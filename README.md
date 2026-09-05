@@ -18,3 +18,5 @@ Vercel 대시보드 → 프로젝트 → Settings → Environment Variables →
 - `middleware.js` — 로그인 게이트 (Vercel Edge Middleware)
 - `vercel.json` — 정적 서빙 설정
 - 엑셀/PDF 라이브러리는 cdnjs에서 로드 (SheetJS 0.18.5, pdf.js 3.11.174)
+
+
