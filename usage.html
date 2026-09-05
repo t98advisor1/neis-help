@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사용법 - 학교생활기록부 점검 도우미</title>
+<style>
+  :root{--rausch:#ff385c;--ink:#222;--muted:#6a6a6a;--line:#ddd;--soft:#f7f7f7;--strong:#f2f2f2;
+    --work:#f1f6fb;--work-line:#c6d9ea;--work-ink:#2c5b82;--r:8px}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;background:#fff;color:var(--ink)}
+  .guide{background:#fff;max-width:960px;margin:0 auto;overflow:hidden}
+  .guide-head{display:flex;align-items:center;gap:12px;padding:16px 24px;border-bottom:1px solid var(--line)}
+  .guide-head h2{margin:0;font-size:18px;color:var(--rausch)}
+  .seg{margin-left:12px;display:flex;gap:4px}
+  .seg button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:5px 12px;font-size:12px;cursor:pointer;color:var(--muted)}
+  .seg button.on{background:var(--rausch);color:#fff;border-color:var(--rausch)}
+  .step-count{margin-left:auto;font-size:13px;color:var(--muted)}
+  .guide-close{border:1px solid var(--line);background:#fff;border-radius:var(--r);padding:6px 12px;font-size:14px;cursor:pointer}
+  .guide-body{padding:24px}
+  .slide-title{font-size:16px;font-weight:700;margin:0 0 4px}
+  .slide-sub{font-size:13px;color:var(--muted);margin:0 0 16px}
+  .slide-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:20px;align-items:start}
+  @media(max-width:760px){.slide-grid{grid-template-columns:1fr}}
+  .mock{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+  .mock-top{height:44px;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid var(--line)}
+  .mock-burger{width:22px;height:22px;border:1px solid var(--line);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted)}
+  .mock-title{font-size:13px;font-weight:700;color:var(--rausch);white-space:nowrap}
+  .mock-navlink{font-size:11px;color:var(--muted);padding:3px 7px;border-radius:5px}
+  .mock-badge{margin-left:auto;font-size:10px;color:var(--muted);background:var(--soft);border-radius:99px;padding:3px 8px;white-space:nowrap}
+  .mock-ghost{font-size:11px;color:var(--ink);text-decoration:underline}
+  .mock-main{display:flex;min-height:220px}
+  .mock-side{width:120px;flex:none;background:var(--soft);border-right:1px solid var(--line);padding:12px 8px}
+  .mock-side .st{font-size:9px;color:var(--muted);margin:0 4px 6px}
+  .mock-side .sl{display:flex;align-items:center;gap:6px;font-size:11px;padding:6px;border-radius:5px}
+  .mock-side .sl.on{background:#fff;font-weight:700;box-shadow:inset 3px 0 0 var(--rausch)}
+  .mock-side .sn{width:16px;height:16px;border-radius:99px;background:var(--strong);font-size:9px;display:flex;align-items:center;justify-content:center}
+  .mock-side .sl.on .sn{background:var(--rausch);color:#fff}
+  .mock-content{flex:1;padding:16px;min-width:0}
+  .mock-caution{background:#fff5f3;border:1px solid #f3d3cc;border-radius:8px;padding:8px 10px;font-size:10px;color:#b3543f;margin-bottom:12px}
+  .mock-drop{border:2px dashed var(--work-line);background:var(--work);border-radius:10px;padding:22px 14px;text-align:center}
+  .mock-drop .dm{font-size:12px;color:var(--work-ink);font-weight:600}
+  .mock-drop .ds{font-size:10px;color:var(--muted);margin-top:4px}
+  .mock-run{display:inline-block;background:var(--rausch);color:#fff;font-size:12px;font-weight:600;padding:9px 16px;border-radius:8px}
+  .mock-tabs{display:flex;gap:4px;margin-bottom:10px}
+  .mock-tab{font-size:11px;padding:6px 10px;border-radius:6px 6px 0 0;color:var(--muted)}
+  .mock-tab.on{background:var(--strong);font-weight:700}
+  .mock-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .mock-sel{font-size:10px;border:1px solid var(--line);border-radius:6px;padding:5px 8px;color:var(--muted)}
+  .mock-row{border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:10px;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+  .dot{width:8px;height:8px;border-radius:99px;flex:none}.dot.v{background:#e11d48}.dot.w{background:#eab308}.dot.i{background:#9ca3af}
+  .mock-login{padding:24px;text-align:center}
+  .mock-login .lg{width:38px;height:38px;border-radius:10px;background:var(--rausch);margin:0 auto 12px}
+  .mock-login h3{font-size:14px;color:var(--rausch);margin:0 0 4px}
+  .mock-login .ls{font-size:10px;color:var(--muted);margin:0 0 14px}
+  .mock-login .lf{text-align:left;font-size:10px;color:var(--muted);margin:8px 0 3px}
+  .mock-login .li{border:1px solid var(--line);border-radius:8px;height:28px;margin-bottom:4px}
+  .mock-login .lb{background:var(--rausch);color:#fff;border-radius:8px;height:32px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;margin-top:10px}
+  .notes{margin:0;padding:0;list-style:none}
+  .notes li{display:flex;gap:10px;margin-bottom:13px}
+  .notes .n{width:22px;height:22px;border-radius:99px;background:var(--rausch);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+  .notes .tx b{display:block;font-size:13px;margin-bottom:2px}
+  .notes .tx span{font-size:12px;color:var(--muted);line-height:1.5}
+  .guide-foot{display:flex;align-items:center;gap:12px;padding:14px 24px;border-top:1px solid var(--line)}
+  .dots{display:flex;gap:6px;margin:0 auto}
+  .dots i{width:8px;height:8px;border-radius:99px;background:var(--line)}
+  .dots i.on{background:var(--rausch)}
+  .nav-btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 16px;font-size:14px;cursor:pointer}
+  .nav-btn.primary{background:var(--rausch);color:#fff;border-color:var(--rausch)}
+  /* 규칙 슬라이드 전용 */
+  .rule-full{max-width:none}
+  .way{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .way-item{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .way-item b{display:block;font-size:13px;margin-bottom:3px;color:var(--rausch)}
+  .way-item span{font-size:12px;color:var(--muted);line-height:1.5}
+  .lim-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px}
+  .lim{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:6px 2px;font-size:12px}
+  .lim b{color:var(--rausch)}
+  .grow-item{border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:6px}
+  .gi-top{display:flex;align-items:center;gap:8px}
+  .gi-top b{font-size:13px}
+  .clause{margin-left:auto;font-size:10px;color:#fff;background:var(--muted);border-radius:99px;padding:2px 8px}
+  .gi-desc{font-size:11px;color:var(--muted)}
+  .sev-row{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+  .sev-badge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;flex:none}
+  .sev-v{background:#fde8ee;color:#e11d48}.sev-w{background:#fef6e0;color:#b7860b}.sev-i{background:#eef0f2;color:#555}
+  .sev-row .d b{font-size:13px}.sev-row .d span{font-size:12px;color:var(--muted)}
+</style></head>
+<body>
+<div style="background:#222;color:#fff;padding:10px 20px;font-size:14px;display:flex;align-items:center;gap:14px">
+  <a href="/" style="color:#fff;text-decoration:none;font-weight:600">← 학교생활기록부 점검 도우미로 돌아가기</a>
+  <a href="/guide.html" style="color:#fff;text-decoration:underline;margin-left:auto;font-size:13px">기재요령 검색 →</a>
+</div>
+<div class="guide">
+  <div class="guide-head">
+    <h2>📘 안내</h2>
+    <div class="seg">
+      <button class="on" data-seg="use">사용법</button>
+      <button data-seg="rule">검사 규칙</button>
+    </div>
+    <span class="step-count"><span id="cur">1</span> / <span id="tot">5</span></span>
+    <a href="/" style="border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;font-size:14px;text-decoration:none;color:var(--ink)">메인으로</a>
+  </div>
+  <div class="guide-body" id="stage"></div>
+  <div class="guide-foot">
+    <button class="nav-btn" id="prev">← 이전</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn primary" id="next">다음 →</button>
+  </div>
+</div>
+<script>
+const USE = [
+  {title:"1. 로그인", sub:"배부받은 아이디와 비밀번호로 접속합니다.",
+   mock:`<div class="mock"><div class="mock-login"><div class="lg"></div><h3>학교생활기록부 점검 도우미</h3><p class="ls">교내 접속용 · 로그인이 필요합니다</p><div class="lf">아이디</div><div class="li"></div><div class="lf">비밀번호</div><div class="li"></div><div class="lb">로그인</div></div></div>`,
+   notes:[["아이디","배부받은 아이디(예: teacher01)를 입력합니다."],["비밀번호","함께 받은 비밀번호를 입력합니다."],["로그인","누르면 앱으로 들어갑니다. 한 번 로그인하면 하루 유지됩니다."]]},
+  {title:"2. 첫 화면 둘러보기", sub:"로그인하면 이 화면이 나옵니다.",
+   mock:`<div class="mock"><div class="mock-top"><div class="mock-burger">≡</div><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-navlink">파일 열기</div><div class="mock-badge">🔒 외부 전송 없음</div><div class="mock-ghost">로그아웃</div></div><div class="mock-main"><div class="mock-side"><div class="st">점검 단계</div><div class="sl on"><span class="sn">1</span>파일 열기</div><div class="sl"><span class="sn">2</span>항목 확인</div><div class="sl"><span class="sn">3</span>검사 결과</div></div><div class="mock-content"><div class="mock-caution">[주의] 참고용 자료입니다. 최종 판단은 교사가 확인하세요.</div><div class="mock-drop"><div class="dm">엑셀·PDF를 여기에 끌어다 놓기</div><div class="ds">클릭해서 선택할 수도 있어요</div></div></div></div></div>`,
+   notes:[["≡ 메뉴 접기","왼쪽 메뉴를 접거나 펼칩니다."],["점검 단계 메뉴","1→2→3 단계로 이동. 지금 단계는 분홍색 강조."],["파일 올리는 곳","파일을 끌어다 놓거나 클릭해서 고릅니다."],["개인정보 안내","파일은 이 브라우저 안에서만 처리됩니다."],["로그아웃","사용을 마치면 여기서 로그아웃."]]},
+  {title:"3. 검사할 항목 확인", sub:"무엇을 검사할지 자동으로 맞춰집니다.",
+   mock:`<div class="mock"><div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div></div><div class="mock-content"><div style="font-size:12px;font-weight:700;margin-bottom:10px">② 검사할 항목 확인</div><div class="mock-run">검사 실행</div><div style="margin-top:12px"><div class="mock-row"><span>세부능력 및 특기사항</span><span style="margin-left:auto;color:#999">검사함</span></div><div class="mock-row"><span>행동특성 및 종합의견</span><span style="margin-left:auto;color:#999">검사함</span></div><div class="mock-row"><span>번호 / 이름 열</span><span style="margin-left:auto;color:#999">검사 안 함</span></div></div></div></div>`,
+   notes:[["검사 실행","확인이 끝나면 눌러서 검사를 시작합니다."],["자동 인식된 항목","검사 대상이 자동으로 맞춰져 있습니다. 틀리면 바꿀 수 있어요."]]},
+  {title:"4. 검사 결과 보기", sub:"결과가 네 개의 탭으로 정리됩니다.",
+   mock:`<div class="mock"><div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div></div><div class="mock-content"><div class="mock-tabs"><div class="mock-tab on">지적 사항</div><div class="mock-tab">학생별</div><div class="mock-tab">유형별</div><div class="mock-tab">중복 문장</div></div><div class="mock-filter"><div class="mock-sel">심각도 ▾</div><div class="mock-sel">영역 ▾</div><div class="mock-sel" style="flex:1;text-align:left">🔎 검색</div><div class="mock-sel" style="background:var(--soft)">결과 엑셀로 저장</div></div><div class="mock-row"><span class="dot v"></span><span>부모 직업 암시 표현</span></div><div class="mock-row"><span class="dot w"></span><span>맥락 확인이 필요한 표현</span></div><div class="mock-row"><span class="dot i"></span><span>표기·형식 점검</span></div></div></div>`,
+   notes:[["4개의 탭","지적 사항 / 학생별 / 유형별 / 중복 문장."],["심각도 필터","위반·주의·점검 중 골라 봅니다."],["검색","낱말·학생을 찾을 때."],["엑셀로 저장","지적 목록을 엑셀로 내려받기."],["색깔","🔴위반 🟡주의 ⚪점검"]]},
+  {title:"5. 규칙 설정 (선택)", sub:"처음에는 건드리지 않아도 됩니다.",
+   mock:`<div class="mock"><div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div><div class="mock-ghost">규칙 설정</div></div><div class="mock-content"><div class="mock-caution" style="border-color:#f3d3cc">⚠️ 처음엔 건드리지 않아도 됩니다. 기본값 그대로 쓰세요.</div><div class="mock-row"><span>금지어·허용 표현 직접 넣기</span></div><div class="mock-row"><span>기본값: 2026학년도 기재요령 기준</span></div></div></div>`,
+   notes:[["규칙 설정","상단/왼쪽 메뉴에서 엽니다."],["처음엔 그대로","기본값이 기재요령 기준으로 맞춰져 있습니다."],["직접 추가","학교만의 금지어를 더할 수 있어요. 이 브라우저에만 저장."]]},
+];
+const RULE = [
+  {title:"검사 규칙 ① — 이렇게 검사합니다", sub:"다섯 가지 방식으로 한 칸씩 살펴봅니다.", full:true,
+   html:`<div class="way">
+     <div class="way-item"><b>1. 분량 초과</b><span>영역별 글자 수 한도를 넘는지 확인 (NEIS 기준 바이트로 계산)</span></div>
+     <div class="way-item"><b>2. 금지 표현</b><span>기재요령상 적으면 안 되는 낱말·표현이 있는지 사전으로 검색</span></div>
+     <div class="way-item"><b>3. 형식·표기</b><span>개인정보 형식, 특수기호, 이모지 등 표기 문제</span></div>
+     <div class="way-item"><b>4. 문맥 규칙</b><span>'부모 직업'처럼 특정 단어가 함께 나올 때만 잡는 규칙</span></div>
+     <div class="way-item" style="grid-column:1/-1"><b>5. 문장 종결</b><span>서술형 영역에서 '-함/-임' 명사형 종결을 지키는지 (참고용)</span></div>
+   </div>`},
+  {title:"검사 규칙 ② — 영역별 글자 수 한도", sub:"NEIS 실제 한도에 맞춰 계산합니다. (한글 1자 = 3바이트)", full:true,
+   html:`<div class="lim-grid">AREA_ROWS</div>`},
+  {title:"검사 규칙 ③ — 주로 잡아내는 금지 표현", sub:"모두 「2026학년도 학교생활기록부 기재요령(고등학교)」 근거입니다.", full:true,
+   html:`GROUP_ROWS`},
+  {title:"검사 규칙 ④ — 심각도 3단계", sub:"색깔로 구분해 표시합니다.", full:true,
+   html:`<div class="sev-row"><span class="sev-badge sev-v">위반</span><span class="d"><b>기재요령에 어긋날 가능성이 큼</b><span> — 꼭 확인하고 수정하세요. (예: 부모 직업, 교외 수상)</span></span></div>
+     <div class="sev-row"><span class="sev-badge sev-w">주의</span><span class="d"><b>맥락에 따라 문제될 수 있음</b><span> — 문장을 보고 판단하세요.</span></span></div>
+     <div class="sev-row"><span class="sev-badge sev-i">점검</span><span class="d"><b>표기·형식 관련</b><span> — 가볍게 확인하세요. (예: 띄어쓰기, 기호)</span></span></div>
+     <p style="font-size:12px;color:var(--muted);margin-top:12px">※ 애매한 경우 놓치지 않도록 '위반'으로 넉넉히 표시합니다. 최종 판단은 반드시 선생님이 하세요.</p>`},
+];
+// 실제 데이터 주입
+const AREA_ROWS = `<div class="lim"><span>인적·학적사항 특기사항</span><b>500자</b></div><div class="lim"><span>출결상황 특기사항</span><b>500자</b></div><div class="lim"><span>수상경력 수상명</span><b>100자</b></div><div class="lim"><span>자격증 명칭</span><b>100자</b></div><div class="lim"><span>자율·자치활동</span><b>500자</b></div><div class="lim"><span>동아리활동</span><b>500자</b></div><div class="lim"><span>진로활동</span><b>500자</b></div><div class="lim"><span>봉사활동실적 활동내용</span><b>50자</b></div><div class="lim"><span>일상생활 활동상황</span><b>1000자</b></div><div class="lim"><span>과목별 세부능력 및 특기사항</span><b>500자</b></div><div class="lim"><span>개인별 세부능력 및 특기사항</span><b>500자</b></div><div class="lim"><span>독서활동상황(공통)</span><b>500자</b></div><div class="lim"><span>독서활동상황(과목별)</span><b>250자</b></div><div class="lim"><span>행동특성 및 종합의견</span><b>300자</b></div>`;
+const GROUP_ROWS = `<div class="grow-item"><div class="gi-top"><b>부모·친인척 배경</b><span class="clause">유의사항 3-차</span></div><span class="gi-desc">부모·친인척의 직업·지위 암시</span></div><div class="grow-item"><div class="gi-top"><b>교외 수상·대회</b><span class="clause">유의사항 3-나·다</span></div><span class="gi-desc">교내·외 대회 참여·수상, 올림피아드</span></div><div class="grow-item"><div class="gi-top"><b>공인어학·모의고사 성적</b><span class="clause">유의사항 3-가·마</span></div><span class="gi-desc">TOEIC·TEPS, 모의고사 성적 등</span></div><div class="grow-item"><div class="gi-top"><b>특정 대학·기관·상호명</b><span class="clause">유의사항 3-타</span></div><span class="gi-desc">대학명·학원명·기업명·브랜드</span></div><div class="grow-item"><div class="gi-top"><b>논문·도서·지식재산권</b><span class="clause">유의사항 3-바·사·아</span></div><span class="gi-desc">학회 발표, 도서출간, 특허 등</span></div><div class="grow-item"><div class="gi-top"><b>자격증·인증시험</b><span class="clause">유의사항 3-라·파</span></div><span class="gi-desc">자격증 명칭, 교내외 인증시험</span></div><div class="grow-item"><div class="gi-top"><b>학교 특정·개인정보</b><span class="clause">유의사항 4</span></div><span class="gi-desc">학교를 알 수 있는 내용, 개인정보 노출</span></div><div class="grow-item"><div class="gi-top"><b>기타 입력 불가</b><span class="clause">세특 입력 불가 등</span></div><span class="gi-desc">방과후학교·MOOC·소논문·기부 등</span></div>`;
+RULE[1].html = RULE[1].html.replace('AREA_ROWS', AREA_ROWS);
+RULE[2].html = RULE[2].html.replace('GROUP_ROWS', GROUP_ROWS);
+
+let seg='use', idx=0;
+const stage=document.getElementById('stage');
+function list(){return seg==='use'?USE:RULE;}
+function render(){
+  const s=list()[idx];
+  if(s.full){
+    stage.innerHTML=`<h3 class="slide-title">${s.title}</h3><p class="slide-sub">${s.sub}</p>${s.html}`;
+  }else{
+    stage.innerHTML=`<h3 class="slide-title">${s.title}</h3><p class="slide-sub">${s.sub}</p>
+      <div class="slide-grid"><div class="mock-wrap">${s.mock}</div>
+      <ol class="notes">${s.notes.map((n,i)=>`<li><span class="n">${i+1}</span><span class="tx"><b>${n[0]}</b><span>${n[1]}</span></span></li>`).join('')}</ol></div>`;
+  }
+  document.getElementById('cur').textContent=idx+1;
+  document.getElementById('tot').textContent=list().length;
+  document.getElementById('prev').disabled=idx===0;
+  document.getElementById('next').textContent=idx===list().length-1?'완료':'다음 →';
+  document.getElementById('dots').innerHTML=list().map((_,i)=>`<i class="${i===idx?'on':''}"></i>`).join('');
+  document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.seg===seg));
+}
+document.querySelector('.seg').onclick=e=>{if(e.target.dataset.seg){seg=e.target.dataset.seg;idx=0;render();}};
+document.getElementById('prev').onclick=()=>{if(idx>0){idx--;render();}};
+document.getElementById('next').onclick=()=>{if(idx<list().length-1){idx++;render();}else if(seg==='use'){seg='rule';idx=0;render();}};
+render();
+</script>
+<div style="text-align:center;padding:20px;color:#999;font-size:12px">Copyright ⓒ 2026 math-tong. All rights reserved.</div>
+</body></html>
