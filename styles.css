@@ -107,6 +107,17 @@ body {
   border-radius: var(--r-full); padding: 6px 14px; white-space: nowrap;
 }
 
+/* 방문 카운터 (오늘 / 누적) */
+.visit-counter {
+  font-size: 12px; color: var(--muted-soft);
+  background: var(--surface-soft);
+  border-radius: var(--r-full);
+  padding: 5px 12px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
 /* 햄버거 버튼 (사이드바 접기) */
 .icon-btn {
   border: 1px solid var(--hairline); background: var(--canvas);
@@ -809,4 +820,30 @@ button.tiny.cat-resolve:hover { background: var(--done-bg); border-color: var(--
   /* 진행률 줄에서 '확인 표시 지우기' 를 오른쪽 끝으로 미는 것은 넓은 화면 이야기다.
    * 폰에서는 줄이 접히므로 왼쪽에 그대로 둔다. */
   .progress .pg-danger { margin-left: 0; }
+}
+
+/* ── 단원별 탭 (guide.html 기재요령 검색) ── */
+.toc-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 14px; }
+.toc-tab {
+  border: 1px solid var(--border-soft);
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-size: 0.92em;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.toc-tab:hover { border-color: var(--accent); color: var(--accent-dark); }
+.toc-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+.toc-group { margin-top: 6px; }
+.toc-group h3 {
+  font-size: 0.95em;
+  color: var(--text-soft);
+  margin: 6px 0 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }

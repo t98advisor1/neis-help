@@ -17,16 +17,15 @@
     </button>
     <h1>학교생활기록부 점검 도우미</h1>
     <nav class="topnav" id="topnav">
-      <button class="topnav-link" data-nav="step-file">파일 열기</button>
-      <button class="topnav-link" data-nav="step-map">검사할 항목</button>
-      <button class="topnav-link" data-nav="step-result">검사 결과</button>
-      <a class="topnav-link" href="/usage.html">사용법</a>
-      <a class="topnav-link" href="/guide.html">기재요령 검색</a>
-      <a class="topnav-link" href="/prompts.html">AI 프롬프트</a>
+      <a class="topnav-link" href="/" data-nav="tab-entries">기재요령</a>
+      <a class="topnav-link" href="/guide.html" data-nav="tab-search">기재요령 검색</a>
+      <a class="topnav-link" href="/prompts.html" data-nav="tab-prompt">AI 프롬프트</a>
+      <a class="topnav-link" href="/usage.html" data-nav="tab-sites">유용한 사이트</a>
     </nav>
     <span class="privacy-badge" title="업로드한 파일은 서버로 전송되지 않고 이 브라우저 안에서만 처리됩니다.">
       🔒 파일 외부 전송 없음
     </span>
+    <span class="visit-counter" id="visit-counter" title="오늘 / 지금까지 방문자 수"></span>
     <span class="build" id="build" title="화면 코드가 마지막으로 바뀐 때입니다. 고친 내용이 안 보이면 새로고침(⌘⇧R) 해 주세요."></span>
     <button id="btn-settings-top" class="ghost">규칙 설정</button>
     <a id="btn-logout" class="ghost" href="/__logout" title="로그아웃">로그아웃</a>
@@ -54,13 +53,6 @@
     <p class="sidebar-title">도구</p>
     <nav class="sidenav">
       <button class="sidenav-link" id="btn-settings">⚙️ 규칙 설정</button>
-    </nav>
-
-    <p class="sidebar-title">자료</p>
-    <nav class="sidenav">
-      <a class="sidenav-link" href="/usage.html">📘 사용법</a>
-      <a class="sidenav-link" href="/guide.html">📖 기재요령 검색</a>
-      <a class="sidenav-link" href="/prompts.html">✍️ AI 프롬프트</a>
     </nav>
 
     <div class="sidebar-foot">
@@ -273,5 +265,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="rules.js"></script>
 <script src="app.js"></script>
+<script>
+// ── 방문자 카운터 (오늘 / 누적) ──
+(async function loadVisitCounter(){
+  try {
+    const res = await fetch('/api/visit');
+    if (!res.ok) throw new Error('status ' + res.status);
+    const d = await res.json();
+    const el = document.getElementById('visit-counter');
+    if (el) {
+      el.textContent = `👁 ${d.today} / ${d.total}`;
+    }
+  } catch (e) {
+    const el = document.getElementById('visit-counter');
+    if (el) el.textContent = '';
+  }
+})();
+</script>
 </body>
 </html>
