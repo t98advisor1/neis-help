@@ -1,4 +1,4 @@
-/* 생기부 금지어 탐색기 — 화면 스타일
+/* 학교생활기록부 점검 도우미 — 화면 스타일
  *
  * 디자인 근거: DESIGN-airbnb.md (Airbnb design analysis)
  *   - 순백 캔버스(#fff) + 잉크(#222). 순수 검정은 쓰지 않는다.
@@ -85,33 +85,122 @@ body {
 
 .hidden { display: none !important; }
 
-/* ── 상단 바 ── */
+/* ── 상단 메뉴 바 ── */
 .topbar {
   background: var(--canvas);
   border-bottom: 1px solid var(--hairline);
-  position: sticky; top: 0; z-index: 20;
+  position: sticky; top: 0; z-index: 30;
 }
 .topbar-inner {
-  max-width: 1280px; margin: 0 auto; padding: 0 40px;
-  height: 80px; display: flex; align-items: center; gap: 16px;
+  padding: 0 24px;
+  height: 64px; display: flex; align-items: center; gap: 16px;
 }
 .topbar h1 {
-  font-size: 20px; font-weight: 600; letter-spacing: -0.18px; margin: 0;
-  color: var(--rausch);
+  font-size: 20px; font-weight: 700; letter-spacing: -0.18px; margin: 0;
+  color: var(--rausch); white-space: nowrap;
 }
 /* 화면 코드가 언제 것인지. 고친 내용이 안 보이면 새로고침해야 한다는 것을 여기서 안다. */
-.build { font-size: 12px; color: var(--muted-soft); margin-left: auto; white-space: nowrap; }
+.build { font-size: 12px; color: var(--muted-soft); white-space: nowrap; }
 
 .privacy-badge {
   font-size: 13px; color: var(--muted); background: var(--surface-soft);
-  border-radius: var(--r-full); padding: 6px 14px;
+  border-radius: var(--r-full); padding: 6px 14px; white-space: nowrap;
 }
-.topbar .ghost { margin-left: 0; }
+
+/* 햄버거 버튼 (사이드바 접기) */
+.icon-btn {
+  border: 1px solid var(--hairline); background: var(--canvas);
+  width: 40px; height: 40px; padding: 0; border-radius: var(--r-sm);
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+}
+.icon-btn:hover { background: var(--surface-soft); border-color: var(--border-strong); }
+.hamburger, .hamburger::before, .hamburger::after {
+  display: block; width: 18px; height: 2px; background: var(--ink); border-radius: 2px;
+  position: relative; transition: transform .15s;
+}
+.hamburger::before, .hamburger::after { content: ""; position: absolute; left: 0; }
+.hamburger::before { top: -6px; }
+.hamburger::after { top: 6px; }
+
+/* 상단 가로 메뉴 — 넓은 화면에서 단계 이동 */
+.topnav { display: flex; gap: 4px; margin-left: 8px; }
+.topnav-link {
+  border: none; background: transparent; color: var(--body);
+  font-size: 15px; font-weight: 500; padding: 8px 14px; border-radius: var(--r-sm);
+}
+.topnav-link:hover { background: var(--surface-soft); color: var(--ink); }
+.topnav-link.is-active { background: var(--surface-strong); color: var(--ink); font-weight: 600; }
+.topnav-link:disabled { color: var(--muted-soft); cursor: default; background: transparent; }
+
+/* build 와 우측 요소를 오른쪽으로 민다 */
+.topbar .build { margin-left: auto; }
+
+/* ── 레이아웃: 좌측 사이드바 + 본문 ── */
+.layout { display: flex; align-items: flex-start; }
+
+.sidebar {
+  position: sticky; top: 64px; align-self: flex-start;
+  width: 240px; flex: none;
+  height: calc(100vh - 64px); overflow-y: auto;
+  border-right: 1px solid var(--hairline);
+  background: var(--surface-soft);
+  padding: 24px 16px;
+  box-sizing: border-box;
+  transition: width .18s ease, padding .18s ease;
+}
+/* 접힌 상태 — 폭 0 으로 밀어 넣고 내용은 감춘다 */
+.layout.sidebar-collapsed .sidebar {
+  width: 0; padding-left: 0; padding-right: 0; overflow: hidden; border-right-color: transparent;
+}
+
+.sidebar-title {
+  font-size: 12px; font-weight: 700; color: var(--muted);
+  text-transform: none; letter-spacing: .02em;
+  margin: 18px 8px 8px; white-space: nowrap;
+}
+.sidebar-title:first-child { margin-top: 0; }
+
+.sidenav { display: flex; flex-direction: column; gap: 2px; }
+.sidenav-link {
+  display: flex; align-items: center; gap: 10px;
+  border: none; background: transparent; color: var(--body);
+  font-size: 15px; font-weight: 500; text-align: left;
+  padding: 10px 12px; border-radius: var(--r-sm); width: 100%;
+  white-space: nowrap;
+}
+.sidenav-link:hover { background: var(--surface-strong); color: var(--ink); }
+.sidenav-link.is-active { background: var(--canvas); color: var(--ink); font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--rausch); }
+.sidenav-link:disabled { color: var(--muted-soft); cursor: default; }
+.sidenav-link:disabled:hover { background: transparent; }
+.sidenav-no {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: var(--r-full); flex: none;
+  background: var(--surface-strong); color: var(--ink); font-size: 12px; font-weight: 700;
+}
+.sidenav-link.is-active .sidenav-no { background: var(--rausch); color: var(--on-primary); }
+
+.sidebar-foot { margin-top: 24px; padding: 0 8px; }
+.sidebar-note { font-size: 12px; line-height: 1.5; color: var(--muted); margin: 0; }
 
 /* 아래 여백은 홈 인디케이터(홈바)가 있는 폰에서 마지막 줄을 가리지 않을 만큼 둔다. */
 main {
-  max-width: 1280px; margin: 0 auto;
+  flex: 1 1 auto; min-width: 0;
+  max-width: 1160px; margin: 0 auto;
   padding: 32px 40px calc(64px + env(safe-area-inset-bottom));
+}
+
+/* 좁은 화면: 상단 가로 메뉴는 감추고, 사이드바는 기본 접힘.
+   펼치면 본문 위에 겹쳐 뜨는 오버레이 방식으로. */
+@media (max-width: 900px) {
+  .topnav { display: none; }
+  .privacy-badge { display: none; }
+  .sidebar {
+    position: fixed; top: 64px; left: 0; z-index: 25;
+    box-shadow: rgba(0,0,0,.12) 4px 0 16px;
+  }
+  .layout.sidebar-collapsed .sidebar { box-shadow: none; }
+  main { padding: 24px 20px calc(64px + env(safe-area-inset-bottom)); }
 }
 
 /* ── 카드 ── */
@@ -148,8 +237,8 @@ button.primary {
 button.primary:hover { background: var(--rausch-active); border-color: var(--rausch-active); }
 button.primary:disabled { background: var(--rausch-pale); border-color: var(--rausch-pale); }
 
-button.ghost { background: transparent; border-color: transparent; color: var(--ink); text-decoration: underline; }
-button.ghost:hover { background: var(--surface-soft); }
+button.ghost, a.ghost { background: transparent; border: 1px solid transparent; color: var(--ink); text-decoration: underline; font: inherit; padding: 8px 12px; border-radius: var(--r-sm); cursor: pointer; display: inline-flex; align-items: center; }
+button.ghost:hover, a.ghost:hover { background: var(--surface-soft); }
 button:disabled { cursor: not-allowed; }
 
 select, input[type="search"], input[type="text"], input[type="number"] {

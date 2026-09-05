@@ -3,24 +3,62 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>생기부 금지어 탐색기</title>
+<title>학교생활기록부 점검 도우미</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23ff385c'/%3E%3Cpath d='M9 10h14M9 16h14M9 22h9' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+<!-- ── 상단 메뉴 바 ── -->
 <header class="topbar">
   <div class="topbar-inner">
-    <h1>생기부 금지어 탐색기</h1>
+    <button id="btn-sidebar" class="icon-btn" title="메뉴 접기/펼치기" aria-label="메뉴 접기/펼치기">
+      <span class="hamburger"></span>
+    </button>
+    <h1>학교생활기록부 점검 도우미</h1>
+    <nav class="topnav" id="topnav">
+      <button class="topnav-link" data-nav="step-file">파일 열기</button>
+      <button class="topnav-link" data-nav="step-map">검사할 항목</button>
+      <button class="topnav-link" data-nav="step-result">검사 결과</button>
+    </nav>
     <span class="privacy-badge" title="업로드한 파일은 서버로 전송되지 않고 이 브라우저 안에서만 처리됩니다.">
-      브라우저 내 처리 · 외부 전송 없음
+      🔒 파일 외부 전송 없음
     </span>
     <span class="build" id="build" title="화면 코드가 마지막으로 바뀐 때입니다. 고친 내용이 안 보이면 새로고침(⌘⇧R) 해 주세요."></span>
-    <button id="btn-settings" class="ghost">규칙 설정</button>
+    <button id="btn-settings-top" class="ghost">규칙 설정</button>
+    <a id="btn-logout" class="ghost" href="/__logout" title="로그아웃">로그아웃</a>
   </div>
 </header>
 
-<main>
+<!-- ── 본문: 좌측 사이드바 + 내용 ── -->
+<div class="layout" id="layout">
+
+  <!-- 좌측 접기 메뉴 -->
+  <aside class="sidebar" id="sidebar">
+    <p class="sidebar-title">점검 단계</p>
+    <nav class="sidenav">
+      <button class="sidenav-link is-active" data-nav="step-file">
+        <span class="sidenav-no">1</span> 파일 열기
+      </button>
+      <button class="sidenav-link" data-nav="step-map">
+        <span class="sidenav-no">2</span> 검사할 항목 확인
+      </button>
+      <button class="sidenav-link" data-nav="step-result">
+        <span class="sidenav-no">3</span> 검사 결과
+      </button>
+    </nav>
+
+    <p class="sidebar-title">도구</p>
+    <nav class="sidenav">
+      <button class="sidenav-link" id="btn-settings">⚙️ 규칙 설정</button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <p class="sidebar-note">업로드한 파일은 이 브라우저 안에서만 처리되며, 외부로 전송되지 않습니다.</p>
+    </div>
+  </aside>
+
+  <main>
 
   <p class="caution" id="caution">
     <strong>[주의]</strong> 본 프로그램은 참고용 자료입니다. 내용의 오류나 누락이 있을 수 있으므로
@@ -53,7 +91,7 @@
   <!-- 2단계: 매핑 -->
   <section class="card hidden" id="step-map">
     <h2>
-      <span class="step-no">2</span> <span id="step2-title">검사할 열 확인</span>
+      <span class="step-no">2</span> <span id="step2-title">검사할 항목 확인</span>
       <span class="card-sum" id="step2-sum"></span>
       <button class="card-toggle">접기</button>
     </h2>
@@ -111,7 +149,8 @@
     <div id="pane-dups" class="pane hidden"></div>
   </section>
 
-</main>
+  </main>
+</div><!-- /.layout -->
 
 <!-- 설정 모달 -->
 <div class="modal-backdrop hidden" id="settings-modal">
@@ -123,9 +162,9 @@
 
     <div class="modal-body">
       <p class="note">
-        기본값은 <strong>「2026학년도 학교생활기록부 기재요령(고등학교)」</strong> 에서 옮겼습니다.
-        학교·연도별 사정에 맞게 직접 고쳐 쓰세요. 저장한 내용은 이 컴퓨터의
-        <code>data/dictionary.json</code> 에만 남습니다.
+        ⚠️ 이 설정 화면은 <strong>처음에는 건드리지 않아도 됩니다.</strong> 기본값 그대로 사용하세요.
+        기본값은 <strong>「2026학년도 학교생활기록부 기재요령(고등학교)」</strong> 에서 옮긴 것입니다.
+        고친 내용은 <strong>이 브라우저에만</strong> 저장되며, 다른 선생님과는 공유되지 않습니다.
       </p>
 
       <h3>금지어·허용 표현 직접 넣기</h3>
