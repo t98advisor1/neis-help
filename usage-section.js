@@ -4,12 +4,12 @@
 (function () {
 
 const USE = [
-  {title:"1. 로그인", sub:"배부받은 아이디와 비밀번호로 접속합니다.",
-   mock:`<div class="mock"><div class="mock-login"><div class="lg"></div><h3>학교생활기록부 점검 도우미</h3><p class="ls">교내 접속용 · 로그인이 필요합니다</p><div class="lf">아이디</div><div class="li"></div><div class="lf">비밀번호</div><div class="li"></div><div class="lb">로그인</div></div></div>`,
-   notes:[["아이디","배부받은 아이디(예: teacher01)를 입력합니다."],["비밀번호","함께 받은 비밀번호를 입력합니다."],["로그인","누르면 앱으로 들어갑니다. 한 번 로그인하면 하루 유지됩니다."]]},
-  {title:"2. 첫 화면 둘러보기", sub:"로그인하면 이 화면이 나옵니다.",
-   mock:`<div class="mock"><div class="mock-top"><div class="mock-burger">≡</div><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-navlink">파일 열기</div><div class="mock-badge">🔒 외부 전송 없음</div><div class="mock-ghost">로그아웃</div></div><div class="mock-main"><div class="mock-side"><div class="st">점검 단계</div><div class="sl on"><span class="sn">1</span>파일 열기</div><div class="sl"><span class="sn">2</span>항목 확인</div><div class="sl"><span class="sn">3</span>검사 결과</div></div><div class="mock-content"><div class="mock-caution">[주의] 참고용 자료입니다. 최종 판단은 교사가 확인하세요.</div><div class="mock-drop"><div class="dm">엑셀·PDF를 여기에 끌어다 놓기</div><div class="ds">클릭해서 선택할 수도 있어요</div></div></div></div></div>`,
-   notes:[["≡ 메뉴 접기","왼쪽 메뉴를 접거나 펼칩니다."],["점검 단계 메뉴","1→2→3 단계로 이동. 지금 단계는 분홍색 강조."],["파일 올리는 곳","파일을 끌어다 놓거나 클릭해서 고릅니다."],["개인정보 안내","파일은 이 브라우저 안에서만 처리됩니다."],["로그아웃","사용을 마치면 여기서 로그아웃."]]},
+  {title:"1. 로그인", sub:"구글 계정으로 접속합니다.",
+   mock:`<div class="mock"><div class="mock-login"><div class="lg"></div><h3>학교생활기록부 점검 도우미</h3><p class="ls">교내 접속용 · 구글 계정으로 로그인해 주세요</p><div class="lb" style="background:#fff;color:#3c4043;border:1px solid #dadce0">G&nbsp; Google 계정으로 로그인</div><p class="ls" style="margin-top:12px">허용된 계정만 들어올 수 있습니다.</p></div></div>`,
+   notes:[["Google 계정으로 로그인","누르면 구글 로그인 창이 열립니다. 학교에서 허용한 계정을 고르세요."],["허용된 계정만","허용되지 않은 계정이면 안내 문구가 나옵니다. 담당 선생님께 계정 등록을 요청하세요."],["로그인 유지","한 번 로그인하면 하루 유지됩니다. 다 쓰고 나면 위쪽 [로그아웃]을 누르세요."]]},
+  {title:"2. 첫 화면과 메뉴", sub:"로그인하면 소개 화면이 나오고, 한 번 내리면 메뉴가 나옵니다.",
+   mock:`<div class="mock"><div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div><div class="mock-ghost">로그아웃</div></div><div class="mock-content"><div style="font-size:13px;font-weight:700;margin-bottom:10px">무엇을 확인하시겠어요?</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="mock-row" style="margin:0">📝 생기부 점검하기</div><div class="mock-row" style="margin:0">📘 사용법 · 검사 규칙</div><div class="mock-row" style="margin:0">📖 기재요령 검색</div><div class="mock-row" style="margin:0">✍️ AI 프롬프트</div></div></div></div>`,
+   notes:[["첫 화면","서비스 소개가 나옵니다. [시작하기]를 누르거나 마우스 휠을 한 번 내리면 다음 화면으로 넘어갑니다."],["메뉴 선택","네 가지 메뉴 중 하나를 고르면 같은 페이지 아래 화면에서 바로 열립니다."],["위쪽 탭","내용 화면에서는 위쪽 탭으로 메뉴를 바꾸고, [↑ 메뉴]로 메뉴 화면에 돌아갑니다."],["개인정보 안내","파일은 이 브라우저 안에서만 처리됩니다."]]},
   {title:"3. 검사할 항목 확인", sub:"무엇을 검사할지 자동으로 맞춰집니다.",
    mock:`<div class="mock"><div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div></div><div class="mock-content"><div style="font-size:12px;font-weight:700;margin-bottom:10px">② 검사할 항목 확인</div><div class="mock-run">검사 실행</div><div style="margin-top:12px"><div class="mock-row"><span>세부능력 및 특기사항</span><span style="margin-left:auto;color:#999">검사함</span></div><div class="mock-row"><span>행동특성 및 종합의견</span><span style="margin-left:auto;color:#999">검사함</span></div><div class="mock-row"><span>번호 / 이름 열</span><span style="margin-left:auto;color:#999">검사 안 함</span></div></div></div></div>`,
    notes:[["검사 실행","확인이 끝나면 눌러서 검사를 시작합니다."],["자동 인식된 항목","검사 대상이 자동으로 맞춰져 있습니다. 틀리면 바꿀 수 있어요."]]},
@@ -18,7 +18,7 @@ const USE = [
    notes:[["4개의 탭","지적 사항 / 학생별 / 유형별 / 중복 문장."],["심각도 필터","위반·주의·점검 중 골라 봅니다."],["검색","낱말·학생을 찾을 때."],["엑셀로 저장","지적 목록을 엑셀로 내려받기."],["색깔","🔴위반 🟡주의 ⚪점검"]]},
   {title:"5. 규칙 설정 (선택)", sub:"처음에는 건드리지 않아도 됩니다.",
    mock:`<div class="mock"><div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div><div class="mock-ghost">규칙 설정</div></div><div class="mock-content"><div class="mock-caution" style="border-color:#f3d3cc">⚠️ 처음엔 건드리지 않아도 됩니다. 기본값 그대로 쓰세요.</div><div class="mock-row"><span>금지어·허용 표현 직접 넣기</span></div><div class="mock-row"><span>기본값: 2026학년도 기재요령 기준</span></div></div></div>`,
-   notes:[["규칙 설정","상단/왼쪽 메뉴에서 엽니다."],["처음엔 그대로","기본값이 기재요령 기준으로 맞춰져 있습니다."],["직접 추가","학교만의 금지어를 더할 수 있어요. 이 브라우저에만 저장."]]},
+   notes:[["규칙 설정","화면 위쪽의 [규칙 설정]에서 엽니다."],["처음엔 그대로","기본값이 기재요령 기준으로 맞춰져 있습니다."],["직접 추가","학교만의 금지어를 더할 수 있어요. 이 브라우저에만 저장."]]},
 ];
 const RULE = [
   {title:"검사 규칙 ① — 이렇게 검사합니다", sub:"다섯 가지 방식으로 한 칸씩 살펴봅니다.", full:true,

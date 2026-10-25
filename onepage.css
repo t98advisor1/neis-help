@@ -1,0 +1,147 @@
+/* 한 페이지 구성 — 화면이 카드처럼 걸렸다가 다음 화면으로 넘어간다.
+ *   1화면 소개 → 2화면 메뉴 선택 → 3화면 선택한 메뉴의 내용(같은 페이지 안에서 바뀜)
+ * 스냅은 css scroll-snap 으로 한다. JS 는 등장 모션과 메뉴 전환만 맡는다. */
+
+:root { --op-h: 56px; --op-tabs-h: 52px; --op-dark: #16090d; }
+
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+body { overflow-x: hidden; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ── 고정 상단 바 ── */
+.op-top {
+  position: fixed; inset: 0 0 auto 0; z-index: 40; height: var(--op-h);
+  display: flex; align-items: center; gap: 12px; padding: 0 24px;
+  background: rgba(255, 255, 255, .88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--hairline);
+  transition: background .3s, border-color .3s, color .3s;
+}
+.op-brand { display: flex; align-items: center; gap: 10px; color: var(--rausch); text-decoration: none; font-weight: 700; font-size: 17px; margin-right: auto; white-space: nowrap; }
+.op-logo { width: 30px; height: 30px; border-radius: 8px; background: var(--rausch); display: inline-flex; align-items: center; justify-content: center; }
+.op-logo svg { width: 18px; height: 18px; }
+.op-badge { margin: 0; }
+.op-top.on-dark { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom-color: transparent; }
+.op-top.on-dark .op-brand { color: #fff; }
+.op-top.on-dark .op-badge { background: rgba(255, 255, 255, .12); color: rgba(255, 255, 255, .85); }
+.op-top.on-dark .ghost { color: #fff; }
+.op-top.on-dark .ghost:hover { background: rgba(255, 255, 255, .14); }
+
+/* ── 오른쪽 점 ── */
+.op-dots { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 35; display: flex; flex-direction: column; gap: 14px; }
+.op-dots a { width: 10px; height: 10px; border-radius: 50%; background: rgba(120, 120, 120, .45); transition: transform .25s, background .25s; display: block; }
+.op-dots a:hover { transform: scale(1.4); }
+.op-dots a.is-active { background: var(--rausch); transform: scale(1.5); }
+
+/* ── 한 화면씩 걸리는 구역 ── */
+.op-screen {
+  min-height: 100vh; min-height: 100svh;
+  scroll-snap-align: start; scroll-snap-stop: always;
+  display: flex; align-items: center; justify-content: center;
+  padding: calc(var(--op-h) + 24px) 40px 56px; position: relative;
+}
+.op-eyebrow { margin: 0 0 14px; font-size: 14px; font-weight: 600; letter-spacing: .04em; color: var(--rausch); }
+.op-lead { margin: 0; font-size: 18px; line-height: 1.7; color: var(--body); }
+
+/* 등장 모션 — 화면에 들어올 때마다 아래에서 떠오른다. JS 가 없으면 그냥 보인다. */
+.js .reveal { opacity: 0; transform: translateY(36px); transition: opacity .6s cubic-bezier(.2, .7, .2, 1) var(--d, 0s), transform .6s cubic-bezier(.2, .7, .2, 1) var(--d, 0s); }
+.js .reveal.in { opacity: 1; transform: none; }
+
+/* ── 1화면 ── */
+.op-hero { background: radial-gradient(900px 520px at 78% 18%, rgba(255, 56, 92, .38), transparent 62%), linear-gradient(160deg, #16090d 0%, #2a0d18 55%, #14070b 100%); color: #fff; overflow: hidden; }
+.op-hero-inner { width: 100%; max-width: 1160px; display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; will-change: transform, opacity; }
+.op-hero h1 { margin: 0 0 22px; font-size: clamp(34px, 5vw, 58px); line-height: 1.18; letter-spacing: -.02em; font-weight: 800; }
+.op-hero h1 em { font-style: normal; color: #ff7d95; }
+.op-hero .op-lead { color: rgba(255, 255, 255, .78); max-width: 560px; }
+.op-hero .op-lead strong { color: #fff; }
+.op-points { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 26px 0 32px; }
+.op-points li { padding: 7px 14px; border-radius: 9999px; background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .16); font-size: 14px; }
+.op-cta { display: inline-flex; align-items: center; gap: 8px; padding: 15px 30px; border-radius: 9999px; background: var(--rausch); color: #fff; font-size: 17px; font-weight: 700; text-decoration: none; transition: background .2s, transform .2s; }
+.op-cta:hover { background: var(--rausch-active); transform: translateY(-2px); }
+.op-caution { margin: 28px 0 0; font-size: 13px; color: rgba(255, 255, 255, .55); }
+
+.op-hero-visual { position: relative; height: 410px; }
+.op-mock-label { position: absolute; top: -26px; left: 4px; margin: 0; font-size: 12px; color: rgba(255, 255, 255, .5); }
+.op-mock-card { position: absolute; width: 82%; padding: 18px 20px; border-radius: 16px; background: #fff; color: var(--ink); box-shadow: 0 18px 40px rgba(0, 0, 0, .35); animation: op-float 6s ease-in-out infinite; }
+.op-mock-card b { display: block; margin: 8px 0 4px; font-size: 16px; }
+.op-mock-card p { margin: 0 0 6px; font-size: 14px; color: var(--body); }
+.op-mock-card small { color: var(--muted); font-size: 12px; }
+.op-mock-card .sev { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 12px; font-weight: 700; }
+.sev.v { background: #fde8ee; color: #c13515; } .sev.w { background: #fdf3dd; color: #a1651a; } .sev.i { background: #eef0f2; color: #555; }
+.op-mock-card.c1 { top: 0; left: 0; }
+.op-mock-card.c2 { top: 136px; left: 14%; animation-delay: -2s; }
+.op-mock-card.c3 { top: 272px; left: 6%; animation-delay: -4s; }
+@keyframes op-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+.op-scroll-hint { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); margin: 0; font-size: 12px; letter-spacing: .12em; color: rgba(255, 255, 255, .55); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.op-scroll-hint span { width: 1px; height: 26px; background: linear-gradient(rgba(255, 255, 255, .7), transparent); animation: op-hint 1.8s ease-in-out infinite; }
+@keyframes op-hint { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+/* ── 2화면: 메뉴 ── */
+.op-menu { background: var(--surface-soft); }
+.op-menu-inner { width: 100%; max-width: 1100px; }
+.op-menu h2 { margin: 0 0 12px; font-size: clamp(28px, 3.6vw, 40px); letter-spacing: -.02em; }
+.op-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-top: 36px; }
+.op-card {
+  position: relative; text-align: left; display: flex; flex-direction: column; gap: 6px; min-height: 230px;
+  padding: 26px 24px; border: 1px solid var(--hairline); border-radius: 20px; background: #fff; color: var(--ink);
+  cursor: pointer; font: inherit; transition: opacity .6s cubic-bezier(.2, .7, .2, 1) var(--d, 0s), transform .6s cubic-bezier(.2, .7, .2, 1) var(--d, 0s), box-shadow .25s, border-color .25s;
+}
+.op-card:hover { background: #fff; border-color: var(--rausch); box-shadow: var(--shadow); }
+.js .op-card.reveal.in:hover { transform: translateY(-6px); transition-delay: 0s; }
+.op-card:focus-visible { outline: 3px solid var(--rausch-pale); outline-offset: 2px; }
+.op-card .no { font-size: 13px; font-weight: 700; color: var(--muted-soft); }
+.op-card .ic { font-size: 34px; margin: 6px 0 8px; }
+.op-card b { font-size: 20px; letter-spacing: -.01em; }
+.op-card .ds { font-size: 14px; line-height: 1.55; color: var(--muted); }
+.op-card i { position: absolute; right: 22px; bottom: 20px; font-style: normal; font-size: 22px; color: var(--rausch); transition: transform .25s; }
+.op-card:hover i { transform: translateX(5px); }
+
+/* ── 3화면: 내용 ── */
+.op-workspace { min-height: 100vh; min-height: 100svh; scroll-snap-align: start; padding-top: var(--op-h); background: var(--canvas); display: flex; flex-direction: column; }
+.op-tabs {
+  position: sticky; top: var(--op-h); z-index: 30; height: var(--op-tabs-h);
+  display: flex; align-items: stretch; gap: 4px; padding: 0 24px; overflow-x: auto; scrollbar-width: none;
+  background: #111; border-bottom: 1px solid #000;
+}
+.op-tabs::-webkit-scrollbar { display: none; }
+.op-tabs button, .op-tabs .op-up {
+  flex: none; display: inline-flex; align-items: center; padding: 0 18px; border: 0; border-bottom: 3px solid transparent; border-radius: 0;
+  background: transparent; color: rgba(255, 255, 255, .62); font-family: inherit; font-weight: 600; font-size: 15px; line-height: 1; text-decoration: none; cursor: pointer; white-space: nowrap;
+}
+.op-tabs .op-up { margin-right: auto; font-weight: 500; font-size: 14px; }
+.op-tabs button:hover, .op-tabs .op-up:hover { background: transparent; color: #fff; }
+.op-tabs button.is-active { color: #fff; border-bottom-color: var(--rausch); }
+
+.op-panels { flex: 1 1 auto; }
+.op-panel { max-width: 1160px; margin: 0 auto; padding: 32px 40px 48px; animation: op-panel-in .4s ease; }
+.op-panel-wide { max-width: none; padding: 0; }
+@keyframes op-panel-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.op-panel-title { margin: 0 0 6px; font-size: 24px; color: var(--ink); }
+.op-panel-sub { margin: 0 0 24px; color: var(--muted); font-size: 14px; }
+#guide-frame { display: block; width: 100%; height: 80vh; border: 0; background: #f7f7f7; }
+.op-empty { border: 2px dashed var(--hairline); border-radius: 14px; padding: 48px 24px; text-align: center; background: var(--surface-soft); }
+.op-empty .ic { font-size: 36px; margin-bottom: 12px; }
+.op-empty h3 { margin: 0 0 8px; font-size: 16px; }
+.op-empty p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* 앱 안의 scrollIntoView 가 고정 바 밑으로 들어가지 않게 한다 */
+.card, .tabs { scroll-margin-top: calc(var(--op-h) + var(--op-tabs-h) + 12px); }
+.app-footer { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; padding: 22px 24px 28px; border-top: 1px solid var(--hairline-soft); color: var(--muted-soft); font-size: 12px; }
+
+@media (max-width: 900px) {
+  .op-hero-inner { grid-template-columns: 1fr; gap: 28px; }
+  .op-hero-visual { display: none; }
+  .op-screen { padding: calc(var(--op-h) + 16px) 20px 48px; align-items: flex-start; }
+  .op-hero { align-items: center; }
+  .op-badge, .op-brand-name { display: none; }
+  .op-top { padding: 0 14px; }
+  .op-dots { right: 8px; }
+  .op-panel { padding: 24px 20px 40px; }
+  .op-card { min-height: 0; }
+  .op-tabs { padding: 0 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js .reveal, .op-card { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .op-mock-card, .op-scroll-hint span, .op-panel { animation: none; }
+}

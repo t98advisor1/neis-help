@@ -20,7 +20,9 @@ OAuth 클라이언트의 **승인된 리디렉션 URI**에 `https://배포주소
 환경변수를 고친 뒤에는 Redeploy 해야 반영됩니다.
 
 ## 구성
-- `index.html`, `styles.css`, `app.js`, `rules.js` — 웹앱 본체
+- `index.html`, `styles.css`, `app.js`, `rules.js` — 웹앱 본체(검사 화면·검사 규칙)
+- `onepage.css`, `onepage.js` — 한 페이지 구성: 소개 → 메뉴 선택 → 내용 화면이 한 화면씩 걸리며 넘어가는 스크롤(css scroll-snap + 휠 보강)
+- `usage-section.css/js` — 사용법·검사 규칙 메뉴, `guide.html` — 기재요령 검색 메뉴(메인 안에 삽입됨; `usage.html`·`prompts.html`은 메인의 해당 메뉴로 연결만 한다)
 - `middleware.js` — 로그인 게이트 (Vercel Edge Middleware)
 - `vercel.json` — 정적 서빙 설정
 - 엑셀/PDF 라이브러리는 cdnjs에서 로드 (SheetJS 0.18.5, pdf.js 3.11.174)

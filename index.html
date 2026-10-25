@@ -6,62 +6,89 @@
 <title>학교생활기록부 점검 도우미</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23ff385c'/%3E%3Cpath d='M9 10h14M9 16h14M9 22h9' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="usage-section.css">
+<link rel="stylesheet" href="onepage.css">
+<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 
-<!-- ── 상단 메뉴 바 ── -->
-<header class="topbar">
-  <div class="topbar-inner">
-    <button id="btn-sidebar" class="icon-btn" title="메뉴 접기/펼치기" aria-label="메뉴 접기/펼치기">
-      <span class="hamburger"></span>
-    </button>
-    <h1>학교생활기록부 점검 도우미</h1>
-    <nav class="topnav" id="topnav">
-      <a class="topnav-link" href="/" data-nav="tab-entries">기재요령</a>
-      <a class="topnav-link" href="/guide.html" data-nav="tab-search">기재요령 검색</a>
-      <a class="topnav-link" href="/prompts.html" data-nav="tab-prompt">AI 프롬프트</a>
-      <a class="topnav-link" href="/usage.html" data-nav="tab-sites">유용한 사이트</a>
-    </nav>
-    <span class="privacy-badge" title="업로드한 파일은 서버로 전송되지 않고 이 브라우저 안에서만 처리됩니다.">
-      🔒 파일 외부 전송 없음
-    </span>
-    <span class="visit-counter" id="visit-counter" title="오늘 / 지금까지 방문자 수"></span>
-    <span class="build" id="build" title="화면 코드가 마지막으로 바뀐 때입니다. 고친 내용이 안 보이면 새로고침(⌘⇧R) 해 주세요."></span>
-    <button id="btn-settings-top" class="ghost">규칙 설정</button>
-    <a id="btn-logout" class="ghost" href="/__logout" title="로그아웃">로그아웃</a>
-  </div>
+<!-- ── 고정 상단 바 ── -->
+<header class="op-top" id="op-top">
+  <a class="op-brand" href="#hero" aria-label="처음 화면으로">
+    <span class="op-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 10h14M9 16h14M9 22h9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></span>
+    <span class="op-brand-name">학교생활기록부 점검 도우미</span>
+  </a>
+  <span class="privacy-badge op-badge" title="업로드한 파일은 서버로 전송되지 않고 이 브라우저 안에서만 처리됩니다.">🔒 파일 외부 전송 없음</span>
+  <button id="btn-settings" class="ghost">규칙 설정</button>
+  <a id="btn-logout" class="ghost" href="/__logout" title="로그아웃">로그아웃</a>
 </header>
 
-<!-- ── 본문: 좌측 사이드바 + 내용 ── -->
-<div class="layout" id="layout">
+<!-- 오른쪽 화면 이동 점 -->
+<nav class="op-dots" aria-label="화면 이동">
+  <a href="#hero" data-for="hero" title="소개"><span class="sr">소개</span></a>
+  <a href="#menu" data-for="menu" title="메뉴"><span class="sr">메뉴</span></a>
+  <a href="#workspace" data-for="workspace" title="내용"><span class="sr">내용</span></a>
+</nav>
 
-  <!-- 좌측 접기 메뉴 -->
-  <aside class="sidebar" id="sidebar">
-    <p class="sidebar-title">점검 단계</p>
-    <nav class="sidenav">
-      <button class="sidenav-link is-active" data-nav="step-file">
-        <span class="sidenav-no">1</span> 파일 열기
-      </button>
-      <button class="sidenav-link" data-nav="step-map">
-        <span class="sidenav-no">2</span> 검사할 항목 확인
-      </button>
-      <button class="sidenav-link" data-nav="step-result">
-        <span class="sidenav-no">3</span> 검사 결과
-      </button>
-    </nav>
-
-    <p class="sidebar-title">도구</p>
-    <nav class="sidenav">
-      <button class="sidenav-link" id="btn-settings">⚙️ 규칙 설정</button>
-    </nav>
-
-    <div class="sidebar-foot">
-      <p class="sidebar-note">업로드한 파일은 이 브라우저 안에서만 처리되며, 외부로 전송되지 않습니다.</p>
+<!-- ── 1화면: 소개 ── -->
+<section class="op-screen op-hero" id="hero">
+  <div class="op-hero-inner">
+    <div class="op-hero-text">
+      <p class="op-eyebrow reveal">2026학년도 학교생활기록부 기재요령(고등학교) 기준</p>
+      <h1 class="reveal" style="--d:.08s">학교생활기록부,<br><em>올리면 바로</em> 점검합니다</h1>
+      <p class="op-lead reveal" style="--d:.16s">엑셀·PDF 파일을 올리면 글자수(Byte) 초과, 금지 표현, 형식 오류, 중복 문장을 찾아 드립니다.
+        파일은 서버로 올라가지 않고 <strong>이 브라우저 안에서만</strong> 처리됩니다.</p>
+      <ul class="op-points reveal" style="--d:.24s">
+        <li>분량(Byte) 검사</li><li>금지 표현 사전</li><li>문맥·형식 검사</li><li>중복 문장 찾기</li>
+      </ul>
+      <a class="op-cta reveal" style="--d:.32s" href="#menu">시작하기 <span aria-hidden="true">↓</span></a>
+      <p class="op-caution reveal" style="--d:.4s">[주의] 본 프로그램은 참고용 자료입니다. 최종 판단은 반드시 교사가 직접 확인해 주세요.</p>
     </div>
-  </aside>
+    <div class="op-hero-visual" aria-hidden="true">
+      <p class="op-mock-label">검사 결과 예시</p>
+      <div class="op-mock-card c1"><span class="sev v">위반</span><b>교외 수상 실적 기재</b><p>“…○○ 경시대회에서 우수상을 수상하여…”</p><small>창의적 체험활동 · 예시</small></div>
+      <div class="op-mock-card c2"><span class="sev w">주의</span><b>분량 초과 가능</b><p>1,512 / 1,500 Byte</p><small>행동특성 및 종합의견 · 예시</small></div>
+      <div class="op-mock-card c3"><span class="sev i">점검</span><b>종결어미 확인</b><p>‘~했다’ → ‘~함’</p><small>교과 세부능력 · 예시</small></div>
+    </div>
+  </div>
+  <p class="op-scroll-hint" aria-hidden="true">스크롤<span></span></p>
+</section>
 
-  <main>
+<!-- ── 2화면: 메뉴 선택 ── -->
+<section class="op-screen op-menu" id="menu">
+  <div class="op-menu-inner">
+    <p class="op-eyebrow reveal">MENU</p>
+    <h2 class="reveal" style="--d:.06s">무엇을 확인하시겠어요?</h2>
+    <p class="op-lead reveal" style="--d:.12s">메뉴를 고르면 아래 화면에서 바로 열립니다.</p>
+    <div class="op-cards">
+      <button class="op-card reveal" style="--d:.18s" data-open="check">
+        <span class="no">01</span><span class="ic">📝</span><b>생기부 점검하기</b>
+        <span class="ds">엑셀·PDF를 올려 기재요령 위반 표현을 찾습니다.</span><i aria-hidden="true">→</i></button>
+      <button class="op-card reveal" style="--d:.26s" data-open="usage">
+        <span class="no">02</span><span class="ic">📘</span><b>사용법 · 검사 규칙</b>
+        <span class="ds">쓰는 순서와 검사 규칙, 영역별 글자 수 한도를 봅니다.</span><i aria-hidden="true">→</i></button>
+      <button class="op-card reveal" style="--d:.34s" data-open="guide">
+        <span class="no">03</span><span class="ic">📖</span><b>기재요령 검색</b>
+        <span class="ds">기재요령 원문을 낱말로 찾고 단원별로 읽습니다.</span><i aria-hidden="true">→</i></button>
+      <button class="op-card reveal" style="--d:.42s" data-open="prompts">
+        <span class="no">04</span><span class="ic">✍️</span><b>AI 프롬프트</b>
+        <span class="ds">생기부 작성에 쓸 수 있는 프롬프트 모음입니다.</span><i aria-hidden="true">→</i></button>
+    </div>
+  </div>
+</section>
 
+<!-- ── 3화면: 선택한 메뉴의 내용 (같은 페이지 안에서 바뀐다) ── -->
+<section class="op-workspace" id="workspace">
+  <nav class="op-tabs" id="op-tabs" role="tablist" aria-label="메뉴">
+    <a class="op-up" href="#menu" title="메뉴 화면으로">↑ 메뉴</a>
+    <button role="tab" data-open="check" class="is-active" aria-selected="true">생기부 점검하기</button>
+    <button role="tab" data-open="usage" aria-selected="false">사용법 · 검사 규칙</button>
+    <button role="tab" data-open="guide" aria-selected="false">기재요령 검색</button>
+    <button role="tab" data-open="prompts" aria-selected="false">AI 프롬프트</button>
+  </nav>
+
+  <div class="op-panels">
+    <div class="op-panel" id="panel-check" role="tabpanel">
   <p class="caution" id="caution">
     <strong>[주의]</strong> 본 프로그램은 참고용 자료입니다. 내용의 오류나 누락이 있을 수 있으므로
     최종 판단은 반드시 교사가 직접 확인해 주시기 바랍니다.
@@ -150,14 +177,36 @@
     <div id="pane-bycat" class="pane hidden"></div>
     <div id="pane-dups" class="pane hidden"></div>
   </section>
+    </div>
+
+    <div class="op-panel hidden" id="panel-usage" role="tabpanel">
+      <div id="sec-usage">
+        <h2 class="op-panel-title">사용법 · 검사 규칙</h2>
+        <div id="usage-body"></div>
+      </div>
+    </div>
+
+    <div class="op-panel op-panel-wide hidden" id="panel-guide" role="tabpanel">
+      <iframe id="guide-frame" title="기재요령 검색" data-src="/guide.html?embed=1"></iframe>
+    </div>
+
+    <div class="op-panel hidden" id="panel-prompts" role="tabpanel">
+      <h2 class="op-panel-title">✍️ 생기부 작업용 프롬프트</h2>
+      <p class="op-panel-sub">학교생활기록부 작성에 활용할 수 있는 AI 프롬프트 모음입니다.</p>
+      <div class="op-empty">
+        <div class="ic">🛠️</div>
+        <h3>준비 중입니다</h3>
+        <p>이 메뉴의 프롬프트 내용은 곧 채워질 예정입니다.<br>담당 선생님이 내용을 전달하면 이곳에 정리되어 표시됩니다.</p>
+      </div>
+    </div>
+  </div>
 
   <footer class="app-footer">
     <span id="visit-counter" class="visit-counter"></span>
+    <span class="build" id="build" title="화면 코드가 마지막으로 바뀐 때입니다. 고친 내용이 안 보이면 새로고침(⌘⇧R) 해 주세요."></span>
     <span class="copyright">Copyright ⓒ 2026 math-tong. All rights reserved.</span>
   </footer>
-
-  </main>
-</div><!-- /.layout -->
+</section>
 
 <!-- 설정 모달 -->
 <div class="modal-backdrop hidden" id="settings-modal">
@@ -261,10 +310,13 @@
   </div>
 </div>
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="rules.js"></script>
 <script src="app.js"></script>
+<script src="usage-section.js"></script>
+<script src="onepage.js"></script>
 <script>
 // ── 방문자 카운터 (오늘 / 누적) ──
 (async function loadVisitCounter(){
@@ -283,4 +335,3 @@
 })();
 </script>
 </body>
-</html>
