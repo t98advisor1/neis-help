@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>기재요령 검색 - 학교생활기록부 점검 도우미</title>
+<script>
+  // 메인 페이지의 한 메뉴로 들어가 있다. 따로 열면 메인의 해당 메뉴로 보낸다.
+  if (self === top) location.replace('/#guide');
+  else document.documentElement.classList.add('embed');
+</script>
+<style>.embed body > div:first-child { display: none !important; }</style>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -2481,5 +2487,13 @@ renderFAQ();
   Copyright ⓒ 2026 math-tong. All rights reserved.
 </footer>
 
+<script>
+  // 안쪽 높이를 바깥 페이지에 알려 바깥 화면 하나로 스크롤되게 한다.
+  if (self !== top) {
+    const send = () => parent.postMessage({ type: 'guide-height', height: document.body.getBoundingClientRect().height }, location.origin);
+    new ResizeObserver(send).observe(document.body);
+    addEventListener('load', send);
+  }
+</script>
 </body>
 </html>
