@@ -1,57 +1,171 @@
 'use strict';
-/* 사용법·검사 규칙 섹션 — usage.html 의 슬라이드를 위에서 아래로 이어 붙여 그린다.
- * 한 장씩 넘기던 방식을 스크롤로 바꾼 것일 뿐 내용은 그대로다. */
+/* 사용법·검사 규칙 메뉴 — 탭 두 개(사용법 / 검사 규칙)와 한 단계씩 보여 주는 화면.
+ * 검사 규칙 탭의 글자 수 한도·사전·형식 목록은 rules.js 에서 읽어 그린다.
+ * 그래서 규칙을 고치면 이 화면의 설명도 따라 바뀐다(손으로 옮겨 적지 않는다). */
 (function () {
-
-const USE = [
-  {title:"1. 첫 화면과 메뉴", sub:"주소를 열면 소개 화면이 나오고, 한 번 내리면 메뉴가 나옵니다.",
-   mock:`<div class="mock"><div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div><div class="mock-ghost">규칙 설정</div></div><div class="mock-content"><div style="font-size:13px;font-weight:700;margin-bottom:10px">무엇을 확인하시겠어요?</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="mock-row" style="margin:0">📝 생기부 점검하기</div><div class="mock-row" style="margin:0">📘 사용법 · 검사 규칙</div><div class="mock-row" style="margin:0">📖 기재요령 검색</div><div class="mock-row" style="margin:0">✍️ AI 프롬프트</div></div></div></div>`,
-   notes:[["첫 화면","서비스 소개가 나옵니다. [시작하기]를 누르거나 마우스 휠을 한 번 내리면 다음 화면으로 넘어갑니다."],["메뉴 선택","네 가지 메뉴 중 하나를 고르면 같은 페이지 아래 화면에서 바로 열립니다."],["위쪽 탭","내용 화면에서는 위쪽 탭으로 메뉴를 바꾸고, [↑ 메뉴]로 메뉴 화면에 돌아갑니다."],["개인정보 안내","파일은 이 브라우저 안에서만 처리됩니다."]]},
-  {title:"2. 검사할 항목 확인", sub:"무엇을 검사할지 자동으로 맞춰집니다.",
-   mock:`<div class="mock"><div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div></div><div class="mock-content"><div style="font-size:12px;font-weight:700;margin-bottom:10px">② 검사할 항목 확인</div><div class="mock-run">검사 실행</div><div style="margin-top:12px"><div class="mock-row"><span>세부능력 및 특기사항</span><span style="margin-left:auto;color:#999">검사함</span></div><div class="mock-row"><span>행동특성 및 종합의견</span><span style="margin-left:auto;color:#999">검사함</span></div><div class="mock-row"><span>번호 / 이름 열</span><span style="margin-left:auto;color:#999">검사 안 함</span></div></div></div></div>`,
-   notes:[["검사 실행","확인이 끝나면 눌러서 검사를 시작합니다."],["자동 인식된 항목","검사 대상이 자동으로 맞춰져 있습니다. 틀리면 바꿀 수 있어요."]]},
-  {title:"3. 검사 결과 보기", sub:"결과가 네 개의 탭으로 정리됩니다.",
-   mock:`<div class="mock"><div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div></div><div class="mock-content"><div class="mock-tabs"><div class="mock-tab on">지적 사항</div><div class="mock-tab">학생별</div><div class="mock-tab">유형별</div><div class="mock-tab">중복 문장</div></div><div class="mock-filter"><div class="mock-sel">심각도 ▾</div><div class="mock-sel">영역 ▾</div><div class="mock-sel" style="flex:1;text-align:left">🔎 검색</div><div class="mock-sel" style="background:var(--soft)">결과 엑셀로 저장</div></div><div class="mock-row"><span class="dot v"></span><span>부모 직업 암시 표현</span></div><div class="mock-row"><span class="dot w"></span><span>맥락 확인이 필요한 표현</span></div><div class="mock-row"><span class="dot i"></span><span>표기·형식 점검</span></div></div></div>`,
-   notes:[["4개의 탭","지적 사항 / 학생별 / 유형별 / 중복 문장."],["심각도 필터","위반·주의·점검 중 골라 봅니다."],["검색","낱말·학생을 찾을 때."],["엑셀로 저장","지적 목록을 엑셀로 내려받기."],["색깔","🔴위반 🟡주의 ⚪점검"]]},
-  {title:"4. 규칙 설정 (선택)", sub:"처음에는 건드리지 않아도 됩니다.",
-   mock:`<div class="mock"><div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div><div class="mock-ghost">규칙 설정</div></div><div class="mock-content"><div class="mock-caution" style="border-color:#f3d3cc">⚠️ 처음엔 건드리지 않아도 됩니다. 기본값 그대로 쓰세요.</div><div class="mock-row"><span>금지어·허용 표현 직접 넣기</span></div><div class="mock-row"><span>기본값: 2026학년도 기재요령 기준</span></div></div></div>`,
-   notes:[["규칙 설정","화면 위쪽의 [규칙 설정]에서 엽니다."],["처음엔 그대로","기본값이 기재요령 기준으로 맞춰져 있습니다."],["직접 추가","학교만의 금지어를 더할 수 있어요. 이 브라우저에만 저장."]]},
-];
-const RULE = [
-  {title:"검사 규칙 ① — 이렇게 검사합니다", sub:"다섯 가지 방식으로 한 칸씩 살펴봅니다.", full:true,
-   html:`<div class="way">
-     <div class="way-item"><b>1. 분량 초과</b><span>영역별 글자 수 한도를 넘는지 확인 (NEIS 기준 바이트로 계산)</span></div>
-     <div class="way-item"><b>2. 금지 표현</b><span>기재요령상 적으면 안 되는 낱말·표현이 있는지 사전으로 검색</span></div>
-     <div class="way-item"><b>3. 형식·표기</b><span>개인정보 형식, 특수기호, 이모지 등 표기 문제</span></div>
-     <div class="way-item"><b>4. 문맥 규칙</b><span>'부모 직업'처럼 특정 단어가 함께 나올 때만 잡는 규칙</span></div>
-     <div class="way-item" style="grid-column:1/-1"><b>5. 문장 종결</b><span>서술형 영역에서 '-함/-임' 명사형 종결을 지키는지 (참고용)</span></div>
-   </div>`},
-  {title:"검사 규칙 ② — 영역별 글자 수 한도", sub:"NEIS 실제 한도에 맞춰 계산합니다. (한글 1자 = 3바이트)", full:true,
-   html:`<div class="lim-grid">AREA_ROWS</div>`},
-  {title:"검사 규칙 ③ — 주로 잡아내는 금지 표현", sub:"모두 「2026학년도 학교생활기록부 기재요령(고등학교)」 근거입니다.", full:true,
-   html:`GROUP_ROWS`},
-  {title:"검사 규칙 ④ — 심각도 3단계", sub:"색깔로 구분해 표시합니다.", full:true,
-   html:`<div class="sev-row"><span class="sev-badge sev-v">위반</span><span class="d"><b>기재요령에 어긋날 가능성이 큼</b><span> — 꼭 확인하고 수정하세요. (예: 부모 직업, 교외 수상)</span></span></div>
-     <div class="sev-row"><span class="sev-badge sev-w">주의</span><span class="d"><b>맥락에 따라 문제될 수 있음</b><span> — 문장을 보고 판단하세요.</span></span></div>
-     <div class="sev-row"><span class="sev-badge sev-i">점검</span><span class="d"><b>표기·형식 관련</b><span> — 가볍게 확인하세요. (예: 띄어쓰기, 기호)</span></span></div>
-     <p style="font-size:12px;color:var(--muted);margin-top:12px">※ 애매한 경우 놓치지 않도록 '위반'으로 넉넉히 표시합니다. 최종 판단은 반드시 선생님이 하세요.</p>`},
-];
-// 실제 데이터 주입
-const AREA_ROWS = `<div class="lim"><span>인적·학적사항 특기사항</span><b>500자</b></div><div class="lim"><span>출결상황 특기사항</span><b>500자</b></div><div class="lim"><span>수상경력 수상명</span><b>100자</b></div><div class="lim"><span>자격증 명칭</span><b>100자</b></div><div class="lim"><span>자율·자치활동</span><b>500자</b></div><div class="lim"><span>동아리활동</span><b>500자</b></div><div class="lim"><span>진로활동</span><b>500자</b></div><div class="lim"><span>봉사활동실적 활동내용</span><b>50자</b></div><div class="lim"><span>일상생활 활동상황</span><b>1000자</b></div><div class="lim"><span>과목별 세부능력 및 특기사항</span><b>500자</b></div><div class="lim"><span>개인별 세부능력 및 특기사항</span><b>500자</b></div><div class="lim"><span>독서활동상황(공통)</span><b>500자</b></div><div class="lim"><span>독서활동상황(과목별)</span><b>250자</b></div><div class="lim"><span>행동특성 및 종합의견</span><b>300자</b></div>`;
-const GROUP_ROWS = `<div class="grow-item"><div class="gi-top"><b>부모·친인척 배경</b><span class="clause">유의사항 3-차</span></div><span class="gi-desc">부모·친인척의 직업·지위 암시</span></div><div class="grow-item"><div class="gi-top"><b>교외 수상·대회</b><span class="clause">유의사항 3-나·다</span></div><span class="gi-desc">교내·외 대회 참여·수상, 올림피아드</span></div><div class="grow-item"><div class="gi-top"><b>공인어학·모의고사 성적</b><span class="clause">유의사항 3-가·마</span></div><span class="gi-desc">TOEIC·TEPS, 모의고사 성적 등</span></div><div class="grow-item"><div class="gi-top"><b>특정 대학·기관·상호명</b><span class="clause">유의사항 3-타</span></div><span class="gi-desc">대학명·학원명·기업명·브랜드</span></div><div class="grow-item"><div class="gi-top"><b>논문·도서·지식재산권</b><span class="clause">유의사항 3-바·사·아</span></div><span class="gi-desc">학회 발표, 도서출간, 특허 등</span></div><div class="grow-item"><div class="gi-top"><b>자격증·인증시험</b><span class="clause">유의사항 3-라·파</span></div><span class="gi-desc">자격증 명칭, 교내외 인증시험</span></div><div class="grow-item"><div class="gi-top"><b>학교 특정·개인정보</b><span class="clause">유의사항 4</span></div><span class="gi-desc">학교를 알 수 있는 내용, 개인정보 노출</span></div><div class="grow-item"><div class="gi-top"><b>기타 입력 불가</b><span class="clause">세특 입력 불가 등</span></div><span class="gi-desc">방과후학교·MOOC·소논문·기부 등</span></div>`;
-RULE[1].html = RULE[1].html.replace('AREA_ROWS', AREA_ROWS);
-RULE[2].html = RULE[2].html.replace('GROUP_ROWS', GROUP_ROWS);
-
 
 const host = document.getElementById('usage-body');
 if (!host) return;
-function slide(s) {
-  const head = `<h3 class="slide-title">${s.title}</h3><p class="slide-sub">${s.sub}</p>`;
-  if (s.full) return `<article class="slide">${head}${s.html}</article>`;
-  return `<article class="slide">${head}<div class="slide-grid"><div class="mock-wrap">${s.mock}</div>` +
-    `<ol class="notes">${s.notes.map((n, i) => `<li><span class="n">${i + 1}</span><span class="tx"><b>${n[0]}</b><span>${n[1]}</span></span></li>`).join('')}</ol></div></article>`;
+const R = window.SRRules;
+
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = (n) => Number(n).toLocaleString('ko-KR');
+
+/* ── 사용법: 실제 화면 순서대로 ── */
+const MOCK_TOP = '<div class="mock-top"><div class="mock-title">학교생활기록부 점검 도우미</div><div class="mock-badge">🔒 외부 전송 없음</div></div>';
+
+const USE = [
+  { short: '메뉴에서 시작', title: '1. 메뉴에서 시작하기', sub: '소개 화면에서 [시작하기]를 누르면 메뉴가 나옵니다.',
+    mock: `<div class="mock">${MOCK_TOP}<div class="mock-content"><div style="font-size:13px;font-weight:700;margin-bottom:10px">무엇을 확인하시겠어요?</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="mock-row" style="margin:0;border-color:#ff385c">📝 생기부 점검하기</div><div class="mock-row" style="margin:0">📘 사용법 · 검사 규칙</div><div class="mock-row" style="margin:0">📖 기재요령 검색</div><div class="mock-row" style="margin:0">✍️ AI 프롬프트</div></div></div></div>`,
+    notes: [['첫 화면', '서비스 소개가 나옵니다. [시작하기]를 누르거나 마우스 휠을 한 번 내리면 메뉴 화면으로 넘어갑니다.'],
+            ['메뉴 선택', '[생기부 점검하기]를 누르면 같은 페이지 아래 화면에서 바로 열립니다. 다른 페이지로 이동하지 않습니다.'],
+            ['위쪽 탭', '내용 화면 위쪽의 탭으로 다른 메뉴로 옮기고, [↑ 메뉴]로 메뉴 화면에 돌아갑니다.']] },
+  { short: '파일 열기', title: '2. 파일 열기', sub: '점검할 파일을 올립니다.',
+    mock: `<div class="mock">${MOCK_TOP}<div class="mock-content"><div style="font-size:12px;font-weight:700;margin-bottom:10px">① 파일 열기</div><div class="mock-drop"><div class="dm">엑셀 또는 PDF 파일을 여기에 끌어다 놓거나 클릭해서 선택하세요</div><div class="ds">.xlsx · .xls · .csv · .pdf — 여러 개를 한 번에</div></div></div></div>`,
+    notes: [['담임 전체점검', '학교생활기록부 → 학생부 조회 및 출력 → PDF로 저장한 뒤 올립니다.'],
+            ['교과·동아리 등 개별점검', '해당 항목을 엑셀 파일로 저장한 뒤 올립니다. 과목별 파일을 한꺼번에 올리면 과목을 가로지르는 복사·붙여넣기도 잡아 줍니다.'],
+            ['여러 개를 한 번에', '끌어다 놓거나 클릭해서 고릅니다. 파일 형식은 .xlsx .xls .csv .pdf 입니다.'],
+            ['개인정보', '파일은 이 브라우저 안에서만 처리되며 외부로 전송되지 않습니다.']] },
+  { short: '검사할 항목 확인', title: '3. 검사할 항목 확인', sub: '무엇을 검사할지 자동으로 맞춰집니다.',
+    mock: `<div class="mock">${MOCK_TOP}<div class="mock-content"><div style="font-size:12px;font-weight:700;margin-bottom:10px">② 검사할 항목 확인</div><div class="mock-run">검사 실행</div><div style="margin-top:12px"><div class="mock-row"><span>세부능력 및 특기사항</span><span style="margin-left:auto;color:#999">검사함</span></div><div class="mock-row"><span>행동특성 및 종합의견</span><span style="margin-left:auto;color:#999">검사함</span></div><div class="mock-row"><span>번호 / 이름 열</span><span style="margin-left:auto;color:#999">검사 안 함</span></div></div></div></div>`,
+    notes: [['자동 인식', '엑셀은 열 이름으로, PDF는 학생·영역별 구간으로 검사 대상을 자동으로 맞춥니다.'],
+            ['틀리면 고치기', '잘못 인식된 열이나 구간은 직접 바꿀 수 있습니다.'],
+            ['검사 실행', '확인이 끝나면 [검사 실행]을 눌러 검사를 시작합니다.']] },
+  { short: '검사 결과 보기', title: '4. 검사 결과 보기', sub: '결과가 네 개의 탭으로 정리됩니다.',
+    mock: `<div class="mock">${MOCK_TOP}<div class="mock-content"><div class="mock-tabs"><div class="mock-tab on">지적 사항</div><div class="mock-tab">학생별</div><div class="mock-tab">유형별</div><div class="mock-tab">중복 문장</div></div><div class="mock-filter"><div class="mock-sel">심각도 ▾</div><div class="mock-sel">영역 ▾</div><div class="mock-sel" style="flex:1;text-align:left">🔎 검색</div><div class="mock-sel" style="background:var(--soft)">결과 엑셀로 저장</div></div><div class="mock-row"><span class="dot v"></span><span>부모 직업 암시 표현</span></div><div class="mock-row"><span class="dot w"></span><span>맥락 확인이 필요한 표현</span></div><div class="mock-row"><span class="dot i"></span><span>표기·형식 점검</span></div></div></div>`,
+    notes: [['네 개의 탭', '지적 사항 / 학생별 / 유형별 / 중복 문장으로 나눠 봅니다.'],
+            ['걸러 보기', '심각도·영역·유형을 고르거나 낱말·학생을 검색해 좁힙니다.'],
+            ['확인함 표시', '살펴본 지적은 ‘확인함’으로 넘기고, [남은 것만]으로 아직 안 본 것만 모아 봅니다.'],
+            ['엑셀로 저장', '[결과 엑셀로 저장]으로 지적 목록을 내려받습니다.']] },
+  { short: '규칙 설정 (선택)', title: '5. 규칙 설정 (선택)', sub: '처음에는 건드리지 않아도 됩니다.',
+    mock: `<div class="mock">${MOCK_TOP.replace('</div></div>', '</div><div class="mock-ghost">규칙 설정</div></div>')}<div class="mock-content"><div class="mock-caution" style="border-color:#f3d3cc">⚠️ 처음엔 건드리지 않아도 됩니다. 기본값 그대로 쓰세요.</div><div class="mock-row"><span>금지어·허용 표현 직접 넣기</span></div><div class="mock-row"><span>기본값: 2026학년도 기재요령 기준</span></div></div></div>`,
+    notes: [['여는 곳', '화면 위쪽의 [규칙 설정]을 누릅니다.'],
+            ['처음엔 그대로', '기본값이 2026학년도 기재요령 기준으로 맞춰져 있습니다.'],
+            ['직접 추가', '학교만의 금지어와 허용 표현을 더할 수 있습니다. 고친 내용은 이 브라우저에만 저장됩니다.'],
+            ['규칙 파일', '고친 규칙을 파일로 내보내 동료 교사와 나눌 수 있습니다. 규칙만 담기고 생기부 내용은 담기지 않습니다.']] },
+];
+
+/* ── 검사 규칙: rules.js 에서 읽어 그린다 ── */
+const DICT_GROUPS = [
+  ['성적·시험',          ['exam-lang', 'mock-exam', 'exam-cert', 'license']],
+  ['대회·수상',          ['award-contest', 'award-external', 'award-banned-kind', 'olympiad-name', 'night-study']],
+  ['논문·출판·지식재산', ['paper', 'citation-index', 'report', 'book', 'ip']],
+  ['학교·기관·상호명',   ['school-id', 'univ-name', 'org-name', 'private-academy', 'research-inst', 'org-public', 'media-name', 'brand-software', 'brand-company', 'indirect-ref', 'youth-org']],
+  ['가정·개인정보',      ['family', 'scholarship', 'privacy-word', 'donation']],
+  ['활동 제한',          ['overseas', 'afterschool', 'mooc', 'gifted']],
+];
+
+function ruleWays() {
+  return `<div class="way">
+    <div class="way-item"><b>1. 분량 초과</b><span>영역별 글자 수 한도를 넘는지 확인합니다. NEIS 기준 Byte로 계산합니다.</span></div>
+    <div class="way-item"><b>2. 금지 표현</b><span>기재요령상 적으면 안 되는 낱말·표현이 있는지 사전으로 찾습니다.</span></div>
+    <div class="way-item"><b>3. 형식·표기</b><span>개인정보 형식, 특수기호, 이모지, 공백 같은 표기 문제를 찾습니다.</span></div>
+    <div class="way-item"><b>4. 문맥 규칙</b><span>‘부모 직업’처럼 두 조건이 한 문장에 함께 있을 때만 잡습니다.</span></div>
+    <div class="way-item"><b>5. 문장 종결</b><span>서술형 영역에서 ‘-함/-임’ 명사형 종결을 지키는지 봅니다. (참고용)</span></div>
+    <div class="way-item"><b>6. 중복 문장</b><span>같은 문장이 여러 칸·여러 학생에 반복되는지 찾습니다. 판정 최소 길이는 규칙 설정에서 바꿉니다.</span></div>
+  </div>`;
 }
-host.innerHTML =
-  `<h3 class="group-title">사용법</h3>${USE.map(slide).join('')}` +
-  `<h3 class="group-title">검사 규칙</h3>${RULE.map(slide).join('')}`;
+
+function ruleLimits() {
+  const per = R.BYTES_PER_CHAR;
+  const rows = R.AREAS.filter((a) => a.limit).map((a) =>
+    `<div class="lim"><span>${esc(a.label)}</span><b>${fmt(a.limit)}자 <small>${fmt(a.limit * per)} Byte</small></b></div>`).join('');
+  return `<div class="lim-grid">${rows}</div>
+    <p class="us-note">한글 1자는 ${per}Byte, 영문·숫자·줄바꿈은 1Byte로 셉니다. 그래서 영문·숫자가 섞이면 글자 수가 한도를 넘어도 Byte로는 들어갈 수 있습니다.</p>`;
+}
+
+function ruleDictionary() {
+  const byId = new Map(R.DICTIONARY.map((d) => [d.id, d]));
+  const used = new Set();
+  const clause = (d) => esc(d.clause ? String(d.clause).replace('작성 시 유의사항 ', '유의사항 ') : '개인정보 보호');
+  const item = (d) => {
+    used.add(d.id);
+    const terms = d.terms || [];
+    const eg = terms.slice(0, 3).map(esc).join(', ');
+    return `<div class="grow-item"><div class="gi-top"><b>${esc(d.category)}</b><span class="clause">${clause(d)}</span></div>` +
+      `<span class="gi-desc">낱말 ${fmt(terms.length)}개${eg ? ' · 예: ' + eg : ''}</span></div>`;
+  };
+  let html = '';
+  DICT_GROUPS.forEach(([name, ids]) => {
+    const items = ids.map((id) => byId.get(id)).filter(Boolean);
+    if (items.length) html += `<h4 class="us-h">${esc(name)}</h4>${items.map(item).join('')}`;
+  });
+  const rest = R.DICTIONARY.filter((d) => !used.has(d.id));
+  if (rest.length) html += `<h4 class="us-h">기타</h4>${rest.map(item).join('')}`;
+  return `<p class="us-note" style="margin-top:0">모두 「${esc(R.SOURCE.year)} ${esc(R.SOURCE.title)}」를 근거로 합니다. 항목마다 근거 조항을 함께 보여 줍니다.</p>${html}`;
+}
+
+function ruleFormats() {
+  const cats = [];
+  R.PATTERNS.forEach((p) => { if (!cats.includes(p.category)) cats.push(p.category); });
+  const prox = R.PROXIMITY.map((p) => {
+    const why = String(p.basis || '').split('—').slice(1).join('—').trim();
+    return `<div class="grow-item"><div class="gi-top"><b>${esc(p.category)}</b><span class="clause">${esc(String(p.clause || '').replace('작성 시 유의사항 ', '유의사항 '))}</span></div>` +
+      (why ? `<span class="gi-desc">${esc(why.length > 90 ? why.slice(0, 90) + '…' : why)}</span>` : '') + '</div>';
+  }).join('');
+  return `<h4 class="us-h">형식 검사 — 글자 모양만 보고 잡습니다</h4>
+    <div class="us-chips">${cats.map((c) => `<span>${esc(c)}</span>`).join('')}</div>
+    <h4 class="us-h">문맥 검사 — 두 조건이 한 문장에 함께 있을 때만 잡습니다</h4>${prox}`;
+}
+
+function ruleSeverity() {
+  const L = R.SEVERITY_LABEL;
+  return `<div class="sev-row"><span class="sev-badge sev-v">${esc(L.violation)}</span><span class="d"><b>기재요령에 어긋날 가능성이 큼</b><span> — 꼭 확인하고 수정하세요. (예: 부모 직업, 교외 수상)</span></span></div>
+    <div class="sev-row"><span class="sev-badge sev-w">${esc(L.warning)}</span><span class="d"><b>맥락에 따라 문제될 수 있음</b><span> — 문장을 보고 판단하세요.</span></span></div>
+    <div class="sev-row"><span class="sev-badge sev-i">${esc(L.info)}</span><span class="d"><b>표기·형식 관련</b><span> — 가볍게 확인하세요. (예: 띄어쓰기, 기호)</span></span></div>
+    <p class="us-note">애매한 경우 놓치지 않도록 ‘위반’으로 넉넉히 표시합니다. 최종 판단은 반드시 선생님이 하세요.</p>`;
+}
+
+const RULE = [
+  { short: '이렇게 검사합니다', title: '검사 방식 6가지', sub: '한 칸씩 이 여섯 가지 방식으로 살펴봅니다.', html: ruleWays },
+  { short: '글자 수 한도',     title: '영역별 글자 수 한도', sub: 'NEIS 실제 한도에 맞춰 계산합니다.', html: ruleLimits },
+  { short: '금지 표현 사전',   title: '주로 잡아내는 금지 표현', sub: '낱말 목록은 규칙 설정에서 보고 고칠 수 있습니다.', html: ruleDictionary },
+  { short: '형식·문맥 검사',   title: '형식 검사와 문맥 검사', sub: '낱말 사전으로는 못 잡는 것을 따로 살핍니다.', html: ruleFormats },
+  { short: '심각도 3단계',     title: '심각도 3단계', sub: '색깔로 구분해 표시합니다.', html: ruleSeverity },
+];
+
+/* ── 화면: 탭 두 개 + 한 단계씩 ── */
+const SETS = { use: { label: '사용법', steps: USE }, rule: { label: '검사 규칙', steps: RULE } };
+let tab = 'use';
+let idx = 0;
+
+function stageHtml(s) {
+  const head = `<h3 class="slide-title">${esc(s.title)}</h3><p class="slide-sub">${esc(s.sub)}</p>`;
+  if (s.html) return head + s.html();
+  return head + `<div class="slide-grid"><div class="mock-wrap">${s.mock}</div>` +
+    `<ol class="notes">${s.notes.map((n, i) => `<li><span class="n">${i + 1}</span><span class="tx"><b>${esc(n[0])}</b><span>${esc(n[1])}</span></span></li>`).join('')}</ol></div>`;
+}
+
+function render() {
+  const steps = SETS[tab].steps;
+  const last = idx === steps.length - 1;
+  const nextLabel = last ? (tab === 'use' ? '검사 규칙 보기 →' : '처음으로') : '다음 →';
+  host.innerHTML =
+    `<div class="us-top"><div class="us-seg" role="tablist">${Object.entries(SETS).map(([k, v]) =>
+      `<button role="tab" data-tab="${k}" class="${k === tab ? 'on' : ''}" aria-selected="${k === tab}">${v.label}</button>`).join('')}</div></div>` +
+    `<div class="us-body"><ol class="us-steps">${steps.map((s, i) =>
+      `<li><button data-step="${i}" class="${i === idx ? 'on' : ''}"${i === idx ? ' aria-current="step"' : ''}><span class="n">${i + 1}</span>${esc(s.short)}</button></li>`).join('')}</ol>` +
+    `<div class="us-stage" id="us-stage">${stageHtml(steps[idx])}` +
+    `<div class="us-nav"><button data-go="prev"${idx === 0 ? ' disabled' : ''}>← 이전</button><span class="us-count">${idx + 1} / ${steps.length}</span><button data-go="next" class="primary">${nextLabel}</button></div></div></div>`;
+}
+
+host.addEventListener('click', (e) => {
+  const t = e.target.closest('button');
+  if (!t) return;
+  const steps = SETS[tab].steps;
+  if (t.dataset.tab) { tab = t.dataset.tab; idx = 0; }
+  else if (t.dataset.step) { idx = Number(t.dataset.step); }
+  else if (t.dataset.go === 'prev') { if (idx > 0) idx--; }
+  else if (t.dataset.go === 'next') {
+    if (idx < steps.length - 1) idx++;
+    else if (tab === 'use') { tab = 'rule'; idx = 0; }
+    else { idx = 0; }
+  } else return;
+  render();
+  // 화면이 바뀌면 단계 카드 머리가 보이게 맞춘다(탭 막대에 가리지 않도록 css 의 scroll-margin 사용)
+  const st = document.getElementById('us-stage');
+  if (st && st.getBoundingClientRect().top < 0) st.scrollIntoView({ block: 'start' });
+});
+
+render();
 })();
