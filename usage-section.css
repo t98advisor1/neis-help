@@ -1,5 +1,5 @@
 /* 사용법·검사 규칙 메뉴 — usage.html 의 스타일을 #sec-usage 안으로 범위를 좁혀 옮겨 왔고, 아래쪽에 탭·단계 화면용 규칙(.us-*)을 더했다. */
-#sec-usage{--rausch:#ff385c;--ink:#222;--muted:#6a6a6a;--line:#ddd;--soft:#f7f7f7;--strong:#f2f2f2;
+#sec-usage{--rausch:#ff385c;--ink:#1f1e1d;--muted:#6f6d66;--line:#e6e3d8;--soft:#f5f4ee;--strong:#efede4;
     --work:#f1f6fb;--work-line:#c6d9ea;--work-ink:#2c5b82;--r:8px}
 #sec-usage *{box-sizing:border-box}
 #sec-usage .slide-title{font-size:16px;font-weight:700;margin:0 0 4px}
@@ -74,7 +74,7 @@
 #sec-usage .us-seg{display:inline-flex;background:var(--strong);border-radius:99px;padding:4px}
 #sec-usage .us-seg button{border:0;background:transparent;padding:9px 22px;border-radius:99px;font:inherit;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer}
 #sec-usage .us-seg button:hover{background:transparent;color:var(--ink)}
-#sec-usage .us-seg button.on{background:#111;color:#fff}
+#sec-usage .us-seg button.on{background:#1f1e1d;color:#fff}
 #sec-usage .us-body{display:grid;grid-template-columns:250px minmax(0,1fr);gap:24px;align-items:start}
 #sec-usage .us-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;position:sticky;top:calc(var(--op-h) + var(--op-tabs-h) + 16px)}
 #sec-usage .us-steps button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:12px;padding:11px 12px;font:inherit;font-size:14px;color:#3f3f3f;cursor:pointer}
