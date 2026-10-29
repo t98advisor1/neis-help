@@ -9,6 +9,8 @@
 //   쿠키에는 날짜만 들어 있고 개인을 식별하는 값은 없다.
 
 const COOKIE = 'sr_visit';
+// 같은 Redis 를 다른 프로젝트와 나눠 써도 키가 섞이지 않게 이 앱 전용 접두어를 붙인다.
+const PREFIX = 'neis-help:visits';
 const KEEP_DAYS = 400; // 날짜별 키는 이 기간이 지나면 저절로 지워진다
 
 function kstDate(now = new Date()) {
@@ -37,8 +39,8 @@ export default async function handler(req, res) {
   }
 
   const today = kstDate();
-  const keyToday = `visits:${today}`;
-  const keyTotal = 'visits:total';
+  const keyToday = `${PREFIX}:${today}`;
+  const keyTotal = `${PREFIX}:total`;
   const counted = readCookie(req.headers.cookie, COOKIE) === today;
 
   // 한 번의 요청으로 처리한다(pipeline). 오늘 이미 센 브라우저는 읽기만 한다.
