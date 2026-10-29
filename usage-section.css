@@ -1,5 +1,5 @@
-/* 사용법·검사 규칙 섹션 — usage.html 에서 옮겨 와 #sec-usage 안으로 범위를 좁혔다. */
-#sec-usage{--rausch:#ff385c;--ink:#222;--muted:#6a6a6a;--line:#ddd;--soft:#f7f7f7;--strong:#f2f2f2;
+/* 사용법·검사 규칙 메뉴 — usage.html 의 스타일을 #sec-usage 안으로 범위를 좁혀 옮겨 왔고, 아래쪽에 탭·단계 화면용 규칙(.us-*)을 더했다. */
+#sec-usage{--rausch:#ff385c;--ink:#1f1e1d;--muted:#6f6d66;--line:#e6e3d8;--soft:#f5f4ee;--strong:#efede4;
     --work:#f1f6fb;--work-line:#c6d9ea;--work-ink:#2c5b82;--r:8px}
 #sec-usage *{box-sizing:border-box}
 #sec-usage .slide-title{font-size:16px;font-weight:700;margin:0 0 4px}
@@ -68,4 +68,41 @@
 #sec-usage .sev-row .d b{font-size:13px}
 #sec-usage .sev-row .d span{font-size:12px;color:var(--muted)}
 @media(max-width:760px){#sec-usage .slide-grid,#sec-usage .way,#sec-usage .lim-grid{grid-template-columns:1fr}}
-#sec-usage .group-title{font-size:18px;margin:32px 0 16px;color:var(--rausch)}#sec-usage .group-title:first-child{margin-top:0}#sec-usage .slide{border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:20px;background:#fff}
+
+/* ── 탭 두 개 + 한 단계씩 ── */
+#sec-usage .us-top{display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+#sec-usage .us-seg{display:inline-flex;background:var(--strong);border-radius:99px;padding:4px}
+#sec-usage .us-seg button{border:0;background:transparent;padding:9px 22px;border-radius:99px;font:inherit;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer}
+#sec-usage .us-seg button:hover{background:transparent;color:var(--ink)}
+#sec-usage .us-seg button.on{background:#1f1e1d;color:#fff}
+#sec-usage .us-body{display:grid;grid-template-columns:250px minmax(0,1fr);gap:24px;align-items:start}
+#sec-usage .us-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;position:sticky;top:calc(var(--op-h) + var(--op-tabs-h) + 16px)}
+#sec-usage .us-steps button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:12px;padding:11px 12px;font:inherit;font-size:14px;color:#3f3f3f;cursor:pointer}
+#sec-usage .us-steps button:hover{background:var(--strong);color:var(--ink)}
+#sec-usage .us-steps button .n{width:24px;height:24px;border-radius:50%;background:var(--strong);font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex:none}
+#sec-usage .us-steps button.on{background:#fff;border-color:var(--rausch);color:var(--ink);font-weight:700}
+#sec-usage .us-steps button.on .n{background:var(--rausch);color:#fff}
+#sec-usage .us-stage{border:1px solid var(--line);border-radius:16px;background:#fff;padding:28px;min-height:440px;scroll-margin-top:calc(var(--op-h) + var(--op-tabs-h) + 12px);animation:op-panel-in .3s ease}
+#sec-usage .us-stage .slide-title{font-size:22px;margin-bottom:6px}
+#sec-usage .us-stage .slide-sub{font-size:14px;margin-bottom:20px}
+#sec-usage .us-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:28px;padding-top:16px;border-top:1px solid var(--line)}
+#sec-usage .us-nav button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 18px;font:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
+#sec-usage .us-nav button:hover:not(:disabled){background:var(--soft)}
+#sec-usage .us-nav button:disabled{opacity:.4;cursor:not-allowed}
+#sec-usage .us-nav button.primary{background:var(--rausch);border-color:var(--rausch);color:#fff}
+#sec-usage .us-nav button.primary:hover{background:#e00b41}
+#sec-usage .us-count{font-size:13px;color:var(--muted)}
+#sec-usage .us-note{font-size:13px;line-height:1.6;color:var(--muted);margin:14px 0 0}
+#sec-usage .us-h{font-size:14px;margin:20px 0 8px;color:var(--ink)}
+#sec-usage .us-h:first-child{margin-top:0}
+#sec-usage .us-chips{display:flex;flex-wrap:wrap;gap:6px}
+#sec-usage .us-chips span{font-size:12px;padding:5px 11px;border-radius:99px;background:var(--soft);border:1px solid var(--line);color:#3f3f3f}
+#sec-usage .lim b small{font-weight:400;font-size:11px;color:var(--muted);margin-left:4px}
+@media(max-width:860px){
+  #sec-usage .us-body{grid-template-columns:1fr}
+  #sec-usage .us-steps{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px;scrollbar-width:none}
+  #sec-usage .us-steps::-webkit-scrollbar{display:none}
+  #sec-usage .us-steps li{flex:none}
+  #sec-usage .us-steps button{white-space:nowrap;border-color:var(--line)}
+  #sec-usage .us-stage{padding:20px 16px;min-height:0}
+}

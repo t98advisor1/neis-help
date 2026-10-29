@@ -5,9 +5,6 @@
 
 ## 접속
 로그인 없이 누구나 열 수 있습니다. 업로드한 파일은 서버로 전송되지 않고 브라우저 안에서만 처리됩니다.
-접속 제한(아이디/비밀번호 → 구글 계정 로그인)을 두었던 `middleware.js`는 제거했습니다.
-다시 필요하면 git 기록(`claude/zen-heisenberg-gi7spu` 브랜치의 이전 커밋)에서 되살릴 수 있습니다.
-이때 구글 로그인에는 `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `AUTH_SECRET`, `ALLOWED_EMAILS`/`ALLOWED_DOMAINS` 환경변수가 필요합니다.
 
 ## 구성
 - `index.html`, `styles.css`, `app.js`, `rules.js` — 웹앱 본체(검사 화면·검사 규칙)

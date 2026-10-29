@@ -1,7 +1,7 @@
 /* 학교생활기록부 점검 도우미 — 화면 스타일
  *
  * 디자인 근거: DESIGN-airbnb.md (Airbnb design analysis)
- *   - 순백 캔버스(#fff) + 잉크(#222). 순수 검정은 쓰지 않는다.
+ *   - 페이지 바탕은 따뜻한 크림(--page), 카드·헤더는 흰색(--canvas). 잉크는 #1f1e1d 로 순수 검정은 쓰지 않는다.
  *   - 브랜드색 Rausch(#ff385c)는 아껴 쓴다 — 주요 CTA 한두 곳뿐.
  *   - 모서리는 전부 둥글다: 버튼 8px, 카드 14px, 배지·알약 9999px.
  *   - 그림자는 시스템 전체에 단 한 단계뿐. 나머지는 평면 + 1px hairline.
@@ -18,8 +18,9 @@
 
   /* 표면 */
   --canvas: #ffffff;
-  --surface-soft: #f7f7f7;
-  --surface-strong: #f2f2f2;
+  --page: #faf9f5;
+  --surface-soft: #f5f4ee;
+  --surface-strong: #efede4;
 
   /* 작업 영역 — 이 시스템의 넷째 색이고, 쓰는 곳은 드롭존 하나뿐이다.
    * 나머지 색은 전부 '판정 결과'를 뜻한다(빨강=위반, 주황=주의, 초록=확인함).
@@ -33,17 +34,17 @@
   --surface-work-ink: #2c5b82;
 
   /* 선 */
-  --hairline: #dddddd;
-  --hairline-soft: #ebebeb;
-  --border-strong: #c1c1c1;
+  --hairline: #e6e3d8;
+  --hairline-soft: #eeeae0;
+  --border-strong: #cbc8bb;
 
   /* 글자 */
-  --ink: #222222;
+  --ink: #1f1e1d;
   /* 잉크 알약에 마우스를 올렸을 때. 순수 검정은 쓰지 않는다. */
   --ink-hover: #111111;
-  --body: #3f3f3f;
-  --muted: #6a6a6a;
-  --muted-soft: #929292;
+  --body: #3d3c38;
+  --muted: #6f6d66;
+  --muted-soft: #8d8b83;
   --on-primary: #ffffff;
 
   /* 의미 */
@@ -74,7 +75,7 @@
 
 body {
   margin: 0;
-  background: var(--canvas);
+  background: var(--page);
   color: var(--ink);
   /* Cereal VF 는 라이선스 폰트라 쓸 수 없다. 문서가 권한 Inter 를 첫 후보로 두고
    * 한글은 시스템 고딕으로 받는다. 웹폰트를 내려받지 않아 오프라인에서도 그대로 뜬다. */
