@@ -81,7 +81,7 @@
         <span class="ds">엑셀·PDF를 올려 기재요령 위반 표현을 찾습니다.</span><i aria-hidden="true">→</i></button>
       <button class="op-card reveal" style="--d:.26s" data-open="usage">
         <span class="no">02</span><span class="ic">📘</span><b>사용법 · 검사 규칙</b>
-        <span class="ds">쓰는 순서와 검사 규칙, 영역별 글자 수 한도를 봅니다.</span><i aria-hidden="true">→</i></button>
+        <span class="ds">쓰는 순서와 검사 규칙을 보고, 점검 요소를 복사·내려받습니다.</span><i aria-hidden="true">→</i></button>
       <button class="op-card reveal" style="--d:.34s" data-open="guide">
         <span class="no">03</span><span class="ic">📖</span><b>기재요령 검색</b>
         <span class="ds">기재요령 원문을 낱말로 찾고 단원별로 읽습니다.</span><i aria-hidden="true">→</i></button>
@@ -114,7 +114,7 @@
   <!-- 1단계: 파일 -->
   <section class="card" id="step-file">
     <h2>
-      <span class="step-no">1</span> 파일 열기
+      <span class="step-no">1</span> 파일 열기 · 붙여넣기
       <span class="card-sum" id="step1-sum"></span>
       <button class="card-toggle">접기</button>
     </h2>
@@ -129,7 +129,19 @@
       </ol>
       <input type="file" id="file-input" accept=".xlsx,.xls,.csv,.pdf" multiple hidden>
     </div>
-    <div id="file-info" class="file-info hidden"></div>
+    <div class="paste-box">
+        <div class="paste-head">
+          <strong>또는 엑셀에서 복사해서 붙여넣기</strong>
+          <span>엑셀에서 칸을 드래그해 복사(Ctrl+C)한 뒤, 아래 칸을 클릭하고 붙여넣으세요(Ctrl+V). <b>제목 줄까지 같이 복사</b>하면 열을 자동으로 알아봅니다. 이 화면에서는 어디서든 Ctrl+V 로 바로 붙여넣을 수도 있습니다.</span>
+        </div>
+        <textarea id="paste-input" rows="3" spellcheck="false"
+          placeholder="여기를 클릭한 뒤 Ctrl+V (Mac: ⌘V)로 붙여넣기. 글을 직접 입력해도 됩니다."></textarea>
+        <div class="actions">
+          <button id="btn-paste-run" class="primary" disabled>이 내용으로 검사 준비</button>
+          <span class="hint" id="paste-hint">붙여넣은 내용도 이 브라우저 안에서만 처리됩니다.</span>
+        </div>
+      </div>
+      <div id="file-info" class="file-info hidden"></div>
   </section>
 
   <!-- 2단계: 매핑 -->

@@ -106,3 +106,14 @@
   #sec-usage .us-steps button{white-space:nowrap;border-color:var(--line)}
   #sec-usage .us-stage{padding:20px 16px;min-height:0}
 }
+
+/* ── 점검 요소 코드박스 ── */
+#sec-usage .us-code{border-radius:12px;overflow:hidden;background:#1f1e1d;border:1px solid #2b2a27}
+#sec-usage .us-code-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 12px;background:#2b2a27;color:#cfcbc0;font-size:12px}
+#sec-usage .us-code-btns{display:flex;gap:6px;flex-wrap:wrap}
+#sec-usage .us-code-btns button{border:1px solid #4a4843;background:#33312e;color:#f0eee6;border-radius:8px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer}
+#sec-usage .us-code-btns button:hover{background:#44413d}
+#sec-usage .us-code pre{margin:0;padding:16px;max-height:420px;overflow:auto;color:#f0eee6;font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,"Malgun Gothic",monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+#sec-usage .us-opt{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;color:var(--ink);cursor:pointer}
+#sec-usage .us-opt small{color:var(--muted)}
+#sec-usage .us-code pre code{background:transparent;color:inherit;border:0;padding:0;border-radius:0;font:inherit}
