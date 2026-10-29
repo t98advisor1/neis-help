@@ -41,7 +41,7 @@ body { overflow-x: hidden; }
   padding: calc(var(--op-h) + 40px) 40px 40px; position: relative;
 }
 .op-eyebrow { margin: 0 0 14px; font-size: 14px; font-weight: 600; letter-spacing: .04em; color: var(--rausch); }
-.op-lead { margin: 0; font-size: 18px; line-height: 1.7; color: var(--body); }
+.op-lead { margin: 0; font-size: 18px; line-height: 1.7; color: var(--body); word-break: keep-all; }
 
 /* 등장 모션 — 화면에 들어올 때마다 아래에서 떠오른다. JS 가 없으면 그냥 보인다. */
 .js .reveal { opacity: 0; transform: translateY(36px); transition: opacity .6s cubic-bezier(.2, .7, .2, 1) var(--d, 0s), transform .6s cubic-bezier(.2, .7, .2, 1) var(--d, 0s); }
@@ -50,7 +50,7 @@ body { overflow-x: hidden; }
 /* ── 1화면 ── */
 .op-hero { background: radial-gradient(900px 520px at 78% 18%, rgba(217, 119, 87, .32), transparent 62%), linear-gradient(160deg, #1b1a18 0%, #2b2420 55%, #191816 100%); color: #fff; overflow: hidden; }
 .op-hero-inner { width: 100%; max-width: 1160px; display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; will-change: transform, opacity; }
-.op-hero h1 { margin: 0 0 22px; font-size: clamp(34px, 5vw, 58px); line-height: 1.18; letter-spacing: -.02em; font-weight: 800; }
+.op-hero h1 { word-break: keep-all; margin: 0 0 22px; font-size: clamp(34px, 5vw, 58px); line-height: 1.18; letter-spacing: -.02em; font-weight: 800; }
 .op-hero h1 em { font-style: normal; color: #ff7d95; }
 .op-hero .op-lead { color: rgba(255, 255, 255, .78); max-width: 560px; }
 .op-hero .op-lead strong { color: #fff; }
