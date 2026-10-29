@@ -335,18 +335,19 @@
 <script src="onepage.js"></script>
 <script>
 // ── 방문자 카운터 (오늘 / 누적) ──
+// 브라우저 하나당 하루 한 번만 센다(서버가 쿠키로 구분). 저장소가 아직 연결되지 않았으면 숨긴다.
 (async function loadVisitCounter(){
+  const el = document.getElementById('visit-counter');
+  if (!el) return;
   try {
     const res = await fetch('/api/visit');
     if (!res.ok) throw new Error('status ' + res.status);
     const d = await res.json();
-    const el = document.getElementById('visit-counter');
-    if (el) {
-      el.textContent = `👁 ${d.today} / ${d.total}`;
-    }
+    if (typeof d.today !== 'number' || typeof d.total !== 'number') return; // 미설정('—')
+    el.textContent = `👁 오늘 ${d.today.toLocaleString('ko-KR')} · 누적 ${d.total.toLocaleString('ko-KR')}`;
+    el.title = '오늘 / 지금까지 방문자 수 (브라우저당 하루 한 번)';
   } catch (e) {
-    const el = document.getElementById('visit-counter');
-    if (el) el.textContent = '';
+    el.textContent = '';
   }
 })();
 </script>

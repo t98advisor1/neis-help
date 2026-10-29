@@ -10,7 +10,7 @@
 - `index.html`, `styles.css`, `app.js`, `rules.js` — 웹앱 본체(검사 화면·검사 규칙)
 - `onepage.css`, `onepage.js` — 한 페이지 구성: 소개 → 메뉴 선택 → 내용 화면이 한 화면씩 걸리며 넘어가는 스크롤(css scroll-snap + 휠 보강)
 - `usage-section.css/js` — 사용법·검사 규칙 메뉴, `guide.html` — 기재요령 검색 메뉴(메인 안에 삽입됨; `usage.html`·`prompts.html`은 메인의 해당 메뉴로 연결만 한다)
-- `api/visit.js` — 방문자 수 카운터 (Upstash Redis, 환경변수 `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN`)
+- `api/visit.js` — 방문자 수 카운터 (Upstash Redis, 환경변수 `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` 또는 마켓플레이스 연결 시 `KV_REST_API_URL`/`KV_REST_API_TOKEN`; 브라우저당 하루 한 번, 한국 시간 기준)
 - `vercel.json` — 정적 서빙 설정
 - 엑셀/PDF 라이브러리는 cdnjs에서 로드 (SheetJS 0.18.5, pdf.js 3.11.174)
 
