@@ -25,6 +25,7 @@ const USE = [
     notes: [['담임 전체점검', '학교생활기록부 → 학생부 조회 및 출력 → PDF로 저장한 뒤 올립니다.'],
             ['교과·동아리 등 개별점검', '해당 항목을 엑셀 파일로 저장한 뒤 올립니다. 과목별 파일을 한꺼번에 올리면 과목을 가로지르는 복사·붙여넣기도 잡아 줍니다.'],
             ['여러 개를 한 번에', '끌어다 놓거나 클릭해서 고릅니다. 파일 형식은 .xlsx .xls .csv .pdf 입니다.'],
+            ['엑셀에서 복사해 붙여넣기', '파일 없이도 됩니다. 엑셀에서 제목 줄까지 칸을 복사(Ctrl+C)해 붙여넣기 칸에 붙여넣거나(Ctrl+V), 이 화면 어디서든 Ctrl+V 하면 바로 읽습니다.'],
             ['개인정보', '파일은 이 브라우저 안에서만 처리되며 외부로 전송되지 않습니다.']] },
   { short: '검사할 항목 확인', title: '3. 검사할 항목 확인', sub: '무엇을 검사할지 자동으로 맞춰집니다.',
     mock: `<div class="mock">${MOCK_TOP}<div class="mock-content"><div style="font-size:12px;font-weight:700;margin-bottom:10px">② 검사할 항목 확인</div><div class="mock-run">검사 실행</div><div style="margin-top:12px"><div class="mock-row"><span>세부능력 및 특기사항</span><span style="margin-left:auto;color:#999">검사함</span></div><div class="mock-row"><span>행동특성 및 종합의견</span><span style="margin-left:auto;color:#999">검사함</span></div><div class="mock-row"><span>번호 / 이름 열</span><span style="margin-left:auto;color:#999">검사 안 함</span></div></div></div></div>`,
@@ -116,12 +117,204 @@ function ruleSeverity() {
     <p class="us-note">애매한 경우 놓치지 않도록 ‘위반’으로 넉넉히 표시합니다. 최종 판단은 반드시 선생님이 하세요.</p>`;
 }
 
+/* ── 점검 요소: 지금 적용 중인 기준을 글로 옮긴다 ──
+ * 코드박스에 보여 주고, 복사하거나 텍스트·HTML 로 내려받는다. AI 에게 붙여 넣거나 문서로 보관하는 용도다.
+ * 이 브라우저의 '규칙 설정'에서 고친 내용(끈 항목·바꾼 한도·직접 넣은 금지어)이 있으면 그것까지 반영한다. */
+const CUSTOM_BAN_ID = 'custom-ban';
+let criteriaAll = false;   // 금지 표현 낱말을 모두 넣을지(기본은 예시만)
+
+function currentSettings() {
+  try { return (window.SRApp && window.SRApp.settings && window.SRApp.settings()) || null; } catch (e) { return null; }
+}
+const shortClause = (c) => String(c || '').replace('작성 시 유의사항 ', '유의사항 ');
+
+function criteria(allTerms) {
+  const S = currentSettings();
+  const L = R.SEVERITY_LABEL;
+  const per = R.BYTES_PER_CHAR;
+  const sections = [];
+
+  // 1. 글자 수 한도
+  const limitOn = !S || S.checkLength !== false;
+  const limits = R.AREAS.map((a) => ({ a, v: S && S.limits ? S.limits[a.key] : a.limit }))
+    .filter((x) => x.v != null && x.v !== '' && Number(x.v) > 0);
+  sections.push({
+    title: '영역별 글자 수 한도',
+    note: limitOn ? `NEIS는 Byte로 셉니다. 한글 1자 = ${per}Byte, 영문·숫자·줄바꿈 = 1Byte 입니다.` : '글자 수(분량) 검사가 꺼져 있습니다.',
+    groups: limitOn ? [{ items: limits.map(({ a, v }) => ({ main: a.label, detail: `${fmt(v)}자 (${fmt(v * per)}Byte)` })) }] : [],
+  });
+
+  // 2. 금지 표현 사전
+  const dict = (S && S.dictionary ? S.dictionary : R.DICTIONARY).filter((d) => d.enabled !== false && (d.terms || []).length);
+  const byId = new Map(dict.map((d) => [d.id, d]));
+  const used = new Set();
+  const dictItem = (d) => {
+    used.add(d.id);
+    const terms = d.terms || [];
+    const shown = allTerms ? terms : terms.slice(0, 5);
+    const more = terms.length - shown.length;
+    const where = d.id === CUSTOM_BAN_ID ? '직접 넣은 기준' : shortClause(d.clause) || '개인정보 보호';
+    return { main: d.category, tag: `${L[d.severity] || d.severity} · ${where}`,
+             detail: shown.join(', ') + (more > 0 ? ` … 외 ${fmt(more)}개` : '') };
+  };
+  const dictGroups = [];
+  DICT_GROUPS.forEach(([name, ids]) => {
+    const items = ids.map((id) => byId.get(id)).filter(Boolean).map(dictItem);
+    if (items.length) dictGroups.push({ name, items });
+  });
+  const mine = byId.get(CUSTOM_BAN_ID);
+  if (mine && !used.has(mine.id)) dictGroups.push({ name: '직접 넣은 금지어', items: [dictItem(mine)] });
+  const rest = dict.filter((d) => !used.has(d.id)).map(dictItem);
+  if (rest.length) dictGroups.push({ name: '기타', items: rest });
+  sections.push({
+    title: '기재하면 안 되는 표현 (금지 표현 사전)',
+    note: `각 항목의 낱말이 본문에 있으면 지적합니다. ${allTerms ? '낱말을 모두 적었습니다.' : '낱말은 예시만 적었습니다(앞 5개).'}`,
+    groups: dictGroups,
+  });
+
+  // 3. 형식·표기
+  const offP = new Set((S && S.disabledPatterns) || []);
+  const pats = R.PATTERNS.filter((p) => !offP.has(p.id));
+  sections.push({
+    title: '형식·표기 검사',
+    note: '글자 모양만 보고 찾습니다.',
+    groups: [{ items: pats.map((p) => ({ main: p.category, tag: L[p.severity], detail: String(p.basis).replace(/^.*? — /, '') })) }],
+  });
+
+  // 4. 문맥
+  const offR = new Set((S && S.disabledRules) || []);
+  const prox = R.PROXIMITY.filter((p) => !offR.has(p.id));
+  sections.push({
+    title: '문맥 검사',
+    note: '한 문장 안에 두 조건이 함께 있을 때만 지적합니다.',
+    groups: [{ items: prox.map((p) => ({ main: p.category, tag: `${L[p.severity]} · ${shortClause(String(p.basis).split(' — ')[0])}`,
+      detail: String(p.basis).split(' — ').slice(1).join(' — ') })) }],
+  });
+
+  // 5. 문장 종결·중복
+  const narrative = R.AREAS.filter((a) => R.NARRATIVE_AREAS.has(a.key)).map((a) => a.label).join(', ');
+  const tail = [];
+  if (!S || S.checkEnding !== false) tail.push({ main: '문장 종결', detail: `서술형 영역(${narrative})은 명사형 종결(‘-함’, ‘-임’)을 쓰는 것이 원칙입니다. (참고용)` });
+  tail.push({ main: '중복 문장', detail: `같은 문장이 여러 칸·여러 학생에 ${S && S.dupMinLen ? S.dupMinLen : 20}자 이상 반복되면 찾아 줍니다.` });
+  sections.push({ title: '문장 종결·중복 문장', groups: [{ items: tail }] });
+
+  // 6. 허용 표현
+  const allow = (S && S.allowlist) || [];
+  if (allow.length) sections.push({ title: '허용 표현 (지적에서 제외)', groups: [{ items: [{ main: allow.join(', ') }] }] });
+
+  const d = new Date();
+  return {
+    title: '학교생활기록부 점검 요소',
+    basis: `${R.SOURCE.year} ${R.SOURCE.title} 기준 · ${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()} 내려받음`,
+    caution: '※ 참고용 자료입니다. 내용의 오류나 누락이 있을 수 있으므로 최종 판단은 반드시 교사가 직접 확인해 주세요. 이 브라우저의 [규칙 설정]에서 고친 내용이 있으면 그것까지 반영된 목록입니다.',
+    sections,
+  };
+}
+
+function criteriaText(c) {
+  const out = [c.title, c.basis, c.caution, ''];
+  c.sections.forEach((sec, i) => {
+    out.push(`${i + 1}. ${sec.title}`);
+    if (sec.note) out.push(`   ${sec.note}`);
+    sec.groups.forEach((g) => {
+      if (g.name) out.push(`  ■ ${g.name}`);
+      g.items.forEach((it) => out.push(`   - ${it.main}${it.tag ? ` [${it.tag}]` : ''}${it.detail ? (it.tag ? ' — ' : ': ') + it.detail : ''}`));
+    });
+    out.push('');
+  });
+  return out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+}
+
+function criteriaHtml(c) {
+  const secs = c.sections.map((sec, i) =>
+    `<section><h2>${i + 1}. ${esc(sec.title)}</h2>${sec.note ? `<p class="note">${esc(sec.note)}</p>` : ''}` +
+    sec.groups.map((g) => `${g.name ? `<h3>${esc(g.name)}</h3>` : ''}<ul>${g.items.map((it) =>
+      `<li><b>${esc(it.main)}</b>${it.tag ? ` <span class="tag">${esc(it.tag)}</span>` : ''}${it.detail ? `<div class="d">${esc(it.detail)}</div>` : ''}</li>`).join('')}</ul>`).join('') +
+    '</section>').join('');
+  return `<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(c.title)}</title>
+<style>
+  body{margin:0;background:#faf9f5;color:#1f1e1d;font:15px/1.7 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  main{max-width:860px;margin:0 auto;padding:40px 24px 64px}
+  h1{margin:0 0 4px;font-size:26px}
+  .basis{margin:0 0 12px;color:#6f6d66;font-size:14px}
+  .caution{margin:0 0 28px;padding:12px 16px;border:1px solid #f3d3cc;border-radius:10px;background:#fff5f3;color:#c13515;font-size:13px}
+  section{margin:0 0 28px;padding:20px 22px;border:1px solid #e6e3d8;border-radius:14px;background:#fff}
+  h2{margin:0 0 6px;font-size:18px}
+  h3{margin:18px 0 6px;font-size:14px;color:#6f6d66}
+  .note{margin:0 0 8px;color:#6f6d66;font-size:13px}
+  ul{margin:0;padding-left:20px}
+  li{margin:6px 0}
+  .tag{display:inline-block;padding:1px 9px;border-radius:99px;background:#efede4;color:#3d3c38;font-size:12px}
+  .d{color:#3d3c38;font-size:13px}
+  @media print{body{background:#fff}section{break-inside:avoid;border-color:#ccc}}
+</style></head><body><main>
+<h1>${esc(c.title)}</h1><p class="basis">${esc(c.basis)}</p><p class="caution">${esc(c.caution)}</p>
+${secs}
+</main></body></html>`;
+}
+
+function ruleCriteria() {
+  const text = criteriaText(criteria(criteriaAll));
+  return `<p class="us-note" style="margin-top:0">지금 적용 중인 점검 기준을 글로 옮긴 것입니다. 복사해서 AI에 붙여 넣거나, 파일로 내려받아 보관하세요.</p>
+    <div class="us-code">
+      <div class="us-code-bar">
+        <span>점검 요소 · 글 ${fmt(text.length)}자</span>
+        <span class="us-code-btns">
+          <button type="button" data-act="copy">복사</button>
+          <button type="button" data-act="dl-txt">텍스트(.txt)로 받기</button>
+          <button type="button" data-act="dl-html">HTML(.html)로 받기</button>
+        </span>
+      </div>
+      <pre><code id="us-code">${esc(text)}</code></pre>
+    </div>
+    <label class="us-opt"><input type="checkbox" id="us-all"${criteriaAll ? ' checked' : ''}> 금지 표현 낱말을 모두 포함 <small>(끄면 항목마다 예시 5개만)</small></label>`;
+}
+
+function saveFile(name, mime, content) {
+  const blob = new Blob(['﻿', content], { type: mime + ';charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+async function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    try { await navigator.clipboard.writeText(text); return true; } catch (e) { /* 아래 대체 방법 */ }
+  }
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+  document.body.appendChild(ta); ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  ta.remove();
+  return ok;
+}
+
+async function criteriaAction(act, btn) {
+  const c = criteria(criteriaAll);
+  if (act === 'dl-txt') return saveFile('학교생활기록부_점검요소.txt', 'text/plain', criteriaText(c));
+  if (act === 'dl-html') return saveFile('학교생활기록부_점검요소.html', 'text/html', criteriaHtml(c));
+  if (act === 'copy') {
+    const ok = await copyText(criteriaText(c));
+    const old = btn.textContent;
+    btn.textContent = ok ? '복사됨 ✓' : '복사 실패 — 상자를 눌러 직접 선택하세요';
+    setTimeout(() => { if (btn.isConnected) btn.textContent = old; }, 1800);
+  }
+}
+
 const RULE = [
   { short: '이렇게 검사합니다', title: '검사 방식 6가지', sub: '한 칸씩 이 여섯 가지 방식으로 살펴봅니다.', html: ruleWays },
   { short: '글자 수 한도',     title: '영역별 글자 수 한도', sub: 'NEIS 실제 한도에 맞춰 계산합니다.', html: ruleLimits },
   { short: '금지 표현 사전',   title: '주로 잡아내는 금지 표현', sub: '낱말 목록은 규칙 설정에서 보고 고칠 수 있습니다.', html: ruleDictionary },
   { short: '형식·문맥 검사',   title: '형식 검사와 문맥 검사', sub: '낱말 사전으로는 못 잡는 것을 따로 살핍니다.', html: ruleFormats },
   { short: '심각도 3단계',     title: '심각도 3단계', sub: '색깔로 구분해 표시합니다.', html: ruleSeverity },
+  { short: '점검 요소 받기',   title: '점검 요소 복사·내려받기', sub: '검사하는 기준 전체를 글로 가져갑니다.', html: ruleCriteria },
 ];
 
 /* ── 화면: 탭 두 개 + 한 단계씩 ── */
@@ -152,6 +345,7 @@ function render() {
 host.addEventListener('click', (e) => {
   const t = e.target.closest('button');
   if (!t) return;
+  if (t.dataset.act) { criteriaAction(t.dataset.act, t); return; }
   const steps = SETS[tab].steps;
   if (t.dataset.tab) { tab = t.dataset.tab; idx = 0; }
   else if (t.dataset.step) { idx = Number(t.dataset.step); }
@@ -165,6 +359,10 @@ host.addEventListener('click', (e) => {
   // 화면이 바뀌면 단계 카드 머리가 보이게 맞춘다(탭 막대에 가리지 않도록 css 의 scroll-margin 사용)
   const st = document.getElementById('us-stage');
   if (st && st.getBoundingClientRect().top < 0) st.scrollIntoView({ block: 'start' });
+});
+
+host.addEventListener('change', (e) => {
+  if (e.target.id === 'us-all') { criteriaAll = e.target.checked; render(); }
 });
 
 render();

@@ -209,6 +209,36 @@ fileInput.addEventListener('change', () => {
   fileInput.value = '';
 });
 
+/* 붙여넣기 입력 — 전용 칸에 붙여넣거나, 화면 어디서든 Ctrl+V.
+ * 입력칸·설정창·다른 메뉴에서는 평소 붙여넣기를 방해하지 않는다. */
+const pasteInput = $('#paste-input');
+const pasteRun = $('#btn-paste-run');
+if (pasteInput && pasteRun) {
+  pasteInput.addEventListener('input', () => { pasteRun.disabled = !pasteInput.value.trim(); });
+  pasteRun.addEventListener('click', () => {
+    const text = pasteInput.value;
+    pasteInput.value = '';
+    pasteRun.disabled = true;
+    loadPasted(text);
+  });
+}
+document.addEventListener('paste', (e) => {
+  const t = e.target;
+  const editable = t && t.closest && t.closest('input, textarea, select, [contenteditable="true"]');
+  if (editable && t.id !== 'paste-input') return;                    // 다른 입력칸은 그대로 둔다
+  const settings = $('#settings-modal');
+  if (settings && !settings.classList.contains('hidden')) return;    // 설정창이 열려 있으면 건드리지 않는다
+  const panel = $('#panel-check');
+  if (panel && panel.classList.contains('hidden')) return;           // '생기부 점검하기' 메뉴에서만
+  const cd = e.clipboardData;
+  if (!cd) return;
+  if (cd.files && cd.files.length) { e.preventDefault(); loadFiles(cd.files); return; }   // 탐색기에서 복사한 파일
+  const text = cd.getData('text/plain');
+  if (!text || !text.trim()) return;
+  e.preventDefault();
+  loadPasted(text);
+});
+
 /* ── 파일 열기 ──────────────────────────────────────────────
  * 개별점검은 과목별로 파일이 나뉜다(국어_세특.xlsx, 영어_세특.xlsx …).
  * 파일마다 따로 읽어 doc 하나로 담고, 검사와 결과는 통째로 합친다.
@@ -220,14 +250,13 @@ fileInput.addEventListener('change', () => {
  * 섞이고, 확인 표시는 엉뚱한 지문으로 되살아난다. 세대가 바뀌었으면 그냥 버린다. */
 let loadGen = 0;
 
-function loadFiles(fileList) {
-  const files = [...fileList];
-  if (!files.length) return;
+/* 새 입력(파일·붙여넣기)을 받기 전에 앞 결과를 통째로 걷어내고 세대를 올린다. */
+function beginLoad(label, progressText) {
   const gen = ++loadGen;
 
   // 앞 파일의 결과가 화면에 남아 있으면 새 파일의 것으로 오해하게 된다. 통째로 걷어낸다.
   state.docs = [];
-  state.fileName = files.length === 1 ? files[0].name : files.length + '개 파일';
+  state.fileName = label;
   state.resolved.clear();
   state.restored = 0;
   state.fileKey = '';
@@ -244,9 +273,116 @@ function loadFiles(fileList) {
   collapseCard('step-map', false);
   const info = $('#file-info');
   info.classList.remove('hidden');
-  info.textContent = files.length === 1 ? '읽는 중…' : files.length + '개 파일을 읽는 중…';
+  info.textContent = progressText;
+  return gen;
+}
 
-  readDocs(files, info, gen);
+function loadFiles(fileList) {
+  const files = [...fileList];
+  if (!files.length) return;
+  const gen = beginLoad(files.length === 1 ? files[0].name : files.length + '개 파일',
+    files.length === 1 ? '읽는 중…' : files.length + '개 파일을 읽는 중…');
+  readDocs(files, $('#file-info'), gen);
+}
+
+/* ── 붙여넣기 ──────────────────────────────────────────────
+ * 엑셀에서 칸을 드래그해 복사하면 클립보드에는 '탭으로 칸을, 줄바꿈으로 행을 나눈 글'이 담긴다.
+ * 칸 안에 줄바꿈이나 따옴표가 있으면 엑셀은 그 칸을 "…" 로 감싸고 안쪽 따옴표는 "" 로 적는다.
+ * 이것을 격자로 풀어 엑셀 파일을 연 것과 똑같은 doc 로 만든다 — 그 뒤(열 인식·검사·결과)는 파일과 같다. */
+function parsePasted(raw) {
+  const text = String(raw).replace(/\r\n?/g, '\n');
+  if (!text.trim()) return [];
+
+  const parse = (useQuotes) => {
+    const rows = [];
+    let row = [], cell = '', inQuote = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (inQuote) {
+        if (ch === '"') {
+          if (text[i + 1] === '"') { cell += '"'; i++; } else inQuote = false;
+        } else cell += ch;
+      } else if (useQuotes && ch === '"' && cell === '') inQuote = true;
+      else if (ch === '\t') { row.push(cell); cell = ''; }
+      else if (ch === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+      else cell += ch;
+    }
+    row.push(cell); rows.push(row);
+    return { rows, unclosed: inQuote };
+  };
+
+  // 따옴표가 닫히지 않았으면 엑셀이 만든 글이 아니라 글 속의 따옴표다 — 따옴표를 풀지 않고 다시 읽는다.
+  let res = parse(true);
+  if (res.unclosed) res = parse(false);
+  const rows = res.rows;
+  while (rows.length && rows[rows.length - 1].every(c => !String(c).trim())) rows.pop();
+  return rows;
+}
+
+/* 붙여넣은 격자 → doc. 가상의 시트 하나짜리 통합문서에 담아 엑셀 파일과 같은 길로 보낸다. */
+function makePastedDoc(grid) {
+  const width = Math.max(...grid.map(r => r.length));
+  const singleColumn = width === 1;
+  let rows = grid;
+  let headerAdded = false;
+  if (singleColumn) {
+    // 한 칸짜리(글만 붙여넣음)는 제목 줄이 있는지 알 수 없다. 첫 줄이 짧고 아래가 긴 글이면 제목으로 보고,
+    // 아니면 '붙여넣은 내용' 이라는 제목을 앞에 붙여 모든 줄이 검사 대상이 되게 한다.
+    const rest = rows.slice(1).map(r => String(r[0] || ''));
+    const restAvg = rest.length ? rest.reduce((n, t) => n + t.length, 0) / rest.length : 0;
+    const first = String(rows[0][0] || '');
+    if (!(rows.length >= 2 && first.length <= 30 && restAvg >= 40)) {
+      rows = [['붙여넣은 내용']].concat(rows);
+      headerAdded = true;
+    }
+  }
+  const SHEET = '붙여넣기';
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), SHEET);
+  const doc = {
+    source: 'excel', name: '붙여넣은 표', workbook: wb, pasted: true,
+    sheetName: '', grid: [], headerRow: 0, columns: [],
+    note: '',
+  };
+  selectSheet(doc, SHEET);
+  if (singleColumn) {
+    // 짧은 글만 있어도 검사 대상에서 빠지지 않게 한다(열 이름이 없어 자동 인식이 '무시'로 둘 수 있다).
+    doc.columns.forEach(c => { if (c.role === 'ignore') { c.role = 'text'; c.areaKey = 'etc'; } });
+  }
+  doc.note = '<div>붙여넣은 표 — ' + fmt(rows.length) + '행 × ' + fmt(width) + '열' +
+    (singleColumn ? ' (줄바꿈마다 한 행으로 읽었습니다' + (headerAdded ? '. 제목 줄이 없어 ‘붙여넣은 내용’ 열로 이름 붙였습니다' : '') + ')' : '') +
+    '</div>';
+  doc.pasteStats = { rows: rows.length, cols: width };
+  return doc;
+}
+
+async function loadPasted(text) {
+  const hint = $('#paste-hint');
+  const grid = parsePasted(text);
+  if (!grid.length) {
+    if (hint) { hint.classList.add('is-error'); hint.textContent = '붙여넣은 내용이 비어 있습니다.'; }
+    return;
+  }
+  if (typeof XLSX === 'undefined') {
+    if (hint) { hint.classList.add('is-error'); hint.textContent = '엑셀 처리 도구를 아직 불러오지 못했습니다. 인터넷 연결을 확인하고 새로고침해 주세요.'; }
+    return;
+  }
+  const gen = beginLoad('붙여넣은 표', '붙여넣은 내용을 읽는 중…');
+  try {
+    const key = await fileFingerprint(new TextEncoder().encode(text).buffer);
+    if (gen !== loadGen) return;
+    const doc = makePastedDoc(grid);
+    state.docs.push(doc);
+    if (hint) {
+      hint.classList.remove('is-error');
+      hint.textContent = fmt(doc.pasteStats.rows) + '행 × ' + fmt(doc.pasteStats.cols) + '열을 읽었습니다. 아래 2단계에서 검사할 열을 확인하세요.';
+    }
+    finishLoad([key], [doc.note], $('#file-info'));
+  } catch (err) {
+    if (gen !== loadGen) return;
+    $('#file-info').innerHTML = '<div class="split-warn"><div>⚠ 붙여넣은 내용을 읽지 못했습니다 — ' +
+      escapeHtml((err && err.message) || err) + '</div></div>';
+  }
 }
 
 function readArrayBuffer(file) {
@@ -309,6 +445,11 @@ async function readDocs(files, info, gen) {
   }
   if (!live()) return;
 
+  finishLoad(keys, notes, info);
+}
+
+/* 읽기를 마친 doc 들을 정리해 2단계로 넘긴다. 파일이든 붙여넣기든 여기로 모인다. */
+function finishLoad(keys, notes, info) {
   // 고른 순서는 그때그때 다르다. docTag 가 순서에서 나오므로 그대로 두면 같은 묶음을
   // 다시 열었을 때 확인 표시가 통째로 어긋난다. 이름순으로 세워 순서를 고정한다.
   state.docs.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
@@ -2076,5 +2217,8 @@ function restorePending() {
   state.settings = fillAlt(Object.assign(defaultSettings(), pending));
   state.settingsPending = true;
 }
+
+/* 사용법·검사 규칙 화면의 '점검 요소 내려받기'가 지금 적용 중인 기준을 읽어 간다(읽기만 한다). */
+window.SRApp = { settings: () => state.settings };
 
 })();

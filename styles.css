@@ -848,3 +848,22 @@ button.tiny.cat-resolve:hover { background: var(--done-bg); border-color: var(--
   font-weight: 500;
   letter-spacing: 0.02em;
 }
+
+/* ── 붙여넣기 칸 (파일 열기 아래) ── */
+.paste-box {
+  margin-top: 16px; padding: 18px 20px;
+  border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--surface-soft);
+}
+.paste-head { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.paste-head strong { font-size: 15px; color: var(--ink); }
+.paste-head span { font-size: 13px; line-height: 1.55; color: var(--muted); }
+.paste-head b { color: var(--ink); font-weight: 600; }
+.paste-box textarea {
+  width: 100%; resize: vertical; min-height: 76px; padding: 12px 14px;
+  border: 1px solid var(--border-strong); border-radius: var(--r-sm); background: var(--canvas);
+  font: inherit; font-size: 14px; line-height: 1.5; color: var(--ink);
+}
+.paste-box textarea::placeholder { color: var(--muted-soft); }
+.paste-box .actions { margin: 12px 0 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.paste-box .hint.is-error { color: var(--violation); }
+@media (max-width: 900px) { .paste-box textarea { font-size: 16px; } }
