@@ -1814,6 +1814,27 @@
       modal.showModal();
     });
 
+    // 메인 히어로 화면의 [구글 계정 시트 동기화] 버튼 연동
+    const heroBtnSync = $('#heroBtnGoogleSync');
+    if (heroBtnSync) {
+      heroBtnSync.addEventListener('click', () => {
+        if (window.GoogleSheet) {
+          if (inHrUrl) inHrUrl.value = window.GoogleSheet.getHomeroomUrl();
+          if (inSubUrl) inSubUrl.value = window.GoogleSheet.getSubjectUrl();
+        }
+        modal.showModal();
+      });
+    }
+
+    // 4번째 화면 [대입 진학상담 전체 화면으로 열기] 버튼 연동
+    const btnOpenCounsel = $('#btnOpenFullCounsel');
+    if (btnOpenCounsel) {
+      btnOpenCounsel.addEventListener('click', () => {
+        const counselTab = $(`#op-tabs [data-open="counsel"]`);
+        if (counselTab) counselTab.click();
+      });
+    }
+
     if (btnSave) {
       btnSave.addEventListener('click', () => {
         if (window.GoogleSheet) {

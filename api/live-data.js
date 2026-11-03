@@ -77,7 +77,7 @@ export default async function handler(req, res) {
     ? `https://www.uwayapply.com/`
     : `https://www.jinhakapply.com/`;
 
-  const adigaUrl = `https://www.adiga.kr/PageLinkAll.do?linkPage=/kcue/ast/uniinfo/html/university/EIndexDataSearch.do`;
+  const adigaUrl = `https://www.adiga.kr/man/sch/searchView.do?menuId=PCMANSCH5001&checkMiss=1&search=${encodeURIComponent(cleanName)}`;
 
   // 기본/공시 데이터 매핑
   const stat = UNI_STATS_DB[uni] || UNI_STATS_DB[cleanName] || {

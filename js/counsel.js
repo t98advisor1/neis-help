@@ -562,7 +562,7 @@
           $("#lblRadioResults input").checked = true;
           $$(".ud-radio-item").forEach(lbl => lbl.classList.toggle("on", lbl.id === "lblRadioResults"));
         } else if (val === "adiga") {
-          const adigaUrl = `https://www.adiga.kr/kcue/ast/univInfo/univList.do?query=${encodeURIComponent(uni.name)}`;
+          const adigaUrl = `https://www.adiga.kr/man/sch/searchView.do?menuId=PCMANSCH5001&checkMiss=1&search=${encodeURIComponent(uni.name)}`;
           window.open(adigaUrl, "_blank", "noopener,noreferrer");
           $("#lblRadioResults input").checked = true;
           $$(".ud-radio-item").forEach(lbl => lbl.classList.toggle("on", lbl.id === "lblRadioResults"));

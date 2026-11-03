@@ -448,7 +448,6 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <span id="sheetSyncStatusBadge" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#94a3b8;"></span>
     <span id="sheetSyncStatusLabel">구글 시트 연동</span>
   </button>
-  <button id="btn-ai-dock" type="button" class="ghost" aria-expanded="false" aria-controls="aiDock">AI 창</button>
 </header>
 
 <!-- ── 새 AI 패널: 프롬프트 복사 → 오른쪽에 AI 창(일반 창이라 구독 로그인 가능) → 답변 가져오기 ── -->
@@ -477,14 +476,17 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <section class="op-screen op-hero" id="hero">
   <div class="op-hero-inner">
     <div class="op-hero-text">
-      <p class="op-eyebrow reveal">2026학년도 학교생활기록부 기재요령(고등학교) 기준</p>
-      <h1 class="reveal" style="--d:.08s">학교생활기록부,<br><em>작성부터 점검까지</em> 한 곳에서</h1>
-      <p class="op-lead reveal" style="--d:.16s">엑셀·PDF 파일을 올리면 글자수(Byte) 초과, 금지 표현, 형식 오류, 중복 문장을 찾아 드리고, 수업 관찰 메모로 기재요령에 맞춘 초안 문단을 작성합니다.
-        모든 데이터는 서버로 올라가지 않고 <strong>이 브라우저 안에서만</strong> 처리됩니다.</p>
+      <p class="op-eyebrow reveal">2026 생기부 기재요령 · 2027학년도 대입 진학상담 통합 플랫폼</p>
+      <h1 class="reveal" style="--d:.08s">학교생활기록부 점검부터<br><em>대입 진학상담·세특 연계</em>까지 한 곳에서</h1>
+      <p class="op-lead reveal" style="--d:.16s">엑셀·PDF 생기부 점검과 나이스 규격 초안 작성은 물론, 133개 대학 2027 수시 입결DB, 2028 개편 5등급제 환산, 실시간 경쟁률 조회 및 구글 시트 1:1 자동 연동까지 모두 지원합니다. 모든 학생 데이터는 서버로 올라가지 않고 <strong>선생님의 개인 브라우저와 구글 드라이브 안에서만</strong> 처리됩니다.</p>
       <ul class="op-points reveal" style="--d:.24s">
-        <li>분량(Byte) 검사</li><li>금지 표현 사전</li><li>문맥·형식 검사</li><li>중복 문장 찾기</li><li>특기사항 초안 작성</li><li>AI 스킬·사이드바 연동</li>
+        <li>나이스 분량(Byte) 검사</li><li>금지 표현 사전</li><li>특기사항 초안 작성</li><li>133개 대학 2027 입결DB</li><li>2028 5등급제 환산</li><li>구글 시트 1:1 실시간 연동</li>
       </ul>
-      <a class="op-cta reveal" style="--d:.32s" href="#menu">시작하기 <span aria-hidden="true">↓</span></a>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+        <a class="op-cta reveal" style="--d:.32s; margin-top:0;" href="#menu">시작하기 <span aria-hidden="true">↓</span></a>
+        <button type="button" class="op-cta reveal" id="heroBtnGoogleSync" style="--d:.36s; margin-top:0; background:#ffffff; color:#1e293b; border:1px solid #cbd5e1; cursor:pointer; font-weight:700;">구글 계정 시트 동기화</button>
+        <a class="op-cta reveal" style="--d:.40s; margin-top:0; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; font-weight:700;" href="#sec-counsel-scroll">대입 진학상담 바로가기 ↓</a>
+      </div>
       <p class="op-caution reveal" style="--d:.4s">[주의] 본 프로그램은 참고용 자료입니다. 최종 판단은 반드시 교사가 직접 확인해 주세요.</p>
     </div>
     <div class="op-hero-visual" aria-hidden="true">
@@ -492,6 +494,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <div class="op-mock-card c1"><span class="sev v">위반</span><b>교외 수상 실적 기재</b><p>“…○○ 경시대회에서 우수상을 수상하여…”</p><small>창의적 체험활동 · 예시</small></div>
       <div class="op-mock-card c2"><span class="sev w">주의</span><b>분량 초과 가능</b><p>1,512 / 1,500 Byte</p><small>행동특성 및 종합의견 · 예시</small></div>
       <div class="op-mock-card c3"><span class="sev i">점검</span><b>종결어미 · 초안 다듬기</b><p>‘~했다’ → ‘~함’ (기재요령 기준)</p><small>교과 세부능력 · 예시</small></div>
+      <div class="op-mock-card c4" style="background:#eff6ff; border-left:4px solid #2563eb;"><span class="sev" style="background:#2563eb; color:#fff;">대입</span><b>2027 수시 입결 &amp; 5등급제</b><p>고려대 학우: 1.85 (5등급 1.48) / 실시간 15.5:1</p><small>진학상담 · 구글 시트 연계</small></div>
     </div>
   </div>
   <p class="op-scroll-hint" aria-hidden="true">스크롤<span></span></p>
@@ -1586,6 +1589,45 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         </div>
       </div>
     </div>
+
+  
+    <!-- ── 4화면: 2027학년도 대입 진학상담 & 대학 진학성적 분석 스크롤 전용 섹션 ── -->
+    <section class="op-section" id="sec-counsel-scroll" style="padding:48px 24px; background:#f8fafc; border-top:1px solid #e2e8f0;">
+      <div style="max-width:1120px; margin:0 auto;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+          <div>
+            <p style="font-size:12px; font-weight:800; color:#2563eb; letter-spacing:0.05em; margin-bottom:4px; text-transform:uppercase;">Admissions &amp; Grade Analysis</p>
+            <h2 style="font-size:24px; font-weight:800; color:#0f172a; margin:0;">2027학년도 대입 진학상담 &amp; 대학 진학성적 분석</h2>
+            <p style="font-size:13.5px; color:#64748b; margin-top:4px;">133개 대학 2025/2026 수시 최종 입결 분석, 2028 개편 5등급제 환산, 논술전형 총정리 및 나만의 구글 시트 연계</p>
+          </div>
+          <button type="button" class="btn primary" id="btnOpenFullCounsel" style="padding:10px 20px; font-size:14px; font-weight:700; background:#2563eb; color:#fff; border-radius:8px; cursor:pointer;">대입 진학상담 전체 화면으로 열기 ➔</button>
+        </div>
+
+        <!-- 4대 핵심 기능 카드 그리드 -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px; margin-bottom:24px;">
+          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:18px;">
+            <div style="font-size:12px; font-weight:700; color:#2563eb; margin-bottom:4px;">01. 대학별 전형 검색</div>
+            <strong style="font-size:16px; color:#0f172a;">전국 133개 대학 입결</strong>
+            <p style="font-size:12.5px; color:#64748b; margin-top:6px; line-height:1.5;">지역·계열별 필터, 주요 15개대 뱃지, 실시간 수시 경쟁률 및 분야별 등록자 평균 분석</p>
+          </div>
+          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:18px;">
+            <div style="font-size:12px; font-weight:700; color:#059669; margin-bottom:4px;">02. 성적으로 대학 찾기</div>
+            <strong style="font-size:16px; color:#0f172a;">2028 5등급제 환산</strong>
+            <p style="font-size:12.5px; color:#64748b; margin-top:6px; line-height:1.5;">현재 9등급제 성적 입력 시 5등급제 환산 등급 자동 계산 및 ±0.3등급 내 지원 가능 대학 추천</p>
+          </div>
+          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:18px;">
+            <div style="font-size:12px; font-weight:700; color:#b91c1c; margin-bottom:4px;">03. 논술전형 자료실</div>
+            <strong style="font-size:16px; color:#0f172a;">49개 대학 논술 총정리</strong>
+            <p style="font-size:12.5px; color:#64748b; margin-top:6px; line-height:1.5;">수능 최저학력기준 유무, 전형방법, EBSi 기출문제 및 대학어디가 1:1 입결 매칭</p>
+          </div>
+          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:18px;">
+            <div style="font-size:12px; font-weight:700; color:#7c3aed; margin-bottom:4px;">04. 구글 시트 연계</div>
+            <strong style="font-size:16px; color:#0f172a;">상담기록 &amp; 세특 동기화</strong>
+            <p style="font-size:12.5px; color:#64748b; margin-top:6px; line-height:1.5;">클릭 한 번으로 목표대학을 구글 시트로 [담기], 나이스 1,500 Byte 세특 실시간 기록</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
   <footer class="app-footer">
     <span id="visit-counter" class="visit-counter"></span>
