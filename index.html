@@ -1482,9 +1482,35 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         <div class="counsel-workbench">
           <!-- 좌측: 학생별 진학목표 & 세특 입력 폼 -->
           <div class="wb-card">
-            <div class="wb-card-title">
-              <span>✍️ 학생 상담 & 나이스 세특 (단일 마스터 행 입력)</span>
-              <span style="font-size:12px; color:var(--rausch); font-weight:700;" id="currentCounselUniTag">선택 대학 없음</span>
+            <div class="wb-card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span>✍️ 학생 상담 & 나이스 세특 (단일 마스터 행 입력)</span>
+                <span id="masterGSheetBadge" class="privacy-badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac; font-size:11.5px; font-weight:700;">
+                  📊 구글 시트 1:1 실시간 연동 항목
+                </span>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <button type="button" id="btnCounselOpenSheetModal" class="btn secondary" style="padding:3px 8px; font-size:11.5px; font-weight:700; background:#ffffff; color:#2563eb; border:1px solid #93c5fd; cursor:pointer;">
+                  ⚙️ 구글 시트 연동 설정
+                </button>
+                <span style="font-size:12px; color:var(--rausch); font-weight:700;" id="currentCounselUniTag">선택 대학 없음</span>
+              </div>
+            </div>
+
+            <!-- 📊 구글 시트 1:1 실시간 동기화 상태 바 -->
+            <div id="masterGSheetSyncBanner" style="background:linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%); border:1.5px solid #86efac; border-radius:10px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-size:12.5px;">
+              <div style="display:flex; align-items:center; gap:8px; color:#166534;">
+                <span id="masterSyncDot" style="width:9px; height:9px; border-radius:50%; background:#22c55e; display:inline-block; box-shadow:0 0 8px rgba(34,197,94,0.6);"></span>
+                <span id="masterSyncStatusText"><strong>구글 시트 4번째 탭 [4_대입상담_진학기록]</strong>과 1:1 실시간 양방향 동기화 대상 항목입니다.</span>
+              </div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button type="button" id="btnPullFromGSheet" class="btn secondary" style="font-size:11.5px; padding:4px 9px; font-weight:700; background:#fff;">
+                  📥 시트에서 불러오기
+                </button>
+                <button type="button" id="btnPushAllToGSheet" class="btn secondary" style="font-size:11.5px; padding:4px 9px; font-weight:700; background:#fff; color:#15803d; border-color:#86efac;">
+                  📤 전체 학생 시트 일괄 전송
+                </button>
+              </div>
             </div>
 
             <input type="hidden" id="editingRecordId">
@@ -1608,8 +1634,8 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
                 <button type="button" class="btn secondary" id="btnSendToMake" style="font-size:12.5px; color:var(--rausch); border-color:var(--rausch);" title="1지망 대학 및 세특 메모를 '초안 만들기' 탭으로 전송하여 바이트 검사 및 AI 윤문 진행">
                   🚀 초안 작성기로 전송
                 </button>
-                <button type="button" class="btn primary" id="btnSaveMaster" style="font-size:13px; font-weight:700;">
-                  💾 마스터 시트 저장
+                <button type="button" class="btn primary" id="btnSaveMaster" style="font-size:13px; font-weight:800; background:#059669; border:none; color:#fff; border-radius:8px; padding:8px 18px; cursor:pointer; box-shadow:0 3px 10px rgba(5,150,105,0.35);">
+                  💾 마스터 저장 &amp; 구글 시트 1:1 동기화
                 </button>
               </div>
             </div>
