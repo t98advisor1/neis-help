@@ -1,0 +1,98 @@
+<!doctype html>
+<!-- 동료용 사용 안내서(표지 + 한 쪽). tools/build-offline.mjs 가 더블클릭판 폴더에 '사용 안내서.html' 로 넣으며 2026-11-02·2027-02-28·공개 사례 전체(대학 가이드북·교육부 자료 등) (112개) 를 바꿔 쓴다.
+     내용 근거: 이 앱의 실제 화면·기능(2026-10-21), 2026 기재요령 19쪽(AI 생성 자료를 그대로 입력 금지), Gemini API 약관(무료 등급 입력 활용) -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>생기부 초안 도우미 사용 안내</title>
+<style>
+  :root { --ink: #3a3340; --muted: #6f6478; --brand: #bf4b3b; --mint: #24806a; --soft: #fff4ef; --line: #eadbd2; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f6f1ec; color: var(--ink); font: 15px/1.6 -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif; }
+  .page { background: #fff; max-width: 210mm; margin: 16px auto; padding: 18mm 16mm; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+  .cover { min-height: 270mm; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+  .cover h1 { font-size: 34px; margin: 0 0 8px; color: var(--brand); }
+  .cover .sub { font-size: 18px; color: var(--muted); margin: 0 0 40px; }
+  .cover table { margin: 0 auto; border-collapse: collapse; font-size: 15px; text-align: left; }
+  .cover td { padding: 6px 14px; border-bottom: 1px solid var(--line); }
+  .cover td:first-child { color: var(--muted); white-space: nowrap; }
+  .cover .who { margin-top: 48px; color: var(--muted); font-size: 14px; }
+  h2 { font-size: 17px; margin: 18px 0 6px; color: var(--mint); border-bottom: 2px solid var(--line); padding-bottom: 3px; }
+  h2:first-child { margin-top: 0; }
+  ol, ul { margin: 4px 0 4px 20px; padding: 0; }
+  li { margin: 2px 0; }
+  .warn { background: var(--soft); border: 1.5px solid #f0b8aa; border-radius: 10px; padding: 8px 12px; margin: 6px 0; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+  b { color: #2b2531; }
+  .small { font-size: 13px; color: var(--muted); }
+  @media (max-width: 640px) { .page { padding: 18px 16px; margin: 0; } .two { grid-template-columns: 1fr; } .cover { min-height: 80vh; } }
+  @media print { body { background: #fff; font-size: 13.5px; line-height: 1.5; } .page { box-shadow: none; margin: 0; max-width: none; padding: 13mm 14mm; } .cover { page-break-after: always; min-height: 250mm; } h2 { margin: 11px 0 4px; font-size: 15.5px; } li { margin: 1px 0; } .warn { padding: 6px 10px; } @page { size: A4; margin: 0; } } /* 인쇄 때 표지 + 한 쪽(2쪽)에 들어가게 조금 촘촘히 */
+</style>
+</head>
+<body>
+
+<section class="page cover">
+  <h1>생기부 초안 도우미</h1>
+  <p class="sub">관찰 메모 몇 줄로 2026 기재요령에 맞춘 특기사항 초안 만들기<br>— 동료 선생님용 사용 안내 —</p>
+  <table>
+    <tr><td>만든 날</td><td>2026-11-02</td></tr>
+    <tr><td>사용 기한</td><td>2027-02-28까지</td></tr>
+    <tr><td>기준</td><td>2026학년도 학교생활기록부 기재요령(고등학교)</td></tr>
+    <tr><td>참고 예시</td><td>공개 사례 전체(대학 가이드북·교육부 자료 등) (112개)</td></tr>
+    <tr><td>필요한 것</td><td>컴퓨터 + 크롬·엣지 (설치 없음)</td></tr>
+  </table>
+  <p class="who">학생 기록은 선생님 컴퓨터의 브라우저에만 저장됩니다.</p>
+</section>
+
+<section class="page">
+  <h2>1. 열기</h2>
+  <ol>
+    <li>받은 zip을 풀고 폴더를 바탕화면 등에 둡니다.</li>
+    <li>폴더 안 <b>생기부 초안 도우미.html</b>을 크롬이나 엣지로 엽니다(더블클릭). 인터넷 연결이 필요합니다. 그림 안내는 <b>참고 이미지</b> 폴더에 있습니다.</li>
+  </ol>
+
+  <h2>2. 쓰는 순서 (✏️ 만들기 탭)</h2>
+  <ol>
+    <li><b>항목</b>(교과세특·자율자치·동아리·진로·행동특성) → <b>기본 정보</b>(학년·과목, 반·번호는 선택) → <b>관찰 메모</b>(무엇을·어떻게·결과). 메모 아래 칸에서 교과세특 <b>성취기준</b>과 실제로 본 <b>특성·변화·참여도</b>를 골라 더할 수 있습니다(선택).</li>
+    <li><b>분량·역량·예시</b>를 고릅니다(안 고르면 알아서).</li>
+    <li>결과 받기: 아래 둘 중 하나
+      <div class="two">
+        <ul><li><b>앱에서 바로 만들기</b> — Gemini API 키 필요(❓ 안내 → "Gemini API 키 받기", 무료)</li></ul>
+        <ul><li><b>프롬프트 복사해서 쓰기</b> — 키 없이 ChatGPT·Gemini·Claude 채팅에 붙여 넣기</li></ul>
+      </div>
+    </li>
+    <li>완성 문단 아래 <b>점검 결과</b>(글자 수·금지 표현)를 보고 고친 뒤 <b>복사</b>해 초안으로 다듬어 쓰기(나이스에는 선생님이 최종 확인한 문장을 입력). <b>저장함에 넣기</b>를 누르면 📋 저장함에 모입니다.</li>
+  </ol>
+
+  <h2>3. 꼭 지킬 것</h2>
+  <div class="warn">
+    <ul>
+      <li>메모에 <b>학생 이름·학번·학교명·연락처를 적지 마세요.</b> 무료 Gemini는 보낸 내용이 구글 서비스 개선에 쓰이고 검토하는 사람이 읽을 수도 있습니다.</li>
+      <li>기재요령은 <b>AI가 만든 글을 그대로 입력하는 것을 금지</b>합니다(19쪽). 초안은 반드시 선생님이 확인·수정한 뒤 입력하세요.</li>
+      <li>만들기 4번 '메모가 짧을 때'에서 <b>약간의 과장 허용</b>을 고르면 메모에 없는 내용이 들어갑니다. 한 문장씩 메모와 대조해 사실이 아닌 부분을 고치세요. 결과 아래에 AI가 덧붙였다고 밝힌 내용과 늘리기로 더한 문장이 목록으로 나오니 그것부터 보세요(목록에 없는 덧붙임도 있을 수 있어요).</li>
+    </ul>
+  </div>
+
+  <h2>4. 저장과 옮기기</h2>
+  <ul>
+    <li>저장함은 <b>이 컴퓨터의 브라우저에만</b> 남습니다. 가끔 📋 저장함 → <b>백업 파일 저장</b>을 해 두세요. 다른 컴퓨터에서는 <b>백업 파일 불러오기</b>로 옮깁니다(API 키는 다시 입력).</li>
+    <li>학급 전체 문단은 저장함 → <b>엑셀 파일 받기</b>로 한 번에 받을 수 있습니다.</li>
+    <li>교무실 <b>공용 PC</b>라면 다 쓴 뒤 ❓ 안내 → <b>이 기기의 앱 데이터 모두 지우기</b>. 재부팅 때 기록을 지우는 PC는 저장함이 사라질 수 있으니 백업을 자주 하세요.</li>
+    <li>이 앱을 쓰는 크롬에서는 메일·메신저로 받은 <b>출처 모를 HTML 파일</b>을 더블클릭해 열지 마세요. 파일로 연 HTML은 저장 공간을 함께 써서 이 앱의 API 키·저장함을 읽을 수 있습니다.</li>
+  </ul>
+
+  <h2>5. API 키 없이 쓰기 (구독·무료 채팅)</h2>
+  <ul>
+    <li>구독(Claude Pro·Google AI Pro·ChatGPT Plus 등)은 API와 별개라 "앱에서 바로 만들기" 한도(하루 15명 안팎)는 늘지 않습니다.</li>
+    <li>무료 사용량을 다 썼거나 평소 쓰는 채팅(Gemini·ChatGPT·Claude)에서 받고 싶으면 <b>프롬프트 복사해서 쓰기</b>를 씁니다. 구독이 있으면 지침을 채팅에 한 번 저장해 두고 학생마다 메모만 보내세요 — ChatGPT는 <b>지침만 복사</b>(프로젝트 지침), Claude는 <b>스킬 파일 받기</b>(스킬에 올리기), Gemini는 둘 중 하나. 받은 문단은 만들기 5번 <b>채팅에서 받은 문단 점검하기</b>로 점검·저장합니다.</li>
+    <li>개인 구독 채팅은 설정에서 "모델 개선에 사용"을 끄고, 학생 이름·학번은 빼고 보내세요.</li>
+  </ul>
+
+  <h2>6. 사용 기한</h2>
+  <p>2027-02-28이 지나면 새 문단 만들기는 막히고, 저장함의 복사·엑셀·백업 파일 저장만 됩니다. 새 기재요령에 맞춘 새 판을 받아 백업 파일을 불러오세요.</p>
+  <p class="small">문의는 이 판을 나눠 준 선생님께. 앱의 ❓ 안내에서 사용법·API 키·Gemini·ChatGPT·Claude별 그림을 볼 수 있습니다. 레서판다·거북이·펭귄이 안내마다 다른 장면으로 등장하며, 그림을 누르면 확대됩니다.</p>
+</section>
+
+</body>
+</html>

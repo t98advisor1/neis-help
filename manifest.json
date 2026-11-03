@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "학생부 올인원 도우미 (사이드바)",
+  "version": "1.0.0",
+  "description": "나이스(NEIS) 화면 옆에서 바로 쓰는 생활기록부 초안 작성 및 점검 사이드바",
+  "permissions": [
+    "sidePanel",
+    "cookies",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://claude.ai/*",
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "preview.html"
+  },
+  "action": {
+    "default_title": "학생부 도우미 사이드바 열기"
+  }
+}

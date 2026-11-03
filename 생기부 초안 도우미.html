@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffe4dc">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#452c2c">
+<!-- 제목용 글꼴 Jua(OFL). 인터넷이 없으면 기본 글꼴로 보임 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" href="assets/mascot.svg" type="image/svg+xml">
+<!-- 홈 화면에 추가했을 때 주소창 없이 열리고 말랑이 아이콘이 보이게(사용자 요청 2026-10-21). 버셀 로그인 잠금 때문에 쿠키를 함께 보내야 manifest 를 받음 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&display=swap">
+<title>생기부 초안 도우미</title>
+<!-- 컴퓨터 화면 폭: 넓게(기본)/좁게를 사용자가 고름(2026-10-22). 화면이 그려지기 전에 적용해야 폭이 튀지 않아 여기서 읽음(js/app.js bindViewWidth 와 같은 키) -->
+<script>try { if (JSON.parse(localStorage.getItem('sm.viewWidth')) === 'narrow') document.documentElement.dataset.width = 'narrow'; } catch (e) {}</script>
+<!-- 파일을 고치면 ?v= 값을 함께 바꿔 주세요 (브라우저가 옛 파일을 쓰지 않게) -->
+<link rel="stylesheet" href="css/app.css?v=20261030-revert">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <h1><img class="mascot" src="assets/mascot.svg" alt="" width="40" height="40">생기부 초안 도우미</h1>
+    <span class="topbar-sub" id="rulesBadge">기재요령 불러오는 중…</span>
+    <div class="seg view-width" id="viewWidthSeg" role="radiogroup" aria-label="화면 폭">
+      <button type="button" role="radio" data-width="wide" title="모니터 폭에 맞춰 넓게">넓게 보기</button>
+      <button type="button" role="radio" data-width="narrow" title="휴대폰처럼 한 줄로 좁게">좁게 보기</button>
+    </div>
+  </div>
+  <div class="mock-banner" id="mockBanner" hidden>시험 모드 — AI를 부르지 않고 가짜 문단을 돌려줘요</div>
+</header>
+
+<main class="wrap">
+
+  <!-- ✏️ 만들기 ─────────────────────────────── -->
+  <section class="tab" id="tab-make" data-tab="make">
+
+    <div class="card">
+      <h2 class="card-title"><span class="step">1</span> 항목</h2>
+      <div class="area-grid" id="areaGrid" role="radiogroup" aria-label="쓸 항목 고르기"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title"><span class="step">2</span> 기본 정보</h2>
+      <div class="field">
+        <span class="label">학년</span>
+        <div class="seg" id="gradeSeg" role="radiogroup" aria-label="학년">
+          <button type="button" role="radio" data-grade="1">1학년</button>
+          <button type="button" role="radio" data-grade="2">2학년</button>
+          <button type="button" role="radio" data-grade="3">3학년</button>
+        </div>
+        <p class="hint" id="curriculumHint"></p>
+      </div>
+      <div class="field student-tag">
+        <span class="label">반·번호 <span class="muted">(선택 — 저장·엑셀에만 쓰고 AI에는 보내지 않아요)</span></span>
+        <div class="tag-row">
+          <label class="tag-field"><input id="tagClass" type="text" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="반"><span>반</span></label>
+          <label class="tag-field"><input id="tagNum" type="text" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="번호"><span>번</span></label>
+        </div>
+      </div>
+      <div class="field" id="subjectField" hidden>
+        <label class="label" for="subject">과목</label>
+        <input id="subject" type="text" placeholder="예: 영어 I, 통합사회1" autocomplete="off">
+        <p class="hint" id="subjectHint" hidden></p>
+      </div>
+      <div class="field" id="clubField" hidden>
+        <label class="label" for="club">동아리명</label>
+        <input id="club" type="text" placeholder="예: 과학탐구반" autocomplete="off" maxlength="40">
+        <label class="check"><input type="checkbox" id="clubHeaderCounts" checked> 나이스가 붙이는 "(동아리명)(시간)"도 글자 수에 들어간다고 보고 계산 <span class="muted">(권장)</span></label>
+      </div>
+      <div class="field" id="emphField">
+        <div id="subjectGroupRow" hidden>
+          <span class="label">교과 구분</span>
+          <div class="seg" id="subjectGroupSeg" role="radiogroup" aria-label="교과 구분">
+            <button type="button" role="radio" data-sg="general">일반 교과</button>
+            <button type="button" role="radio" data-sg="arts_pe">체육·예술</button>
+            <button type="button" role="radio" data-sg="vocational">전공 실무</button>
+          </div>
+          <p class="hint" id="sgHint"></p>
+          <label class="label" for="kyogwaSel">교과</label>
+          <select id="kyogwaSel"></select>
+          <span class="label kg-label" id="kgLabel"></span>
+          <div class="chips" id="kgChips"></div>
+          <p class="hint" id="kgHint"></p>
+        </div>
+        <span class="label">강조할 관점 <span class="muted">(기재요령 기준)</span></span>
+        <div class="chips" id="emphChips"></div>
+        <p class="hint" id="emphHint"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title"><span class="step">3</span> 관찰 메모</h2>
+      <label class="label" for="memo">무엇을, 어떻게 했고, 결과는 어땠는지 적어 주세요</label>
+      <textarea id="memo" rows="7" placeholder="예: 기후 변화 영어 기사를 읽고 3문장으로 요약해 발표함. 발표 뒤 질문을 던져 토의를 이끔. 동료 피드백을 반영해 쉬운 표현으로 수정본을 다시 냄."></textarea>
+      <p class="hint warn-hint">🔒 학생을 알아볼 수 있는 내용(이름·학교명·연락처)은 빼고 적어 주세요. ‘민수가’·‘김민수가’처럼 쓴 이름은 앱이 자동으로 못 잡을 수 있으니 직접 확인해 주세요.</p>
+      <div id="memoNotes"></div>
+      <!-- 관찰한 특성·변화·참여도 고르기(사용자 요청 2026-10-24). 고른 것은 메모와 같은 '관찰한 사실'로 AI에 감. 예시 문구는 이 앱이 쓴 것(기재요령 근거 아님), 참여도는 기재요령 근거 -->
+      <details class="obs" id="obsBox" open>
+        <summary><span id="obsTitle">관찰한 특성·변화·참여도 더하기</span> <span class="muted">(선택)</span> <span class="obs-count" id="obsCount"></span></summary>
+        <!-- 처음부터 펼쳐 두므로(사용자 요청 2026-10-24) 목록이 길어도 바로 넘어갈 수 있게 위에도 접기(UX 점검 2026-10-24: 과목에 따라 상자가 화면 10장 넘게 길어짐) -->
+        <div class="btn-line end obs-skip"><button type="button" class="btn ghost small" id="btnObsSkip">고를 것이 없으면 · 접고 4번으로</button></div>
+        <!-- 교과세특 성취기준(사용자 요청 2026-10-24, 2022 개정 1·2학년 — rules/achievement-standards-2022.json) -->
+        <div id="stdBox" hidden>
+          <span class="label">관련 성취기준</span>
+          <div id="stdBody"></div>
+        </div>
+        <!-- 칩을 누르기 전에 읽히게 칩 바로 위에, 경고 모양으로(UX 점검 2026-10-24) -->
+        <p class="hint warn-hint">✋ 여기서 누른 특성·변화·참여도는 ‘이 학생에게서 실제로 본 사실’로 메모와 함께 AI에 가고, 문단에 들어가요. 보지 않은 것은 누르지 마세요. 칩 문구는 이 앱이 만든 예시예요.</p>
+        <span class="label">학생 특성</span>
+        <div class="chips" id="traitChips"></div>
+        <span class="label" id="changeLabel">변화</span>
+        <div class="chips" id="changeChips"></div>
+        <span class="label" id="partLabel">참여도</span>
+        <div class="seg seg-wrap" id="partSeg" role="radiogroup" aria-labelledby="partLabel"></div>
+        <input id="partNote" type="text" maxlength="60" placeholder="예: 모둠마다 먼저 역할을 나눔" aria-label="참여 모습 직접 쓰기">
+        <p class="hint" id="partHint" hidden>소극적이면 AI가 깎아내리지 않고, 노력한 부분이나 달라질 가능성과 함께 쓰게 해요(기재요령).</p>
+        <div class="btn-line end"><button type="button" class="btn ghost small" id="btnObsClose">다 골랐어요 · 접기</button></div>
+      </details>
+    </div>
+
+    <!-- 4번은 꼭 거치는 단계로 늘 펼쳐 둔다(사용자 요청 2026-10-21). 고르지 않은 칸은 안내대로 자동(핵심역량 모두 참고·예시 임의 2개) -->
+    <div class="card more" id="moreCard">
+      <h2 class="card-title"><span class="step">4</span> 분량·역량·예시 <span class="muted">(고르지 않아도 돼요)</span></h2>
+      <div class="field">
+        <label class="label" for="target">목표 분량</label>
+        <select id="target"></select>
+        <p class="hint">나이스는 바이트로 세요 — 한글 1자 3바이트, 영문·숫자 1자 1바이트, 엔터 1바이트 (기재요령 208쪽)</p>
+        <!-- 메모가 짧을 때의 방식(사용자 결정 2026-10-21): 기본 사실만. 과장 허용은 결과·저장함에 경고 표시 -->
+        <span class="label" id="factModeLabel">메모가 짧을 때</span>
+        <div class="seg" id="factModeSeg" role="radiogroup" aria-labelledby="factModeLabel">
+          <button type="button" role="radio" data-fact="strict">사실만 (기본)</button>
+          <button type="button" role="radio" data-fact="loose">약간의 과장 허용</button>
+        </div>
+        <p class="hint" id="factModeHint"></p>
+      </div>
+      <div class="field">
+        <div id="compField">
+          <span class="label">강조할 핵심역량 <span class="muted">(교육과정 총론 · 고르지 않으면 모두 참고)</span></span>
+          <div class="chips" id="compChips"></div>
+        </div>
+      </div>
+      <!-- 대학 평가요소 세부 역량(사용자 요청 2026-10-21): rules/prompt-base.json eval_factors — 5개 대학 공동연구 원문 -->
+      <div class="field" id="evalField">
+        <span class="label">대학 평가요소 세부 역량 <span class="muted">(학생부종합전형 공통 평가요소 · 고르지 않으면 넣지 않음)</span></span>
+        <div class="chips eval-chips" id="evalChips"></div>
+        <p class="hint">고른 관점이 메모 속 행동으로 드러나게 써요. 흐린 칸(성적·이수 과목으로 보는 항목)은 문단에 쓸 수 없어 고를 수 없어요. 출처: 건국대·경희대·연세대·중앙대·한국외대 공동연구(2022)</p>
+      </div>
+      <div class="field">
+        <span class="label">참고 예시 <span class="muted">(쓰는 방식을 본뜸, 고르지 않으면 과목에 맞춰 임의로 2개)</span></span>
+        <p class="hint" id="refCardHint"></p>
+        <div class="ex-groups" id="exGroups" hidden></div>
+        <div class="examples" id="exampleList"></div>
+        <button type="button" class="btn text my-ex-open" id="btnMyExOpen">+ 내 예시 추가</button>
+        <div class="my-ex-form" id="myExForm" hidden>
+          <p class="hint" id="myExWhere"></p>
+          <label class="label" for="myExText">예시 문단</label>
+          <textarea id="myExText" rows="6" placeholder="잘 쓴 생기부 문단을 붙여 넣으세요. 학생 이름 등 알아볼 수 있는 내용은 지워 주세요."></textarea>
+          <label class="btn ghost file-btn">텍스트 파일 불러오기 (.txt·.md)<input type="file" id="myExFile" accept=".txt,.md,text/plain,text/markdown" hidden></label>
+          <div class="field" id="myExSubjectField">
+            <label class="label" for="myExSubject">과목</label>
+            <input id="myExSubject" type="text" autocomplete="off" placeholder="예: 영어 I">
+          </div>
+          <label class="label" for="myExTitle">예시 이름 <span class="muted">(선택 · 목록에 보일 이름)</span></label>
+          <input id="myExTitle" type="text" autocomplete="off" maxlength="40" placeholder="예: 우리 학교 우수 사례">
+          <p class="hint">이 기기에만 저장되고 백업 파일에 함께 들어가요. 금지 표현이 있으면 표시만 하고 프롬프트에는 넣지 않아요.</p>
+          <div class="btn-line"><button type="button" class="btn primary" id="btnMyExSave">예시 추가</button><button type="button" class="btn text" id="btnMyExCancel">취소</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title"><span class="step">5</span> 결과 받기</h2>
+      <div class="key-row" id="keyRow" hidden>
+        <label class="label" for="apiKeyInline">Gemini API 키 <button type="button" class="small-link link-btn" data-open-keyguide>발급 방법</button></label>
+        <div class="refine-row">
+          <input id="apiKeyInline" type="password" autocomplete="off" placeholder="AIza… 또는 AQ.… 로 시작">
+          <button type="button" class="btn small" id="btnSaveKeyInline">저장</button>
+        </div>
+        <p class="hint">이 기기(브라우저)에만 저장되고, 구글 AI에 요청할 때만 쓰여요.</p>
+      </div>
+      <p class="hint key-saved" id="keySavedLine" hidden>✓ API 키가 이 기기에 저장되어 있어요. <a href="#guide">바꾸기·지우기</a></p>
+      <div class="btn-col">
+        <p class="loose-now" id="looseNow" hidden>⚠ 지금 '약간의 과장 허용'으로 만들어요 <button type="button" class="link-btn" data-goto-fact>(4번에서 바꾸기)</button></p>
+        <button type="button" class="btn primary" id="btnGenerate">앱에서 바로 만들기</button>
+        <button type="button" class="btn ghost" id="btnPrompt">프롬프트 복사해서 쓰기 <span class="muted">(Gemini·ChatGPT·Claude)</span></button>
+      </div>
+      <p class="hint center" id="needMemo"></p>
+      <!-- 무료 등급 사용량 안내(사용자 요청 2026-10-21): 하루 약 20회는 이 앱 시험 관찰값, 공식 숫자는 AI Studio Rate limit 화면 -->
+      <!-- 두 줄로 줄이고 구독 안내는 아래 지침 상자로 옮김(UX 점검 2026-10-24: 폰 화면 3분의 1을 막았음) -->
+      <p class="hint free-limit">ℹ️ 무료 키는 하루 15명 안팎이 적당해요(다시 만들기·다듬기도 1회씩). 다 쓰면 오후 4~5시에 다시 채워지고, 그동안은 <b>프롬프트 복사해서 쓰기</b>를 써 주세요.</p>
+      <!-- 지침 저장 버튼 묶음: 작은 글자 링크라 잘 안 보여서 상자·버튼으로 키움(사용자 요청 2026-10-21) -->
+      <div class="skill-box" role="group" aria-labelledby="skillBoxTitle">
+        <p class="skill-box-title" id="skillBoxTitle">📌 지침으로 저장해 두기 <span class="muted">(메모 없이도 돼요)</span></p>
+        <div class="skill-box-btns">
+          <button type="button" class="btn ghost skill-btn" id="btnSkillCopy">지침만 복사</button>
+          <button type="button" class="btn ghost skill-btn" id="btnSkillZip">스킬 파일 받기</button>
+          <button type="button" class="btn ghost skill-btn" id="btnSkillMd">SKILL.md</button>
+        </div>
+        <button type="button" class="btn ghost skill-btn" id="btnOpenPaste">채팅에서 받은 문단 점검하기</button>
+        <p class="hint skill-box-hint">유료 구독이 있으면 지침을 한 번 저장해 두고 학생마다 메모만 보내면 돼요. ChatGPT 프로젝트 → 지침만 복사 · Claude 스킬 → 스킬 파일 받기 · Gemini 스킬 → SKILL.md나 스킬 파일 (<a href="#guide">❓ 안내 → API 키 없이 쓰기</a>)</p>
+      </div>
+    </div>
+
+    <!-- 방식 B: 프롬프트 -->
+    <div class="card" id="promptCard" hidden>
+      <div id="promptOnly">
+      <h2 class="card-title">프롬프트</h2>
+      <p class="hint">아래 글을 복사해 Gemini·ChatGPT·Claude 채팅에 붙여 넣으세요. 위에서 관점·역량·예시를 바꾸면 이 글도 바로 바뀌어요. 받은 문단은 아래 칸에 붙여 넣으면 점검해 드려요.</p>
+      <textarea id="promptOut" rows="8" readonly></textarea>
+      <div class="btn-line">
+        <button type="button" class="btn primary" id="btnCopyPrompt">프롬프트 복사</button>
+        <button type="button" class="btn ghost" id="btnDownloadPrompt">파일로 받기 (.txt)</button>
+      </div>
+      </div>
+      <label class="label" for="pasteBack">받은 문단 붙여 넣기</label>
+      <textarea id="pasteBack" rows="5" placeholder="채팅에서 받은 문단을 여기에 붙여 넣으세요"></textarea>
+      <button type="button" class="btn ghost" id="btnCheckPasted">받은 문단 점검하기</button>
+    </div>
+
+    <!-- 결과 -->
+    <div class="card result" id="resultCard" hidden>
+      <div class="result-head">
+        <h2 class="card-title">완성 문단</h2>
+        <span class="count" id="countTag"></span>
+      </div>
+      <p class="hint target-line" id="targetLine" hidden></p>
+      <p class="status" id="genStatus" hidden></p>
+      <textarea id="resultText" rows="10" aria-label="완성 문단 (고쳐 쓸 수 있음)"></textarea>
+      <div id="resultNotes"></div>
+      <div id="findings"></div>
+      <p class="responsibility">나이스에 넣기 전 마지막 확인은 선생님이 해요. (2026 기재요령: AI가 만든 글을 그대로 입력하면 안 돼요)</p>
+      <div class="btn-line">
+        <button type="button" class="btn primary" id="btnCopyResult">복사</button>
+        <button type="button" class="btn ghost" id="btnSave">저장함에 넣기</button>
+        <button type="button" class="btn ghost" id="btnRegenerate">다시 만들기</button>
+      </div>
+      <div class="refine" id="refineBox">
+        <label class="label" for="refineInput">더 다듬기</label>
+        <div class="refine-row">
+          <input id="refineInput" type="text" placeholder="예: 더 짧게 / 발표 부분을 더 구체적으로">
+          <button type="button" class="btn small" id="btnRefine">요청</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-line end"><button type="button" class="btn text" id="btnReset">다음 학생 쓰기 (입력 지우기)</button></div>
+  </section>
+
+  <!-- 📋 저장함 ─────────────────────────────── -->
+  <section class="tab" id="tab-saved" data-tab="saved" hidden>
+    <div class="card">
+      <h2 class="card-title">저장한 문단 <span class="muted" id="savedTotal"></span></h2>
+      <div class="btn-line">
+        <button type="button" class="btn ghost" id="btnExport">백업 파일 저장</button>
+        <label class="btn ghost file-btn">백업 파일 불러오기<input type="file" id="importFile" accept="application/json,.json" hidden></label>
+      </div>
+      <p class="hint">저장한 문단·내 예시·직접 추가한 칩을 파일 하나로 보관해요. 브라우저 기록을 지우거나 다른 기기로 옮길 때 이 파일을 불러오면 그대로 돌아와요. (API 키는 들어가지 않아요) 반·번호가 붙은 문단도 들어가니 학교 밖으로 보내지 마세요.</p>
+      <p class="hint" id="backupHint"></p>
+    </div>
+    <div class="card" id="excelCard">
+      <h2 class="card-title">엑셀로 내려받기</h2>
+      <div class="xl-row">
+        <label class="xl-field"><span>학년</span><select id="xlGrade"></select></label>
+        <label class="xl-field"><span>반</span><select id="xlClass"></select></label>
+      </div>
+      <label class="check"><input type="checkbox" id="xlLatest" checked><span>같은 학생·같은 항목은 가장 최근에 저장한 것만</span></label>
+      <button type="button" class="btn primary xl-btn" id="btnExcel">엑셀 파일 받기 (.xlsx)</button>
+      <p class="hint" id="xlHint"></p>
+    </div>
+    <div id="savedList"></div>
+  </section>
+
+  <!-- 📚 자료 ─────────────────────────────── -->
+  <section class="tab" id="tab-library" data-tab="library" hidden>
+    <div class="card">
+      <h2 class="card-title">기재요령 규정</h2>
+      <div id="rulesView"></div>
+    </div>
+    <div class="card">
+      <h2 class="card-title">자동 점검 규칙</h2>
+      <div id="checkerView"></div>
+      <!-- 기본 규칙이 미리 들어 있어 대부분 필요 없음 → 접어 둠(사용자 결정 2026-10-21). 가져온 파일이 있으면 펼쳐 보임(js/app.js renderLibrary) -->
+      <details class="inline-details" id="checkerMore"><summary>다른 규칙 파일 쓰기 (선택)</summary>
+        <p class="hint">생기부 금지어 탐색기 앱에서 규칙을 직접 고쳤을 때만 써요. [규칙 설정] → [규칙 내보내기]로 받은 파일을 넣으면 고친 금지어·허용 목록이 이 앱 점검에도 적용돼요. 학교 고유 금지어 몇 개만 더하려면 아래 <b>✏️ 내 규칙</b>이 더 간단해요.</p>
+        <label class="btn ghost file-btn">금지어 탐색기 규칙 파일 가져오기 (.json)<input type="file" id="checkerFile" accept="application/json,.json" hidden></label>
+      </details>
+      <div class="my-rules" id="myRules">
+        <h3 class="sub-title">✏️ 내 규칙 <span class="muted">이 기기에만 저장 · 백업 파일에 함께 들어감</span></h3>
+        <p class="hint">위 규칙에 더해, 선생님이 따로 잡고 싶은 금지어나 잡지 않았으면 하는 표현을 넣어요. 다른 선생님 기기에는 적용되지 않아요.</p>
+        <div class="my-rule-form">
+          <b>금지어 더하기</b>
+          <div class="row-inline">
+            <input type="text" id="myBanTerm" maxlength="40" placeholder="금지어 (예: 학원)" aria-label="더할 금지어">
+            <input type="text" id="myBanAlt" maxlength="60" placeholder="바꿔 쓸 말 (선택)" aria-label="바꿔 쓸 말">
+            <button type="button" class="btn ghost" id="btnAddBan">더하기</button>
+          </div>
+        </div>
+        <div class="chips" id="myBanList"></div>
+        <div class="my-rule-form">
+          <b>허용 표현 더하기</b> <span class="muted">— 잘못 잡히는 표현만, 기재요령을 확인한 뒤에</span>
+          <div class="row-inline">
+            <input type="text" id="myAllowTerm" maxlength="40" placeholder="예: 대상 독자" aria-label="더할 허용 표현">
+            <button type="button" class="btn ghost" id="btnAddAllow">더하기</button>
+          </div>
+        </div>
+        <div class="chips" id="myAllowList"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2 class="card-title">참고 예시 <span class="muted" id="exampleCount"></span></h2>
+      <div class="chips" id="libraryFilter"></div>
+      <div class="ex-groups" id="libraryGroups" hidden></div>
+      <div id="libraryExamples"></div>
+    </div>
+    <div class="card" id="uploadCard" hidden>
+      <h2 class="card-title">올린 자료 <span class="muted" id="uploadCount"></span></h2>
+            <div id="uploadList"></div>
+    </div>
+  </section>
+
+  <!-- ❓ 안내 ─────────────────────────────── -->
+  <section class="tab" id="tab-guide" data-tab="guide" hidden>
+    <div class="card">
+      <h2 class="card-title">처음 쓰는 법</h2>
+      <ol class="howto">
+        <li><b>✏️ 만들기</b>에서 항목을 고르고, 학년과 관찰 메모를 적어요.</li>
+        <li><b>앱에서 바로 만들기</b>를 누르면 완성 문단이 나와요. (Gemini API 키 필요)</li>
+        <li>무료 사용량을 다 썼거나, 평소 쓰는 Gemini·ChatGPT·Claude 채팅에서 받고 싶다면 <b>프롬프트 복사해서 쓰기</b>로 받아도 돼요.</li>
+        <li>문단 아래 점검 결과(글자 수·금지 표현)를 보고 고친 뒤 <b>복사</b>해 초안으로 다듬어 써요. 나이스에는 선생님이 최종 확인한 문장을 넣어요.</li>
+      </ol>
+      <p class="hint">학생 이름은 어디에도 적지 않아요. 저장한 문단은 이 기기에만 남으니, 가끔 <b>📋 저장함 → 백업 파일 저장</b>을 해 두세요.</p>
+      <button type="button" class="btn ghost" data-open-keyguide data-guide-image="start">그림으로 보기</button>
+    </div>
+    <!-- 구독 이용자 안내(사용자 요청 2026-10-21): 개인 구독은 API 한도와 별개 → 지침을 채팅에 저장해 쓰기(저장 방법은 서비스별 — 2026-10-22 사용자 지적). 바로 아래에 스킬·프로젝트 안내 3개(순서: 사용자 승인 2026-10-21) -->
+    <div class="card">
+      <h2 class="card-title">API 키 없이 쓰기 <span class="muted">(구독·무료 채팅)</span></h2>
+      <ul class="howto">
+        <li><b>구독(Claude Pro·Google AI Pro·ChatGPT Plus 등)과 API는 별개</b>예요. 구독해도 "앱에서 바로 만들기"(API)의 하루 한도는 늘지 않아요.</li>
+        <li>대신 구독이 있으면 채팅에서 넉넉하게 쓸 수 있어요: <b>✏️ 만들기 5번</b>에서 지침을 받아 채팅에 한 번 저장(아래 안내) → 학생마다 메모만 보내기.</li>
+        <li>저장 방법은 서비스마다 달라요: <b>ChatGPT</b>는 <b>지침만 복사</b> → 프로젝트 지침 칸, <b>Claude</b>는 <b>스킬 파일 받기</b> → 스킬에 올리기, <b>Gemini</b>는 <b>지침만 복사</b>나 <b>SKILL.md</b>로 스킬 만들기.</li>
+        <li>받은 문단은 이 앱에서 메모를 적고 <b>프롬프트 복사해서 쓰기</b>를 누르면 나오는 <b>받은 문단 붙여 넣기</b> 칸에 넣어요. 글자 수·금지 표현 점검과 저장·엑셀은 그대로 돼요.</li>
+        <li>🔒 개인 구독 채팅은 설정에 따라 대화가 모델 학습에 쓰일 수 있어요. 각 서비스 설정에서 "모델 개선에 사용"을 끄고, 학생 이름·학번은 빼고 보내세요. 학교 구글 계정의 Gemini는 교육용 보호를 받는 경우가 많지만 학교 설정을 확인해 주세요.</li>
+      </ul>
+    </div>
+    <details class="card guide"><summary>Gemini 스킬로 저장해 쓰기</summary><button type="button" class="btn ghost" data-open-keyguide data-guide-image="gemini">그림으로 보기</button><div data-guide-src="gemini"></div></details>
+    <details class="card guide"><summary>ChatGPT 프로젝트에 저장해 쓰기</summary><button type="button" class="btn ghost" data-open-keyguide data-guide-image="gpt">그림으로 보기</button><div data-guide-src="gpt"></div></details>
+    <details class="card guide"><summary>Claude 스킬로 저장해 쓰기</summary><button type="button" class="btn ghost" data-open-keyguide data-guide-image="claude">그림으로 보기</button><div data-guide-src="claude"></div></details>
+    <details class="card guide"><summary>Gemini API 키 받기</summary><button type="button" class="btn ghost" data-open-keyguide>그림으로 보기</button><div data-guide-src="api"></div></details>
+    <div class="card">
+      <h2 class="card-title">API 키 설정</h2>
+      <div class="field">
+        <label class="label" for="apiKey">Gemini API 키</label>
+        <input id="apiKey" type="password" autocomplete="off" placeholder="AIza… 또는 AQ.… 로 시작">
+      </div>
+      <div class="field">
+        <label class="label" for="modelName">모델 이름</label>
+        <input id="modelName" type="text" autocomplete="off">
+        <p class="hint">비워 두면 기본값을 써요.</p>
+      </div>
+      <div class="btn-line">
+        <button type="button" class="btn primary" id="btnSaveKey">저장</button>
+        <button type="button" class="btn ghost" id="btnDeleteKey">키 지우기</button>
+      </div>
+      <p class="hint">키는 이 브라우저에만 저장돼요. 백업 파일에도 들어가지 않아요.</p>
+    </div>
+    <div class="card">
+      <h2 class="card-title">공용 컴퓨터에서 썼다면</h2>
+      <p class="hint">교무실 공용 PC처럼 여럿이 쓰는 기기라면, 다 쓴 뒤 이 앱이 이 기기에 남긴 것(API 키·작성 중 메모·저장함·내 예시·내 규칙)을 모두 지워 주세요. 저장함을 남기려면 먼저 <b>📋 저장함 → 백업 파일 저장</b>을 해 두세요.</p>
+      <div class="btn-line">
+        <button type="button" class="btn ghost danger" id="btnClearAll">이 기기의 앱 데이터 모두 지우기</button>
+      </div>
+    </div>
+    <p class="hint center">안내 글: Google·OpenAI·Anthropic 공식 도움말 기준 (2026-10 확인). 메뉴 이름은 바뀔 수 있어요.</p>
+  </section>
+</main>
+
+<nav class="tabbar" aria-label="화면 이동">
+  <a href="#make" data-tab-link="make"><span class="ico" aria-hidden="true">✏️</span>만들기</a>
+  <a href="#saved" data-tab-link="saved"><span class="ico" aria-hidden="true">📋</span>저장함</a>
+  <a href="#library" data-tab-link="library"><span class="ico" aria-hidden="true">📚</span>자료</a>
+  <a href="#guide" data-tab-link="guide"><span class="ico" aria-hidden="true">❓</span>안내</a>
+</nav>
+
+<dialog id="keyGuide" class="img-dialog" aria-labelledby="keyGuideTitle">
+  <div class="img-dialog-bar"><b id="keyGuideTitle">Gemini API 키 발급 안내</b><button type="button" class="btn small" data-close-keyguide>닫기</button></div>
+  <div class="img-scroll" id="keyGuideScroll">
+    <img id="keyGuideImg" data-src="assets/gemini-key-guide.svg?v=20261101-share" width="1080" height="1920" alt="레서판다·거북이·펭귄이 설명하는 Gemini API 키 발급 5단계: 1 크롬에서 aistudio.google.com/apikey 열기, 2 구글 계정으로 로그인, 3 키가 있으면 4번으로·없으면 Create API key, 4 키 복사, 5 이 앱의 Gemini API 키 칸에 붙여 넣고 저장(윈도우 Ctrl + V, 맥 ⌘ + V). 무료 등급에서는 결제 설정을 하지 말고 학생 개인정보를 넣지 마세요.">
+  </div>
+  <p class="img-dialog-hint">그림을 누르면 크게·작게 볼 수 있어요.</p>
+</dialog>
+
+<dialog id="welcome">
+  <div class="mascot-row" aria-hidden="true"><img src="assets/mascot.svg" alt="" width="76" height="76"></div>
+  <h2>생기부 초안 도우미</h2>
+  <p>메모 몇 줄로 2026학년도 기재요령에 맞춘 특기사항 문단을 만들어요.</p>
+  <ul>
+    <li>학생 이름은 적지 않아요. 저장한 내용은 이 기기에만 남아요.</li>
+    <li>문단마다 글자 수와 금지 표현을 자동으로 점검해요.</li>
+    <li>기재요령상 AI 문장을 그대로 입력할 수는 없어요. 최종 확인과 수정은 선생님 몫이에요.</li>
+  </ul>
+  <form method="dialog"><button class="btn primary" value="ok">시작하기</button></form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/offline-data.js"></script>
+<script src="vendor/sr-rules.js?v=20261021b"></script>
+<script src="js/extra-checks.js?v=20261021-qa1"></script>
+<script src="js/prompt.js?v=20261101-share"></script>
+<script src="js/storage.js?v=20261101-share"></script>
+<script src="js/ai.js?v=20261023-fix1"></script>
+<script src="js/xlsx.js?v=20261021-sk1"></script>
+<script src="js/app.js?v=20261101-share"></script>
+<!-- 스크립트를 못 읽었을 때(zip 안에서 바로 열었거나 html 만 옮겼을 때) 빈 화면 대신 이유를 알린다 -->
+<script>if (!window.SMStore) document.body.insertAdjacentHTML('afterbegin', '<p role="alert" style="margin:16px;padding:16px;border:2px solid #b3261e;border-radius:8px;background:#fff;color:#1f1f1f;font-size:18px;line-height:1.6">앱 파일을 읽지 못했어요. zip 파일은 먼저 <b>압축을 풀고</b>, 풀린 폴더 안의 html 파일을 열어 주세요. html 파일만 다른 곳으로 옮겨도 열리지 않아요.</p>');</script>
+</body>
+</html>
