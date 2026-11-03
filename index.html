@@ -811,6 +811,10 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
                     <span class="label">참고 예시 <span class="muted">(미선택 시 과목 맞춤 2개 자동 참조)</span></span>
                     <p class="hint" id="refCardHint"></p>
                     <div class="ex-groups" id="exGroups" hidden></div>
+                    <div class="gk-lock-notice" id="exampleLockNotice" style="display:none; background:#fffbeb; border:1.5px solid #fde68a; border-radius:8px; padding:10px 14px; margin-bottom:12px; font-size:12.5px; color:#92400e; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                      <span>🔒 <strong>작성 예시 열람 잠금:</strong> 학교용 계정(@korea.kr) 또는 경기도교육청 계정(@goe.go.kr) 승인 교사 전용</span>
+                      <button type="button" class="btn small" style="background:#f59e0b; color:#fff; border:none; padding:4px 10px; font-size:11.5px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="window.Gatekeeper && window.Gatekeeper.openModal('apply')">승인 신청하기 ➔</button>
+                    </div>
                     <div class="examples" id="exampleList"></div>
                     <button type="button" class="btn text my-ex-open" id="btnMyExOpen">+ 내 예시 직접 추가</button>
                     <div class="my-ex-form" id="myExForm" hidden>
@@ -840,6 +844,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
                   </div>
                 </div>
                 <p class="hint key-saved" id="keySavedLine" hidden>✓ API 키가 이 브라우저에 저장되어 있습니다. <a href="#guide" data-tab-link="guide">변경·삭제</a></p>
+                <!-- AI 초안 생성 기능 잠금 안내 배너 -->
+                <div class="gk-lock-notice" id="draftLockNotice" style="display:none; background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:10px; padding:12px 16px; margin-bottom:14px; font-size:13px; color:#1e40af; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                  <span>🔒 <strong>AI 초안 바로 생성 &amp; 프롬프트 복사는 승인된 교사 전용 기능입니다.</strong></span>
+                  <button type="button" class="btn small" style="background:#2563eb; color:#fff; border:none; padding:5px 12px; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="window.Gatekeeper && window.Gatekeeper.openModal('apply')">학교/교육청 계정 승인 신청 ➔</button>
+                </div>
                 <div class="btn-col">
                   <p class="loose-now" id="looseNow" hidden>⚠ 현재 '과장 허용' 모드입니다 <button type="button" class="link-btn" data-goto-fact>(바꾸기)</button></p>
                   <button type="button" class="btn primary" id="btnGenerate">초안 바로 생성하기 (Gemini API)</button>
@@ -1069,6 +1078,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <span class="card-sum" id="step2-sum"></span>
           <button class="card-toggle">접기</button>
         </h2>
+        <!-- 생기부 정밀 검사 잠금 안내 배너 -->
+        <div class="gk-lock-notice" id="checkLockNotice" style="display:none; background:#fef2f2; border:1.5px solid #fecaca; border-radius:10px; padding:12px 16px; margin-bottom:14px; font-size:13px; color:#991b1b; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+          <span>🔒 <strong>생기부 정밀 검사 기능은 승인 교사 전용입니다.</strong> (학교/교육청 계정 승인 후 무제한 이용)</span>
+          <button type="button" class="btn small" style="background:#dc2626; color:#fff; border:none; padding:5px 12px; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="window.Gatekeeper && window.Gatekeeper.openModal('apply')">승인 신청하기 ➔</button>
+        </div>
         <div class="actions">
           <button id="btn-run" class="primary">검사 실행</button>
           <span class="hint" id="run-hint"></span>
@@ -2937,16 +2951,17 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <div id="appGatekeeperOverlay" class="gk-backdrop gk-hidden">
   <div class="gk-dialog">
     <!-- 게이트키퍼 헤더 -->
-    <div class="gk-header">
+    <div class="gk-header" style="position:relative;">
+      <button type="button" class="gk-close-btn" style="position:absolute; right:18px; top:18px; border:none; background:#e2e8f0; color:#334155; font-size:16px; font-weight:800; border-radius:50%; width:32px; height:32px; cursor:pointer;" title="닫기 (첫 화면 둘러보기)">✕</button>
       <div class="gk-brand-row">
         <span class="gk-lock-icon">🔒</span>
         <div>
-          <span class="gk-badge">비공개 시범 운영 · 교사 승인제</span>
+          <span class="gk-badge">교사 승인제 서비스</span>
           <h2 class="gk-title">학교생활기록부 올인원: 상담부터 기록까지</h2>
         </div>
       </div>
       <p class="gk-desc">
-        본 플랫폼은 2028 개편 5등급제 대입 진학상담 및 나이스 세특 1:1 동기화 연구를 위해, <strong>사전 승인을 받은 선생님에 한하여 제한적으로 제공</strong>되는 비공개 서비스입니다.
+        첫 화면 및 주요 가이드는 자유롭게 둘러보실 수 있으며, <strong>세특 AI 생성 및 정밀 검사 기능은 사전 승인을 받은 선생님에 한하여 제공</strong>됩니다.
       </p>
     </div>
 
@@ -2962,18 +2977,18 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <form id="gkApplyForm" class="gk-form">
         <div class="gk-form-grid">
           <div class="gk-field">
-            <label class="gk-label" for="gkInputName">선생님 성함 *</label>
-            <input type="text" id="gkInputName" class="gk-input" placeholder="예: 홍길동" required autocomplete="name">
+            <label class="gk-label" for="gkInputName">닉네임 (또는 선생님 성함) *</label>
+            <input type="text" id="gkInputName" class="gk-input" placeholder="예: 김선생, 수학통, 홍길동" required autocomplete="name">
           </div>
           <div class="gk-field">
             <label class="gk-label" for="gkInputSchool">소속 고등학교 *</label>
-            <input type="text" id="gkInputSchool" class="gk-input" placeholder="예: 한국고등학교" required>
+            <input type="text" id="gkInputSchool" class="gk-input" placeholder="예: 경기OO고등학교, 수원고등학교" required>
           </div>
         </div>
         <div class="gk-field">
-          <label class="gk-label" for="gkInputEmail">구글 이메일 (계정) *</label>
-          <input type="email" id="gkInputEmail" class="gk-input" placeholder="예: teacher@gmail.com" required autocomplete="email">
-          <span class="gk-hint">※ 승인 확인 시 본 이메일로 로그인하므로 정확히 입력해 주세요.</span>
+          <label class="gk-label" for="gkInputEmail">학교용 계정 또는 경기도교육청 계정 (이메일) *</label>
+          <input type="email" id="gkInputEmail" class="gk-input" placeholder="예: teacher@goe.go.kr 또는 teacher@korea.kr" required autocomplete="email">
+          <span class="gk-hint">※ 경기도교육청 계정(@goe.go.kr), 공직자통합메일(@korea.kr), 학교 공식 도메인 계정 입력 시 관리자가 우선 승인합니다.</span>
         </div>
         <div class="gk-field">
           <label class="gk-label" for="gkInputPhone">연락처 및 담당 학년 (선택)</label>
@@ -2996,7 +3011,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         </p>
         <div class="gk-field">
           <label class="gk-label" for="gkInputCheckEmail">신청하신 구글 이메일 주소</label>
-          <input type="email" id="gkInputCheckEmail" class="gk-input" placeholder="예: teacher@gmail.com" required autocomplete="email">
+          <input type="email" id="gkInputCheckEmail" class="gk-input" placeholder="예: teacher@goe.go.kr 또는 teacher@korea.kr" required autocomplete="email">
         </div>
         <button type="submit" id="gkBtnCheckApproval" class="gk-btn-primary" style="background:#059669;">✅ 승인 상태 확인 &amp; 워크벤치 입장</button>
         <div id="gkCheckResultMsg" class="gk-msg-box"></div>
