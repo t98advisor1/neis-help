@@ -426,6 +426,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 .ai-dock-btn { width: 100%; height: auto; padding: 10px 12px; font-size: 13px; }
 .ai-dock-note { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
 </style>
+  <link rel="stylesheet" href="css/counsel.css">
 </head>
 <body class="font-nanum">
 
@@ -514,6 +515,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <button class="op-card reveal" style="--d:.46s" data-open="guide">
         <span class="no">05</span><span class="ic">📖</span><b>기재요령 검색</b>
         <span class="ds">2026학년도 기재요령 원문을 낱말로 찾고 단원별로 읽습니다.</span><i aria-hidden="true">→</i></button>
+    <button class="op-card reveal" style="--d:.54s" data-open="counsel">
+        <span class="no">06</span><span class="ic">🎯</span><b>2027 대입 진학상담</b>
+        <span class="ds">133개 대학 입결DB, 5등급제 환산, 논술전형 총정리 및 단일 마스터 시트와 세특을 연동합니다.</span><i aria-hidden="true">→</i></button>
     </div>
   </div>
 </section>
@@ -527,6 +531,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <button role="tab" data-open="check" aria-selected="false">생기부 점검하기</button>
     <button role="tab" data-open="prompts" aria-selected="false">AI 프롬프트 · 스킬</button>
     <button role="tab" data-open="guide" aria-selected="false">기재요령 검색</button>
+    <button role="tab" data-open="counsel" aria-selected="false" class="op-tab-counsel">🎯 2027 대입 진학상담</button>
   </nav>
 
   <div class="op-panels">
@@ -1028,13 +1033,40 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <h2 class="op-panel-title">✍️ AI 프롬프트 · 스킬 지침</h2>
       <p class="op-panel-sub">ChatGPT 프로젝트 지침, Claude 스킬(.zip), Gemini 스킬(SKILL.md)로 등록해 두고 쓸 수 있는 2026 기재요령 영역별 표준 지침입니다.</p>
 
+            <!-- 💎 구글 제미나이 젬스(Gems) & 맞춤형 AI 활용 가이드 -->
+      <div class="card" style="margin-bottom:18px; background:linear-gradient(135deg, #fdfbf7 0%, #fff0f3 100%); border:1.5px solid #fecdd3;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h2 style="font-size:16.5px; font-weight:800; color:var(--ink); margin:0; display:flex; align-items:center; gap:8px;">
+            💎 구글 제미나이 젬스(Gems) & 맞춤형 AI 전용 봇 활용법
+          </h2>
+          <span style="font-size:11.5px; font-weight:700; color:var(--rausch); background:#ffe4e6; padding:3px 8px; border-radius:999px;">무료 계정 지원</span>
+        </div>
+        <p style="font-size:13px; color:var(--body); line-height:1.6; margin-bottom:12px;">
+          스킬 압축파일(.zip)을 따로 다운로드받아 설치할 필요 없이, 아래에서 원하는 영역의 <strong>[지침 복사]</strong>를 누른 뒤 
+          <strong>Google Gemini(gemini.google.com)</strong>의 <strong>[Gems]</strong>에 등록해 두면 나만의 1,500 Byte 준수 생기부 작성 봇이 완성됩니다!
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px; font-size:12.5px;">
+          <div style="background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #fce7f3;">
+            <b style="color:var(--rausch);">1단계: 지침 복사</b><br>
+            아래 카드에서 원하는 영역(교과세특, 행특 등)의 <strong>[지침 복사]</strong> 버튼을 누릅니다.
+          </div>
+          <div style="background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #fce7f3;">
+            <b style="color:var(--rausch);">2단계: Gemini 젬스 생성</b><br>
+            Gemini 화면 좌측 <strong>[Gems 관리] → [새 Gem 만들기]</strong>를 누르고 복사한 지침을 붙여넣습니다.
+          </div>
+          <div style="background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #fce7f3;">
+            <b style="color:var(--rausch);">3단계: 평생 무료 자동화</b><br>
+            이제 대화창에 학생의 수업 관찰 사실만 한 줄 적어주면 기재요령을 완벽 준수한 초안이 즉시 완성됩니다!
+          </div>
+        </div>
+      </div>
+
       <div class="summary">
         <div class="card" style="flex:1 1 300px; margin-bottom:0;">
           <h2><span class="step-no">1</span> 교과 세부능력 및 특기사항</h2>
           <p class="hint" style="margin-bottom:16px;">수업·수행평가 관찰 사실, 성취기준에 따른 성취수준 특성, 학습활동 참여도와 성장을 500자(1,500 Byte) 이내로 구성합니다.</p>
           <div class="actions" style="margin-top:0;">
             <button type="button" class="primary" style="height:auto; padding:10px 16px; font-size:14px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('setuk','copy')">지침 복사</button>
-            <button type="button" style="padding:10px 14px; font-size:14px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('setuk','zip')">스킬 .zip</button>
             <button type="button" style="padding:10px 14px; font-size:14px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('setuk','md')">SKILL.md</button>
           </div>
         </div>
@@ -1044,7 +1076,6 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <p class="hint" style="margin-bottom:16px;">1년 동안 지속 관찰한 행동특성, 인성, 발전 가능성을 구체적 행동 근거 중심으로 300자(900 Byte) 이내로 구성합니다.</p>
           <div class="actions" style="margin-top:0;">
             <button type="button" class="primary" style="height:auto; padding:10px 16px; font-size:14px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('haengteuk','copy')">지침 복사</button>
-            <button type="button" style="padding:10px 14px; font-size:14px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('haengteuk','zip')">스킬 .zip</button>
             <button type="button" style="padding:10px 14px; font-size:14px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('haengteuk','md')">SKILL.md</button>
           </div>
         </div>
@@ -1056,7 +1087,6 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <p class="hint" style="margin-bottom:16px;">실제 맡은 역할과 활동 과정, 참여도·협력도·태도 변화를 500자(1,500 Byte) 이내로 서술합니다.</p>
           <div class="actions" style="margin-top:0;">
             <button type="button" style="padding:9px 14px; font-size:13.5px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('jayul','copy')">지침 복사</button>
-            <button type="button" style="padding:9px 14px; font-size:13.5px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('jayul','zip')">스킬 .zip</button>
             <button type="button" style="padding:9px 14px; font-size:13.5px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('jayul','md')">SKILL.md</button>
           </div>
         </div>
@@ -1066,7 +1096,6 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <p class="hint" style="margin-bottom:16px;">부서명·이수시간 자동 표기 바이트를 고려하여 동아리 내 실제 활동과 역할을 서술합니다.</p>
           <div class="actions" style="margin-top:0;">
             <button type="button" style="padding:9px 14px; font-size:13.5px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('dongari','copy')">지침 복사</button>
-            <button type="button" style="padding:9px 14px; font-size:13.5px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('dongari','zip')">스킬 .zip</button>
             <button type="button" style="padding:9px 14px; font-size:13.5px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('dongari','md')">SKILL.md</button>
           </div>
         </div>
@@ -1076,7 +1105,6 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <p class="hint" style="margin-bottom:16px;">관심 분야와 진로 탐색·체험·상담 결과를 사실 위주로 500자(1,500 Byte) 이내로 서술합니다.</p>
           <div class="actions" style="margin-top:0;">
             <button type="button" style="padding:9px 14px; font-size:13.5px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('jinro','copy')">지침 복사</button>
-            <button type="button" style="padding:9px 14px; font-size:13.5px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('jinro','zip')">스킬 .zip</button>
             <button type="button" style="padding:9px 14px; font-size:13.5px;" onclick="window.SMAction && window.SMAction.exportAreaSkill('jinro','md')">SKILL.md</button>
           </div>
         </div>
@@ -1090,12 +1118,678 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
   </div>
 
+  
+    <!-- ── 패널 6: 2027 대입 진학상담 & 대학별 입결 & 5등급제 환산 & 나이스 세특 ── -->
+    <div class="op-panel hidden" id="panel-counsel" role="tabpanel">
+      <!-- 2027 상담 상단 서브바 -->
+      <div class="counsel-header-bar">
+        <nav class="counsel-sub-nav" role="tablist" aria-label="진학상담 메뉴">
+          <button type="button" class="counsel-sub-btn is-active" data-counsel-sub="unis">🏛️ 대학·전형 검색</button>
+          <button type="button" class="counsel-sub-btn" data-counsel-sub="finder">📊 성적으로 대학 찾기</button>
+          <button type="button" class="counsel-sub-btn" data-counsel-sub="nonsul">📝 논술전형·자료실</button>
+          <button type="button" class="counsel-sub-btn" data-counsel-sub="records">✍️ 나이스 세특·마스터 시트 연동</button>
+          <button type="button" class="counsel-sub-btn" data-counsel-sub="settings">⚙️ 보안·관리자 설정</button>
+        </nav>
+
+        <div class="counsel-auth-bar">
+          <div class="auth-badge locked" id="counselAuthBadge" title="클릭하여 교사 인증/잠금 상태 변경">
+            <span id="counselAuthIcon">🔒</span> <span id="counselAuthLabel">보안 잠금</span>
+          </div>
+          <button type="button" class="btn-super-admin" id="btnOpenSuperAdmin" title="전체 관리자 설정 (비밀번호/기한 관리)">👑 전체 관리자</button>
+        </div>
+      </div>
+
+      <!-- 참고자료 안내 배너 -->
+      <div class="counsel-notice-banner">
+        <div>
+          <strong>📌 2027 대입 진학상담 & 5등급제 추정 안내:</strong>
+          <span>본 입결 데이터 및 2028 개편 5등급제 환산 수치는 담임선생님의 상담 편의를 위한 참고자료입니다. 최종 지원 시에는 각 대학 최신 수시 모집요강 및 대교협 어디가(adiga) 공시 기준을 함께 확인하세요.</span>
+        </div>
+      </div>
+
+      <!-- 서브패널 1: 대학·전형 검색 (133개 대학) -->
+      <div class="counsel-sub-panel" id="counsel-sub-unis">
+        <div class="hero-search-box">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input class="main-search-input" id="counselUniSearchInput" type="search" placeholder="대학명(초성 검색 가능: ㄱㄷ, ㅅㄷ), 학과, 지역 검색..." autocomplete="off">
+            <span class="search-clear-btn" id="counselUniSearchClear">✕</span>
+          </div>
+
+          <div class="search-filter-row" id="counselUniFilterRow">
+            <span class="filter-label">지역:</span>
+            <button class="chip on" data-filter-reg="전체">전체</button>
+            <button class="chip" data-filter-reg="서울">서울</button>
+            <button class="chip" data-filter-reg="경기·인천">경기·인천</button>
+            <button class="chip" data-filter-reg="충청">충청</button>
+            <button class="chip" data-filter-reg="영남">영남</button>
+            <button class="chip" data-filter-reg="호남">호남</button>
+            <button class="chip" data-filter-reg="강원·제주">강원·제주</button>
+
+            <div class="chip-divider"></div>
+
+            <span class="filter-label">특화:</span>
+            <button class="chip m15" id="chipM15">주요 15개대</button>
+            <button class="chip" id="chipNonsulOnly">📝 논술실시교</button>
+            <button class="chip" id="chipFavs">★ 즐겨찾기</button>
+          </div>
+        </div>
+
+        <div class="result-status-bar">
+          <span>검색된 대학 <b id="counselUniCount">0</b>개교</span>
+          <span style="font-size:12px; color:var(--muted)">전국 133개 대학 전형 데이터베이스 (카드 클릭 시 분야별 입결 분석)</span>
+        </div>
+
+        <div class="uni-grid" id="counselUniGrid"></div>
+      </div>
+
+      <!-- 서브패널 2: 성적으로 대학 찾기 (Finder) -->
+      <div class="counsel-sub-panel" id="counsel-sub-finder" hidden>
+        <div class="finder-card">
+          <div class="finder-header">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+              <div>
+                <h3 class="finder-title">🎯 내신 등급별 지원 가능 대학·전형 탐색 (5등급제 추정 병기)</h3>
+                <p class="finder-desc">학생의 교과 평균 등급을 입력하면 현행 9등급제 등록자 평균선과 <strong>2028 개편 5등급제 환산 추정선</strong>을 함께 분석합니다.</p>
+              </div>
+              <div style="background:var(--page); border:1px solid var(--hairline); border-radius:var(--r-full); padding:3px; display:inline-flex; gap:2px;">
+                <button class="chip on" id="modeGrade9" style="font-size:12px; padding:4px 12px;">9등급제(현행)</button>
+                <button class="chip" id="modeGrade5" style="font-size:12px; padding:4px 12px;">5등급제(개편안)</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="finder-control-grid">
+            <div class="grade-box">
+              <label for="counselGradeInput" id="counselGradeInputLabel">학생 내신 (9등급제 기준)</label>
+              <input class="grade-input-large" id="counselGradeInput" type="number" step="0.05" min="1.0" max="9.0" value="2.50">
+              <span style="font-size:12px; font-weight:700; color:var(--muted);" id="counselGradeConvertedHint">≈ 2028 5등급제 추정: 2.11등급</span>
+            </div>
+
+            <div>
+              <div class="search-filter-row" style="margin-bottom:8px;">
+                <span class="filter-label">계열:</span>
+                <button class="chip on" data-finder-trk="인">인문</button>
+                <button class="chip" data-finder-trk="자">자연</button>
+                <button class="chip" data-finder-trk="초">초등</button>
+                <button class="chip" data-finder-trk="의">의약학</button>
+
+                <div class="chip-divider"></div>
+
+                <span class="filter-label">전형:</span>
+                <button class="chip on" data-finder-ty="전체">전체</button>
+                <button class="chip" data-finder-ty="교">교과</button>
+                <button class="chip" data-finder-ty="종">종합</button>
+                <button class="chip" data-finder-ty="논">논술</button>
+              </div>
+
+              <div class="search-filter-row">
+                <span class="filter-label">권역:</span>
+                <button class="chip on" data-finder-reg="전체">전체</button>
+                <button class="chip" data-finder-reg="수도권">수도권</button>
+                <button class="chip" data-finder-reg="비수도권">비수도권</button>
+
+                <div class="chip-divider"></div>
+
+                <span class="filter-label">오차 범위:</span>
+                <button class="chip" data-finder-range="0.15">±0.15</button>
+                <button class="chip on" data-finder-range="0.3">±0.30</button>
+                <button class="chip" data-finder-range="0.5">±0.50</button>
+                <button class="chip" data-finder-range="0.8">±0.80</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-status-bar">
+            <span>지원 가능권 전형: <b id="counselFinderCount">0</b>개</span>
+            <span style="font-size:12px; color:var(--muted)">※ 2025 수시 최종 등록자 평균 기준 (어디가 70% Cut 교차확인 권장)</span>
+          </div>
+
+          <div class="finder-table-wrapper">
+            <table class="m-table">
+              <thead>
+                <tr>
+                  <th>대학명</th>
+                  <th>계열</th>
+                  <th>전형유형</th>
+                  <th>전형명</th>
+                  <th>9등급제 (등록자 평균)</th>
+                  <th>2028 5등급제 추정</th>
+                  <th>세특/상담 담기</th>
+                </tr>
+              </thead>
+              <tbody id="counselFinderTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 서브패널 3: 논술전형 총정리 & 공식 자료실 -->
+      <div class="counsel-sub-panel" id="counsel-sub-nonsul" hidden>
+        <!-- 공식 사이트 바로가기 허브 카드 -->
+        <div class="wb-card" style="margin-bottom:20px; background:linear-gradient(to right, #ffffff, #faf9f5);">
+          <div class="wb-card-title">
+            <span>🌐 공식 입시결과 & 논술 기출 공식 자료실</span>
+          </div>
+          <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">
+            학생들이 가장 많이 찾는 대학별 공식 입결 공시 사이트 및 논술 기출문제·채점기준 다운로드 공식 출처입니다.
+          </p>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px; margin-bottom:16px;">
+            <a class="wb-card" style="padding:14px 16px; border-left:4px solid var(--rausch); display:flex; flex-direction:column; gap:4px; text-decoration:none;" href="https://www.adiga.kr" target="_blank" rel="noreferrer">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong style="color:var(--ink); font-size:14px;">🏫 대교협 대학어디가 (공식)</strong>
+                <span style="font-size:11px; color:var(--rausch); font-weight:700;">바로가기 ↗</span>
+              </div>
+              <span style="font-size:12px; color:var(--muted);">전국 모든 대학 전년도 70% 컷 입결 및 수시 모집요강 공시</span>
+            </a>
+
+            <a class="wb-card" style="padding:14px 16px; border-left:4px solid #0284c7; display:flex; flex-direction:column; gap:4px; text-decoration:none;" href="https://www.ebsi.co.kr" target="_blank" rel="noreferrer">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong style="color:var(--ink); font-size:14px;">📝 EBSi 논술 자료실</strong>
+                <span style="font-size:11px; color:#0284c7; font-weight:700;">바로가기 ↗</span>
+              </div>
+              <span style="font-size:12px; color:var(--muted);">주요 대학 논술 기출문제 다운로드 및 무료 기출 해설 특강</span>
+            </a>
+
+            <div class="wb-card" style="padding:14px 16px; border-left:4px solid #059669; display:flex; flex-direction:column; gap:4px;">
+              <strong style="color:var(--ink); font-size:14px;">📌 선행학습 영향평가 보고서 안내</strong>
+              <span style="font-size:12px; color:var(--muted);">각 대학 입학처 홈페이지 자료실에서 대학별 논술 기출 원문·출제의도·모범답안을 PDF로 공식 배포합니다.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 49개 대학 논술전형 요약표 -->
+        <div class="finder-card">
+          <div class="finder-header">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div>
+                <h3 class="finder-title">📝 2027 전국 49개 대학 논술전형 총정리 (pp.175~176 원본 데이터)</h3>
+                <p class="finder-desc">모집인원, 전형방법(논술 비중), 수능최저학력기준 적용 여부를 한눈에 비교합니다.</p>
+              </div>
+              <div class="search-filter-row">
+                <span class="filter-label">수능최저:</span>
+                <button class="chip on" data-nonsul-filter="전체">전체 (49개)</button>
+                <button class="chip" data-nonsul-filter="csat-o">최저 있음(O)</button>
+                <button class="chip" data-nonsul-filter="csat-x">최저 없음(X)</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-status-bar">
+            <span>해당 전형 수: <b id="counselNonsulCount">0</b>개</span>
+            <span style="font-size:12px; color:var(--muted)">※ 세부 학과별 모집인원 및 수능최저 등급은 대학별 모집요강 참고</span>
+          </div>
+
+          <div class="finder-table-wrapper">
+            <table class="m-table">
+              <thead>
+                <tr>
+                  <th>대학명</th>
+                  <th>전형명</th>
+                  <th>모집인원</th>
+                  <th>전형방법</th>
+                  <th>수능최저</th>
+                  <th>세특/상담 담기</th>
+                </tr>
+              </thead>
+              <tbody id="counselNonsulTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 서브패널 4: 단일 마스터 시트 & 구글 시트 =AI() 관계형 자동화 워크벤치 -->
+      <div class="counsel-sub-panel" id="counsel-sub-records" hidden>
+        <!-- 💡 구글 시트 =AI() 관계형 파이프라인 안내 카드 -->
+        <div class="wb-card" style="margin-bottom:20px; background:linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); border:1.5px solid #86efac;">
+          <div class="wb-card-title" style="margin-bottom:8px;">
+            <span style="display:flex; align-items:center; gap:8px;">
+              📊 구글 시트 관계형 마스터 시트 & <code style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:6px; font-size:14px;">=AI()</code> 무료 자동화
+            </span>
+            <span style="font-size:11.5px; font-weight:700; color:#15803d; background:#dcfce7; padding:3px 8px; border-radius:999px;">무료 구글 계정 100% 지원</span>
+          </div>
+          <p style="font-size:13px; color:var(--body); line-height:1.6; margin-bottom:12px;">
+            <strong>로컬에서는 100% 프라이버시가 안전하게 보장</strong>되며, 선생님 본인의 구글 계정으로 로그인 후 <strong>[관계형 마스터 시트 사본 만들기]</strong>를 실행하면, 
+            구글 시트 셀 안에서 <code style="font-weight:700; color:var(--rausch);">=AI(관찰기록, 목표대학)</code> 수식으로 전교생 세특 문구를 자동 완성할 수 있습니다!
+          </p>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px; margin-bottom:12px;">
+            <div style="background:#ffffff; border:1px solid #bbf7d0; border-radius:8px; padding:12px;">
+              <strong style="color:#15803d; font-size:13.5px;">① 관계형 마스터 시트 사본 생성</strong>
+              <p style="font-size:12px; color:var(--muted); margin:4px 0 10px;">
+                학번, 이름, 9등급/5등급내신, 1·2·3지망, 세특초안이 가로 1행으로 이어지는 표준 템플릿입니다.
+              </p>
+              <a href="https://docs.google.com/spreadsheets/create" target="_blank" rel="noreferrer" class="btn secondary" style="font-size:12px; padding:5px 10px; display:inline-block; text-decoration:none;">
+                📥 새 구글 시트 열기 ↗
+              </a>
+            </div>
+
+            <div style="background:#ffffff; border:1px solid #bbf7d0; border-radius:8px; padding:12px;">
+              <strong style="color:#15803d; font-size:13.5px;">② Google AI Studio 무료 API 키</strong>
+              <p style="font-size:12px; color:var(--muted); margin:4px 0 10px;">
+                Gemini 무료 API(분당 15회 호출, 완전 무료) 키를 시트에 등록해 유료 결제 없이 =AI() 수식을 씁니다.
+              </p>
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" class="btn secondary" style="font-size:12px; padding:5px 10px; display:inline-block; text-decoration:none;">
+                🔑 무료 Gemini API 키 발급 ↗
+              </a>
+            </div>
+
+            <div style="background:#ffffff; border:1px solid #bbf7d0; border-radius:8px; padding:12px;">
+              <strong style="color:#15803d; font-size:13.5px;">③ 시트용 =AI() Apps Script 코드</strong>
+              <p style="font-size:12px; color:var(--muted); margin:4px 0 10px;">
+                구글 시트 메뉴 [확장 프로그램] → [Apps Script]에 붙여넣기만 하면 =AI() 함수가 바로 동작합니다.
+              </p>
+              <button type="button" class="btn secondary" id="btnCopySheetScript" style="font-size:12px; padding:5px 10px;">
+                📋 시트용 Apps Script 복사
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="counsel-workbench">
+          <!-- 좌측: 학생별 진학목표 & 세특 입력 폼 -->
+          <div class="wb-card">
+            <div class="wb-card-title">
+              <span>✍️ 학생 상담 & 나이스 세특 (단일 마스터 행 입력)</span>
+              <span style="font-size:12px; color:var(--rausch); font-weight:700;" id="currentCounselUniTag">선택 대학 없음</span>
+            </div>
+
+            <input type="hidden" id="editingRecordId">
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="stuNumber">학번 (예: 10301)</label>
+                <input class="form-input" id="stuNumber" type="text" placeholder="학번 입력">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="stuName">학생 이름 *</label>
+                <input class="form-input" id="stuName" type="text" placeholder="예: 김민수">
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="stuMajor">희망 학과 / 진로 분야</label>
+                <input class="form-input" id="stuMajor" type="text" placeholder="예: 인공지능소프트웨어">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="stuStatus">진행 상태</label>
+                <select class="form-input" id="stuStatus">
+                  <option value="상담대기">상담대기</option>
+                  <option value="1차상담완료" selected>1차상담완료</option>
+                  <option value="수시지원확정">수시지원확정</option>
+                  <option value="기재마감">기재마감</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="stuGrade9">9등급제 내신</label>
+                <input class="form-input" id="stuGrade9" type="number" step="0.01" placeholder="예: 2.15">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="stuGrade5">2028 5등급제 추정</label>
+                <input class="form-input" id="stuGrade5" type="number" step="0.01" placeholder="예: 1.85">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="targetUni1">1지망 대학 / 전형명 (핵심 목표) *</label>
+              <input class="form-input" id="targetUni1" type="text" placeholder="예: 한양대 컴퓨터소프트웨어 (논술전형)">
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="targetUni2">2지망 대학 / 전형</label>
+                <input class="form-input" id="targetUni2" type="text" placeholder="예: 중앙대 소프트웨어 (CAU융합)">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="targetUni3">3지망 대학 / 전형</label>
+                <input class="form-input" id="targetUni3" type="text" placeholder="예: 숭실대 AI융합 (학생부우수자)">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="counselOpinion">담임 진학상담 종합 의견</label>
+              <textarea class="form-input" id="counselOpinion" rows="2" placeholder="학생의 모의고사 성적 추이, 최저 충족 가능성, 면접/논술 준비도 요약..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="stuCreative">자율 / 동아리 / 진로활동 연계 메모</label>
+              <input class="form-input" id="stuCreative" type="text" placeholder="동아리 탐구 주제, 진로 특기사항 메모...">
+            </div>
+
+            <!-- 세특 바이트 카운터 -->
+            <div class="form-group">
+              <div class="form-label">
+                <span>국어/수학/영어/탐구 세특 관찰 기록</span>
+                <span style="font-size:11.5px; color:var(--muted)"><span id="counselByteCount">0</span> / 1,500 Byte</span>
+              </div>
+              <div class="byte-bar-bg" style="height:4px; background:var(--hairline); border-radius:2px; margin-bottom:6px; overflow:hidden;">
+                <div class="byte-bar-fill" id="counselByteBarFill" style="height:100%; width:0%; background:var(--rausch); transition:width 0.15s;"></div>
+              </div>
+              <textarea class="textarea-counsel" id="counselSetukMemo" placeholder="수업 중 발표, 탐구 보고서, 수학적/논리적 문제해결 과정 세특 문구를 기록하세요..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="stuBehavior">행동특성 및 종합의견(행특) 메모</label>
+              <input class="form-input" id="stuBehavior" type="text" placeholder="자기주도성, 배려/협력 태도 특기사항...">
+            </div>
+
+            <div style="display:flex; gap:8px; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-top:10px;">
+              <button type="button" class="btn secondary" id="btnNewMasterRecord" style="font-size:12.5px;">+ 새 학생 작성</button>
+              <div style="display:flex; gap:8px;">
+                <button type="button" class="btn secondary" id="btnCounselCopyText" style="font-size:12.5px;">📋 본문 복사</button>
+                <button type="button" class="btn secondary" id="btnSendToMake" style="font-size:12.5px; color:var(--rausch); border-color:var(--rausch);" title="1지망 대학 및 세특 메모를 '초안 만들기' 탭으로 전송하여 바이트 검사 및 AI 윤문 진행">
+                  🚀 초안 작성기로 전송
+                </button>
+                <button type="button" class="btn primary" id="btnSaveMaster" style="font-size:13px; font-weight:700;">
+                  💾 마스터 시트 저장
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 우측: 학생 목록 & 단일 마스터 시트 뷰 -->
+          <div class="wb-card">
+            <div class="wb-card-title">
+              <span>📁 단일 마스터 시트 (학급 학생 목록)</span>
+              <button type="button" class="btn secondary" id="btnExportMasterCsv" style="padding:4px 10px; font-size:12px;">📊 엑셀/CSV 내보내기</button>
+            </div>
+
+            <div class="form-group">
+              <input class="form-input" id="masterRecordSearch" type="search" placeholder="학생명, 학번, 1지망 대학으로 검색...">
+            </div>
+
+            <div id="counselRecordCards" style="max-height:460px; overflow-y:auto; padding-right:4px;"></div>
+          </div>
+        </div>
+
+        <!-- 단일 마스터 시트 1행 전체 테이블 (Single Master Sheet View) -->
+        <div class="wb-card">
+          <div class="wb-card-title">
+            <span>📋 학급 진학·세특 단일 마스터 테이블 (1학생 1행 구조)</span>
+            <span style="font-size:12px; color:var(--muted)">가로 1행으로 진학 목표와 세특이 한눈에 연결됩니다.</span>
+          </div>
+
+          <div class="master-table-wrapper">
+            <table class="master-table">
+              <thead>
+                <tr>
+                  <th>학번</th>
+                  <th>이름</th>
+                  <th>희망학과</th>
+                  <th>9등급</th>
+                  <th>5등급추정</th>
+                  <th>1지망 대학/전형</th>
+                  <th>2지망</th>
+                  <th>3지망</th>
+                  <th>담임상담의견</th>
+                  <th>세특관찰기록</th>
+                  <th>상태</th>
+                  <th>수정</th>
+                </tr>
+              </thead>
+              <tbody id="masterSheetTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 서브패널 5: 보안 및 관리자 설정 -->
+      <div class="counsel-sub-panel" id="counsel-sub-settings" hidden>
+        <div class="finder-card" style="max-width:760px; margin:0 auto;">
+          <h3 style="font-size:18px; font-weight:800; color:var(--ink); margin-bottom:6px;">⚙️ 진학자료 보안 및 시스템 설정</h3>
+          <p style="font-size:13px; color:var(--muted); margin-bottom:20px;">
+            교사용 비밀번호(PIN), Cloudflare R2 원본 스캔본 저장소 및 구글 시트 마스터 연동 주소를 설정합니다.
+          </p>
+
+          <div class="form-group">
+            <label class="form-label" for="settingSubPin">교사용(중간관리자) 비밀번호</label>
+            <input class="form-input" id="settingSubPin" type="password" placeholder="기본값: 2027">
+            <span style="font-size:11.5px; color:var(--muted)">인증 시 1개월(30일)간 로그인 상태가 유지되며, 전체 서비스 이용 기한까지 유효합니다.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">현재 서비스 이용 기한 (만료일)</label>
+            <div style="font-size:14px; font-weight:700; color:#0f766e; background:#f0fdfa; padding:8px 12px; border-radius:6px; border:1px solid #ccfbf1;">
+              📅 <span id="settingExpiryView">2027-02-28</span> (전체 관리자가 변경 가능)
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="settingStorageBase">Cloudflare R2 원본 스캔본 저장소 URL (CDN)</label>
+            <input class="form-input" id="settingStorageBase" type="text" placeholder="https://pub-xxx.r2.dev/pages/">
+            <span style="font-size:11.5px; color:var(--muted)">1,294쪽 원본 스캔본 WebP 파일이 보관된 초고속 CDN 주소입니다.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="settingGSheet">구글 시트(단일 마스터 시트) 웹앱 URL</label>
+            <input class="form-input" id="settingGSheet" type="url" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+            <span style="font-size:11.5px; color:var(--muted)">Google Apps Script 웹앱 URL을 입력하시면 학생 저장 시 구글 시트로 자동 전송됩니다.</span>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:16px; border-top:1px solid var(--hairline); flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn secondary" id="btnLockNow">🔒 즉시 보안 잠금</button>
+              <button type="button" class="btn secondary" id="btnClearMasterData" style="color:var(--danger);">전체 데이터 초기화</button>
+            </div>
+            <button type="button" class="btn primary" id="btnSaveGeneralSettings">설정 저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   <footer class="app-footer">
     <span id="visit-counter" class="visit-counter"></span>
     <span class="build" id="build" title="화면 코드가 마지막으로 바뀐 때입니다. 고친 내용이 안 보이면 새로고침(⌘⇧R) 해 주세요."></span>
     <span class="copyright">Copyright ⓒ 2026 math-tong, pkm. All rights reserved.</span>
   </footer>
 </section>
+
+
+<!-- 대학 상세 분석 & 관계형 입시결과 모달 (UniDetailDialog) -->
+<div class="viewer-modal-backdrop" id="uniDetailModal" hidden>
+  <div class="uni-detail-dialog">
+    <div class="uni-detail-head">
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <h2 id="udName" style="font-size:20px; font-weight:800; color:var(--ink);">대학명</h2>
+        <div id="udBadges" style="display:flex; gap:6px;"></div>
+      </div>
+      <button class="v-close-btn" id="udCloseBtn" style="padding:6px 12px; font-size:13px; background:none; border:1px solid var(--hairline); border-radius:6px; cursor:pointer;">✕ 닫기</button>
+    </div>
+
+    <!-- 라디오 버튼 4종 탐색 바 -->
+    <div class="uni-detail-nav-bar">
+      <div class="ud-radio-group">
+        <label class="ud-radio-item on" id="lblRadioResults">
+          <input type="radio" name="udAction" value="results" checked>
+          <span>📊 분야별 입시결과 분석</span>
+        </label>
+        <label class="ud-radio-item" id="lblRadioAdmission">
+          <input type="radio" name="udAction" value="admission">
+          <span>🌐 공식 입학처 사이트 ↗</span>
+        </label>
+        <label class="ud-radio-item" id="lblRadioAdiga">
+          <input type="radio" name="udAction" value="adiga">
+          <span>📈 대학어디가(adiga) 입결 ↗</span>
+        </label>
+        <label class="ud-radio-item" id="lblRadioScan">
+          <input type="radio" name="udAction" value="scan">
+          <span>🔒 참고자료 원본보기(비밀번호 필요)</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 모달 본문 (분야별 입시결과) -->
+    <div class="uni-detail-body">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+        <div class="ud-branch-filter-row" id="udBranchFilters" style="margin-bottom:0;">
+          <span class="filter-label">분야(계열) 선택:</span>
+          <button class="chip on" data-ud-trk="전체">전체 분야</button>
+          <button class="chip" data-ud-trk="인">인문계열</button>
+          <button class="chip" data-ud-trk="자">자연계열</button>
+          <button class="chip" data-ud-trk="의">의약학계열</button>
+          <button class="chip" data-ud-trk="초">초등교육</button>
+        </div>
+        <span style="font-size:11.5px; color:#b45309; background:#fffbeb; padding:3px 8px; border-radius:5px;">
+          ※ 합격선 기준: 2025 수시 최종 등록자 전체평균 (어디가 70% Cut과 교차확인 권장)
+        </span>
+      </div>
+
+      <div class="finder-table-wrapper" style="margin-top:10px;">
+        <table class="m-table">
+          <thead>
+            <tr>
+              <th>분야(계열)</th>
+              <th>전형 유형</th>
+              <th>전형명</th>
+              <th>9등급제 (등록자 평균)</th>
+              <th>2028 5등급제 추정</th>
+              <th>충원율</th>
+              <th>세특/상담 담기</th>
+            </tr>
+          </thead>
+          <tbody id="udGradesTbody"></tbody>
+        </table>
+      </div>
+
+      <div id="udNonsulSection" style="margin-top:20px; display:none;">
+        <h4 style="font-size:14.5px; font-weight:800; color:var(--ink); margin-bottom:8px;">📝 해당 대학 실시 논술전형</h4>
+        <div class="finder-table-wrapper">
+          <table class="m-table">
+            <thead>
+              <tr>
+                <th>전형명</th>
+                <th>모집인원</th>
+                <th>전형방법</th>
+                <th>수능최저</th>
+                <th>세특/상담 담기</th>
+              </tr>
+            </thead>
+            <tbody id="udNonsulTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="uni-detail-footer">
+      <button class="btn secondary" id="udBtnScan">🔒 참고자료 원본페이지 보기</button>
+      <button class="btn primary" id="udBtnCounsel">✍️ 이 대학으로 세특·상담 작성</button>
+    </div>
+  </div>
+</div>
+
+<!-- 교사용(중간관리자) 보안 인증 모달 (PIN Lock Modal) -->
+<div class="viewer-modal-backdrop" id="authModal" hidden>
+  <div class="auth-modal-dialog">
+    <div class="auth-modal-icon">🔐</div>
+    <h3 class="auth-modal-title">상담 교사 전용 인증</h3>
+    <p class="auth-modal-desc">
+      대입 참고자료 원본을 열람하려면<br>
+      설정하신 교사용 비밀번호를 입력해 주세요.<br>
+      <small style="color:var(--muted);">(1회 로그인 시 로컬 브라우저에서 1개월간 유지됩니다)</small>
+    </p>
+    <form id="authForm" onsubmit="return false;">
+      <input class="auth-input" id="authInputPin" type="password" placeholder="비밀번호 입력" autocomplete="current-password">
+      <div class="auth-err-msg" id="authErrMsg"></div>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn secondary" id="authCancelBtn" style="flex:1;">취소</button>
+        <button type="button" class="btn primary" id="authSubmitBtn" style="flex:2;">인증 및 열람</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 전체 관리자 전용 설정 모달 (Super Admin Modal) -->
+<div class="viewer-modal-backdrop" id="superAdminModal" hidden>
+  <div class="super-admin-dialog">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--hairline); padding-bottom:10px;">
+      <h3 style="font-size:18px; font-weight:800; color:var(--ink); margin:0;">👑 전체 관리자 전용 설정</h3>
+      <button type="button" id="saCloseBtn" style="background:none; border:none; font-size:18px; cursor:pointer;">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="saSubPin">중간관리자(상담 교사용) PIN 번호</label>
+      <input class="form-input" id="saSubPin" type="text" placeholder="예: 2027">
+      <span style="font-size:11.5px; color:var(--muted)">선생님들이 원본 및 자료를 열람할 때 입력하는 공용 암호입니다.</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="saExpiry">전체 서비스 이용 만료일 (YYYY-MM-DD)</label>
+      <input class="form-input" id="saExpiry" type="date" value="2027-02-28">
+      <span style="font-size:11.5px; color:var(--muted)">이 날짜가 지나면 교사용 비밀번호를 입력해도 접속이 차단됩니다.</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="saStorage">Cloudflare R2 스토리지 주소</label>
+      <input class="form-input" id="saStorage" type="text" placeholder="https://pub-xxx.r2.dev/pages/">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="saGSheet">구글 시트 마스터 웹앱 URL</label>
+      <input class="form-input" id="saGSheet" type="url" placeholder="https://script.google.com/macros/s/...">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="saNewSuperPin">전체 관리자 마스터 비밀번호 변경</label>
+      <input class="form-input" id="saNewSuperPin" type="password" placeholder="변경할 경우에만 새 마스터 비밀번호 입력">
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px;">
+      <button type="button" class="btn primary" id="btnSaveSuperAdmin" style="width:100%;">
+        설정 및 기간 저장
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 원본 1,294쪽 R2 스캔본 리더 모달 (저작권 math-tong) -->
+<div class="viewer-modal-backdrop" id="viewerModal" hidden>
+  <div class="viewer-window">
+    <div class="viewer-head">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:18px;">📖</span>
+        <strong id="viewerTitle" style="font-size:15px; color:var(--ink);">원본 참고자료 열람</strong>
+      </div>
+
+      <div class="viewer-tools">
+        <button type="button" class="btn secondary" id="viewerPrevBtn" style="padding:4px 10px; font-size:12.5px;">◀ 이전</button>
+        <span style="font-size:12.5px; color:var(--ink); font-weight:700;">
+          <input id="viewerCurPageInput" type="number" min="1" max="1294" style="width:54px; text-align:center; padding:3px; font-weight:700; border:1px solid var(--hairline); border-radius:4px;">
+          / <span id="viewerTotalSpan">1294p</span>
+        </span>
+        <button type="button" class="btn secondary" id="viewerNextBtn" style="padding:4px 10px; font-size:12.5px;">다음 ▶</button>
+        <div class="chip-divider"></div>
+        <button type="button" class="btn secondary" id="viewerZoomOut" style="padding:4px 8px; font-size:12px;">−</button>
+        <button type="button" class="btn secondary" id="viewerZoomFit" style="padding:4px 8px; font-size:12px;">맞춤</button>
+        <button type="button" class="btn secondary" id="viewerZoomIn" style="padding:4px 8px; font-size:12px;">+</button>
+        <div class="chip-divider"></div>
+        <button type="button" class="btn secondary" id="viewerCloseBtn" style="padding:4px 12px; font-size:12.5px; color:var(--danger); border-color:#fecaca;">✕ 닫기</button>
+      </div>
+    </div>
+
+    <!-- 북마크 칩 바 -->
+    <div style="padding:6px 16px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; gap:6px; flex-wrap:wrap; overflow-x:auto;" id="viewerNavChips"></div>
+
+    <div class="viewer-body">
+      <img id="viewerImg" class="viewer-image" alt="참고자료 원본 스캔본" loading="eager">
+    </div>
+
+    <!-- 뷰어 푸터 저작권 & 담임선생님 경감 출처 안내문구 -->
+    <div class="viewer-foot" style="flex-direction:column; gap:4px; align-items:flex-start;">
+      <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+        <span style="font-weight:700; color:var(--ink);">© 2026 math-tong. All rights reserved.</span>
+        <span style="font-size:11px; color:var(--muted);">Cloudflare R2 초고속 CDN 분산 제공</span>
+      </div>
+      <div class="viewer-attribution-box" style="width:100%;">
+        <strong>📌 저작권 및 출처 안내:</strong> 본 시스템의 전체적인 내용은 수학 교과서, 학교생활기록부 기재요령 매뉴얼 및 동료 교사들의 생기부 초안 문구를 참고하여 작성되었습니다. 디자인과 전체적인 시스템 구성은 개발자(math-tong)에게 있으며, 1·2학년 담임선생님의 생기부 및 진학 상담 부담을 덜어드리기 위해 정성껏 제작된 관계형 데이터 솔루션입니다.
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- 설정 모달 (기존 Vercel 원본 DOM 100% 그대로) -->
 <div class="modal-backdrop hidden" id="settings-modal">
@@ -1375,5 +2069,10 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   })();
 })();
 </script>
+
+<script src="data/universities.js"></script>
+<script src="data/gradefind.js"></script>
+<script src="js/counsel.js"></script>
+
 </body>
 </html>

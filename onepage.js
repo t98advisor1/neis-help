@@ -6,7 +6,7 @@
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 
-const PANELS = ['usage', 'make', 'check', 'prompts', 'guide'];
+const PANELS = ['usage', 'make', 'check', 'prompts', 'guide', 'counsel'];
 const workspace = $('#workspace');
 
 /* ── 메뉴 전환 ── */
