@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>학교생활기록부 점검 도우미</title>
+<title>학교생활기록부 올인원: 상담부터 기록까지</title>
 <meta name="description" content="엑셀·PDF 파일을 올리면 글자수(Byte) 초과, 금지 표현, 형식 오류, 중복 문장을 찾아 드립니다. 관찰 메모 기반 초안 작성과 AI 스킬 지침까지 브라우저 안에서만 처리됩니다.">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="학교생활기록부 점검 도우미">
+<meta property="og:site_name" content="학교생활기록부 올인원: 상담부터 기록까지">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:title" content="학교생활기록부 점검 도우미">
+<meta property="og:title" content="학교생활기록부 올인원: 상담부터 기록까지">
 <meta property="og:description" content="엑셀·PDF를 올리면 글자수(Byte) 초과, 금지 표현, 형식 오류, 중복 문장을 찾아 드립니다. 파일은 브라우저 안에서만 처리됩니다.">
 <meta property="og:url" content="https://neis-help-one.vercel.app/">
 <meta property="og:image" content="https://neis-help-one.vercel.app/og-image.png?v=1">
@@ -434,7 +434,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <header class="op-top" id="op-top">
   <a class="op-brand" href="#hero" aria-label="처음 화면으로">
     <span class="op-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 10h14M9 16h14M9 22h9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></span>
-    <span class="op-brand-name">학교생활기록부 점검 도우미</span>
+    <span class="op-brand-name">학교생활기록부 올인원: 상담부터 기록까지</span>
   </a>
   <span class="privacy-badge op-badge" title="업로드한 파일과 작성 내용은 서버로 전송되지 않고 이 브라우저 안에서만 처리됩니다.">🔒 파일 외부 전송 없음</span>
   <select id="fontSelect" class="op-font-select" aria-label="글꼴 선택" title="화면 글꼴 변경">
@@ -465,11 +465,12 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   <p class="ai-dock-note">AI 창은 화면 오른쪽에 일반 창으로 열리므로 Claude Pro · ChatGPT Plus 계정으로 평소처럼 로그인하면 됩니다. AI 창에 Ctrl+V → Enter, 답변을 Ctrl+C 한 뒤 ②를 누르세요.</p>
 </div>
 
-<!-- 오른쪽 화면 이동 점 -->
+<!-- 오른쪽 화면 이동 점 (4장 구성) -->
 <nav class="op-dots" aria-label="화면 이동">
-  <a href="#hero" data-for="hero" title="소개"><span class="sr">소개</span></a>
-  <a href="#menu" data-for="menu" title="메뉴"><span class="sr">메뉴</span></a>
-  <a href="#workspace" data-for="workspace" title="내용"><span class="sr">내용</span></a>
+  <a href="#hero" data-for="hero" title="1장: 처음 소개"><span class="sr">처음 소개</span></a>
+  <a href="#menu" data-for="menu" title="2장: 업무 메뉴"><span class="sr">업무 메뉴</span></a>
+  <a href="#workspace" data-for="workspace" title="3장: 생기부 작성·점검"><span class="sr">생기부 작성·점검</span></a>
+  <a href="#sec-counsel-scroll" data-for="sec-counsel-scroll" title="4장: 대입 진학상담"><span class="sr">대입 진학상담</span></a>
 </nav>
 
 <!-- ── 1화면: 소개 (기존 Vercel Hero 디자인 유지) ── -->
@@ -533,8 +534,8 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <section class="op-workspace" id="workspace">
   <nav class="op-tabs" id="op-tabs" role="tablist" aria-label="메뉴">
     <a class="op-up" href="#menu" title="메뉴 화면으로">↑ 메뉴</a>
-    <button role="tab" data-open="usage" class="is-active" aria-selected="true">사용법 · 검사 규칙</button>
-    <button role="tab" data-open="make" aria-selected="false">생기부 초안 작성</button>
+    <button role="tab" data-open="make" class="is-active" aria-selected="true">생기부 초안 작성</button>
+    <button role="tab" data-open="usage" aria-selected="false">사용법 · 검사 규칙</button>
     <button role="tab" data-open="check" aria-selected="false">생기부 점검하기</button>
     <button role="tab" data-open="prompts" aria-selected="false">AI 프롬프트 · 스킬</button>
     <button role="tab" data-open="guide" aria-selected="false">기재요령 검색</button>
@@ -545,7 +546,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   <div class="op-panels">
 
     <!-- ── 패널 1: 사용법 · 검사 규칙 (usage-section.css 디자인 통일) ── -->
-    <div class="op-panel" id="panel-usage" role="tabpanel">
+    <div class="op-panel hidden" id="panel-usage" role="tabpanel">
       <div id="sec-usage">
         <h2 class="op-panel-title">사용법 · 검사 규칙</h2>
         <p class="op-panel-sub">학교 업무 순서와 학생 개인정보 보호 원칙을 먼저 확인하고, 아래에서 상세 사용법과 검사 규칙을 열람하세요.</p>
@@ -578,7 +579,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     </div>
 
     <!-- ── 패널 2: 생기부 초안 작성 (기존 Vercel styles.css 카드 + 2단 데스크톱 워크벤치 디자인) ── -->
-    <div class="op-panel hidden" id="panel-make" role="tabpanel">
+    <div class="op-panel" id="panel-make" role="tabpanel">
       <div class="wrap">
 
         <div class="us-top-bar">
@@ -1592,7 +1593,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
   
     <!-- ── 4화면: 2027학년도 대입 진학상담 & 대학 진학성적 분석 스크롤 전용 섹션 ── -->
-    <section class="op-section" id="sec-counsel-scroll" style="padding:48px 24px; background:#f8fafc; border-top:1px solid #e2e8f0;">
+    <section class="op-screen" id="sec-counsel-scroll" style="background:#f8fafc; border-top:1px solid #e2e8f0; width:100%; box-sizing:border-box;">
       <div style="max-width:1120px; margin:0 auto;">
         <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
           <div>

@@ -78,7 +78,7 @@ if ('IntersectionObserver' in window) {
       top.classList.toggle('on-dark', id === 'hero');
     });
   }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
-  ['hero', 'menu', 'workspace'].forEach((id) => cur.observe(document.getElementById(id)));
+  ['hero', 'menu', 'workspace', 'sec-counsel-scroll'].forEach((id) => { const el = document.getElementById(id); if (el) cur.observe(el); });
 } else {
   top.classList.add('on-dark');
 }
