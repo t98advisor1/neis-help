@@ -1,35 +1,36 @@
 @echo off
-chcp 65001 > nul
-title GitHub 업로드 및 Vercel 배포
-echo ========================================================
-echo   [학생부 올인원 도우미] GitHub 업로드 및 Vercel 배포
-echo ========================================================
-echo.
+setlocal
 cd /d "%~dp0"
 
-:: 폴더 소유자 및 원격 저장소 주소 정정 (neis-help)
-git config --global --add safe.directory "%CD:\=/%" 2>nul
-git remote set-url origin https://github.com/t98advisor1/neis-help.git 2>nul
+git config --global --add safe.directory "%CD:\=/%" >nul 2>&1
+git remote set-url origin https://github.com/t98advisor1/neis-help.git >nul 2>&1
 
-git add -A
-git commit -m "Update 생기부 올인원 도우미" 2>nul
-
-echo [안내] https://github.com/t98advisor1/neis-help.git 로 업로드합니다.
-echo        로그인 창이 뜨면 GitHub 계정으로 로그인해 주세요...
+echo ========================================================
+echo   [GitHub Deploy] neis-help -^> Vercel
+echo ========================================================
 echo.
-git push -u origin main
+echo   Uploading to https://github.com/t98advisor1/neis-help.git ...
+echo.
 
-if %errorlevel% equ 0 (
-    echo.
-    echo ========================================================
-    echo   업로드 성공! Vercel에서 1~2분 안에 자동 배포됩니다.
-    echo   확인: https://neis-help-one.vercel.app/
-    echo ========================================================
-) else (
-    echo.
-    echo [실패] 업로드하지 못했습니다. 위의 영어 메시지를 복사해서 알려 주세요.
-    echo        rejected 라는 말이 있으면 GitHub 쪽에 다른 변경이 있다는 뜻입니다.
-    echo        이 경우 덮어쓰기 전에 꼭 확인이 필요합니다.
-)
+git push -u origin main
+if errorlevel 1 goto FAIL
+
+echo.
+echo ========================================================
+echo   [SUCCESS] Upload complete!
+echo   Vercel automatic deployment will finish in 1-2 minutes.
+echo   Check: https://neis-help-one.vercel.app/
+echo ========================================================
 echo.
 pause
+exit /b 0
+
+:FAIL
+echo.
+echo ========================================================
+echo   [ERROR] Push failed.
+echo   Please check the error message above.
+echo ========================================================
+echo.
+pause
+exit /b 1
