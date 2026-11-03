@@ -814,3 +814,18 @@
   line-height: 1.45;
   margin-top: 6px;
 }
+
+/* 톡톡 튀는 통통 튀는 라디오 버튼 애니메이션 (선생님 요청) */
+.ud-radio-item {
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  cursor: pointer;
+}
+.ud-radio-item:hover {
+  transform: translateY(-3px) scale(1.03) !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25) !important;
+}
+.ud-radio-item.on {
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 18px rgba(37, 99, 235, 0.4) !important;
+  border-color: #2563eb !important;
+}

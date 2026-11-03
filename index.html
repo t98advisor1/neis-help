@@ -517,14 +517,14 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         <span class="ds">수업 관찰 메모로 기재요령에 맞춘 문단을 작성하고 나이스 바이트(Byte)와 금지어를 즉시 점검합니다.</span>
         <i aria-hidden="true">→</i>
       </button>
-      <button class="op-card reveal" style="--d:.12s" data-open="check">
+      <button class="op-card bounce-pop-pink reveal" style="--d:.12s" data-open="check">
         <span class="no">02 · INSPECT</span>
         <span class="ic">📝</span>
         <b>생기부 파일 점검</b>
         <span class="ds">나이스 엑셀·PDF를 올려 기재요령 위반 표현, 글자수 초과, 종결어미 및 중복 문장을 한 번에 찾습니다.</span>
         <i aria-hidden="true">→</i>
       </button>
-      <button class="op-card reveal" style="--d:.18s" data-open="counsel">
+      <button class="op-card bounce-pop-blue reveal" style="--d:.18s" data-open="counsel">
         <span class="no">03 · ADMISSIONS</span>
         <span class="ic">🎯</span>
         <b>2027 대입 진학상담</b>
@@ -575,7 +575,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <button role="tab" data-open="ocr" aria-selected="false" class="op-tab-ocr" id="tabBtnOcr">학생 보고서 OCR</button>
   </nav>
 
-  <div class="op-panels">
+  <div class="op-panels workspace-white-box">
 
     <!-- ── 패널 1: 사용법 · 검사 규칙 (usage-section.css 디자인 통일) ── -->
     <div class="op-panel hidden" id="panel-usage" role="tabpanel">
@@ -1153,7 +1153,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     </div>
 
     <!-- ── 패널 5: 기재요령 검색 ── -->
-    <div class="op-panel op-panel-wide hidden" id="panel-guide" role="tabpanel">
+    <div class="op-panel op-panel-wide hidden" id="panel-guide" role="tabpanel" style="background:#ffffff; color:#0f172a; border-radius:18px; padding:20px; box-shadow:0 20px 50px rgba(0,0,0,0.3);">
       <iframe id="guide-frame" title="기재요령 검색" data-src="https://neis-help-one.vercel.app/guide.html?embed=1"></iframe>
     </div>
 
@@ -1743,19 +1743,19 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <!-- 라디오 버튼 탐색 바 -->
     <div class="uni-detail-nav-bar">
       <div class="ud-radio-group">
-        <label class="ud-radio-item on" id="lblRadioResults">
+        <label class="ud-radio-item live-radio-pop on" id="lblRadioResults">
           <input type="radio" name="udAction" value="results" checked>
           <span>입시결과 분석 (전형·학과)</span>
         </label>
-        <label class="ud-radio-item" id="lblRadioAdmission">
+        <label class="ud-radio-item live-radio-pop" id="lblRadioAdmission">
           <input type="radio" name="udAction" value="admission">
           <span>공식 입학처 사이트</span>
         </label>
-        <label class="ud-radio-item" id="lblRadioAdiga">
+        <label class="ud-radio-item live-radio-pop" id="lblRadioAdiga">
           <input type="radio" name="udAction" value="adiga">
           <span>대학어디가 입결 조회</span>
         </label>
-        <label class="ud-radio-item" id="lblRadioScan">
+        <label class="ud-radio-item live-radio-pop" id="lblRadioScan">
           <input type="radio" name="udAction" value="scan">
           <span>참고자료 원본보기(교사인증)</span>
         </label>
