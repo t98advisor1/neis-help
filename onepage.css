@@ -849,3 +849,154 @@ label.live-radio-pop input:checked + span {
   width: 100% !important;
   min-height: 85vh !important;
 }
+
+/* ==========================================================================
+   화면 4: 2027 대입 진학상담 (선생님 요청: 완벽한 라이트 모드 전환 & 글씨 대비 극대화)
+   ========================================================================== */
+#sec-counsel-scroll {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border-top: 1px solid #e2e8f0;
+}
+
+#sec-counsel-scroll .op-head-block .op-eyebrow {
+  background: rgba(255, 56, 92, 0.1) !important;
+  color: #e11d48 !important;
+  border: 1px solid rgba(255, 56, 92, 0.25) !important;
+}
+
+#sec-counsel-scroll .op-head-block h2 {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+#sec-counsel-scroll .op-head-block .op-lead {
+  color: #475569 !important;
+}
+
+/* SWOT 2*2 매트릭스 카드 — 라이트 모드 프리미엄 카드 */
+.swot-matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+@media (max-width: 860px) {
+  .swot-matrix-grid { grid-template-columns: 1fr; gap: 16px; }
+}
+
+.swot-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 28px;
+  border-radius: 18px;
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06) !important;
+  transition: all 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.swot-card:hover {
+  transform: translateY(-5px);
+  border-color: #ff385c !important;
+  box-shadow: 0 16px 36px rgba(255, 56, 92, 0.15) !important;
+}
+
+.swot-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.swot-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+.swot-card.s1 .swot-label { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.swot-card.s2 .swot-label { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.swot-card.s3 .swot-label { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+.swot-card.s4 .swot-label { background: #faf5ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+
+.swot-icon { font-size: 26px; }
+
+.swot-card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a !important;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+.swot-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #475569 !important;
+  margin: 0 0 18px;
+  flex-grow: 1;
+}
+
+.swot-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.swot-tag {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+}
+
+/* 액션 버튼 — 빨간색 선택/호버 시 글씨가 순백색으로 선명하게 대비 (선생님 요청) */
+.swot-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a !important;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.swot-action-btn:hover,
+.swot-action-btn:focus,
+.swot-card:hover .swot-action-btn {
+  background: #ff385c !important;
+  border-color: #ff385c !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 14px rgba(255, 56, 92, 0.35);
+}
+.swot-action-btn:hover span,
+.swot-action-btn:focus span,
+.swot-card:hover .swot-action-btn span {
+  color: #ffffff !important;
+}
+
+/* 빨간색 버튼 선택 시 글씨가 완벽하게 보이도록 강제 (선생님 요청) */
+button.primary,
+button.is-active,
+.btn.primary,
+.op-cta,
+[aria-selected="true"] {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}

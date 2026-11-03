@@ -829,3 +829,15 @@
   box-shadow: 0 0 18px rgba(37, 99, 235, 0.4) !important;
   border-color: #2563eb !important;
 }
+
+/* 선택할 때 빨간색 부분 글씨 완벽한 흰색 대비 보장 (선생님 피드백 반영) */
+.counsel-sub-btn.is-active,
+.counsel-sub-btn.is-active span,
+.btn.primary,
+.btn.primary *,
+.fav-btn.on,
+.btn-primary,
+button[aria-selected="true"] {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
