@@ -400,76 +400,31 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 }
 .toast.show { opacity: 1; }
 
-/* ── 우측 AI 구독·초안 사이드바 (기존 Vercel 디자인 토큰: --page, --canvas, --hairline, --ink, --rausch) ── */
-.ai-sidebar-fab {
+/* ── 새 AI 패널 (Vercel 디자인 토큰) ── */
+.ai-dock {
   position: fixed;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1100;
-  background: var(--ink);
-  color: #fff;
-  border: 1px solid var(--ink);
-  border-right: 0;
-  border-radius: 10px 0 0 10px;
-  padding: 14px 10px;
-  font-size: 13px;
-  font-weight: 700;
-  writing-mode: vertical-rl;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-}
-.ai-sidebar-fab:hover { background: var(--rausch); border-color: var(--rausch); }
-body.sidebar-open .ai-sidebar-fab { display: none; }
-
-.ai-sidebar-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 400px;
-  max-width: 92vw;
-  height: 100vh;
-  background: var(--page);
-  border-left: 1px solid var(--hairline);
-  box-shadow: -4px 0 20px rgba(0, 0, 0, .06);
+  top: calc(var(--op-h, 64px) + 8px);
+  right: 16px;
+  width: 320px;
+  max-width: calc(100vw - 32px);
   z-index: 1200;
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md, 14px);
+  box-shadow: var(--shadow, 0 6px 24px rgba(0,0,0,.08));
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  transform: translateX(102%);
-  transition: transform .22s ease;
+  gap: 10px;
 }
-body.sidebar-open .ai-sidebar-drawer { transform: translateX(0); }
-@media (min-width: 1320px) {
-  body.sidebar-open { padding-right: 400px; }
-  body.sidebar-open .op-top { right: 400px; }
-}
-.ai-sb-head {
-  height: var(--op-h);
-  padding: 0 18px;
-  background: var(--canvas);
-  border-bottom: 1px solid var(--hairline);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.ai-sb-head h3 { margin: 0; font-size: 15px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 8px; }
-.ai-sb-head .dot-live { width: 8px; height: 8px; border-radius: 50%; background: var(--rausch); }
-.ai-sb-body { padding: 16px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 14px; }
-.ai-sb-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 16px; }
-.ai-sb-label { font-size: 13px; font-weight: 700; color: var(--ink); display: block; margin-bottom: 8px; }
-.ai-sb-seg { display: flex; background: var(--surface-strong); border-radius: var(--r-full); padding: 3px; gap: 2px; }
-.ai-sb-seg button {
-  flex: 1;
-  border: 0;
-  background: transparent;
-  padding: 7px 6px;
-  border-radius: var(--r-full);
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--muted);
-}
-.ai-sb-seg button.active { background: var(--ink); color: #fff; }
+.ai-dock[hidden] { display: none; }
+.ai-dock-row { display: flex; flex-direction: column; gap: 6px; }
+.ai-dock-label { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+.ai-dock-seg { display: flex; background: var(--surface-strong, #f2f0e8); border-radius: var(--r-full, 999px); padding: 3px; gap: 2px; }
+.ai-dock-seg button { flex: 1; border: 0; background: transparent; padding: 7px 6px; border-radius: var(--r-full, 999px); font-size: 12.5px; font-weight: 600; color: var(--muted); cursor: pointer; }
+.ai-dock-seg button.on { background: var(--ink); color: #fff; }
+.ai-dock-btn { width: 100%; height: auto; padding: 10px 12px; font-size: 13px; }
+.ai-dock-note { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
 </style>
 </head>
 <body class="font-nanum">
@@ -488,8 +443,23 @@ body.sidebar-open .ai-sidebar-drawer { transform: translateX(0); }
     <option value="gmarket">글꼴: Gmarket Sans</option>
   </select>
   <button id="btn-settings" class="ghost">규칙 설정</button>
-  <button id="btn-toggle-sidebar" type="button" class="ghost">AI 사이드바</button>
+  <button id="btn-ai-dock" type="button" class="ghost" aria-expanded="false" aria-controls="aiDock">AI 창</button>
 </header>
+
+<!-- ── 새 AI 패널: 프롬프트 복사 → 오른쪽에 AI 창(일반 창이라 구독 로그인 가능) → 답변 가져오기 ── -->
+<div class="ai-dock" id="aiDock" hidden>
+  <div class="ai-dock-row">
+    <span class="ai-dock-label">AI 선택</span>
+    <div class="ai-dock-seg" role="group" aria-label="AI 선택">
+      <button type="button" class="on" data-dock-ai="https://claude.ai/new">Claude</button>
+      <button type="button" data-dock-ai="https://chatgpt.com/">ChatGPT</button>
+      <button type="button" data-dock-ai="https://gemini.google.com/app">Gemini</button>
+    </div>
+  </div>
+  <button type="button" class="primary ai-dock-btn" id="btnDockSend">① 프롬프트 복사하고 AI 창 열기</button>
+  <button type="button" class="ai-dock-btn" id="btnDockPull">② 복사한 답변 가져와 점검하기</button>
+  <p class="ai-dock-note">AI 창은 화면 오른쪽에 일반 창으로 열리므로 Claude Pro · ChatGPT Plus 계정으로 평소처럼 로그인하면 됩니다. AI 창에 Ctrl+V → Enter, 답변을 Ctrl+C 한 뒤 ②를 누르세요.</p>
+</div>
 
 <!-- 오른쪽 화면 이동 점 -->
 <nav class="op-dots" aria-label="화면 이동">
@@ -1243,78 +1213,6 @@ body.sidebar-open .ai-sidebar-drawer { transform: translateX(0); }
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- ── 우측 AI 사이드바 (기존 Vercel 색상·토큰으로 통일) ── -->
-<button type="button" class="ai-sidebar-fab" id="btnSidebarFab" title="AI 초안 사이드바 열기">AI 사이드바</button>
-
-<aside class="ai-sidebar-drawer" id="aiSidebar" aria-label="AI 구독 연동 및 초안 작성 사이드바">
-  <div class="ai-sb-head">
-    <h3><span class="dot-live"></span>AI 초안 · 점검 사이드바</h3>
-    <button type="button" class="ghost" id="btnCloseSidebar" style="padding:4px 8px; font-size:13px;">닫기</button>
-  </div>
-  <div class="ai-sb-body">
-    <div class="ai-sb-card">
-      <span class="ai-sb-label">1. 연결할 AI 선택</span>
-      <div class="ai-sb-seg" id="sbProviderGroup">
-        <button type="button" class="active" data-sb-ai="claude">Claude</button>
-        <button type="button" data-sb-ai="chatgpt">ChatGPT</button>
-        <button type="button" data-sb-ai="gemini">Gemini</button>
-      </div>
-    </div>
-
-    <div class="ai-sb-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span class="ai-sb-label" style="margin:0;">2. 항목 및 관찰 메모</span>
-        <button type="button" class="ghost" id="btnSbOpenFullMake" style="padding:2px 6px; font-size:12px;">상세 설정</button>
-      </div>
-      <div style="display:flex; gap:6px; margin-bottom:8px;">
-        <select id="sbAreaSelect" style="flex:1; font-size:13px; padding:7px 8px;">
-          <option value="setuk">교과세특 (1,500B)</option>
-          <option value="haengteuk">행동특성 (900B)</option>
-          <option value="jayul">자율·자치 (1,500B)</option>
-          <option value="dongari">동아리 (1,500B)</option>
-          <option value="jinro">진로활동 (1,500B)</option>
-        </select>
-        <input id="sbSubjectInput" type="text" placeholder="과목/동아리" style="width:115px; font-size:13px; padding:7px 8px;">
-      </div>
-      <textarea id="sbMemoInput" rows="4" placeholder="수업 활동 사실과 성취 변화를 입력하세요 (학생 이름 제외)." style="width:100%; font-size:13.5px; line-height:1.5; padding:8px 10px; border:1px solid var(--hairline); border-radius:var(--r-sm);"></textarea>
-      <div id="sbPiiAlert" class="caution" style="display:none; margin:8px 0 0; padding:8px 10px; font-size:12px;">
-        식별 의심: <b id="sbPiiWords"></b>
-        <button type="button" id="btnSbMaskPii" class="ghost" style="padding:1px 6px; font-size:11.5px;">'OOO' 변경</button>
-      </div>
-    </div>
-
-    <div class="ai-sb-card">
-      <span class="ai-sb-label">3. 초안 생성 및 스킬 지침</span>
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <button type="button" class="primary" id="btnSbRunGeminiApi" style="width:100%; height:auto; padding:11px 14px; font-size:13.5px;">
-          사이드바 안에서 바로 답변 받기
-        </button>
-        <button type="button" id="btnSbLaunchChat" style="width:100%; padding:10px 14px; font-size:13px;">
-          프롬프트 복사 + <span id="sbAiNameLabel">Claude</span> 새 창 열기
-        </button>
-      </div>
-      <div style="display:flex; gap:6px; margin-top:8px;">
-        <button type="button" id="btnSbSkillCopy" style="flex:1; padding:6px; font-size:12px;">지침 복사</button>
-        <button type="button" id="btnSbSkillZip" style="flex:1; padding:6px; font-size:12px;">스킬 .zip</button>
-        <button type="button" id="btnSbSkillMd" style="flex:1; padding:6px; font-size:12px;">SKILL.md</button>
-      </div>
-    </div>
-
-    <div class="ai-sb-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span class="ai-sb-label" style="margin:0;">4. 완성 문단 · 바이트 점검</span>
-        <span id="sbByteBadge" style="font-size:12px; font-weight:700; color:var(--body);">0 / 1,500 Byte</span>
-      </div>
-      <textarea id="sbResultInput" rows="6" placeholder="생성되거나 붙여 넣은 문단의 글자수(Byte)와 금지 표현을 즉시 점검합니다." style="width:100%; font-size:13.5px; line-height:1.55; padding:8px 10px; border:1px solid var(--hairline); border-radius:var(--r-sm);"></textarea>
-      <div id="sbCheckFindings" style="margin-top:6px; font-size:12px;"></div>
-      <div style="display:flex; gap:6px; margin-top:10px;">
-        <button type="button" class="primary" id="btnSbCopyResult" style="flex:1; height:auto; padding:9px; font-size:13px;">문단 복사</button>
-        <button type="button" id="btnSbCheckDetail" style="flex:1; padding:9px; font-size:13px;">상세 점검·저장</button>
-      </div>
-    </div>
-  </div>
-</aside>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="rules.js"></script>
@@ -1375,7 +1273,6 @@ body.sidebar-open .ai-sidebar-drawer { transform: translateX(0); }
     return found;
   }
 
-  const sbMemo = document.getElementById('sbMemoInput');
   if (memoEl && piiWarnBox && piiWordsEl) {
     memoEl.addEventListener('input', () => {
       const words = detectPIIWords(memoEl.value);
@@ -1385,7 +1282,6 @@ body.sidebar-open .ai-sidebar-drawer { transform: translateX(0); }
       } else {
         piiWarnBox.style.display = 'none';
       }
-      if (sbMemo && sbMemo.value !== memoEl.value) sbMemo.value = memoEl.value;
     });
   }
 
@@ -1401,234 +1297,64 @@ body.sidebar-open .ai-sidebar-drawer { transform: translateX(0); }
     });
   }
 
-  // 우측 AI 사이드바 제어
-  const btnToggleSb = document.getElementById('btn-toggle-sidebar');
-  const btnFabSb = document.getElementById('btnSidebarFab');
-  const btnCloseSb = document.getElementById('btnCloseSidebar');
-  const sbArea = document.getElementById('sbAreaSelect');
-  const sbSubj = document.getElementById('sbSubjectInput');
-  const sbResult = document.getElementById('sbResultInput');
-  const sbByteBadge = document.getElementById('sbByteBadge');
-  const sbFindings = document.getElementById('sbCheckFindings');
-  const sbAiLabel = document.getElementById('sbAiNameLabel');
-  let sbProvider = 'claude';
-
-  function toggleSidebar(open) {
-    const isOpen = typeof open === 'boolean' ? open : !document.body.classList.contains('sidebar-open');
-    document.body.classList.toggle('sidebar-open', isOpen);
-    if (isOpen && memoEl && sbMemo) sbMemo.value = memoEl.value;
-    const subjEl = document.getElementById('subject');
-    if (isOpen && subjEl && sbSubj && !sbSubj.value) sbSubj.value = subjEl.value;
+  // 새 AI 패널
+  const dock = document.getElementById('aiDock');
+  const dockToggle = document.getElementById('btn-ai-dock');
+  let dockUrl = 'https://claude.ai/new';
+  if (dock && dockToggle) {
+    dockToggle.addEventListener('click', () => {
+      dock.hidden = !dock.hidden;
+      dockToggle.setAttribute('aria-expanded', String(!dock.hidden));
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { dock.hidden = true; dockToggle.setAttribute('aria-expanded', 'false'); } });
   }
-  if (btnToggleSb) btnToggleSb.addEventListener('click', () => toggleSidebar());
-  if (btnFabSb) btnFabSb.addEventListener('click', () => toggleSidebar(true));
-  if (btnCloseSb) btnCloseSb.addEventListener('click', () => toggleSidebar(false));
-
-  const AI_URLS = {
-    claude: { name: 'Claude', url: 'https://claude.ai/new' },
-    chatgpt: { name: 'ChatGPT', url: 'https://chatgpt.com/' },
-    gemini: { name: 'Gemini', url: 'https://gemini.google.com/app' }
-  };
-  document.querySelectorAll('[data-sb-ai]').forEach(btn => {
+  document.querySelectorAll('[data-dock-ai]').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('[data-sb-ai]').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      sbProvider = btn.dataset.sbAi;
-      if (sbAiLabel && AI_URLS[sbProvider]) sbAiLabel.textContent = AI_URLS[sbProvider].name;
+      document.querySelectorAll('[data-dock-ai]').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      dockUrl = btn.dataset.dockAi;
     });
   });
-
-  if (sbArea) {
-    sbArea.addEventListener('change', () => {
-      const areaBtn = document.querySelector(`#areaGrid [data-area="${sbArea.value}"]`);
-      if (areaBtn) areaBtn.click();
-      updateSbResultCheck();
-    });
+  function openDockedAI(url) {
+    const sw = screen.availWidth, sh = screen.availHeight;
+    const sl = screen.availLeft || 0, st = screen.availTop || 0;
+    const w = Math.max(440, Math.round(sw * 0.42));
+    // 데스크톱 앱 창(--app)에서는 이 창을 왼쪽으로 맞춰 나란히 놓는다. 일반 탭에서는 무시됨.
+    try { window.moveTo(sl, st); window.resizeTo(sw - w, sh); } catch (e) {}
+    const win = window.open(url, 'neis_ai_window', `left=${sl + sw - w},top=${st},width=${w},height=${sh}`);
+    if (win) win.focus();
+    else alert('팝업이 차단되었습니다. 주소창 오른쪽의 팝업 허용을 눌러 주세요.');
   }
-  if (sbSubj) {
-    sbSubj.addEventListener('input', () => {
-      const subjEl = document.getElementById('subject');
-      const clubEl = document.getElementById('club');
-      if (sbArea && sbArea.value === 'dongari' && clubEl) {
-        clubEl.value = sbSubj.value;
-        clubEl.dispatchEvent(new Event('input', { bubbles: true }));
-      } else if (subjEl) {
-        subjEl.value = sbSubj.value;
-        subjEl.dispatchEvent(new Event('input', { bubbles: true }));
-      }
-    });
-  }
-  if (sbMemo) {
-    sbMemo.addEventListener('input', () => {
-      if (memoEl && memoEl.value !== sbMemo.value) {
-        memoEl.value = sbMemo.value;
-        memoEl.dispatchEvent(new Event('input', { bubbles: true }));
-      }
-      const words = detectPIIWords(sbMemo.value);
-      const alertBox = document.getElementById('sbPiiAlert');
-      const wordsEl = document.getElementById('sbPiiWords');
-      if (alertBox && wordsEl) {
-        if (words.length > 0) {
-          alertBox.style.display = 'block';
-          wordsEl.textContent = words.join(', ');
-        } else {
-          alertBox.style.display = 'none';
-        }
-      }
-    });
-  }
-  const btnSbMask = document.getElementById('btnSbMaskPii');
-  if (btnSbMask && sbMemo) {
-    btnSbMask.addEventListener('click', () => {
-      const words = detectPIIWords(sbMemo.value);
-      let v = sbMemo.value;
-      words.forEach(w => { v = v.split(w).join('OOO'); });
-      sbMemo.value = v;
-      sbMemo.dispatchEvent(new Event('input', { bubbles: true }));
-    });
-  }
-
-  const btnSbOpenFull = document.getElementById('btnSbOpenFullMake');
-  if (btnSbOpenFull) {
-    btnSbOpenFull.addEventListener('click', () => {
-      const makeTab = document.querySelector('#op-tabs [data-open="make"]');
-      if (makeTab) makeTab.click();
-    });
-  }
-
-  const btnSbLaunch = document.getElementById('btnSbLaunchChat');
-  if (btnSbLaunch) {
-    btnSbLaunch.addEventListener('click', () => {
-      if (!sbMemo.value.trim()) {
-        alert('수업 관찰 메모를 먼저 입력해 주세요.');
-        sbMemo.focus();
-        return;
-      }
-      if (window.SMAction && window.SMAction.showPrompt) {
-        window.SMAction.showPrompt();
-        const promptOut = document.getElementById('promptOut');
-        if (promptOut && promptOut.value) navigator.clipboard.writeText(promptOut.value).catch(() => {});
-      }
-      const info = AI_URLS[sbProvider] || AI_URLS.claude;
-      const w = 520, h = Math.min(920, window.screen.availHeight - 40);
-      const left = Math.max(0, window.screen.availWidth - w - 10);
-      window.open(info.url, 'neis_ai_side_window', `width=${w},height=${h},left=${left},top=20,resizable=yes,scrollbars=yes`);
-    });
-  }
-
-  const btnSbGemini = document.getElementById('btnSbRunGeminiApi');
-  if (btnSbGemini) {
-    btnSbGemini.addEventListener('click', async () => {
-      if (!sbMemo.value.trim()) {
-        alert('수업 관찰 메모를 먼저 입력해 주세요.');
-        sbMemo.focus();
-        return;
-      }
-      const promptText = (window.SMAction && window.SMAction.getCombinedPrompt) ? window.SMAction.getCombinedPrompt() : sbMemo.value;
-      const hasDirectExt = typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage;
-      const hasBridgeExt = document.documentElement.dataset.neisExtension === 'installed';
-      if ((sbProvider === 'claude' || sbProvider === 'chatgpt') && (hasDirectExt || hasBridgeExt)) {
-        sbResult.value = `${AI_URLS[sbProvider].name} 구독 세션에 연결하여 사이드바 안에서 초안을 생성하고 있습니다...`;
-        try {
-          const res = await new Promise((resolve) => {
-            if (hasDirectExt) {
-              chrome.runtime.sendMessage({ action: 'GENERATE_AI', provider: sbProvider, prompt: promptText }, (r) => resolve(r));
-            } else {
-              const reqId = 'req_' + Date.now();
-              const handler = (ev) => {
-                if (ev.data && ev.data.type === 'NEIS_AI_RESPONSE' && ev.data.requestId === reqId) {
-                  window.removeEventListener('message', handler);
-                  resolve(ev.data.response);
-                }
-              };
-              window.addEventListener('message', handler);
-              window.postMessage({ type: 'NEIS_AI_REQUEST', requestId: reqId, provider: sbProvider, prompt: promptText }, '*');
-              setTimeout(() => { window.removeEventListener('message', handler); resolve({ success: false, error: '응답 시간 초과' }); }, 60000);
-            }
-          });
-          if (res && res.success && res.text) {
-            sbResult.value = res.text;
-            updateSbResultCheck();
-            return;
-          } else {
-            throw new Error((res && res.error) || '구독 세션 응답 실패');
-          }
-        } catch (err) {
-          sbResult.value = `[안내] ${err.message}\n\n새 창 열기 버튼이나 Gemini API를 이용해 주세요.`;
-          return;
-        }
-      }
-      sbResult.value = 'Gemini API로 사이드바 안에서 문단을 생성하고 있습니다...';
-      const genBtn = document.getElementById('btnGenerate');
-      if (genBtn) genBtn.click();
-    });
-  }
-
-  const bindSbSkill = (id, kind) => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('click', () => {
-      if (window.SMAction && sbArea) window.SMAction.exportAreaSkill(sbArea.value, kind);
-    });
-  };
-  bindSbSkill('btnSbSkillCopy', 'copy');
-  bindSbSkill('btnSbSkillZip', 'zip');
-  bindSbSkill('btnSbSkillMd', 'md');
-
-  function updateSbResultCheck() {
-    if (!sbResult || !sbByteBadge) return;
-    const text = sbResult.value;
-    const area = sbArea ? sbArea.value : 'setuk';
-    const limitBytes = area === 'haengteuk' ? 900 : 1500;
-    const bytes = (window.SMChecks && window.SMChecks.countNeisBytes) ? window.SMChecks.countNeisBytes(text) : new TextEncoder().encode(text).length;
-    sbByteBadge.textContent = `${bytes.toLocaleString()} / ${limitBytes.toLocaleString()} Byte (${text.length}자)`;
-    sbByteBadge.style.color = bytes > limitBytes ? 'var(--violation)' : 'var(--body)';
-
-    if (sbFindings && window.SMChecks && window.SMChecks.checkDraft) {
-      if (!text.trim()) { sbFindings.innerHTML = ''; return; }
-      const list = window.SMChecks.checkDraft(text, area, {}) || [];
-      if (!list.length) {
-        sbFindings.innerHTML = '<span style="color:var(--done); font-weight:600;">✓ 금지 표현·형식 오류가 발견되지 않았습니다.</span>';
-      } else {
-        sbFindings.innerHTML = list.slice(0, 5).map(f =>
-          `<div style="color:${f.severity === 'violation' ? 'var(--violation)' : 'var(--warning)'}; margin-top:3px;">• [${f.category}] ${f.term ? `<b>${f.term}</b> — ` : ''}${f.message || ''}</div>`
-        ).join('');
-      }
-    }
-  }
-  if (sbResult) sbResult.addEventListener('input', updateSbResultCheck);
-
-  const resultTextMain = document.getElementById('resultText');
-  if (resultTextMain && sbResult) {
-    resultTextMain.addEventListener('input', () => {
-      if (sbResult.value !== resultTextMain.value) {
-        sbResult.value = resultTextMain.value;
-        updateSbResultCheck();
-      }
-    });
-  }
-
-  const btnSbCopyRes = document.getElementById('btnSbCopyResult');
-  if (btnSbCopyRes && sbResult) {
-    btnSbCopyRes.addEventListener('click', () => {
-      if (!sbResult.value.trim()) return;
-      navigator.clipboard.writeText(sbResult.value).then(() => alert('문단을 복사했습니다.'));
-    });
-  }
-
-  const btnSbDetail = document.getElementById('btnSbCheckDetail');
-  if (btnSbDetail && sbResult) {
-    btnSbDetail.addEventListener('click', () => {
-      if (!sbResult.value.trim()) {
-        alert('점검할 문단을 먼저 입력하거나 붙여 넣어 주세요.');
-        return;
-      }
-      const pasteBack = document.getElementById('pasteBack');
-      if (pasteBack && window.SMAction) {
-        pasteBack.value = sbResult.value;
+  const btnDockSend = document.getElementById('btnDockSend');
+  if (btnDockSend) {
+    btnDockSend.addEventListener('click', async () => {
+      if (memoEl && !memoEl.value.trim()) {
         const makeTab = document.querySelector('#op-tabs [data-open="make"]');
         if (makeTab) makeTab.click();
-        window.SMAction.checkPasted();
+        alert('초안 만들기에서 관찰 메모를 먼저 입력해 주세요.');
+        memoEl.focus();
+        return;
       }
+      let text = '';
+      if (window.SMAction && window.SMAction.getCombinedPrompt) text = window.SMAction.getCombinedPrompt();
+      if (!text) { const po = document.getElementById('promptOut'); text = po ? po.value : ''; }
+      try { await navigator.clipboard.writeText(text); } catch (e) {}
+      openDockedAI(dockUrl);
+    });
+  }
+  const btnDockPull = document.getElementById('btnDockPull');
+  if (btnDockPull) {
+    btnDockPull.addEventListener('click', async () => {
+      let text = '';
+      try { text = (await navigator.clipboard.readText()).trim(); } catch (e) {}
+      if (!text) { alert('AI 창에서 답변을 복사(Ctrl+C)한 뒤 다시 눌러 주세요.'); return; }
+      const pasteBack = document.getElementById('pasteBack');
+      if (!pasteBack || !window.SMAction) return;
+      const makeTab = document.querySelector('#op-tabs [data-open="make"]');
+      if (makeTab) makeTab.click();
+      if (window.SMAction.openPaste) window.SMAction.openPaste();
+      pasteBack.value = text;
+      window.SMAction.checkPasted();
     });
   }
 
