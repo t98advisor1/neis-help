@@ -1792,73 +1792,78 @@
     });
   }
 
-  /* 2. 구글 계정 & 구글 시트 양방향 실시간 동기화 모달 바인딩 */
+  /* 2. 듀얼 관계형 구글 시트 (학급 담임 & 교과 담임) 실시간 동기화 바인딩 */
   function bindSheetSyncModal() {
     const btnSync = $('#btn-sheet-sync');
     const modal = $('#sheetSyncModal');
-    const inputUrl = $('#inputGasUrl');
+    const inHrUrl = $('#inputGasHomeroomUrl');
+    const inSubUrl = $('#inputGasSubjectUrl');
     const btnSave = $('#btnSaveSheetUrl');
-    const btnTest = $('#btnTestSheetSync');
+    const btnTestHr = $('#btnTestHomeroomSync');
+    const btnTestSub = $('#btnTestSubjectSync');
     const btnCopyCode = $('#btnCopyGasCode');
     const copyHint = $('#gasCopyHint');
 
     if (!btnSync || !modal) return;
 
     btnSync.addEventListener('click', () => {
-      if (inputUrl && window.GoogleSheet) {
-        inputUrl.value = window.GoogleSheet.getUrl();
+      if (window.GoogleSheet) {
+        if (inHrUrl) inHrUrl.value = window.GoogleSheet.getHomeroomUrl();
+        if (inSubUrl) inSubUrl.value = window.GoogleSheet.getSubjectUrl();
       }
       modal.showModal();
     });
 
-    if (btnSave && inputUrl) {
+    if (btnSave) {
       btnSave.addEventListener('click', () => {
-        const url = inputUrl.value.trim();
         if (window.GoogleSheet) {
-          window.GoogleSheet.setUrl(url);
-          toast(url ? '구글 시트 연동 URL이 저장되었습니다.' : '구글 시트 연동이 해제되었습니다.');
+          if (inHrUrl) window.GoogleSheet.setHomeroomUrl(inHrUrl.value.trim());
+          if (inSubUrl) window.GoogleSheet.setSubjectUrl(inSubUrl.value.trim());
+          toast('듀얼 구글 시트 연동 정보가 저장되었습니다.');
         }
         modal.close();
       });
     }
 
-    if (btnTest && inputUrl) {
-      btnTest.addEventListener('click', async () => {
-        const url = inputUrl.value.trim();
-        if (!url) return alert('웹 앱 URL을 먼저 입력하세요.');
-        btnTest.textContent = '테스트 중...';
-        btnTest.disabled = true;
+    async function testSyncUrl(btn, input, label) {
+      const url = input ? input.value.trim() : '';
+      if (!url) return alert(label + ' Web App URL을 먼저 입력하세요.');
+      btn.textContent = '확인 중...';
+      btn.disabled = true;
 
-        try {
-          const res = await fetch(url + (url.includes('?') ? '&' : '?') + 'action=ping');
-          const data = await res.json();
-          if (data && data.success) {
-            alert(`✅ 연결 성공!
-시트 이름: ${data.sheetTitle}
-활성 탭: ${data.activeSheet}
-총 학생 행 수: ${data.rowCount}행`);
-          } else {
-            alert('❌ 연결 실패: ' + (data.error || '응답 오류'));
-          }
-        } catch (err) {
-          alert('❌ 연결 실패: 배포 설정에서 [액세스 권한: 모든 사용자]로 배포되었는지 확인하세요.');
-        } finally {
-          btnTest.textContent = '연결 테스트';
-          btnTest.disabled = false;
+      try {
+        const res = await fetch(url + (url.includes('?') ? '&' : '?') + 'action=ping');
+        const data = await res.json();
+        if (data && data.success) {
+          alert(`✅ [${label}] 연결 성공!\n시트 이름: ${data.sheetTitle}\n활성 탭: ${data.activeTab || data.activeSheet}\n총 학생 행 수: ${data.rowCount}행`);
+        } else {
+          alert(`❌ [${label}] 응답 오류: ` + (data.error || '알 수 없는 에러'));
         }
-      });
+      } catch (err) {
+        alert(`❌ [${label}] 연결 실패: Apps Script 배포 시 [액세스 권한: 모든 사용자]로 배포되었는지 확인하세요.`);
+      } finally {
+        btn.textContent = '연결 테스트';
+        btn.disabled = false;
+      }
+    }
+
+    if (btnTestHr && inHrUrl) {
+      btnTestHr.addEventListener('click', () => testSyncUrl(btnTestHr, inHrUrl, '학급 담임용 시트'));
+    }
+    if (btnTestSub && inSubUrl) {
+      btnTestSub.addEventListener('click', () => testSyncUrl(btnTestSub, inSubUrl, '교과 담임용 시트'));
     }
 
     if (btnCopyCode) {
       btnCopyCode.addEventListener('click', async () => {
         try {
-          const res = await fetch('/google_apps_script_sync.js');
-          const code = await res.text();
-          await navigator.clipboard.writeText(code);
+          const res = await fetch('/google_apps_script_dual_relational.js');
+          const text = await res.text();
+          await navigator.clipboard.writeText(text);
           if (copyHint) copyHint.hidden = false;
           setTimeout(() => { if (copyHint) copyHint.hidden = true; }, 3000);
         } catch (err) {
-          alert('코드 복사 실패: google_apps_script_sync.js 파일을 확인하세요.');
+          alert('코드 복사 실패: google_apps_script_dual_relational.js 파일을 확인하세요.');
         }
       });
     }
