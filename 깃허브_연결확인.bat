@@ -7,13 +7,14 @@ echo ========================================================
 echo.
 cd /d "%~dp0"
 
-:: 폴더 소유자가 관리자 계정이라 git이 거부하는 문제 방지
+:: 폴더 소유자 및 원격 저장소 주소 정정 (neis-help)
 git config --global --add safe.directory "%CD:\=/%" 2>nul
+git remote set-url origin https://github.com/t98advisor1/neis-help.git 2>nul
 
 git add -A
 git commit -m "Update 생기부 올인원 도우미" 2>nul
 
-echo [안내] https://github.com/t98advisor1/neis-solution.git 로 업로드합니다.
+echo [안내] https://github.com/t98advisor1/neis-help.git 로 업로드합니다.
 echo        로그인 창이 뜨면 GitHub 계정으로 로그인해 주세요...
 echo.
 git push -u origin main
