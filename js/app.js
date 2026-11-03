@@ -566,7 +566,10 @@
     if (!r) { $('#resultCard').hidden = true; return; }
     $('#resultCard').hidden = false;
     const ta = $('#resultText');
-    if (ta.value !== r.text) ta.value = r.text;
+    if (ta.value !== r.text) {
+      ta.value = r.text;
+      ta.dispatchEvent(new Event('input', { bubbles: true }));
+    }
     fitResult();
     const text = r.text;
     const meta = resultMeta();
@@ -1808,6 +1811,7 @@
       checkPasted,
       copySkillBody,
       downloadSkill,
+      getCombinedPrompt: () => currentPrompt().combined,
       exportAreaSkill: async (area, kind) => {
         const prev = S.draft.area;
         if (AREA_ORDER.includes(area)) { S.draft.area = area; renderMake(); }

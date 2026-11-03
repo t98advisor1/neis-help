@@ -1305,15 +1305,15 @@ body.sidebar-open .ai-sidebar-drawer { transform: translateX(0); }
       </div>
     </div>
 
-    <!-- 3. 실행 버튼 (우측 분할 팝업창으로 AI 열기 or Gemini API 즉시 생성) -->
+    <!-- 3. 실행 버튼 (우측 분할 팝업창으로 AI 열기 or 사이드바 내부 즉시 생성) -->
     <div class="ai-sb-box" style="background:#eff6ff; border-color:#bfdbfe;">
-      <span class="ai-sb-label" style="color:#1e40af;">3. 초안 생성 및 AI 창 연동</span>
+      <span class="ai-sb-label" style="color:#1e40af;">3. 초안 생성 방식 (2가지 모두 지원)</span>
       <div style="display:flex; flex-direction:column; gap:7px;">
-        <button type="button" class="btn-modern primary" id="btnSbLaunchChat" style="width:100%; padding:10px; font-size:13px;">
-          🚀 프롬프트 자동 복사 + <span id="sbAiNameLabel">Claude</span> 우측 창 띄우기
+        <button type="button" class="btn-modern primary" id="btnSbRunGeminiApi" style="width:100%; padding:10px; font-size:13px;">
+          ✨ 사이드바 창 안에서 바로 답변 받기 <small style="font-weight:400; opacity:0.9;">(확장프로그램 구독 / Gemini API)</small>
         </button>
-        <button type="button" class="btn-modern outline" id="btnSbRunGeminiApi" style="width:100%; padding:8px; font-size:12.5px; background:#fff;">
-          ⚡ Gemini 무료 API로 사이드바에서 즉시 생성
+        <button type="button" class="btn-modern outline" id="btnSbLaunchChat" style="width:100%; padding:9px; font-size:12.5px; background:#fff;">
+          🪟 프롬프트 자동 복사 + <span id="sbAiNameLabel">Claude</span> 새 팝업창 띄우기 <small style="color:#64748b;">(웹 일반 접속용)</small>
         </button>
       </div>
       <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">
@@ -1573,19 +1573,41 @@ body.sidebar-open .ai-sidebar-drawer { transform: translateX(0); }
     });
   }
 
-  // Gemini API 즉시 생성 연동
+  // 사이드바 창 안에서 바로 답변 받기 (확장프로그램 구독 세션 연동 또는 Gemini API)
   const btnSbGemini = document.getElementById('btnSbRunGeminiApi');
   if (btnSbGemini) {
-    btnSbGemini.addEventListener('click', () => {
+    btnSbGemini.addEventListener('click', async () => {
       if (!sbMemo.value.trim()) {
         alert('수업 관찰 메모를 먼저 입력해 주세요.');
         sbMemo.focus();
         return;
       }
+      const promptText = (window.SMAction && window.SMAction.getCombinedPrompt) ? window.SMAction.getCombinedPrompt() : sbMemo.value;
+
+      // 1) 크롬 확장프로그램(manifest.json + background.js) 환경에서 Claude / ChatGPT 구독 세션 직접 호출
+      if ((sbProvider === 'claude' || sbProvider === 'chatgpt') && typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage) {
+        sbResult.value = `${AI_URLS[sbProvider].name} 구독 세션에 연결하여 사이드바 안에서 초안을 생성하고 있습니다...`;
+        try {
+          const res = await new Promise((resolve) => {
+            chrome.runtime.sendMessage({ action: 'GENERATE_AI', provider: sbProvider, prompt: promptText }, (r) => resolve(r));
+          });
+          if (res && res.success && res.text) {
+            sbResult.value = res.text;
+            updateSbResultCheck();
+            return;
+          } else {
+            throw new Error((res && res.error) || '구독 세션 응답 실패');
+          }
+        } catch (err) {
+          sbResult.value = `[안내] ${err.message}\n\n우측 새 팝업창 방식으로 전환하거나 Gemini API를 이용해 주세요.`;
+          return;
+        }
+      }
+
+      // 2) 일반 웹 브라우저 접속 시 Gemini API로 사이드바 안에서 즉시 생성
+      sbResult.value = 'Gemini API로 사이드바 안에서 문단을 생성하고 있습니다...';
       const genBtn = document.getElementById('btnGenerate');
       if (genBtn) genBtn.click();
-      const makeTab = document.querySelector('#op-tabs [data-open="make"]');
-      if (makeTab) makeTab.click();
     });
   }
 
