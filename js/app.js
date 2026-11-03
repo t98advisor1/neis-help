@@ -1709,42 +1709,283 @@
     });
   }
 
-  /* 안내 그림 팝업: 선택한 안내의 그림만 불러온다 */
+  /* 1. Gemini API 키 발급 6단계 인터랙티브 가이드 팝업 */
   function bindKeyGuide() {
-    const dlg = $('#keyGuide'), img = $('#keyGuideImg'), box = $('#keyGuideScroll');
+    const dlg = $('#keyGuide');
+    const img = $('#keyGuideImg');
     const title = $('#keyGuideTitle');
-    if (!dlg || !img || !box || !title) return;
-    const images = {
-      start: { src: 'assets/guide-getting-started.svg?v=20261101-share', title: '생기부 초안 도우미 사용법', alt: '무료 사용, 유료 구독, 문단 점검과 복사를 설명하는 3단계 안내도' },
-      api: { src: img.dataset.src, title: 'Gemini API 키 발급 안내', alt: img.alt },
-      gemini: { src: 'assets/guide-gemini-skill.svg?v=20261101-share', title: 'Gemini 스킬 안내', alt: 'Gemini 스킬 저장 및 사용 4단계 안내도' },
-      gpt: { src: 'assets/guide-gpt-project.svg?v=20261101-share', title: 'ChatGPT 프로젝트 안내', alt: 'ChatGPT 프로젝트 저장 및 사용 4단계 안내도' },
-      claude: { src: 'assets/guide-claude-skill.svg?v=20261101-share', title: 'Claude 스킬 안내', alt: 'Claude 스킬 저장 및 사용 4단계 안내도' },
-    };
+    const prevBtn = $('#btnStepPrev');
+    const nextBtn = $('#btnStepNext');
+    const counter = $('#stepCounter');
+    const tabButtons = $$('#stepGuideTabs .step-tab');
+    if (!dlg || !img) return;
+
+    let currentStep = 1;
+
+    function setStep(step) {
+      currentStep = Math.max(1, Math.min(6, step));
+      img.src = `assets/gemini-step${currentStep}.svg`;
+      counter.textContent = `${currentStep} / 6 단계`;
+      prevBtn.disabled = currentStep === 1;
+
+      if (currentStep === 6) {
+        nextBtn.textContent = '발급 완료! 키 입력하기';
+        nextBtn.style.background = '#16a34a';
+      } else {
+        nextBtn.textContent = '다음 단계';
+        nextBtn.style.background = '#2563eb';
+      }
+
+      tabButtons.forEach(btn => {
+        const s = parseInt(btn.dataset.step, 10);
+        btn.classList.toggle('on', s === currentStep);
+        if (s === currentStep) {
+          btn.style.background = '#2563eb';
+          btn.style.color = '#fff';
+          btn.style.fontWeight = '700';
+        } else {
+          btn.style.background = '#f1f5f9';
+          btn.style.color = '#475569';
+          btn.style.fontWeight = '500';
+        }
+      });
+    }
+
+    // 단계 버튼 클릭
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setStep(parseInt(btn.dataset.step, 10));
+      });
+    });
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => setStep(currentStep - 1));
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (currentStep === 6) {
+          dlg.close();
+          const keyInput = $('#apiKeyInline') || $('#apiKey');
+          if (keyInput) {
+            keyInput.focus();
+            keyInput.select();
+          }
+        } else {
+          setStep(currentStep + 1);
+        }
+      });
+    }
+
+    // 모달 열기 이벤트
     document.addEventListener('click', (e) => {
       const button = e.target.closest('[data-open-keyguide]');
       if (!button) return;
       e.preventDefault();
-      const guide = images[button.dataset.guideImage || 'api'];
-      if (!guide) return;
-      title.textContent = guide.title;
-      img.alt = guide.alt;
-      if (img.getAttribute('src') !== guide.src) img.src = guide.src;
-      box.classList.remove('zoom'); box.scrollTop = 0; box.scrollLeft = 0;
-      if (dlg.showModal) dlg.showModal(); else route('guide');
+      setStep(1);
+      if (dlg.showModal) dlg.showModal();
     });
+
+    // 닫기
     dlg.addEventListener('click', (e) => {
       if (e.target === dlg || e.target.closest('[data-close-keyguide]')) dlg.close();
     });
-    img.addEventListener('click', (e) => {
-      const r = img.getBoundingClientRect();
-      const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
-      box.classList.toggle('zoom');
-      if (box.classList.contains('zoom')) {
-        box.scrollLeft = fx * img.offsetWidth - box.clientWidth / 2;
-        box.scrollTop = fy * img.offsetHeight - box.clientHeight / 2;
+  }
+
+  /* 2. 구글 계정 & 구글 시트 양방향 실시간 동기화 모달 바인딩 */
+  function bindSheetSyncModal() {
+    const btnSync = $('#btn-sheet-sync');
+    const modal = $('#sheetSyncModal');
+    const inputUrl = $('#inputGasUrl');
+    const btnSave = $('#btnSaveSheetUrl');
+    const btnTest = $('#btnTestSheetSync');
+    const btnCopyCode = $('#btnCopyGasCode');
+    const copyHint = $('#gasCopyHint');
+
+    if (!btnSync || !modal) return;
+
+    btnSync.addEventListener('click', () => {
+      if (inputUrl && window.GoogleSheet) {
+        inputUrl.value = window.GoogleSheet.getUrl();
       }
+      modal.showModal();
     });
+
+    if (btnSave && inputUrl) {
+      btnSave.addEventListener('click', () => {
+        const url = inputUrl.value.trim();
+        if (window.GoogleSheet) {
+          window.GoogleSheet.setUrl(url);
+          toast(url ? '구글 시트 연동 URL이 저장되었습니다.' : '구글 시트 연동이 해제되었습니다.');
+        }
+        modal.close();
+      });
+    }
+
+    if (btnTest && inputUrl) {
+      btnTest.addEventListener('click', async () => {
+        const url = inputUrl.value.trim();
+        if (!url) return alert('웹 앱 URL을 먼저 입력하세요.');
+        btnTest.textContent = '테스트 중...';
+        btnTest.disabled = true;
+
+        try {
+          const res = await fetch(url + (url.includes('?') ? '&' : '?') + 'action=ping');
+          const data = await res.json();
+          if (data && data.success) {
+            alert(`✅ 연결 성공!
+시트 이름: ${data.sheetTitle}
+활성 탭: ${data.activeSheet}
+총 학생 행 수: ${data.rowCount}행`);
+          } else {
+            alert('❌ 연결 실패: ' + (data.error || '응답 오류'));
+          }
+        } catch (err) {
+          alert('❌ 연결 실패: 배포 설정에서 [액세스 권한: 모든 사용자]로 배포되었는지 확인하세요.');
+        } finally {
+          btnTest.textContent = '연결 테스트';
+          btnTest.disabled = false;
+        }
+      });
+    }
+
+    if (btnCopyCode) {
+      btnCopyCode.addEventListener('click', async () => {
+        try {
+          const res = await fetch('/google_apps_script_sync.js');
+          const code = await res.text();
+          await navigator.clipboard.writeText(code);
+          if (copyHint) copyHint.hidden = false;
+          setTimeout(() => { if (copyHint) copyHint.hidden = true; }, 3000);
+        } catch (err) {
+          alert('코드 복사 실패: google_apps_script_sync.js 파일을 확인하세요.');
+        }
+      });
+    }
+  }
+
+  /* 3. 학생 보고서 다중 이미지 Gemini Vision OCR 자동 판독기 바인딩 */
+  function bindReportOcr() {
+    const tabBtn = $('#tabBtnOcr');
+    const modal = $('#ocrModal');
+    const dropZone = $('#ocrDropZone');
+    const fileInput = $('#ocrFileInput');
+    const progressArea = $('#ocrProgressArea');
+    const progressBar = $('#ocrProgressBar');
+    const progressText = $('#ocrProgressText');
+    const statusText = $('#ocrStatusText');
+    const resultList = $('#ocrResultList');
+
+    if (!modal) return;
+
+    if (tabBtn) {
+      tabBtn.addEventListener('click', () => modal.showModal());
+    }
+
+    if (dropZone && fileInput) {
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.style.background = '#dbeafe';
+      });
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.style.background = '#eff6ff';
+      });
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.background = '#eff6ff';
+        if (e.dataTransfer.files.length > 0) {
+          handleOcrFiles(e.dataTransfer.files);
+        }
+      });
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+          handleOcrFiles(fileInput.files);
+        }
+      });
+    }
+
+    async function handleOcrFiles(files) {
+      const apiKey = ($('#apiKeyInline') ? $('#apiKeyInline').value.trim() : '') || ($('#apiKey') ? $('#apiKey').value.trim() : '') || localStorage.getItem('sr_apikey') || '';
+      if (!apiKey) {
+        alert('Gemini API 키가 필요합니다. 상단 [API 키] 칸에 키를 먼저 등록해 주세요.');
+        return;
+      }
+
+      progressArea.hidden = false;
+      resultList.innerHTML = '';
+      const total = files.length;
+      let completed = 0;
+
+      for (let i = 0; i < total; i++) {
+        const file = files[i];
+        statusText.textContent = `[${i + 1}/${total}] ${file.name} 판독 중...`;
+        progressText.textContent = `${i + 1} / ${total}`;
+        progressBar.style.width = `${Math.round(((i + 1) / total) * 100)}%`;
+
+        try {
+          const res = await window.ReportOCR.analyzeReportImage(file, apiKey, 'gemini-2.0-flash');
+          renderOcrCard(file.name, res);
+        } catch (err) {
+          renderOcrErrorCard(file.name, err.message);
+        }
+        completed++;
+      }
+
+      statusText.textContent = `총 ${completed}개 보고서 판독 완료!`;
+    }
+
+    function renderOcrCard(fileName, res) {
+      const card = document.createElement('div');
+      card.style.cssText = 'border:1px solid #e2e8f0; border-radius:10px; padding:14px; background:#f8fafc;';
+      card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <strong style="font-size:14px; color:#0f172a;">${res.studentName || '학생'} (${res.studentNo || fileName})</strong>
+            <span style="font-size:11px; background:#eff6ff; color:#2563eb; padding:2px 8px; border-radius:4px; font-weight:600;">${res.subject || '탐구과목'}</span>
+          </div>
+          <button class="btn small btn-copy-ocr" style="padding:4px 10px; font-size:11.5px;">세특 복사</button>
+        </div>
+        <div style="font-size:12.5px; color:#334155; margin-bottom:6px;"><strong>탐구주제:</strong> ${res.title || '-'}</div>
+        <div style="font-size:12px; color:#64748b; margin-bottom:8px; line-height:1.5;">${res.summary || ''}</div>
+        <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; padding:10px; font-size:13px; color:#0f172a; line-height:1.6;" contenteditable="true" class="ocr-draft-text">${res.setukDraft || ''}</div>
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+          <button class="btn small primary btn-send-sheet" style="font-size:11.5px; background:#16a34a; color:#fff;">구글 시트로 저장</button>
+        </div>
+      `;
+
+      card.querySelector('.btn-copy-ocr').onclick = async () => {
+        const text = card.querySelector('.ocr-draft-text').innerText;
+        await navigator.clipboard.writeText(text);
+        alert('세특 초안이 클립보드에 복사되었습니다!');
+      };
+
+      card.querySelector('.btn-send-sheet').onclick = async () => {
+        if (!window.GoogleSheet || !window.GoogleSheet.isConnected()) {
+          alert('구글 시트가 아직 연동되지 않았습니다. 상단 [구글 시트 연동]에서 Web App URL을 먼저 등록해 주세요.');
+          return;
+        }
+        const text = card.querySelector('.ocr-draft-text').innerText;
+        const resSave = await window.GoogleSheet.saveRecord({
+          student: res.studentName || fileName,
+          subject: res.subject || '탐구보고서',
+          content: text
+        });
+        if (resSave && resSave.success) {
+          alert(`✅ [${res.studentName || fileName}] 학생의 세특이 구글 시트 ${resSave.row}행에 성공적으로 저장되었습니다!`);
+        } else {
+          alert('저장 완료 또는 시트 응답 대기');
+        }
+      };
+
+      resultList.appendChild(card);
+    }
+
+    function renderOcrErrorCard(fileName, errMsg) {
+      const card = document.createElement('div');
+      card.style.cssText = 'border:1px solid #fecaca; border-radius:8px; padding:10px 14px; background:#fef2f2; color:#b91c1c; font-size:12.5px;';
+      card.innerHTML = `<strong>${fileName}</strong> 판독 실패: ${errMsg}`;
+      resultList.appendChild(card);
+    }
   }
 
   /* 저장된 초안의 칸 타입을 맞춘다(옛 버전·손상된 값). 전에는 메모·과목이 null 이거나 고른 목록이 배열이 아니면
@@ -1803,7 +2044,7 @@
     renderMake();
     route('make');
     if (S.result) renderResult();
-    bindKeyGuide();
+    bindKeyGuide(); bindSheetSyncModal(); bindReportOcr();
     window.SMAction = {
       route,
       showPrompt,

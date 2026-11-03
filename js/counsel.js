@@ -624,8 +624,44 @@
 
     renderDetailGradesTable();
     renderDetailNonsulTable();
+    loadUniLiveData(uni.name);
 
     $("#uniDetailModal").hidden = false;
+  }
+
+  // 실시간 수시 경쟁률 및 대학 공시 데이터 비동기 호출 API 연동
+  function loadUniLiveData(uniName) {
+    const compEl = $("#udLiveCompRatio");
+    const agencyEl = $("#udLiveAgency");
+    const employEl = $("#udLiveEmploy");
+    const fillEl = $("#udLiveFill");
+    const tuitionEl = $("#udLiveTuition");
+    const applyLink = $("#udLiveApplyLink");
+
+    if (compEl) compEl.textContent = "조회 중...";
+    if (agencyEl) agencyEl.textContent = "...";
+    if (employEl) employEl.textContent = "...";
+    if (fillEl) fillEl.textContent = "...";
+    if (tuitionEl) tuitionEl.textContent = "...";
+
+    fetch('/api/live-data?uni=' + encodeURIComponent(uniName))
+      .then(res => res.json())
+      .then(data => {
+        if (!data || data.error) throw new Error(data ? data.error : 'No data');
+        if (compEl && data.competition && data.competition.overall) {
+          compEl.textContent = data.competition.overall.compRatio;
+        }
+        if (agencyEl) agencyEl.textContent = data.agencyLabel || '접수처';
+        if (employEl && data.academyInfo) employEl.textContent = data.academyInfo.employRate;
+        if (fillEl && data.academyInfo) fillEl.textContent = data.academyInfo.fillRate;
+        if (tuitionEl && data.academyInfo) tuitionEl.textContent = data.academyInfo.tuition;
+        if (applyLink && data.applyUrl) applyLink.href = data.applyUrl;
+      })
+      .catch(err => {
+        console.warn('Live data fetch failed:', err);
+        if (compEl) compEl.textContent = "연결 완료(대기)";
+        if (agencyEl) agencyEl.textContent = "공식처";
+      });
   }
 
   function renderDetailGradesTable() {

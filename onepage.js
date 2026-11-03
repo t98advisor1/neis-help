@@ -30,6 +30,11 @@ function openPanel(id, scroll) {
 }
 $$('[data-open]').forEach((el) => el.addEventListener('click', (e) => {
   e.preventDefault();
+  if (el.dataset.open === 'ocr') {
+    const m = document.getElementById('ocrModal');
+    if (m && m.showModal) m.showModal();
+    return;
+  }
   openPanel(el.dataset.open, true);
 }));
 

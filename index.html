@@ -444,6 +444,10 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <option value="gmarket">글꼴: Gmarket Sans</option>
   </select>
   <button id="btn-settings" class="ghost">규칙 설정</button>
+  <button id="btn-sheet-sync" type="button" class="ghost" style="border:1px solid #cbd5e1; display:flex; align-items:center; gap:6px;">
+    <span id="sheetSyncStatusBadge" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#94a3b8;"></span>
+    <span id="sheetSyncStatusLabel">구글 시트 연동</span>
+  </button>
   <button id="btn-ai-dock" type="button" class="ghost" aria-expanded="false" aria-controls="aiDock">AI 창</button>
 </header>
 
@@ -531,7 +535,8 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <button role="tab" data-open="check" aria-selected="false">생기부 점검하기</button>
     <button role="tab" data-open="prompts" aria-selected="false">AI 프롬프트 · 스킬</button>
     <button role="tab" data-open="guide" aria-selected="false">기재요령 검색</button>
-    <button role="tab" data-open="counsel" aria-selected="false" class="op-tab-counsel">🎯 2027 대입 진학상담</button>
+    <button role="tab" data-open="counsel" aria-selected="false" class="op-tab-counsel">2027 대입 진학상담</button>
+    <button role="tab" data-open="ocr" aria-selected="false" class="op-tab-ocr" id="tabBtnOcr">학생 보고서 OCR</button>
   </nav>
 
   <div class="op-panels">
@@ -1601,30 +1606,45 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <button class="v-close-btn" id="udCloseBtn" style="padding:6px 12px; font-size:13px; background:none; border:1px solid var(--hairline); border-radius:6px; cursor:pointer;">✕ 닫기</button>
     </div>
 
-    <!-- 라디오 버튼 4종 탐색 바 -->
+    <!-- 라디오 버튼 탐색 바 -->
     <div class="uni-detail-nav-bar">
       <div class="ud-radio-group">
         <label class="ud-radio-item on" id="lblRadioResults">
           <input type="radio" name="udAction" value="results" checked>
-          <span>📊 분야별 입시결과 분석</span>
+          <span>입시결과 분석 (전형·학과)</span>
         </label>
         <label class="ud-radio-item" id="lblRadioAdmission">
           <input type="radio" name="udAction" value="admission">
-          <span>🌐 공식 입학처 사이트 ↗</span>
+          <span>공식 입학처 사이트</span>
         </label>
         <label class="ud-radio-item" id="lblRadioAdiga">
           <input type="radio" name="udAction" value="adiga">
-          <span>📈 대학어디가(adiga) 입결 ↗</span>
+          <span>대학어디가 입결 조회</span>
         </label>
         <label class="ud-radio-item" id="lblRadioScan">
           <input type="radio" name="udAction" value="scan">
-          <span>🔒 참고자료 원본보기(비밀번호 필요)</span>
+          <span>참고자료 원본보기(교사인증)</span>
         </label>
       </div>
     </div>
 
-    <!-- 모달 본문 (분야별 입시결과) -->
+    <!-- 모달 본문 -->
     <div class="uni-detail-body">
+      <!-- 실시간 경쟁률 & 공시 지표 라이브 스트립 -->
+      <div class="ud-live-bar" id="udLiveBar" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#22c55e; box-shadow:0 0 6px #22c55e;"></span>
+          <strong style="font-size:13px; color:#0f172a;">실시간 수시 경쟁률:</strong>
+          <span id="udLiveCompRatio" style="font-size:15px; font-weight:800; color:#2563eb;">조회 중...</span>
+          <span id="udLiveAgency" style="font-size:11.5px; color:#64748b; background:#e2e8f0; padding:2px 6px; border-radius:4px;">접수처</span>
+        </div>
+        <div style="display:flex; gap:12px; font-size:12px; color:#475569; flex-wrap:wrap; align-items:center;">
+          <span>취업률: <strong id="udLiveEmploy" style="color:#0f172a;">—</strong></span>
+          <span>신입생 충원율: <strong id="udLiveFill" style="color:#0f172a;">—</strong></span>
+          <span>평균 등록금: <strong id="udLiveTuition" style="color:#0f172a;">—</strong></span>
+          <a id="udLiveApplyLink" href="#" target="_blank" rel="noreferrer" class="btn-primary" style="padding:4px 10px; font-size:11.5px; text-decoration:none; border-radius:5px; background:#2563eb; color:#fff;">실시간 접수처 이동</a>
+        </div>
+      </div>
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
         <div class="ud-branch-filter-row" id="udBranchFilters" style="margin-bottom:0;">
           <span class="filter-label">분야(계열) 선택:</span>
@@ -1893,10 +1913,111 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   </div>
 </div>
 
-<dialog id="keyGuide" class="img-dialog" aria-labelledby="keyGuideTitle">
-  <div class="img-dialog-bar"><b id="keyGuideTitle">Gemini API 키 발급 안내</b><button type="button" class="btn small" data-close-keyguide>닫기</button></div>
-  <div class="img-scroll" id="keyGuideScroll">
-    <img id="keyGuideImg" data-src="assets/gemini-key-guide.svg?v=20261101-share" width="1080" height="1920" alt="Gemini API 키 발급 안내도">
+<!-- Gemini API 키 발급 6단계 인터랙티브 팝업 모달 (Windows 전용) -->
+<dialog id="keyGuide" class="step-guide-dialog" aria-labelledby="keyGuideTitle" style="max-width:960px; width:95vw; border:none; border-radius:16px; padding:0; box-shadow:0 25px 60px rgba(0,0,0,0.3); background:#ffffff; overflow:hidden;">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 20px; border-bottom:1px solid #e2e8f0; background:#f8fafc;">
+    <div>
+      <b id="keyGuideTitle" style="font-size:16px; font-weight:800; color:#0f172a;">Gemini API 키 무료 발급 가이드 (Windows)</b>
+      <span style="font-size:12px; color:#64748b; margin-left:8px;">단계별 빨간색 박스와 곡선 화살표 포인트를 클릭하세요</span>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" class="btn small" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; text-decoration:none; font-weight:700; padding:6px 12px; border-radius:6px; font-size:12.5px;">Google AI Studio 열기</a>
+      <button type="button" class="btn small" data-close-keyguide style="padding:6px 12px; font-size:13px; cursor:pointer;">닫기</button>
+    </div>
+  </div>
+
+  <!-- 단계별 탭 버튼 바 -->
+  <div class="step-guide-tabs" id="stepGuideTabs" style="display:flex; gap:6px; padding:8px 16px; background:#f1f5f9; border-bottom:1px solid #e2e8f0; overflow-x:auto;">
+    <button type="button" class="btn small step-tab on" data-step="1" style="font-weight:700;">1. 접속·로그인</button>
+    <button type="button" class="btn small step-tab" data-step="2">2. 약관 동의</button>
+    <button type="button" class="btn small step-tab" data-step="3">3. 키 만들기</button>
+    <button type="button" class="btn small step-tab" data-step="4">4. 새 프로젝트</button>
+    <button type="button" class="btn small step-tab" data-step="5">5. 키 복사</button>
+    <button type="button" class="btn small step-tab" data-step="6">6. 붙여넣기(Ctrl+V)</button>
+  </div>
+
+  <!-- 메인 그래픽 뷰 -->
+  <div style="padding:16px; text-align:center; background:#ffffff; min-height:460px; display:flex; align-items:center; justify-content:center;">
+    <img id="keyGuideImg" src="assets/gemini-step1.svg" width="912" height="464" style="max-width:100%; height:auto; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.08);" alt="Gemini API 키 발급 안내 단계">
+  </div>
+
+  <!-- 하단 컨트롤 바 -->
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-top:1px solid #e2e8f0; background:#f8fafc;">
+    <button type="button" class="btn" id="btnStepPrev" style="padding:6px 14px; font-size:13px;" disabled>이전 단계</button>
+    <span id="stepCounter" style="font-size:13px; font-weight:700; color:#475569;">1 / 6 단계</span>
+    <button type="button" class="btn primary" id="btnStepNext" style="padding:6px 18px; font-size:13px; background:#2563eb; color:#fff; font-weight:700;">다음 단계</button>
+  </div>
+</dialog>
+
+<!-- 구글 계정 & 구글 시트 1:1 실시간 동기화 모달 (BYOS: Bring Your Own Sheet) -->
+<dialog id="sheetSyncModal" style="max-width:680px; width:92vw; border:none; border-radius:14px; padding:0; box-shadow:0 20px 50px rgba(0,0,0,0.25); background:#ffffff; overflow:hidden;">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid #e2e8f0; background:#f8fafc;">
+    <b style="font-size:16px; color:#0f172a;">구글 계정 &amp; 구글 시트 1:1 양방향 실시간 동기화</b>
+    <button type="button" class="btn small" onclick="document.getElementById('sheetSyncModal').close()">✕</button>
+  </div>
+  <div style="padding:20px; font-size:13.5px; color:#334155; line-height:1.6;">
+    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 14px; margin-bottom:16px;">
+      <strong style="color:#1e40af;">개인정보 완벽 보호(BYOS) 아키텍처</strong><br>
+      학생 상담 기록이나 세특 초안은 외부 중앙 서버에 저장되지 않고, <strong>오직 선생님 본인의 구글 드라이브 내 구글 시트에만 1:1로 실시간 기록</strong>됩니다.
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <strong>1단계: 표준 마스터 시트 사본 복사</strong><br>
+      <span style="font-size:12px; color:#64748b;">선생님 구글 드라이브로 1개 시트 연계용 템플릿을 복사합니다.</span><br>
+      <a href="https://docs.google.com/spreadsheets/d/1yWlVl9U3x9a1A5xQ7bE0Z7C2m4L9v/copy" target="_blank" rel="noreferrer" class="btn small" style="margin-top:6px; display:inline-block; background:#16a34a; color:#fff; font-weight:600; text-decoration:none; padding:6px 12px; border-radius:6px;">구글 시트 템플릿 사본 만들기</a>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <strong>2단계: Apps Script 배포 코드 복사</strong><br>
+      <span style="font-size:12px; color:#64748b;">시트의 [확장 프로그램] > [Apps Script]에 붙여넣을 동기화 코드입니다.</span><br>
+      <button type="button" class="btn small" id="btnCopyGasCode" style="margin-top:6px; background:#f1f5f9; border:1px solid #cbd5e1; font-weight:600; padding:6px 12px; border-radius:6px;">동기화 스크립트 코드 복사</button>
+      <span id="gasCopyHint" style="font-size:12px; color:#16a34a; margin-left:8px;" hidden>클립보드에 복사되었습니다!</span>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <strong>3단계: 배포된 웹 앱 URL 등록</strong><br>
+      <span style="font-size:12px; color:#64748b;">Apps Script [배포] 후 발급받은 '웹 앱 URL'을 아래에 붙여넣으세요.</span>
+      <input type="url" id="inputGasUrl" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%; padding:9px 12px; font-size:13px; border:1px solid #cbd5e1; border-radius:6px; margin-top:6px; box-sizing:border-box;">
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <button type="button" class="btn" id="btnTestSheetSync" style="padding:7px 14px; font-size:13px;">연결 테스트</button>
+      <button type="button" class="btn primary" id="btnSaveSheetUrl" style="padding:7px 18px; font-size:13px; background:#2563eb; color:#fff; font-weight:700;">연동 저장</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- 학생 보고서 다중 이미지 Gemini Vision OCR 자동 판독기 모달 -->
+<dialog id="ocrModal" style="max-width:920px; width:95vw; border:none; border-radius:16px; padding:0; box-shadow:0 25px 60px rgba(0,0,0,0.3); background:#ffffff; overflow:hidden;">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid #e2e8f0; background:#f8fafc;">
+    <div>
+      <b style="font-size:16px; font-weight:800; color:#0f172a;">학생 탐구보고서 다중 이미지 OCR 자동 판독기</b>
+      <span style="font-size:12px; color:#64748b; margin-left:8px;">Gemini 2.0 / 1.5 Pro 멀티모달 비전 자동화</span>
+    </div>
+    <button type="button" class="btn small" onclick="document.getElementById('ocrModal').close()">✕ 닫기</button>
+  </div>
+  <div style="padding:20px;">
+    <!-- 드래그 & 드롭 업로드 영역 -->
+    <div id="ocrDropZone" style="border:2px dashed #93c5fd; background:#eff6ff; border-radius:12px; padding:28px 20px; text-align:center; cursor:pointer; transition:all 0.2s;">
+      <div style="font-size:15px; font-weight:700; color:#1e40af; margin-bottom:4px;">학생들의 탐구보고서 사진이나 스캔본 이미지를 끌어다 놓으세요</div>
+      <div style="font-size:12.5px; color:#64748b;">JPG, PNG, WebP 지원 (여러 장 한꺼번에 일괄 업로드 가능)</div>
+      <input type="file" id="ocrFileInput" multiple accept="image/*" style="display:none;">
+      <button type="button" class="btn small" style="margin-top:12px; background:#2563eb; color:#fff; font-weight:600; padding:6px 14px; border-radius:6px;" onclick="document.getElementById('ocrFileInput').click()">파일 선택하기</button>
+    </div>
+
+    <!-- 처리 현황 및 프로그레스 바 -->
+    <div id="ocrProgressArea" style="margin-top:16px;" hidden>
+      <div style="display:flex; justify-content:space-between; font-size:12.5px; color:#475569; margin-bottom:4px;">
+        <span id="ocrStatusText">판독 준비 중...</span>
+        <span id="ocrProgressText">0 / 0</span>
+      </div>
+      <div style="height:8px; background:#e2e8f0; border-radius:4px; overflow:hidden;">
+        <div id="ocrProgressBar" style="width:0%; height:100%; background:#2563eb; transition:width 0.3s;"></div>
+      </div>
+    </div>
+
+    <!-- 판독 결과 리스트 -->
+    <div id="ocrResultList" style="margin-top:20px; max-height:420px; overflow-y:auto; display:flex; flex-direction:column; gap:12px;"></div>
   </div>
 </dialog>
 
@@ -2074,5 +2195,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <script src="data/gradefind.js"></script>
 <script src="js/counsel.js"></script>
 
+<script src="js/google-sheet.js"></script>
+<script src="js/report-ocr.js"></script>
 </body>
 </html>
