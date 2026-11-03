@@ -6,13 +6,16 @@
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 
-const PANELS = ['check', 'usage', 'guide', 'prompts'];
+const PANELS = ['usage', 'make', 'check', 'prompts', 'guide'];
 const workspace = $('#workspace');
 
 /* ── 메뉴 전환 ── */
 function openPanel(id, scroll) {
   if (!PANELS.includes(id)) return;
-  PANELS.forEach((p) => $('#panel-' + p).classList.toggle('hidden', p !== id));
+  PANELS.forEach((p) => {
+    const el = $('#panel-' + p);
+    if (el) el.classList.toggle('hidden', p !== id);
+  });
   $$('#op-tabs button').forEach((b) => {
     const on = b.dataset.open === id;
     b.classList.toggle('is-active', on);
@@ -20,12 +23,15 @@ function openPanel(id, scroll) {
   });
   if (id === 'guide') {
     const f = $('#guide-frame');
-    if (!f.getAttribute('src')) f.setAttribute('src', f.dataset.src); // 처음 열 때만 불러온다(원문이 커서)
+    if (f && !f.getAttribute('src')) f.setAttribute('src', f.dataset.src); // 처음 열 때만 불러온다(원문이 커서)
   }
   try { history.replaceState(null, '', '#' + id); } catch (e) { /* file:// 등 */ }
-  if (scroll) workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (scroll && workspace) workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-$$('[data-open]').forEach((el) => el.addEventListener('click', () => openPanel(el.dataset.open, true)));
+$$('[data-open]').forEach((el) => el.addEventListener('click', (e) => {
+  e.preventDefault();
+  openPanel(el.dataset.open, true);
+}));
 
 function openFromHash() {
   const h = location.hash.slice(1);
@@ -39,9 +45,9 @@ if (PANELS.includes(location.hash.slice(1))) {
 
 /* 기재요령 검색(iframe)은 안쪽 높이를 알려 주면 그만큼 늘린다 — 바깥 화면 하나로 스크롤되게 한다. */
 window.addEventListener('message', (e) => {
-  if (e.origin !== location.origin || !e.data || e.data.type !== 'guide-height') return;
+  if ((e.origin !== location.origin && e.origin !== 'https://neis-help-one.vercel.app') || !e.data || e.data.type !== 'guide-height') return;
   const h = Number(e.data.height);
-  if (h > 200) $('#guide-frame').style.height = Math.ceil(h) + 'px';
+  if (h > 200 && $('#guide-frame')) $('#guide-frame').style.height = Math.ceil(h) + 'px';
 });
 
 /* ── 등장 모션: 화면에 들어올 때마다 다시 재생 ── */

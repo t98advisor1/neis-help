@@ -1662,15 +1662,16 @@ document.addEventListener('click', (e) => {
 });
 
 function switchTab(name) {
-  const tab = document.querySelector(`.tab[data-tab="${name}"]`);
+  const tab = document.querySelector(`#step-result .tab[data-tab="${name}"]`);
   if (tab) tab.click();
-  document.querySelector('.tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const tabsEl = document.querySelector('#step-result .tabs');
+  if (tabsEl) tabsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 /* 탭 · 필터 */
-document.querySelectorAll('.tab').forEach(tab => {
+document.querySelectorAll('#step-result .tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#step-result .tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     const name = tab.dataset.tab;
     ['findings', 'byrow', 'bycat', 'dups'].forEach(p =>

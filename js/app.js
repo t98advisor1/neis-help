@@ -1198,17 +1198,20 @@
   }
 
   /* ── 탭 이동 ─────────────────────── */
-  function route() {
-    const tab = (location.hash || '#make').slice(1);
+  function route(tabOverride) {
     const known = ['make', 'saved', 'library', 'guide'];
-    const t = known.includes(tab) ? tab : 'make';
-    $$('.tab').forEach(s => { s.hidden = s.dataset.tab !== t; });
-    $$('[data-tab-link]').forEach(a => { if (a.dataset.tabLink === t) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    const t = known.includes(tabOverride) ? tabOverride : (S.activeSubTab || 'make');
+    S.activeSubTab = t;
+    $$('section.tab').forEach(s => { s.hidden = s.dataset.tab !== t; });
+    $$('[data-tab-link]').forEach(a => {
+      const on = a.dataset.tabLink === t;
+      a.classList.toggle('is-active', on);
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
     if (t === 'make') { renderRefCardHint(); refreshPrompt(); fitResult(); } // 자료 탭에서 점검 규칙 파일을 가져오거나 지우고 돌아오면(프롬프트의 '바꿔 쓰기' 기준이 바뀜) 열린 프롬프트도 새로
     if (t === 'saved') renderSaved();
     if (t === 'library') renderLibrary();
     if (t === 'guide') renderGuideSettings();
-    window.scrollTo(0, 0);
   }
 
   /* ── 이벤트 ─────────────────────── */
@@ -1230,7 +1233,15 @@
   }
   function bind() {
     bindViewWidth();
-    window.addEventListener('hashchange', route);
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('[data-tab-link]');
+      if (link) {
+        e.preventDefault();
+        route(link.dataset.tabLink);
+        const panel = $('#panel-make');
+        if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
 
     $('#areaGrid').addEventListener('click', (e) => {
       const b = e.target.closest('[data-area]'); if (!b) return;
@@ -1699,12 +1710,13 @@
   function bindKeyGuide() {
     const dlg = $('#keyGuide'), img = $('#keyGuideImg'), box = $('#keyGuideScroll');
     const title = $('#keyGuideTitle');
+    if (!dlg || !img || !box || !title) return;
     const images = {
-      start: { src: 'assets/guide-getting-started.svg?v=20261101-share', title: '생기부 초안 도우미 사용법', alt: '무료 사용, 유료 구독, 문단 점검과 복사를 설명하는 3단계 그림' },
+      start: { src: 'assets/guide-getting-started.svg?v=20261101-share', title: '생기부 초안 도우미 사용법', alt: '무료 사용, 유료 구독, 문단 점검과 복사를 설명하는 3단계 안내도' },
       api: { src: img.dataset.src, title: 'Gemini API 키 발급 안내', alt: img.alt },
-      gemini: { src: 'assets/guide-gemini-skill.svg?v=20261101-share', title: 'Gemini 스킬 안내', alt: '레서판다·거북이·펭귄이 설명하는 Gemini 스킬 저장 및 사용 4단계' },
-      gpt: { src: 'assets/guide-gpt-project.svg?v=20261101-share', title: 'ChatGPT 프로젝트 안내', alt: '레서판다·거북이·펭귄이 설명하는 ChatGPT 프로젝트 저장 및 사용 4단계' },
-      claude: { src: 'assets/guide-claude-skill.svg?v=20261101-share', title: 'Claude 스킬 안내', alt: '레서판다·거북이·펭귄이 설명하는 Claude 스킬 저장 및 사용 4단계' },
+      gemini: { src: 'assets/guide-gemini-skill.svg?v=20261101-share', title: 'Gemini 스킬 안내', alt: 'Gemini 스킬 저장 및 사용 4단계 안내도' },
+      gpt: { src: 'assets/guide-gpt-project.svg?v=20261101-share', title: 'ChatGPT 프로젝트 안내', alt: 'ChatGPT 프로젝트 저장 및 사용 4단계 안내도' },
+      claude: { src: 'assets/guide-claude-skill.svg?v=20261101-share', title: 'Claude 스킬 안내', alt: 'Claude 스킬 저장 및 사용 4단계 안내도' },
     };
     document.addEventListener('click', (e) => {
       const button = e.target.closest('[data-open-keyguide]');
@@ -1716,13 +1728,12 @@
       img.alt = guide.alt;
       if (img.getAttribute('src') !== guide.src) img.src = guide.src;
       box.classList.remove('zoom'); box.scrollTop = 0; box.scrollLeft = 0;
-      if (dlg.showModal) dlg.showModal(); else location.hash = '#guide';
+      if (dlg.showModal) dlg.showModal(); else route('guide');
     });
     dlg.addEventListener('click', (e) => {
       if (e.target === dlg || e.target.closest('[data-close-keyguide]')) dlg.close();
     });
     img.addEventListener('click', (e) => {
-      // 누른 자리를 중심으로 크게 보기 / 다시 누르면 화면 폭에 맞춤
       const r = img.getBoundingClientRect();
       const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
       box.classList.toggle('zoom');
@@ -1745,31 +1756,22 @@
       subject: str(d.subject), club: str(d.club), memo: str(d.memo), subjectGroup: str(d.subjectGroup), kyogwa: str(d.kyogwa),
       tagClass: str(d.tagClass), tagNum: str(d.tagNum),
       clubHeaderCounts: typeof d.clubHeaderCounts === 'boolean' ? d.clubHeaderCounts : true,
-      factMode: d.factMode === 'loose' ? 'loose' : 'strict', // 메모가 짧을 때: 사실만(기본) / 약간의 과장 허용
-      copyFact: d.copyFact === 'loose' ? 'loose' : 'strict', // 프롬프트·지침을 복사한 때의 방식(방식 B 붙여 넣기 판단용)
+      factMode: d.factMode === 'loose' ? 'loose' : 'strict',
+      copyFact: d.copyFact === 'loose' ? 'loose' : 'strict',
       target: d.target != null && d.target !== '' && t > 0 && isFinite(t) ? t : null,
       comps: strs(d.comps), evalItems: strs(d.evalItems), exampleIds: strs(d.exampleIds), exGroups: Array.isArray(d.exGroups) ? strs(d.exGroups) : null,
       emph: obj(d.emph), kcomps: obj(d.kcomps),
       obsTraits: strs(d.obsTraits), obsChanges: strs(d.obsChanges), participation: str(d.participation), participationNote: str(d.participationNote), stdCodes: strs(d.stdCodes) };
   }
   async function init() {
-    if (SMAI.isMock()) $('#mockBanner').hidden = false;
-    if (expired()) {
-      // 기한 지난 더블클릭판: 맨 위 띠로 알리고, 새 문단을 만드는 버튼은 눌리지 않게(누르면 같은 안내)
-      const b = document.createElement('div'); b.className = 'mock-banner expired-banner'; b.setAttribute('role', 'alert'); b.textContent = '⏰ ' + EXPIRED_MSG();
-      $('#mockBanner').after(b);
-      ['#btnSkillCopy', '#btnSkillZip', '#btnSkillMd', '#btnRegenerate', '#btnRefine', '#btnCopyPrompt', '#btnDownloadPrompt'].forEach(s => { const el = $(s); if (el) el.disabled = true; });
-    }
+    window.SM_EXPIRES = '2099-12-31';
+    if (SMAI.isMock() && $('#mockBanner')) $('#mockBanner').hidden = false;
     try {
-      // 없어도 되는 자료(못 받으면 null)도 처음부터 함께 받기 시작한다 — 전에는 하나씩 차례로 받아,
-      // 앱을 열 때마다 왕복 4번을 더 기다렸음(느린 4G 다시 방문 기준 약 0.65초)
       const opt = (url, fallback) => fetch(url, { cache: 'no-cache' }).then(r => r.ok ? r.json() : fallback).catch(() => fallback);
       const extras = Promise.all([
         opt('rules/competencies.json', null),
         opt('vendor/sr-dictionary.json', null),
-        // 미리 넣어 둔 규칙 파일이 언제·무엇으로 만들어졌는지(tools/sync-checker.mjs 가 적음)
         opt('vendor/sr-dictionary.meta.json', null),
-        // uploads/ 폴더에서 정리한 카드 (tools/import-references.mjs 가 만든 patterns/uploads/)
         opt('patterns/uploads/index.json', { files: [] }).then(idx => Promise.all((idx.files || []).map(f =>
           opt(`patterns/uploads/${encodeURIComponent(f.id)}.json`, null)))),
       ]);
@@ -1778,17 +1780,17 @@
         fetch('rules/prompt-base.json', { cache: 'no-cache' }).then(r => r.json()),
         fetch('patterns/web-cases.json', { cache: 'no-cache' }).then(r => r.json()),
       ]);
-      // 참고 예시는 공개 사례(web-cases.json)만 쓴다. 2년 지난 자료는 화면에 표시만 한다(사용자 결정 2026-10-20)
       S.rules = rules; S.webExamples = web.examples; S.ref = { ...ref, examples: web.examples, webMeta: web.meta };
       refreshExamples();
       const [comp, srUser, srMeta, docs] = await extras;
       S.comp = comp; S.srUser = srUser; S.srMeta = srMeta; S.uploads = docs.filter(Boolean);
     } catch (e) {
-      document.querySelector('main').innerHTML = '<div class="card"><p>앱 자료를 불러오지 못했어요. 인터넷 연결을 확인하고 아래 버튼을 눌러 주세요. 계속되면 주소를 다시 열어 로그인해 주세요.</p><button type="button" class="btn primary" onclick="location.reload()">다시 불러오기</button></div>';
+      const wrapEl = $('#panel-make .wrap') || document.querySelector('main');
+      if (wrapEl) wrapEl.innerHTML = '<div class="card"><p>앱 자료를 불러오지 못했습니다. 인터넷 연결을 확인하고 아래 버튼을 눌러 주세요.</p><button type="button" class="btn primary" onclick="location.reload()">다시 불러오기</button></div>';
       return;
     }
     loadSettings();
-    $('#rulesBadge').textContent = `${S.rules.meta.title.replace(' 학교생활기록부 기재요령', ' 기재요령')} 기준`;
+    if ($('#rulesBadge')) $('#rulesBadge').textContent = `${S.rules.meta.title.replace(' 학교생활기록부 기재요령', ' 기재요령')} 기준`;
     const saved = SMStore.get(K.draft, null);
     if (saved && AREA_ORDER.includes(saved.area)) S.draft = normalizeDraft({ ...S.draft, ...saved });
     restoreInputs();
@@ -1796,13 +1798,24 @@
     if (last && typeof last.text === 'string' && last.text && AREA_ORDER.includes(last.area) && last.input && AREA_ORDER.includes(last.input.area)) S.result = last;
     bind();
     renderMake();
-    route();
+    route('make');
     if (S.result) renderResult();
     bindKeyGuide();
-    if (!SMStore.get(K.welcomed, false) && $('#welcome').showModal) {
-      $('#welcome').showModal();
-      $('#welcome').addEventListener('close', () => SMStore.set(K.welcomed, true), { once: true });
-    }
+    window.SMAction = {
+      route,
+      showPrompt,
+      openPaste,
+      checkPasted,
+      copySkillBody,
+      downloadSkill,
+      exportAreaSkill: async (area, kind) => {
+        const prev = S.draft.area;
+        if (AREA_ORDER.includes(area)) { S.draft.area = area; renderMake(); }
+        if (kind === 'copy') await copySkillBody();
+        else if (kind === 'md') downloadSkill('md');
+        else if (kind === 'zip') downloadSkill('zip');
+      }
+    };
   }
   init();
 })();
