@@ -1712,87 +1712,158 @@
   /* 1. Gemini API 키 발급 6단계 인터랙티브 가이드 팝업 */
   function bindKeyGuide() {
     const dlg = $('#keyGuide');
-    const img = $('#keyGuideImg');
-    const title = $('#keyGuideTitle');
-    const prevBtn = $('#btnStepPrev');
-    const nextBtn = $('#btnStepNext');
-    const counter = $('#stepCounter');
-    const tabButtons = $$('#stepGuideTabs .step-tab');
-    if (!dlg || !img) return;
+    if (!dlg) return;
 
-    let currentStep = 1;
+    const extLink = $('#keyGuideExtLink');
+    const viewGems = $('#guideViewGems');
+    const viewApiKey = $('#guideViewApiKey');
 
-    function setStep(step) {
-      currentStep = Math.max(1, Math.min(6, step));
-      img.src = `assets/gemini-step${currentStep}.svg`;
-      counter.textContent = `${currentStep} / 6 단계`;
-      prevBtn.disabled = currentStep === 1;
-
-      if (currentStep === 6) {
-        nextBtn.textContent = '발급 완료! 키 입력하기';
-        nextBtn.style.background = '#16a34a';
+    function switchMode(mode) {
+      if (mode === 'gems') {
+        if (viewGems) viewGems.style.display = 'block';
+        if (viewApiKey) viewApiKey.style.display = 'none';
+        if (extLink) {
+          extLink.href = 'https://gemini.google.com/gems';
+          extLink.textContent = 'Gemini 젬스 열기 ↗';
+          extLink.style.background = '#2563eb';
+        }
       } else {
-        nextBtn.textContent = '다음 단계';
-        nextBtn.style.background = '#2563eb';
+        if (viewGems) viewGems.style.display = 'none';
+        if (viewApiKey) viewApiKey.style.display = 'block';
+        if (extLink) {
+          extLink.href = 'https://aistudio.google.com/apikey';
+          extLink.textContent = 'Google AI Studio 열기 ↗';
+          extLink.style.background = '#ff385c';
+        }
       }
+    }
 
-      tabButtons.forEach(btn => {
-        const s = parseInt(btn.dataset.step, 10);
-        btn.classList.toggle('on', s === currentStep);
-        if (s === currentStep) {
-          btn.style.background = '#2563eb';
-          btn.style.color = '#fff';
-          btn.style.fontWeight = '700';
-        } else {
-          btn.style.background = '#f1f5f9';
-          btn.style.color = '#475569';
-          btn.style.fontWeight = '500';
-        }
+    $$('input[name="guideMode"]').forEach(radio => {
+      radio.addEventListener('change', (e) => switchMode(e.target.value));
+    });
+
+    // 1. 젬스(Gems) 실무 캐러셀
+    const GEMS_DESCS = [
+      "1단계: 학교별 탐구보고서 서식에 맞춰 추출할 항목(학번, 성명, 주제, 세특)을 프롬프트에 지정합니다.",
+      "2단계: Gemini 젬스 관리자에서 새 젬을 만들고, 맞춤 프롬프트를 지침(Instructions)에 입력합니다.",
+      "3단계: 학생들의 수기/타이핑 보고서 사진(한 학급 20~30명)을 Gemini 대화창에 한 번에 드래그하여 올립니다.",
+      "4단계: Gemini가 3단 논법(동기-과정-성장) 세특 초안을 구글 시트 호환 표 양식으로 일괄 출력합니다.",
+      "5단계: 표를 복사해 구글 시트에 붙여넣고, 본 앱의 [생기부 점검하기]에서 나이스 바이트와 금지어를 최종 검증합니다."
+    ];
+
+    let currentGemStep = 1;
+    const gemsImg = $('#gemsGuideImg');
+    const gemsDesc = $('#gemsGuideDesc');
+    const gemsPrev = $('#gemsGuidePrev');
+    const gemsNext = $('#gemsGuideNext');
+    const gemsTabs = $$('#gemsGuideTabs .step-tab');
+    const gemsCopyBox = $('#gemsPromptCopyBox');
+
+    function setGemStep(step) {
+      currentGemStep = Math.max(1, Math.min(5, step));
+      if (gemsImg) gemsImg.src = `assets/gemini-gem-step${currentGemStep}.svg`;
+      if (gemsDesc) gemsDesc.textContent = GEMS_DESCS[currentGemStep - 1];
+      if (gemsPrev) gemsPrev.disabled = (currentGemStep === 1);
+      if (gemsNext) gemsNext.textContent = (currentGemStep === 5) ? '시작하기 ✓' : '다음 ➔';
+      if (gemsCopyBox) gemsCopyBox.style.display = (currentGemStep === 1 || currentGemStep === 2) ? 'flex' : 'none';
+
+      gemsTabs.forEach((btn, i) => {
+        const on = (i + 1 === currentGemStep);
+        btn.classList.toggle('on', on);
+        btn.style.background = on ? '#2563eb' : 'rgba(255,255,255,0.06)';
+        btn.style.color = on ? '#fff' : '#cbd5e1';
       });
     }
 
-    // 단계 버튼 클릭
-    tabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        setStep(parseInt(btn.dataset.step, 10));
-      });
+    gemsTabs.forEach((btn, i) => {
+      btn.addEventListener('click', () => setGemStep(i + 1));
+    });
+    if (gemsPrev) gemsPrev.addEventListener('click', () => setGemStep(currentGemStep - 1));
+    if (gemsNext) gemsNext.addEventListener('click', () => {
+      if (currentGemStep === 5) {
+        dlg.close();
+        window.open('https://gemini.google.com/gems', '_blank');
+      } else {
+        setGemStep(currentGemStep + 1);
+      }
     });
 
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => setStep(currentStep - 1));
+    const btnCopyPrompt = $('#btnCopyGemsPrompt');
+    if (btnCopyPrompt) {
+      btnCopyPrompt.addEventListener('click', () => {
+        const promptText = `너는 2026학년도 학교생활기록부 기재요령을 완벽히 숙지한 교육부 수석교사야.
+첨부된 학생 보고서 사진들에서 손글씨와 텍스트를 판독(OCR)하여 다음 형식의 구글 시트 마크다운 표로 한 번에 출력해 줘:
+
+[표 컬럼 형식]:
+| 학번 | 성명 | 탐구주제 | 세특 3단 초안 (동기-과정-성장) | 바이트(추정) |
+
+[기재 원칙]:
+1. 3단 구조: 탐구 동기 및 계기 → 구체적 실험·탐구 과정 → 심화 결론 및 역량 성장
+2. 종결어미: '~함', '~임'의 개조식 종결어미 준수
+3. 금지어 배제: 공인어학성적, 교외상, 논문, 부모 지위 기재 절대 배제`;
+
+        navigator.clipboard.writeText(promptText).then(() => {
+          btnCopyPrompt.textContent = '✓ 복사 완료!';
+          btnCopyPrompt.style.background = '#059669';
+          setTimeout(() => {
+            btnCopyPrompt.textContent = '프롬프트 복사';
+            btnCopyPrompt.style.background = '#2563eb';
+          }, 2000);
+        });
+      });
     }
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        if (currentStep === 6) {
-          dlg.close();
-          const keyInput = $('#apiKeyInline') || $('#apiKey');
-          if (keyInput) {
-            keyInput.focus();
-            keyInput.select();
-          }
-        } else {
-          setStep(currentStep + 1);
-        }
+    // 2. API 키 발급 캐러셀
+    const API_DESCS = [
+      "1단계: Google AI Studio(aistudio.google.com/apikey)에 접속 후 구글 계정으로 로그인합니다.",
+      "2단계: 서비스 이용 약관 화면이 나타나면 체크박스에 동의 후 [동의 및 계속]을 클릭합니다.",
+      "3단계: 좌측 상단의 파란색 [+ Get API key] 또는 [API 키 만들기] 버튼을 클릭합니다.",
+      "4단계: [Create API key in new project] (새 프로젝트에서 키 만들기) 옵션을 선택합니다.",
+      "5단계: 생성된 AIzaSy... 형태의 비밀 API 키 오른쪽의 [Copy] 복사 버튼을 누릅니다.",
+      "6단계: 본 앱의 입력창에 Ctrl+V로 붙여넣고 [키 저장]을 누르면 즉시 연동 완료됩니다."
+    ];
+
+    let currentApiStep = 1;
+    const apiImg = $('#guideStepImg');
+    const apiDesc = $('#guideStepDesc');
+    const apiPrev = $('#guidePrevBtn');
+    const apiNext = $('#guideNextBtn');
+    const apiTabs = $$('#stepGuideTabs .step-tab');
+
+    function setApiStep(step) {
+      currentApiStep = Math.max(1, Math.min(6, step));
+      if (apiImg) apiImg.src = `assets/gemini-step${currentApiStep}.svg`;
+      if (apiDesc) apiDesc.textContent = API_DESCS[currentApiStep - 1];
+      if (apiPrev) apiPrev.disabled = (currentApiStep === 1);
+      if (apiNext) apiNext.textContent = (currentApiStep === 6) ? '완료' : '다음 ➔';
+
+      apiTabs.forEach((btn, i) => {
+        const on = (i + 1 === currentApiStep);
+        btn.classList.toggle('on', on);
+        btn.style.background = on ? '#ff385c' : 'rgba(255,255,255,0.06)';
+        btn.style.color = on ? '#fff' : '#cbd5e1';
       });
     }
 
-    // 모달 열기 이벤트
-    document.addEventListener('click', (e) => {
-      const button = e.target.closest('[data-open-keyguide]');
-      if (!button) return;
-      e.preventDefault();
-      setStep(1);
-      if (dlg.showModal) dlg.showModal();
+    apiTabs.forEach((btn, i) => {
+      btn.addEventListener('click', () => setApiStep(i + 1));
+    });
+    if (apiPrev) apiPrev.addEventListener('click', () => setApiStep(currentApiStep - 1));
+    if (apiNext) apiNext.addEventListener('click', () => {
+      if (currentApiStep === 6) {
+        dlg.close();
+      } else {
+        setApiStep(currentApiStep + 1);
+      }
     });
 
-    // 닫기
-    dlg.addEventListener('click', (e) => {
-      if (e.target === dlg || e.target.closest('[data-close-keyguide]')) dlg.close();
-    });
+    $$('[data-close-keyguide]').forEach(b => b.addEventListener('click', () => dlg.close()));
+
+    setGemStep(1);
+    setApiStep(1);
+    switchMode('gems');
   }
 
-  /* 2. 듀얼 관계형 구글 시트 (학급 담임 & 교과 담임) 실시간 동기화 바인딩 */
   function bindSheetSyncModal() {
     const btnSync = $('#btn-sheet-sync');
     const modal = $('#sheetSyncModal');

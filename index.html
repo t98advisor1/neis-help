@@ -504,34 +504,66 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <!-- ── 2화면: 메뉴 선택 (기존 Vercel .op-card 디자인 그대로, 업무 흐름 순서 배치) ── -->
 <section class="op-screen op-menu" id="menu">
   <div class="op-menu-inner">
-    <p class="op-eyebrow reveal">MENU</p>
-    <h2 class="reveal" style="--d:.06s">무엇을 확인하시겠어요?</h2>
-    <p class="op-lead reveal" style="--d:.12s">학교 업무 순서에 따라 매뉴얼 확인, 초안 작성, 파일 점검을 한 화면에서 이어서 진행합니다.</p>
+    <div class="op-head-block reveal">
+      <span class="op-eyebrow">02. WORK MENU</span>
+      <h2>학교 업무 순서에 따른 맞춤 도구</h2>
+      <p class="op-lead">학교생활기록부 관찰 메모 초안 작성부터 엑셀·PDF 일괄 점검, 133개 대학 대입 진학상담까지 한곳에서 유기적으로 연결됩니다.</p>
+    </div>
     <div class="op-cards">
-      <button class="op-card reveal" style="--d:.14s" data-open="usage">
-        <span class="no">01</span><span class="ic">📘</span><b>사용법 · 검사 규칙</b>
-        <span class="ds">학교 업무 흐름, 사이드바·개인정보 보호 원칙과 검사 규칙을 확인합니다.</span><i aria-hidden="true">→</i></button>
-      <button class="op-card reveal" style="--d:.22s" data-open="make">
-        <span class="no">02</span><span class="ic">✏️</span><b>생기부 초안 작성</b>
-        <span class="ds">수업 관찰 메모로 기재요령에 맞춘 문단을 작성하고 바이트·금지어를 점검합니다.</span><i aria-hidden="true">→</i></button>
-      <button class="op-card reveal" style="--d:.30s" data-open="check">
-        <span class="no">03</span><span class="ic">📝</span><b>생기부 점검하기</b>
-        <span class="ds">엑셀·PDF를 올려 기재요령 위반 표현과 분량 초과, 중복 문장을 찾습니다.</span><i aria-hidden="true">→</i></button>
-      <button class="op-card reveal" style="--d:.38s" data-open="prompts">
-        <span class="no">04</span><span class="ic">✍️</span><b>AI 프롬프트 · 스킬</b>
-        <span class="ds">Claude·ChatGPT·Gemini에 등록해 쓰는 영역별 표준 지침과 스킬 파일입니다.</span><i aria-hidden="true">→</i></button>
-      <button class="op-card reveal" style="--d:.46s" data-open="guide">
-        <span class="no">05</span><span class="ic">📖</span><b>기재요령 검색</b>
-        <span class="ds">2026학년도 기재요령 원문을 낱말로 찾고 단원별로 읽습니다.</span><i aria-hidden="true">→</i></button>
-    <button class="op-card reveal" style="--d:.54s" data-open="counsel">
-        <span class="no">06</span><span class="ic">🎯</span><b>2027 대입 진학상담</b>
-        <span class="ds">133개 대학 입결DB, 5등급제 환산, 논술전형 총정리 및 단일 마스터 시트와 세특을 연동합니다.</span><i aria-hidden="true">→</i></button>
+      <button class="op-card reveal" style="--d:.06s" data-open="make">
+        <span class="no">01 · DRAFTING</span>
+        <span class="ic">✏️</span>
+        <b>생기부 초안 작성</b>
+        <span class="ds">수업 관찰 메모로 기재요령에 맞춘 문단을 작성하고 나이스 바이트(Byte)와 금지어를 즉시 점검합니다.</span>
+        <i aria-hidden="true">→</i>
+      </button>
+      <button class="op-card reveal" style="--d:.12s" data-open="check">
+        <span class="no">02 · INSPECT</span>
+        <span class="ic">📝</span>
+        <b>생기부 파일 점검</b>
+        <span class="ds">나이스 엑셀·PDF를 올려 기재요령 위반 표현, 글자수 초과, 종결어미 및 중복 문장을 한 번에 찾습니다.</span>
+        <i aria-hidden="true">→</i>
+      </button>
+      <button class="op-card reveal" style="--d:.18s" data-open="counsel">
+        <span class="no">03 · ADMISSIONS</span>
+        <span class="ic">🎯</span>
+        <b>2027 대입 진학상담</b>
+        <span class="ds">133개 대학 수시 입결DB, 2028 5등급제 환산, 논술전형 총정리 및 나만의 구글 시트와 1:1 연계합니다.</span>
+        <i aria-hidden="true">→</i>
+      </button>
+      <button class="op-card reveal" style="--d:.24s" data-open="prompts">
+        <span class="no">04 · PROMPTS</span>
+        <span class="ic">✍️</span>
+        <b>AI 프롬프트 · 스킬</b>
+        <span class="ds">Gemini·ChatGPT·Claude에 등록해 쓰는 교육부 훈령 기반 영역별 표준 프롬프트와 지침입니다.</span>
+        <i aria-hidden="true">→</i>
+      </button>
+      <button class="op-card reveal" style="--d:.30s" data-open="guide">
+        <span class="no">05 · MANUAL</span>
+        <span class="ic">📖</span>
+        <b>기재요령 원문 검색</b>
+        <span class="ds">2026학년도 학교생활기록부 기재요령 원문을 낱말로 검색하고 단원별로 빠르게 확인합니다.</span>
+        <i aria-hidden="true">→</i>
+      </button>
+      <button class="op-card reveal" style="--d:.36s" data-open="usage">
+        <span class="no">06 · GUIDE</span>
+        <span class="ic">📘</span>
+        <b>사용법 · 보안 원칙</b>
+        <span class="ds">학교 업무 표준 흐름과 학생 개인정보 보호 원칙, 바이트 계산 방식 및 검사 규칙을 확인합니다.</span>
+        <i aria-hidden="true">→</i>
+      </button>
     </div>
   </div>
 </section>
 
 <!-- ── 3화면: 선택한 메뉴의 내용 (기존 Vercel .op-workspace & .op-tabs 그대로) ── -->
 <section class="op-workspace" id="workspace">
+  <div class="op-workspace-inner">
+    <div class="op-head-block reveal">
+      <span class="op-eyebrow">03. RECORD WORKBENCH</span>
+      <h2>학교생활기록부 초안 작성</h2>
+      <p class="op-lead">수업 관찰 메모로 나이스 기재요령에 맞춘 완성도 높은 세특 문단을 도출하고 실시간 바이트와 금지어를 점검합니다.</p>
+    </div>
   <nav class="op-tabs" id="op-tabs" role="tablist" aria-label="메뉴">
     <a class="op-up" href="#menu" title="메뉴 화면으로">↑ 메뉴</a>
     <button role="tab" data-open="make" class="is-active" aria-selected="true">생기부 초안 작성</button>
@@ -1126,9 +1158,8 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     </div>
 
   </div>
-
-  
-    <!-- ── 패널 6: 2027 대입 진학상담 & 대학별 입결 & 5등급제 환산 & 나이스 세특 ── -->
+  </div><!-- .op-workspace-inner -->
+  <!-- ── 패널 6: 2027 대입 진학상담 & 대학별 입결 & 5등급제 환산 & 나이스 세특 ── -->
     <div class="op-panel hidden" id="panel-counsel" role="tabpanel">
       <!-- 2027 상담 상단 서브바 -->
       <div class="counsel-header-bar">
@@ -1593,47 +1624,107 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
   
     <!-- ── 4화면: 2027학년도 대입 진학상담 & 대학 진학성적 분석 스크롤 전용 섹션 ── -->
-    <section class="op-screen" id="sec-counsel-scroll" style="background:#f8fafc; border-top:1px solid #e2e8f0; width:100%; box-sizing:border-box;">
-      <div style="max-width:1120px; margin:0 auto;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
-          <div>
-            <p style="font-size:12px; font-weight:800; color:#2563eb; letter-spacing:0.05em; margin-bottom:4px; text-transform:uppercase;">Admissions &amp; Grade Analysis</p>
-            <h2 style="font-size:24px; font-weight:800; color:#0f172a; margin:0;">2027학년도 대입 진학상담 &amp; 대학 진학성적 분석</h2>
-            <p style="font-size:13.5px; color:#64748b; margin-top:4px;">133개 대학 2025/2026 수시 최종 입결 분석, 2028 개편 5등급제 환산, 논술전형 총정리 및 나만의 구글 시트 연계</p>
-          </div>
-          <button type="button" class="btn primary" id="btnOpenFullCounsel" style="padding:10px 20px; font-size:14px; font-weight:700; background:#2563eb; color:#fff; border-radius:8px; cursor:pointer;">대입 진학상담 전체 화면으로 열기 ➔</button>
-        </div>
-
-        <!-- 4대 핵심 기능 카드 그리드 -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px; margin-bottom:24px;">
-          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:18px;">
-            <div style="font-size:12px; font-weight:700; color:#2563eb; margin-bottom:4px;">01. 대학별 전형 검색</div>
-            <strong style="font-size:16px; color:#0f172a;">전국 133개 대학 입결</strong>
-            <p style="font-size:12.5px; color:#64748b; margin-top:6px; line-height:1.5;">지역·계열별 필터, 주요 15개대 뱃지, 실시간 수시 경쟁률 및 분야별 등록자 평균 분석</p>
-          </div>
-          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:18px;">
-            <div style="font-size:12px; font-weight:700; color:#059669; margin-bottom:4px;">02. 성적으로 대학 찾기</div>
-            <strong style="font-size:16px; color:#0f172a;">2028 5등급제 환산</strong>
-            <p style="font-size:12.5px; color:#64748b; margin-top:6px; line-height:1.5;">현재 9등급제 성적 입력 시 5등급제 환산 등급 자동 계산 및 ±0.3등급 내 지원 가능 대학 추천</p>
-          </div>
-          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:18px;">
-            <div style="font-size:12px; font-weight:700; color:#b91c1c; margin-bottom:4px;">03. 논술전형 자료실</div>
-            <strong style="font-size:16px; color:#0f172a;">49개 대학 논술 총정리</strong>
-            <p style="font-size:12.5px; color:#64748b; margin-top:6px; line-height:1.5;">수능 최저학력기준 유무, 전형방법, EBSi 기출문제 및 대학어디가 1:1 입결 매칭</p>
-          </div>
-          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:18px;">
-            <div style="font-size:12px; font-weight:700; color:#7c3aed; margin-bottom:4px;">04. 구글 시트 연계</div>
-            <strong style="font-size:16px; color:#0f172a;">상담기록 &amp; 세특 동기화</strong>
-            <p style="font-size:12.5px; color:#64748b; margin-top:6px; line-height:1.5;">클릭 한 번으로 목표대학을 구글 시트로 [담기], 나이스 1,500 Byte 세특 실시간 기록</p>
-          </div>
-        </div>
+    <section class="op-screen" id="sec-counsel-scroll">
+  <div class="op-head-block reveal">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+      <div>
+        <span class="op-eyebrow">04. ADMISSION &amp; COUNSEL</span>
+        <h2>2027 대입 진학상담 &amp; 대학 진학성적 분석</h2>
+        <p class="op-lead">전국 133개 대학 2025/2026 수시 최종 입결 분석, 2028 개편 5등급제 자동 환산, 49개 대학 논술 총정리 및 나만의 구글 시트 연계</p>
       </div>
-    </section>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <button type="button" class="btn" id="btnOpenLiveDataSummary" style="padding:12px 20px; font-size:14px; font-weight:800; background:#059669; color:#fff; border-radius:9999px; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(5,150,105,0.4); display:inline-flex; align-items:center; gap:6px;">
+          <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#34d399; animation:op-pulse 1.5s infinite;"></span>
+          ⚡ 실시간 경쟁률 &amp; 대학알리미
+        </button>
+        <button type="button" class="btn primary" id="btnOpenFullCounsel"  style="padding:12px 26px; font-size:15px; font-weight:800; background:#ff385c; color:#fff; border-radius:9999px; border:none; cursor:pointer; box-shadow:0 6px 20px rgba(255,56,92,0.4); transition:all 0.2s;">대입 진학상담 전체 화면으로 열기 ➔</button>
+    </div>
+  </div>
+
+  <!-- SWOT 분석 스타일 2*2 대형 행렬 그리드 -->
+  <div class="swot-matrix-grid reveal" style="--d:.1s;">
+    <!-- S1: 대학별 전형 검색 -->
+    <div class="swot-card s1" data-counsel-action="unis">
+      <div class="swot-head">
+        <span class="swot-label">01 · ADMISSIONS DB</span>
+        <span class="swot-icon">🏛️</span>
+      </div>
+      <h3>전국 133개 대학 수시 입결DB</h3>
+      <p class="swot-desc">수도권 및 지방거점국립대 등 133개 대학의 1,095개 전형별 등록자 학생부 등급 컷, 전형방법, 주요 15개대 뱃지 및 실시간 수시 경쟁률을 1:1로 직접 조회합니다.</p>
+      <div class="swot-tags">
+        <span class="swot-tag">133개 대학</span>
+        <span class="swot-tag">실시간 수시 경쟁률</span>
+        <span class="swot-tag">어디가 1:1 직행</span>
+      </div>
+      <button type="button" class="swot-action-btn" onclick="openCounselSubTab('unis')">
+        <span>대학별 전형 검색하기</span>
+        <span>→</span>
+      </button>
+    </div>
+
+    <!-- S2: 성적으로 대학 찾기 -->
+    <div class="swot-card s2" data-counsel-action="finder">
+      <div class="swot-head">
+        <span class="swot-label">02 · 2028 REFORM</span>
+        <span class="swot-icon">📊</span>
+      </div>
+      <h3>2028 5등급제 자동 환산 &amp; 대학 추천</h3>
+      <p class="swot-desc">현재 9등급제 학생부 성적을 입력하면 2028학년도 개편 5등급제로 즉시 상호 환산하고, 목표 대학 합격선(±0.3등급) 범위 내 안정·적정·소신 대학을 추천합니다.</p>
+      <div class="swot-tags">
+        <span class="swot-tag">5등급제 공식 환산</span>
+        <span class="swot-tag">±0.3등급 추천</span>
+        <span class="swot-tag">합격선 진단</span>
+      </div>
+      <button type="button" class="swot-action-btn" onclick="openCounselSubTab('finder')">
+        <span>성적으로 대학 찾기</span>
+        <span>→</span>
+      </button>
+    </div>
+
+    <!-- S3: 논술전형 자료실 -->
+    <div class="swot-card s3" data-counsel-action="nonsul">
+      <div class="swot-head">
+        <span class="swot-label">03 · ESSAY &amp; MOCK</span>
+        <span class="swot-icon">📑</span>
+      </div>
+      <h3>49개 대학 논술전형 총정리</h3>
+      <p class="swot-desc">수능 최저학력기준 유무, 논술 반영비율, 선행학습영향평가서, EBSi 기출문제 및 대학 어디가(adiga) 1:1 공식 상세 페이지로 바로 연결되는 공식 자료실을 제공합니다.</p>
+      <div class="swot-tags">
+        <span class="swot-tag">49개 대학 총정리</span>
+        <span class="swot-tag">수능최저 유무</span>
+        <span class="swot-tag">기출문제 연계</span>
+      </div>
+      <button type="button" class="swot-action-btn" onclick="openCounselSubTab('nonsul')">
+        <span>논술전형 자료실 열기</span>
+        <span>→</span>
+      </button>
+    </div>
+
+    <!-- S4: 구글 시트 연계 -->
+    <div class="swot-card s4" data-counsel-action="records">
+      <div class="swot-head">
+        <span class="swot-label">04 · GOOGLE SYNC</span>
+        <span class="swot-icon">☁️</span>
+      </div>
+      <h3>구글 시트 1:1 상담·세특 동기화</h3>
+      <p class="swot-desc">학생별 상담 기록과 목표 대학, 세특 키워드를 교사 본인의 구글 드라이브(구글 시트 및 Docs)에 안전하게 실시간 양방향 저장하며, 마스터 절대참조로 보호합니다.</p>
+      <div class="swot-tags">
+        <span class="swot-tag">단일 마스터 시트</span>
+        <span class="swot-tag">1:1 양방향 동기화</span>
+        <span class="swot-tag">절대참조 보호</span>
+      </div>
+      <button type="button" class="swot-action-btn" onclick="openCounselSubTab('records')">
+        <span>상담 기록 &amp; 시트 연동</span>
+        <span>→</span>
+      </button>
+    </div>
+  </div>
+</section>
 
   <footer class="app-footer">
     <span id="visit-counter" class="visit-counter"></span>
     <span class="build" id="build" title="화면 코드가 마지막으로 바뀐 때입니다. 고친 내용이 안 보이면 새로고침(⌘⇧R) 해 주세요."></span>
-    <span class="copyright">Copyright ⓒ 2026 math-tong, pkm. All rights reserved.</span>
+    <span class="copyright">Copyright ⓒ 2026 math-tong. All rights reserved.</span>
   </footer>
 </section>
 
@@ -1957,38 +2048,91 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 </div>
 
 <!-- Gemini API 키 발급 6단계 인터랙티브 팝업 모달 (Windows 전용) -->
-<dialog id="keyGuide" class="step-guide-dialog" aria-labelledby="keyGuideTitle" style="max-width:960px; width:95vw; border:none; border-radius:16px; padding:0; box-shadow:0 25px 60px rgba(0,0,0,0.3); background:#ffffff; overflow:hidden;">
-  <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 20px; border-bottom:1px solid #e2e8f0; background:#f8fafc;">
+<dialog id="keyGuide" class="step-guide-dialog" aria-labelledby="keyGuideTitle" style="max-width:980px; width:95vw; border:none; border-radius:18px; padding:0; box-shadow:0 25px 60px rgba(0,0,0,0.5); background:#111217; color:#f1f5f9; overflow:hidden;">
+  <!-- 모달 헤더 -->
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 24px; border-bottom:1px solid rgba(255,255,255,0.1); background:#181920;">
     <div>
-      <b id="keyGuideTitle" style="font-size:16px; font-weight:800; color:#0f172a;">Gemini API 키 무료 발급 가이드 (Windows)</b>
-      <span style="font-size:12px; color:#64748b; margin-left:8px;">단계별 빨간색 박스와 곡선 화살표 포인트를 클릭하세요</span>
+      <b id="keyGuideTitle" style="font-size:17px; font-weight:800; color:#ffffff;">AI 학생 보고서 판독 &amp; 자동화 가이드</b>
+      <span style="font-size:12.5px; color:#94a3b8; margin-left:8px;">선생님의 수업 환경에 맞는 방식을 선택하세요</span>
     </div>
-    <div style="display:flex; gap:8px; align-items:center;">
-      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" class="btn small" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; text-decoration:none; font-weight:700; padding:6px 12px; border-radius:6px; font-size:12.5px;">Google AI Studio 열기</a>
-      <button type="button" class="btn small" data-close-keyguide style="padding:6px 12px; font-size:13px; cursor:pointer;">닫기</button>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <a href="https://gemini.google.com/gems" target="_blank" rel="noreferrer" id="keyGuideExtLink" class="btn small" style="background:#2563eb; color:#fff; border:none; text-decoration:none; font-weight:700; padding:7px 14px; border-radius:8px; font-size:12.5px; box-shadow:0 2px 8px rgba(37,99,235,0.4);">Gemini 젬스 열기 ↗</a>
+      <button type="button" class="btn small" data-close-keyguide style="padding:6px 14px; font-size:13px; cursor:pointer; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">닫기</button>
     </div>
   </div>
 
-  <!-- 단계별 탭 버튼 바 -->
-  <div class="step-guide-tabs" id="stepGuideTabs" style="display:flex; gap:6px; padding:8px 16px; background:#f1f5f9; border-bottom:1px solid #e2e8f0; overflow-x:auto;">
-    <button type="button" class="btn small step-tab on" data-step="1" style="font-weight:700;">1. 접속·로그인</button>
-    <button type="button" class="btn small step-tab" data-step="2">2. 약관 동의</button>
-    <button type="button" class="btn small step-tab" data-step="3">3. 키 만들기</button>
-    <button type="button" class="btn small step-tab" data-step="4">4. 새 프로젝트</button>
-    <button type="button" class="btn small step-tab" data-step="5">5. 키 복사</button>
-    <button type="button" class="btn small step-tab" data-step="6">6. 붙여넣기(Ctrl+V)</button>
+  <!-- 방식 선택 라디오 버튼 (선생님 요청) -->
+  <div style="display:flex; justify-content:center; gap:24px; padding:12px 20px; background:#14151c; border-bottom:1px solid rgba(255,255,255,0.08); flex-wrap:wrap;">
+    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:800; font-size:14px; color:#38bdf8;">
+      <input type="radio" name="guideMode" value="gems" checked style="accent-color:#38bdf8; width:16px; height:16px;">
+      <span>✨ [실무 강력 추천] Gemini 젬스 &amp; 프로로 수십 명 보고서 시트 일괄 생성 (API 불필요)</span>
+    </label>
+    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:700; font-size:14px; color:#cbd5e1;">
+      <input type="radio" name="guideMode" value="apikey" style="accent-color:#ff385c; width:16px; height:16px;">
+      <span>🔑 Gemini API 키 무료 발급 (웹앱 브라우저 연동용)</span>
+    </label>
   </div>
 
-  <!-- 메인 그래픽 뷰 -->
-  <div style="padding:16px; text-align:center; background:#ffffff; min-height:460px; display:flex; align-items:center; justify-content:center;">
-    <img id="keyGuideImg" src="assets/gemini-step1.svg" width="912" height="464" style="max-width:100%; height:auto; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.08);" alt="Gemini API 키 발급 안내 단계">
+  <!-- [VIEW 1: 젬스(Gems) 실무 캐러셀 설명서] -->
+  <div id="guideViewGems">
+    <!-- 단계별 탭 버튼 바 -->
+    <div class="step-guide-tabs" id="gemsGuideTabs" style="display:flex; gap:6px; padding:10px 20px; background:#181922; border-bottom:1px solid rgba(255,255,255,0.08); overflow-x:auto;">
+      <button type="button" class="btn small step-tab on" data-gem-step="1" style="font-weight:700; background:#2563eb; color:#fff; border:none; padding:6px 14px; border-radius:8px;">1. 양식 맞춤 프롬프트</button>
+      <button type="button" class="btn small step-tab" data-gem-step="2" style="padding:6px 14px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1);">2. 젬(Gem) 세팅</button>
+      <button type="button" class="btn small step-tab" data-gem-step="3" style="padding:6px 14px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1);">3. 사진 30장 드래그</button>
+      <button type="button" class="btn small step-tab" data-gem-step="4" style="padding:6px 14px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1);">4. 구글 시트 표 출력</button>
+      <button type="button" class="btn small step-tab" data-gem-step="5" style="padding:6px 14px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1);">5. 시트 붙여넣기 &amp; 검증</button>
+    </div>
+
+    <!-- 그래픽 뷰 & 프롬프트 복사 영역 -->
+    <div style="padding:16px 24px; text-align:center; background:#111217; min-height:430px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <img id="gemsGuideImg" src="assets/gemini-gem-step1.svg" alt="젬스 가이드 1단계" style="max-width:100%; max-height:410px; width:auto; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.6);" />
+      
+      <!-- 1단계 전용 프롬프트 즉시 복사 박스 -->
+      <div id="gemsPromptCopyBox" style="margin-top:14px; width:100%; max-width:860px; background:#181a24; border:1px solid rgba(56,189,248,0.3); border-radius:10px; padding:12px 16px; text-align:left; display:flex; justify-content:space-between; align-items:center; gap:16px;">
+        <div style="overflow:hidden;">
+          <b style="font-size:13px; color:#38bdf8;">📋 [복사하여 지침에 넣을 표준 프롬프트]:</b>
+          <span style="font-size:12px; color:#cbd5e1; margin-left:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">"첨부된 보고서 사진들을 분석하여 학번, 성명, 탐구주제, 3단논법 세특 초안을 구글 시트 표로 만들어줘..."</span>
+        </div>
+        <button type="button" id="btnCopyGemsPrompt" style="padding:6px 14px; background:#2563eb; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap;">프롬프트 복사</button>
+      </div>
+    </div>
+
+    <!-- 푸터 네비게이션 -->
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 24px; border-top:1px solid rgba(255,255,255,0.1); background:#181920;">
+      <span id="gemsGuideDesc" style="font-size:13.5px; font-weight:700; color:#38bdf8;">1단계: 학교별 탐구보고서 서식에 맞춰 추출할 항목(학번, 성명, 주제, 세특)을 프롬프트에 지정합니다.</span>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn small" id="gemsGuidePrev" disabled style="padding:7px 16px; border-radius:8px; font-size:13px; cursor:pointer; background:rgba(255,255,255,0.06); color:#94a3b8; border:1px solid rgba(255,255,255,0.15);">이전</button>
+        <button type="button" class="btn small primary" id="gemsGuideNext" style="padding:7px 18px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; background:#2563eb; color:#fff; border:none;">다음 ➔</button>
+      </div>
+    </div>
   </div>
 
-  <!-- 하단 컨트롤 바 -->
-  <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-top:1px solid #e2e8f0; background:#f8fafc;">
-    <button type="button" class="btn" id="btnStepPrev" style="padding:6px 14px; font-size:13px;" disabled>이전 단계</button>
-    <span id="stepCounter" style="font-size:13px; font-weight:700; color:#475569;">1 / 6 단계</span>
-    <button type="button" class="btn primary" id="btnStepNext" style="padding:6px 18px; font-size:13px; background:#2563eb; color:#fff; font-weight:700;">다음 단계</button>
+  <!-- [VIEW 2: API 키 발급 가이드 (기존)] -->
+  <div id="guideViewApiKey" style="display:none;">
+    <!-- 단계별 탭 버튼 바 -->
+    <div class="step-guide-tabs" id="stepGuideTabs" style="display:flex; gap:6px; padding:10px 20px; background:#181922; border-bottom:1px solid rgba(255,255,255,0.08); overflow-x:auto;">
+      <button type="button" class="btn small step-tab on" data-step="1" style="font-weight:700; background:#ff385c; color:#fff; border:none; padding:6px 14px; border-radius:8px;">1. 접속·로그인</button>
+      <button type="button" class="btn small step-tab" data-step="2" style="padding:6px 14px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1);">2. 약관 동의</button>
+      <button type="button" class="btn small step-tab" data-step="3" style="padding:6px 14px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1);">3. 키 만들기</button>
+      <button type="button" class="btn small step-tab" data-step="4" style="padding:6px 14px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1);">4. 새 프로젝트</button>
+      <button type="button" class="btn small step-tab" data-step="5" style="padding:6px 14px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1);">5. 키 복사</button>
+      <button type="button" class="btn small step-tab" data-step="6" style="padding:6px 14px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1);">6. 붙여넣기(Ctrl+V)</button>
+    </div>
+
+    <!-- 그래픽 뷰 -->
+    <div style="padding:16px 24px; text-align:center; background:#111217; min-height:430px; display:flex; align-items:center; justify-content:center;">
+      <img id="guideStepImg" src="assets/gemini-step1.svg" alt="Gemini 키 발급 1단계" style="max-width:100%; max-height:410px; width:auto; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.6);" />
+    </div>
+
+    <!-- 푸터 네비게이션 -->
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 24px; border-top:1px solid rgba(255,255,255,0.1); background:#181920;">
+      <span id="guideStepDesc" style="font-size:13.5px; font-weight:700; color:#ff7d95;">1단계: Google AI Studio(aistudio.google.com/apikey)에 접속 후 구글 계정으로 로그인합니다.</span>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn small" id="guidePrevBtn" disabled style="padding:7px 16px; border-radius:8px; font-size:13px; cursor:pointer; background:rgba(255,255,255,0.06); color:#94a3b8; border:1px solid rgba(255,255,255,0.15);">이전</button>
+        <button type="button" class="btn small primary" id="guideNextBtn" style="padding:7px 18px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; background:#ff385c; color:#fff; border:none;">다음 ➔</button>
+      </div>
+    </div>
   </div>
 </dialog>
 
@@ -2002,6 +2146,25 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <button type="button" class="btn small" onclick="document.getElementById('sheetSyncModal').close()">✕</button>
   </div>
   <div style="padding:20px; font-size:13.5px; color:#334155; line-height:1.6; max-height:80vh; overflow-y:auto;">
+    <!-- 관계형 서식 2종 (구글 시트 사본 & 엑셀 다운로드) -->
+    <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:16px; margin-bottom:18px; display:flex; flex-direction:column; gap:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <b style="font-size:14px; color:#0f172a;">📊 2026 관계형 표준 서식 (자동 바이트 계산 &amp; 명렬표 VLOOKUP 연계)</b>
+        <span style="font-size:12px; color:#059669; font-weight:700;">✓ 자동 바이트 수식 · 학번 자동 연계 포함</span>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="https://docs.google.com/spreadsheets/d/1a8Kgl8-f2S50Y1zfQ7Kz-dNJmTGwIT1K/copy" target="_blank" rel="noreferrer" class="btn" style="flex:1; min-width:240px; padding:10px 16px; background:#0f9d58; color:#ffffff; font-weight:700; font-size:13.5px; border-radius:8px; text-decoration:none; text-align:center; box-shadow:0 2px 8px rgba(15,157,88,0.3);">
+          📋 관계형 구글 시트 사본 만들기 ↗
+        </a>
+        <button type="button" id="btnDownloadExcelTemplate" class="btn" style="flex:1; min-width:240px; padding:10px 16px; background:#2563eb; color:#ffffff; font-weight:700; font-size:13.5px; border-radius:8px; border:none; cursor:pointer; text-align:center; box-shadow:0 2px 8px rgba(37,99,235,0.3);">
+          📥 관계형 엑셀 서식 다운로드 (.xlsx)
+        </button>
+      </div>
+      <p style="font-size:12px; color:#64748b; margin:0; line-height:1.5;">
+        * '1_학급명렬표'에 학번과 이름을 넣으면, 교과세특/창체/대입상담 탭에서 학번만 입력해도 이름이 자동 출력되며 글자수(Byte)가 실시간 자동 계산됩니다.
+      </p>
+    </div>
+
     <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 14px; margin-bottom:16px;">
       <strong style="color:#1e40af;">안전한 교원 개인정보 보호 (BYOS) 아키텍처</strong><br>
       • 학생 데이터는 중앙 서버에 전혀 저장되지 않고 <strong>선생님의 개인 구글 드라이브 시트에만 기록</strong>됩니다.<br>
@@ -2264,5 +2427,35 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 <script src="js/google-sheet.js"></script>
 <script src="js/report-ocr.js"></script>
+
+<!-- ==========================================================================
+     실시간 수시 경쟁률 & 대학알리미 공시 지표 라이브 팝업 모달
+     ========================================================================== -->
+<dialog id="liveDataModal" style="max-width:960px; width:95vw; border:none; border-radius:18px; padding:0; box-shadow:0 25px 60px rgba(0,0,0,0.5); background:#111217; color:#f1f5f9; overflow:hidden;">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 24px; border-bottom:1px solid rgba(255,255,255,0.1); background:#181920;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow:0 0 10px #10b981;"></span>
+      <div>
+        <b style="font-size:17px; font-weight:800; color:#ffffff;">전국 133개 대학 실시간 수시 경쟁률 &amp; 대학알리미 지표</b>
+        <span style="font-size:12px; color:#94a3b8; margin-left:8px;">진학사·유웨이 원서접수처 실시간 연동 (Vercel Live Edge)</span>
+      </div>
+    </div>
+    <button type="button" class="btn small" onclick="document.getElementById('liveDataModal').close()" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:8px; padding:6px 14px; cursor:pointer;">닫기</button>
+  </div>
+
+  <div style="padding:16px 24px; background:#14151c; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+    <div style="flex:1; min-width:280px; position:relative;">
+      <input type="text" id="liveSearchInput" placeholder="대학명 검색 (초성 검색 지원 예: ㄱㄷ, ㅅㄷ)" style="width:100%; box-sizing:border-box; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:10px; padding:10px 16px; font-size:14px;">
+    </div>
+    <div style="font-size:13px; color:#94a3b8;">
+      총 <strong id="liveUniCount" style="color:#34d399;">133</strong>개 대학 수시 접수처 매핑
+    </div>
+  </div>
+
+  <div id="liveGridContainer" style="padding:20px 24px; max-height:65vh; overflow-y:auto; display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:16px;">
+    <!-- 자바스크립트로 133개 대학 카드 렌더링 -->
+  </div>
+</dialog>
+
 </body>
 </html>

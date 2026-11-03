@@ -41,6 +41,7 @@ $$('[data-open]').forEach((el) => el.addEventListener('click', (e) => {
 function openFromHash() {
   const h = location.hash.slice(1);
   if (PANELS.includes(h)) openPanel(h, true);
+  else openPanel('make', false);
 }
 window.addEventListener('hashchange', openFromHash);
 if (PANELS.includes(location.hash.slice(1))) {
@@ -75,7 +76,7 @@ if ('IntersectionObserver' in window) {
       if (!en.isIntersecting) return;
       const id = en.target.id;
       dots.forEach((d) => d.classList.toggle('is-active', d.dataset.for === id));
-      top.classList.toggle('on-dark', id === 'hero');
+      top.classList.add('on-dark');
     });
   }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
   ['hero', 'menu', 'workspace', 'sec-counsel-scroll'].forEach((id) => { const el = document.getElementById(id); if (el) cur.observe(el); });

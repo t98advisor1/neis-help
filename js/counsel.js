@@ -44,44 +44,322 @@
 
   /* ---------- 대학 공식 입학처 URL 매핑 ---------- */
   const UNI_URLS = {
-    "가천대학교": "https://admission.gachon.ac.kr/",
-    "가톨릭대학교": "https://ipsi.catholic.ac.kr/",
-    "강원대학교": "https://admission.kangwon.ac.kr/",
-    "건국대학교": "https://ibhak.konkuk.ac.kr/",
-    "경기대학교": "https://enter.kyonggi.ac.kr/",
-    "경북대학교": "https://ipsi1.knu.ac.kr/",
-    "경상국립대학교": "https://new.gnu.ac.kr/ipsi/",
-    "경희대학교": "https://iphak.khu.ac.kr/",
-    "고려대학교": "https://oku.korea.ac.kr/",
-    "광운대학교": "https://iphak.kw.ac.kr/",
-    "국민대학교": "https://admission.kookmin.ac.kr/",
-    "단국대학교": "https://ipsi.dankook.ac.kr/",
-    "동국대학교": "https://ipsi.dongguk.edu/",
-    "동덕여자대학교": "https://ipsi.dongduk.ac.kr/",
-    "명지대학교": "https://ipsi.mju.ac.kr/",
-    "부산대학교": "https://go.pusan.ac.kr/",
-    "상명대학교": "https://admission.smu.ac.kr/",
-    "서강대학교": "https://admission.sogang.ac.kr/",
-    "서경대학교": "https://go.skuniv.ac.kr/",
-    "서울과학기술대학교": "https://admission.seoultech.ac.kr/",
-    "서울대학교": "https://admission.snu.ac.kr/",
-    "서울시립대학교": "https://admission.uos.ac.kr/",
-    "서울여자대학교": "https://admission.swu.ac.kr/",
-    "성균관대학교": "https://admission.skku.edu/",
-    "성신여자대학교": "https://ipsi.sungshin.ac.kr/",
-    "세종대학교": "https://ipsi.sejong.ac.kr/",
-    "숙명여자대학교": "https://admission.sookmyung.ac.kr/",
-    "숭실대학교": "https://iphak.ssu.ac.kr/",
-    "아주대학교": "https://www.iajou.ac.kr/",
-    "연세대학교": "https://admission.yonsei.ac.kr/",
-    "이화여자대학교": "https://admission.ewha.ac.kr/",
-    "인하대학교": "https://admission.inha.ac.kr/",
-    "중앙대학교": "https://admission.cau.ac.kr/",
-    "한국외국어대학교": "https://adms.hufs.ac.kr/",
-    "한국항공대학교": "https://ibhak.kau.ac.kr/",
-    "한양대학교": "https://go.hanyang.ac.kr/",
-    "홍익대학교": "https://admission.hongik.ac.kr/"
-  };
+  "가천대학교": "https://admission.gachon.ac.kr/",
+  "가톨릭관동대학교": "https://ipsi.cku.ac.kr/",
+  "가톨릭대학교": "https://ipsi.catholic.ac.kr/",
+  "강남대학교": "https://admission.kangnam.ac.kr/",
+  "강원대학교": "https://admission.kangwon.ac.kr/",
+  "건국대학교": "https://ibhak.konkuk.ac.kr/",
+  "건국대학교(글로컬)": "https://enter.kku.ac.kr/",
+  "경기대학교": "https://enter.kyonggi.ac.kr/",
+  "경북대학교": "https://ipsi1.knu.ac.kr/",
+  "경상국립대학교": "https://new.gnu.ac.kr/ipsi/",
+  "경성대학교": "https://ibsi.ks.ac.kr/",
+  "경희대학교": "https://iphak.khu.ac.kr/",
+  "경희대학교(국제)": "https://iphak.khu.ac.kr/",
+  "계명대학교": "https://www.gokmu.ac.kr/",
+  "고려대학교": "https://oku.korea.ac.kr/",
+  "고려대학교(세종)": "https://oku.korea.ac.kr/sejong/",
+  "고신대학교": "https://ipsi.kosin.ac.kr/",
+  "공주대학교": "https://ipsi.kongju.ac.kr/",
+  "광운대학교": "https://iphak.kw.ac.kr/",
+  "국민대학교": "https://admission.kookmin.ac.kr/",
+  "단국대학교": "https://ipsi.dankook.ac.kr/",
+  "단국대학교(천안)": "https://ipsi.dankook.ac.kr/",
+  "대구가톨릭대학교": "https://ibsi.cu.ac.kr/",
+  "대구대학교": "https://ipsi.daegu.ac.kr/",
+  "대구한의대학교": "https://ipsi.dhu.ac.kr/",
+  "대전대학교": "https://ipsi.dju.ac.kr/",
+  "덕성여자대학교": "https://enter.duksung.ac.kr/",
+  "동국대학교": "https://ipsi.dongguk.edu/",
+  "동국대학교(WISE)": "https://ipsi.dongguk.ac.kr/",
+  "동덕여자대학교": "https://ipsi.dongduk.ac.kr/",
+  "동아대학교": "https://enter.donga.ac.kr/",
+  "동의대학교": "https://ipsi.deu.ac.kr/",
+  "명지대학교": "https://ipsi.mju.ac.kr/",
+  "목원대학교": "https://enter.mokwon.ac.kr/",
+  "목포대학교": "https://ipsi.mokpo.ac.kr/",
+  "목포해양대학교": "https://ipsi.mmu.ac.kr/",
+  "배재대학교": "https://enter.pcu.ac.kr/",
+  "부경대학교": "https://ipsi.pknu.ac.kr/",
+  "부산가톨릭대학교": "https://ipsi.cup.ac.kr/",
+  "부산대학교": "https://go.pusan.ac.kr/",
+  "부산외국어대학교": "https://enter.bufs.ac.kr/",
+  "삼육대학교": "https://ipsi.syu.ac.kr/",
+  "상명대학교": "https://admission.smu.ac.kr/",
+  "상명대학교(천안)": "https://admission.smu.ac.kr/",
+  "서강대학교": "https://admission.sogang.ac.kr/",
+  "서경대학교": "https://go.skuniv.ac.kr/",
+  "서울과학기술대학교": "https://admission.seoultech.ac.kr/",
+  "서울대학교": "https://admission.snu.ac.kr/",
+  "서울시립대학교": "https://admission.uos.ac.kr/",
+  "서울신학대학교": "https://ipsi.stu.ac.kr/",
+  "서울여자대학교": "https://admission.swu.ac.kr/",
+  "선문대학교": "https://ipsi.sunmoon.ac.kr/",
+  "성결대학교": "https://ipsi.sungkyul.ac.kr/",
+  "성공회대학교": "https://ipsi.skhu.ac.kr/",
+  "성균관대학교": "https://admission.skku.edu/",
+  "성신여자대학교": "https://ipsi.sungshin.ac.kr/",
+  "세명대학교": "https://ipsi.semyung.ac.kr/",
+  "세종대학교": "https://ipsi.sejong.ac.kr/",
+  "수원대학교": "https://ipsi.suwon.ac.kr/",
+  "숙명여자대학교": "https://admission.sookmyung.ac.kr/",
+  "순천향대학교": "https://ipsi.sch.ac.kr/",
+  "숭실대학교": "https://iphak.ssu.ac.kr/",
+  "신한대학교": "https://ipsi.shinhan.ac.kr/",
+  "아주대학교": "https://www.iajou.ac.kr/",
+  "안양대학교": "https://ipsi.anyang.ac.kr/",
+  "연세대학교": "https://admission.yonsei.ac.kr/",
+  "연세대학교(미래)": "https://admission.yonsei.ac.kr/mirae/",
+  "영남대학교": "https://enter.yu.ac.kr/",
+  "우석대학교": "https://ipsi.woosuk.ac.kr/",
+  "울산대학교": "https://ipsi.ulsan.ac.kr/",
+  "원광대학교": "https://ipsi.wku.ac.kr/",
+  "을지대학교": "https://ipsi.eulji.ac.kr/",
+  "이화여자대학교": "https://admission.ewha.ac.kr/",
+  "인천가톨릭대학교": "https://ipsi.iccu.ac.kr/",
+  "인천대학교": "https://ipsi.inu.ac.kr/",
+  "인하대학교": "https://admission.inha.ac.kr/",
+  "전남대학교": "https://admission.jnu.ac.kr/",
+  "전북대학교": "https://enter.jbnu.ac.kr/",
+  "제주대학교": "https://ibsi.jejunu.ac.kr/",
+  "조선대학교": "https://ibhak.chosun.ac.kr/",
+  "중부대학교": "https://ipsi.joongbu.ac.kr/",
+  "중앙대학교": "https://admission.cau.ac.kr/",
+  "차의과학대학교": "https://ipsi.cha.ac.kr/",
+  "창원대학교": "https://ipsi.changwon.ac.kr/",
+  "청주대학교": "https://ipsi.cju.ac.kr/",
+  "충남대학교": "https://ipsi.cnu.ac.kr/",
+  "충북대학교": "https://ipsi.chungbuk.ac.kr/",
+  "한국공학대학교": "https://iphak.tukorea.ac.kr/",
+  "한국교원대학교": "https://ent.knue.ac.kr/",
+  "한국교통대학교": "https://ipsi.ut.ac.kr/",
+  "한국기술교육대학교": "https://ipsi.koreatech.ac.kr/",
+  "한국성서대학교": "https://ipsi.bible.ac.kr/",
+  "한국외국어대학교": "https://adms.hufs.ac.kr/",
+  "한국전통문화대학교": "https://www.nuch.ac.kr/iphak/",
+  "한국체육대학교": "https://enter.knsu.ac.kr/",
+  "한국항공대학교": "https://ibhak.kau.ac.kr/",
+  "한국해양대학교": "https://ipsi.kmou.ac.kr/",
+  "한남대학교": "https://ibsi.hnu.kr/",
+  "한동대학교": "https://admissions.handong.edu/",
+  "한림대학교": "https://admission.hallym.ac.kr/",
+  "한서대학교": "https://ipsi.hanseo.ac.kr/",
+  "한성대학교": "https://enter.hansung.ac.kr/",
+  "한양대학교": "https://go.hanyang.ac.kr/",
+  "한양대학교(ERICA)": "https://goerica.hanyang.ac.kr/",
+  "협성대학교": "https://ipsi.uhs.ac.kr/",
+  "호서대학교": "https://ipsi.hoseo.ac.kr/",
+  "홍익대학교": "https://admission.hongik.ac.kr/",
+  "홍익대학교(세종)": "https://admission.hongik.ac.kr/",
+  "경인교육대학교": "https://www.ginue.ac.kr/admission/",
+  "공주교육대학교": "https://ipsi.kongju.ac.kr/",
+  "광주교육대학교": "https://ipsi.gnue.ac.kr/",
+  "대구교육대학교": "https://ipsi.dnue.ac.kr/",
+  "부산교육대학교": "https://ipsi.bnue.ac.kr/",
+  "서울교육대학교": "https://admission.snue.ac.kr/",
+  "전주교육대학교": "https://ipsi.jnue.kr/",
+  "진주교육대학교": "https://ipsi.cue.ac.kr/",
+  "청주교육대학교": "https://ipsi.cje.ac.kr/",
+  "춘천교육대학교": "https://ipsi.cnue.ac.kr/",
+  "KAIST(한국과학기술원)": "https://admission.kaist.ac.kr/",
+  "GIST(광주과학기술원)": "https://www.gist.ac.kr/uadmission/",
+  "DGIST(대구경북과학기술원)": "https://www.dgist.ac.kr/adm/",
+  "UNIST(울산과학기술원)": "https://adm-u.unist.ac.kr/",
+  "KENTECH(한국에너지공과대학교)": "https://admission.kentech.ac.kr/",
+  "한국뉴욕주립대학교": "https://www.sunykorea.ac.kr/ko/admissions",
+  "유타대학교 아시아캠퍼스": "https://asiacampus.utah.edu/ko/admissions/",
+  "조지메이슨대학교 글로벌캠퍼스": "https://korea.gmu.edu/admissions",
+  "겐트대학교 글로벌캠퍼스": "https://www.ghent.ac.kr/admissions",
+  "국군간호사관학교": "https://afna.ac.kr/afna/1355/subview.do",
+  "경찰대학": "https://police.ac.kr/police/police/html/adms/info.html",
+  "감리교신학대학교": "https://search.naver.com/search.naver?query=%EA%B0%90%EB%A6%AC%EA%B5%90%EC%8B%A0%ED%95%99%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "강서대학교": "https://search.naver.com/search.naver?query=%EA%B0%95%EC%84%9C%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "경동대학교": "https://search.naver.com/search.naver?query=%EA%B2%BD%EB%8F%99%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "국립공주대학교": "https://ipsi.kongju.ac.kr/",
+  "국립한국교통대학교": "https://ipsi.ut.ac.kr/",
+  "국립한밭대학교": "https://search.naver.com/search.naver?query=%EA%B5%AD%EB%A6%BD%ED%95%9C%EB%B0%AD%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "극동대학교": "https://search.naver.com/search.naver?query=%EA%B7%B9%EB%8F%99%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "남서울대학교": "https://admission.snu.ac.kr/",
+  "대진대학교": "https://search.naver.com/search.naver?query=%EB%8C%80%EC%A7%84%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "동양대학교": "https://search.naver.com/search.naver?query=%EB%8F%99%EC%96%91%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "루터대학교": "https://search.naver.com/search.naver?query=%EB%A3%A8%ED%84%B0%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "상지대학교": "https://search.naver.com/search.naver?query=%EC%83%81%EC%A7%80%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "서울기독대학교": "https://search.naver.com/search.naver?query=%EC%84%9C%EC%9A%B8%EA%B8%B0%EB%8F%85%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "서울장신대학교": "https://search.naver.com/search.naver?query=%EC%84%9C%EC%9A%B8%EC%9E%A5%EC%8B%A0%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "서울한영대학교": "https://search.naver.com/search.naver?query=%EC%84%9C%EC%9A%B8%ED%95%9C%EC%98%81%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "서원대학교": "https://search.naver.com/search.naver?query=%EC%84%9C%EC%9B%90%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "수원가톨릭대학교": "https://ipsi.catholic.ac.kr/",
+  "아신대학교": "https://search.naver.com/search.naver?query=%EC%95%84%EC%8B%A0%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "용인대학교": "https://search.naver.com/search.naver?query=%EC%9A%A9%EC%9D%B8%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "우송대학교": "https://search.naver.com/search.naver?query=%EC%9A%B0%EC%86%A1%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "장로회신학대학교": "https://search.naver.com/search.naver?query=%EC%9E%A5%EB%A1%9C%ED%9A%8C%EC%8B%A0%ED%95%99%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "전주대학교": "https://search.naver.com/search.naver?query=%EC%A0%84%EC%A3%BC%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "총신대학교": "https://search.naver.com/search.naver?query=%EC%B4%9D%EC%8B%A0%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "추계예술대학교": "https://search.naver.com/search.naver?query=%EC%B6%94%EA%B3%84%EC%98%88%EC%88%A0%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "칼빈대학교": "https://search.naver.com/search.naver?query=%EC%B9%BC%EB%B9%88%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "평택대학교": "https://search.naver.com/search.naver?query=%ED%8F%89%ED%83%9D%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "포항공과대학교": "https://search.naver.com/search.naver?query=%ED%8F%AC%ED%95%AD%EA%B3%B5%EA%B3%BC%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "한경국립대학교": "https://search.naver.com/search.naver?query=%ED%95%9C%EA%B2%BD%EA%B5%AD%EB%A6%BD%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "한라대학교": "https://search.naver.com/search.naver?query=%ED%95%9C%EB%9D%BC%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "한세대학교": "https://search.naver.com/search.naver?query=%ED%95%9C%EC%84%B8%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "한신대학교": "https://search.naver.com/search.naver?query=%ED%95%9C%EC%8B%A0%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "한양대학교(에리카)": "https://go.hanyang.ac.kr/",
+  "호남대학교": "https://search.naver.com/search.naver?query=%ED%98%B8%EB%82%A8%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "화성의과학대학교": "https://search.naver.com/search.naver?query=%ED%99%94%EC%84%B1%EC%9D%98%EA%B3%BC%ED%95%99%EB%8C%80%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "서울호서직업전문학교": "https://search.naver.com/search.naver?query=%EC%84%9C%EC%9A%B8%ED%98%B8%EC%84%9C%EC%A7%81%EC%97%85%EC%A0%84%EB%AC%B8%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98",
+  "서울호서예술실용전문학교": "https://search.naver.com/search.naver?query=%EC%84%9C%EC%9A%B8%ED%98%B8%EC%84%9C%EC%98%88%EC%88%A0%EC%8B%A4%EC%9A%A9%EC%A0%84%EB%AC%B8%ED%95%99%EA%B5%90%20%EC%9E%85%ED%95%99%EC%B2%98"
+};
+
+  const ADIGA_UNI_CODES = {
+  "가천대학교": "0000063",
+  "가톨릭관동대학교": "0000072",
+  "가톨릭대학교": "0000114",
+  "감리교신학대학교": "0000050",
+  "강남대학교": "0000051",
+  "강서대학교": "0000079",
+  "강원대학교": "0000003",
+  "건국대학교": "0000052",
+  "건국대학교(글로컬)": "0000052",
+  "경기대학교": "0000056",
+  "경동대학교": "0000060",
+  "경북대학교": "0000005",
+  "경상국립대학교": "0000007",
+  "경희대학교": "0000066",
+  "고려대학교": "0000069",
+  "고려대학교(세종)": "0000069",
+  "광운대학교": "0000074",
+  "국립공주대학교": "0000008",
+  "국립한국교통대학교": "0000034",
+  "국립한밭대학교": "0000039",
+  "국민대학교": "0000078",
+  "극동대학교": "0000080",
+  "남서울대학교": "0000245",
+  "단국대학교": "0000082",
+  "대구가톨릭대학교": "0000088",
+  "대진대학교": "0000097",
+  "덕성여자대학교": "0000099",
+  "동국대학교": "0000100",
+  "동덕여자대학교": "0000102",
+  "동양대학교": "0000106",
+  "루터대학교": "0000108",
+  "명지대학교": "0000109",
+  "부산대학교": "0000014",
+  "삼육대학교": "0000116",
+  "상명대학교": "0000117",
+  "상지대학교": "0000410",
+  "서강대학교": "0000120",
+  "서경대학교": "0000121",
+  "서울과학기술대학교": "0000036",
+  "서울기독대학교": "0000098",
+  "서울대학교": "0000450",
+  "서울시립대학교": "0000040",
+  "서울신학대학교": "0000125",
+  "서울여자대학교": "0000126",
+  "서울장신대학교": "0000127",
+  "서울한영대학교": "0000205",
+  "서원대학교": "0000128",
+  "선문대학교": "0000129",
+  "성결대학교": "0000131",
+  "성공회대학교": "0000132",
+  "성균관대학교": "0000133",
+  "성신여자대학교": "0000136",
+  "세명대학교": "0000137",
+  "세종대학교": "0000138",
+  "수원가톨릭대학교": "0000139",
+  "수원대학교": "0000140",
+  "숙명여자대학교": "0000141",
+  "순천향대학교": "0000142",
+  "숭실대학교": "0000143",
+  "신한대학교": "0002712",
+  "아신대학교": "0000145",
+  "아주대학교": "0000146",
+  "안양대학교": "0000147",
+  "연세대학교": "0000149",
+  "연세대학교(미래)": "0000149",
+  "용인대학교": "0000156",
+  "우송대학교": "0000240",
+  "울산대학교": "0000158",
+  "원광대학교": "0000159",
+  "을지대학교": "0000161",
+  "이화여자대학교": "0000163",
+  "인천가톨릭대학교": "0000168",
+  "인천대학교": "0002660",
+  "인하대학교": "0000169",
+  "장로회신학대학교": "0000170",
+  "전남대학교": "0000023",
+  "전북대학교": "0000025",
+  "전주대학교": "0000171",
+  "제주대학교": "0000027",
+  "조선대학교": "0000172",
+  "중앙대학교": "0000175",
+  "차의과학대학교": "0000187",
+  "총신대학교": "0000180",
+  "추계예술대학교": "0000181",
+  "충남대학교": "0000029",
+  "충북대학교": "0000030",
+  "칼빈대학교": "0000184",
+  "평택대학교": "0000186",
+  "포항공과대학교": "0000188",
+  "한경국립대학교": "0000037",
+  "한국공학대학교": "0000247",
+  "한국교원대학교": "0000031",
+  "한국기술교육대학교": "0000189",
+  "한국성서대학교": "0000191",
+  "한국외국어대학교": "0000192",
+  "한국전통문화대학교": null,
+  "한국체육대학교": "0000032",
+  "한국항공대학교": "0000194",
+  "한남대학교": "0000195",
+  "한동대학교": "0000196",
+  "한라대학교": "0002655",
+  "한림대학교": "0000198",
+  "한서대학교": "0000199",
+  "한성대학교": "0000200",
+  "한세대학교": "0000201",
+  "한신대학교": "0000202",
+  "한양대학교": "0000203",
+  "한양대학교(에리카)": "0000203",
+  "협성대학교": "0000207",
+  "호남대학교": "0000208",
+  "호서대학교": "0000211",
+  "홍익대학교": "0000212",
+  "화성의과학대학교": "0000233",
+  "경인교육대학교": "0000256",
+  "공주교육대학교": "0000251",
+  "광주교육대학교": "0000252",
+  "대구교육대학교": "0000253",
+  "부산교육대학교": "0000254",
+  "서울교육대학교": "0000255",
+  "전주교육대학교": "0000258",
+  "진주교육대학교": "0000260",
+  "청주교육대학교": "0000261",
+  "춘천교육대학교": "0000262",
+  "DGIST(대구경북과학기술원)": null,
+  "GIST(광주과학기술원)": null,
+  "KAIST(한국과학기술원)": null,
+  "KENTECH(한국에너지공과대학교)": null,
+  "UNIST(울산과학기술원)": null,
+  "겐트대학교 글로벌캠퍼스": null,
+  "유타대학교 아시아캠퍼스": null,
+  "한국뉴욕주립대학교": null,
+  "서울호서직업전문학교": null,
+  "서울호서예술실용전문학교": null
+};
+
+
+  
+  function getUniAdigaUrl(uniName) {
+    if (ADIGA_UNI_CODES[uniName]) {
+      return `https://www.adiga.kr/ucp/uvt/uni/univDetail.do?menuId=PCUVTINF2000&unvCd=${ADIGA_UNI_CODES[uniName]}&searchSyr=2027`;
+    }
+    for (const [k, cd] of Object.entries(ADIGA_UNI_CODES)) {
+      if (cd && (uniName.includes(k) || k.includes(uniName))) {
+        return `https://www.adiga.kr/ucp/uvt/uni/univDetail.do?menuId=PCUVTINF2000&unvCd=${cd}&searchSyr=2027`;
+      }
+    }
+    return getUniAdmissionUrl(uniName);
+  }
 
   function getUniAdmissionUrl(uniName) {
     if (UNI_URLS[uniName]) return UNI_URLS[uniName];
@@ -348,6 +626,21 @@
     });
   }
 
+  
+  window.openCounselSubTab = function(tab) {
+    if (typeof openPanel === "function") {
+      openPanel("counsel", true);
+    } else {
+      const btn = document.querySelector('[data-open="counsel"]');
+      if (btn) btn.click();
+    }
+    setTimeout(() => {
+      if (typeof switchCounselSubTab === "function") {
+        switchCounselSubTab(tab);
+      }
+    }, 100);
+  };
+
   function switchCounselSubTab(tab) {
     appState.currentSubTab = tab;
     $$(".counsel-sub-btn").forEach(b => {
@@ -501,7 +794,7 @@
         <div>
           <div class="uni-card-head">
             <div class="uni-title-wrap">
-              <h3 class="uni-name">${escHtml(u.name)}</h3>
+              <h3 class="uni-name"><a href="${escHtml(getUniAdmissionUrl(u.name))}" target="_blank" rel="noopener noreferrer" class="uni-name-link" title="대학 공식 입학처 바로가기 (새 창)">${escHtml(u.name)} <span class="uni-ext-icon">↗</span></a></h3>
               <span class="uni-badge-region ${u.m15 ? 'm15' : ''}">${escHtml(u.region)}</span>
               ${u.m15 ? '<span class="uni-badge-region m15" style="background:#fee2e2; color:#ef4444;">주요15개대</span>' : ''}
             </div>
@@ -510,7 +803,7 @@
 
           <div class="uni-specs">
             <span class="uni-spec-item">분류: ${escHtml(u.cat || "일반대학")}</span>
-            <span class="uni-spec-item">자료 페이지: ${u.start}~${u.end}p</span>
+            
           </div>
         </div>
 
@@ -521,6 +814,10 @@
       `;
 
       card.addEventListener("click", (e) => {
+        if (e.target.closest(".uni-name-link")) {
+          e.stopPropagation();
+          return;
+        }
         if (e.target.closest(".fav-btn")) {
           e.stopPropagation();
           const on = store.toggleFav(u.id);
@@ -532,6 +829,86 @@
 
       grid.appendChild(card);
     });
+  }
+
+
+  /* ---------- 실시간 경쟁률 & 대학알리미 종합 모달 로직 ---------- */
+  function initLiveDataModal() {
+    const modal = $("#liveDataModal");
+    const openBtn = $("#btnOpenLiveDataSummary");
+    const input = $("#liveSearchInput");
+    const container = $("#liveGridContainer");
+    const countEl = $("#liveUniCount");
+    if (!modal || !container || typeof UNIS === "undefined") return;
+
+    if (openBtn) {
+      openBtn.addEventListener("click", () => {
+        modal.showModal();
+        renderLiveCards("");
+      });
+    }
+
+    if (input) {
+      input.addEventListener("input", (e) => {
+        renderLiveCards(e.target.value.trim());
+      });
+    }
+
+    async function renderLiveCards(query) {
+      container.innerHTML = "";
+      const q = query.toLowerCase();
+      const isCho = isChoQuery(q);
+
+      const filtered = UNIS.filter(u => {
+        if (!q) return true;
+        if (isCho) return choseong(u.name).includes(q);
+        return u.name.toLowerCase().includes(q) || u.region.toLowerCase().includes(q);
+      });
+
+      if (countEl) countEl.textContent = filtered.length;
+
+      filtered.forEach(u => {
+        const card = document.createElement("div");
+        card.style.background = "rgba(255,255,255,0.05)";
+        card.style.border = "1px solid rgba(255,255,255,0.1)";
+        card.style.borderRadius = "12px";
+        card.style.padding = "14px 16px";
+        card.style.display = "flex";
+        card.style.flexDirection = "column";
+        card.style.justifyContent = "space-between";
+
+        const adigaUrl = getUniAdigaUrl(u.name);
+        const applyUrl = getUniAdmissionUrl(u.name);
+
+        card.innerHTML = `
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+              <b style="font-size:15px; color:#fff;">${escHtml(u.name)}</b>
+              <span style="font-size:11px; padding:2px 8px; border-radius:9999px; background:rgba(255,255,255,0.1); color:#cbd5e1;">${escHtml(u.region)}</span>
+            </div>
+            <div style="font-size:12px; color:#94a3b8; margin-bottom:12px; line-height:1.5;">
+              <div>• 실시간 접수처: <span style="color:#34d399; font-weight:700;">진학사 / 유웨이 매핑</span></div>
+              <div>• 어디가 1:1 직행: <a href="${escHtml(adigaUrl)}" target="_blank" rel="noreferrer" style="color:#60a5fa; text-decoration:none;">어디가 상세 ↗</a></div>
+            </div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <a href="${escHtml(applyUrl)}" target="_blank" rel="noreferrer" style="flex:1; text-align:center; padding:6px 10px; background:rgba(37,99,235,0.25); color:#93c5fd; border:1px solid rgba(37,99,235,0.4); border-radius:6px; font-size:12px; font-weight:700; text-decoration:none;">
+              원서접수처 ↗
+            </a>
+            <button type="button" class="btn-check-live" style="flex:1; text-align:center; padding:6px 10px; background:#059669; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
+              상세 분석
+            </button>
+          </div>
+        `;
+
+        card.querySelector(".btn-check-live").addEventListener("click", () => {
+          modal.close();
+          openUniDetailModal(u);
+        });
+
+        container.appendChild(card);
+      });
+    }
   }
 
   /* ---------- 대학 상세 입결 모달 (라디오 4종 & 관계형 입결) ---------- */
@@ -562,7 +939,7 @@
           $("#lblRadioResults input").checked = true;
           $$(".ud-radio-item").forEach(lbl => lbl.classList.toggle("on", lbl.id === "lblRadioResults"));
         } else if (val === "adiga") {
-          const adigaUrl = `https://www.adiga.kr/man/sch/searchView.do?menuId=PCMANSCH5001&checkMiss=1&search=${encodeURIComponent(uni.name)}`;
+          const adigaUrl = getUniAdigaUrl(uni.name);
           window.open(adigaUrl, "_blank", "noopener,noreferrer");
           $("#lblRadioResults input").checked = true;
           $$(".ud-radio-item").forEach(lbl => lbl.classList.toggle("on", lbl.id === "lblRadioResults"));
@@ -1601,6 +1978,7 @@ function NEIS_BYTE(text) {
   /* DOM 준비 후 초기화 */
   document.addEventListener("DOMContentLoaded", () => {
     initCounselSubTabs();
+    initLiveDataModal();
     initUniSearch();
     initFinder();
     initNonsulModule();
