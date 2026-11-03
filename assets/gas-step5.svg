@@ -1,40 +1,79 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
   <defs>
-    <linearGradient id="bg5" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a"/>
-      <stop offset="100%" stop-color="#1e293b"/>
-    </linearGradient>
-    <filter id="shadow5" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.4"/>
+    <style>
+      @import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css');
+      text { font-family: 'SUIT', 'Pretendard', 'Malgun Gothic', -apple-system, sans-serif; letter-spacing: -0.02em; }
+      .title { font-size: 20px; font-weight: 800; fill: #0f172a; }
+      .badge-step { font-size: 12px; font-weight: 800; fill: #ffffff; }
+      .callout { font-size: 13.5px; font-weight: 800; fill: #ffffff; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#000" flood-opacity="0.12"/>
+    </filter>
+    <filter id="badgeShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#dc2626" flood-opacity="0.4"/>
     </filter>
   </defs>
-  <rect width="800" height="450" fill="url(#bg5)"/>
-  <!-- Formula in Sheet Window -->
-  <g transform="translate(60, 40)" filter="url(#shadow5)">
-    <rect width="680" height="370" rx="12" fill="#ffffff"/>
-    <!-- Title Bar -->
-    <rect width="680" height="44" rx="12" fill="#f1f5f9"/>
-    <text x="30" y="27" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" fill="#334155">구글 시트 셀 안에서 =AI_SETUK() 수식 사용 결과</text>
-    <!-- Formula Input Bar -->
-    <rect x="0" y="44" width="680" height="36" fill="#ffffff" stroke="#cbd5e1"/>
-    <text x="20" y="68" font-family="Courier New, monospace" font-size="13" font-weight="700" fill="#ef4444">fx</text>
-    <rect x="50" y="49" width="610" height="26" rx="4" fill="#eff6ff" stroke="#3b82f6"/>
-    <text x="60" y="67" font-family="Courier New, monospace" font-size="12.5" font-weight="700" fill="#1d4ed8">=AI_SETUK(D2, "고려대 생명공학", "생명공학과", "생명과학Ⅰ")</text>
-    <!-- Result Card in Cell -->
-    <g transform="translate(20, 100)">
-      <rect width="640" height="230" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
-      <text x="24" y="34" font-family="-apple-system, sans-serif" font-size="14" font-weight="800" fill="#15803d">✅ AI 세특 초안 자동 완성 결과 (나이스 글자수 420 Byte / 1,500 Byte 준수):</text>
-      <rect x="24" y="50" width="592" height="110" rx="6" fill="#ffffff" stroke="#bbf7d0"/>
-      <text x="40" y="78" font-family="-apple-system, sans-serif" font-size="12.5" fill="#1e293b">"삼투현상과 세포막 선택적 투과성을 탐구하고자 농도에 따른 원형질 분리 현상을 현미경으로</text>
-      <text x="40" y="102" font-family="-apple-system, sans-serif" font-size="12.5" fill="#1e293b">정밀 관찰함. 선택적 투과 원리를 세포막 인지질 이중층 구조와 논리적으로 연결하여 규명하고,</text>
-      <text x="40" y="126" font-family="-apple-system, sans-serif" font-size="12.5" fill="#1e293b">바이오 신약 기술의 최신 동향을 조사하여 생명윤리적 시각에서 균형 있게 분석함."</text>
-      <text x="24" y="190" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" fill="#047857">📊 =NEIS_BYTE(E2) ➔ 실시간 420 Byte 자동 검증 완료 (엔터 2B, 한글 3B)</text>
-      <text x="24" y="215" font-family="-apple-system, sans-serif" font-size="12" fill="#64748b">※ 드래그하여 전교생 30명~200명에게 아래로 채우면 1초 만에 전원 완성됩니다!</text>
+
+  <rect width="960" height="540" fill="#f8fafc" rx="12"/>
+
+  <!-- Top Title Bar -->
+  <rect x="24" y="16" width="76" height="24" rx="12" fill="#dc2626"/>
+  <text x="62" y="32" text-anchor="middle" class="badge-step">STEP 5</text>
+  <text x="110" y="34" class="title">5단계: 최초 1회 Google 계정 승인 (고급 ➔ 안전하지 않음 이동 ➔ 허용)</text>
+
+  <!-- Browser Frame -->
+  <g transform="translate(24, 52)" filter="url(#shadow)">
+    <rect width="912" height="464" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <path d="M 0 10 Q 0 0 10 0 L 902 0 Q 912 0 912 10 L 912 36 L 0 36 Z" fill="#e2e8f0"/>
+    
+    <!-- Google OAuth Warning Dialog Box -->
+    <rect x="0" y="36" width="912" height="428" fill="#f8fafc"/>
+
+    <g transform="translate(206, 60)" filter="url(#shadow)">
+      <rect width="500" height="380" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+      
+      <!-- Warning Icon -->
+      <path d="M 40 40 L 55 68 L 25 68 Z" fill="#f59e0b"/>
+      <text x="40" y="64" text-anchor="middle" font-size="15" font-weight="900" fill="#ffffff">!</text>
+      
+      <text x="70" y="58" font-size="18" font-weight="800" fill="#0f172a">Google에서 확인하지 않은 앱입니다</text>
+      <text x="36" y="100" font-size="13" fill="#64748b" line-height="1.5">
+        선생님 본인이 직접 생성한 스크립트이므로 Google 보안 알림이 뜹니다.
+      </text>
+
+      <!-- Advanced Button (Highlighted) -->
+      <g transform="translate(36, 140)">
+        <rect width="110" height="32" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+        <text x="55" y="21" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">고급 (Advanced)</text>
+      </g>
+
+      <!-- Sub link (Unsafe) -->
+      <g transform="translate(36, 190)">
+        <rect width="280" height="34" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="14" y="22" font-size="12.5" font-weight="800" fill="#b91c1c">제목 없는 프로젝트(안전하지 않음)로 이동</text>
+      </g>
+
+      <!-- Allow Button -->
+      <g transform="translate(360, 316)">
+        <rect width="104" height="40" rx="8" fill="#0f9d58" filter="url(#shadow)"/>
+        <text x="52" y="25" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">허용 (Allow)</text>
+      </g>
     </g>
-  </g>
-  <!-- Step Badge -->
-  <g transform="translate(60, 415)">
-    <rect width="680" height="30" rx="6" fill="#2563eb"/>
-    <text x="340" y="20" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="13" font-weight="800" fill="#ffffff">5단계: 구글 시트 셀에서 =AI_SETUK() 수식으로 전교생 세특 1초 완성!</text>
+
+    <!-- Callout 1: Advanced -->
+    <g transform="translate(420, 196)" filter="url(#badgeShadow)">
+      <rect width="360" height="40" rx="8" fill="#dc2626"/>
+      <polygon points="0,20 -10,25 -10,15" fill="#dc2626"/>
+      <text x="180" y="25" text-anchor="middle" class="callout">① [고급] 누른 뒤 ② [안전하지 않음 이동] 클릭!</text>
+    </g>
+
+    <!-- Callout 2: Allow -->
+    <g transform="translate(560, 340)" filter="url(#badgeShadow)">
+      <rect width="210" height="34" rx="6" fill="#059669"/>
+      <polygon points="0,17 -10,22 -10,12" fill="#059669"/>
+      <text x="105" y="22" text-anchor="middle" class="callout">③ 마지막 [허용] 클릭!</text>
+    </g>
   </g>
 </svg>

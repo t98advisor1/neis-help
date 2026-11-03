@@ -1732,7 +1732,231 @@
         }
       }
     }
-    updateCounselGSheetStatus();
+
+    // 🎯 학급 세특 동기화 & 점검 센터 핵심 액션 바
+    const btnDlExcel = $("#btnMasterDownloadExcel");
+    if (btnDlExcel) {
+      btnDlExcel.addEventListener("click", () => {
+        if (window.GoogleSheet && typeof window.GoogleSheet.downloadRelationalExcel === "function") {
+          window.GoogleSheet.downloadRelationalExcel();
+        } else {
+          alert("엑셀 생성 모듈을 불러오는 중입니다. 잠시 후 다시 시도해 주세요.");
+        }
+      });
+    }
+
+    const btnOpenGasTab = $("#btnOpenGasManualTab");
+    if (btnOpenGasTab) {
+      btnOpenGasTab.addEventListener("click", () => {
+        switchCounselSubTab("gasguide");
+      });
+    }
+
+    // 📸 전용 서브패널 5: Apps Script 6단계 스크린샷 매뉴얼 컨트롤러
+    const GAS_PAGE_STEPS = [
+      {
+        img: "assets/gas-step1.svg",
+        title: "1단계: 관계형 구글 시트 마스터 템플릿 사본 만들기",
+        desc: "상단의 <strong>[시트 사본 만들기]</strong> 버튼을 누르면 선생님 본인의 개인 Google 드라이브로 복사됩니다. 학생 정보는 외부 서버가 아닌 선생님 개인 드라이브에만 안전하게 보관됩니다."
+      },
+      {
+        img: "assets/gas-step2.svg",
+        title: "2단계: 시트 상단 메뉴 [확장 프로그램] ➔ [Apps Script] 클릭",
+        desc: "구글 시트 상단 메뉴의 <strong>[확장 프로그램]</strong>을 누른 뒤 <strong>[Apps Script]</strong>를 클릭하면 나만의 스크립트 에디터 창이 새 탭으로 열립니다."
+      },
+      {
+        img: "assets/gas-step3.svg",
+        title: "3단계: 기존 코드 전체 삭제(Ctrl+A ➔ Del) 후 코드 붙여넣기 & 💾 저장",
+        desc: "에디터 창의 기존 글씨를 모두 지우고, <strong>[통합 스크립트 코드 복사]</strong>로 복사한 코드를 붙여넣은 뒤 <strong>💾 저장 아이콘(Ctrl+S)</strong>을 누릅니다."
+      },
+      {
+        img: "assets/gas-step4.svg",
+        title: "4단계: 우측 상단 [배포] ➔ [새 배포] ➔ [웹 앱 (액세스: 모든 사용자)]",
+        desc: "우측 상단 파란색 <strong>[배포] ➔ [새 배포]</strong>를 누르고, 톱니바퀴에서 '웹 앱'을 선택합니다. <strong>액세스 권한을 '모든 사용자(Anyone)'로 설정</strong>한 뒤 [배포]를 누릅니다."
+      },
+      {
+        img: "assets/gas-step5.svg",
+        title: "5단계: 최초 1회 Google 계정 승인 (고급 ➔ 안전하지 않음 이동 ➔ 허용)",
+        desc: "<strong>(가장 중요!)</strong> 선생님 개인 스크립트이므로 구글이 보안 경고를 띄웁니다. 당황하지 마시고 <strong>[고급(Advanced)]</strong>을 누른 뒤 <strong>[안전하지 않은 페이지로 이동] ➔ [허용(Allow)]</strong>을 누르시면 1초 만에 권한이 승인됩니다."
+      },
+      {
+        img: "assets/gas-step6.svg",
+        title: "6단계: 배포 완료창의 [웹 앱 URL] 복사 ➔ 본 프로그램에 붙여넣기!",
+        desc: "배포 완료 창에 표시된 <strong>웹 앱 URL (https://script.google.com/macros/s/.../exec)</strong>을 복사하여 본 프로그램의 <strong>[구글 시트 연동]</strong> 창에 붙여넣으시면 실시간 동기화가 영구 연동됩니다!"
+      }
+    ];
+
+    let currentGasPageStep = 0;
+    function renderGasPageStep(idx) {
+      if (idx < 0) idx = 0;
+      if (idx >= GAS_PAGE_STEPS.length) idx = GAS_PAGE_STEPS.length - 1;
+      currentGasPageStep = idx;
+
+      const data = GAS_PAGE_STEPS[idx];
+      const img = $("#gasPageViewerImg");
+      const title = $("#gasPageStepTitle");
+      const desc = $("#gasPageStepDesc");
+      const counter = $("#gasPageStepCounter");
+      const btnPrev = $("#btnGasPagePrev");
+      const btnNext = $("#btnGasPageNext");
+
+      if (img) img.src = data.img;
+      if (title) title.textContent = data.title;
+      if (desc) desc.innerHTML = data.desc;
+      if (counter) counter.textContent = `${idx + 1} / ${GAS_PAGE_STEPS.length}`;
+
+      if (btnPrev) btnPrev.disabled = (idx === 0);
+      if (btnNext) btnNext.disabled = (idx === GAS_PAGE_STEPS.length - 1);
+
+      $$(".gas-page-tab").forEach((tab, i) => {
+        if (i === idx) {
+          tab.classList.add("on");
+          tab.style.background = "#7c3aed";
+          tab.style.color = "#fff";
+          tab.style.border = "none";
+        } else {
+          tab.classList.remove("on");
+          tab.style.background = "#f1f5f9";
+          tab.style.color = (i === 4) ? "#dc2626" : "#475569";
+          tab.style.border = (i === 4) ? "1.5px solid #fca5a5" : "1px solid #cbd5e1";
+        }
+      });
+    }
+
+    $$(".gas-page-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        const step = parseInt(tab.dataset.gasStep, 10);
+        if (!isNaN(step)) renderGasPageStep(step);
+      });
+    });
+
+    const btnGasPagePrev = $("#btnGasPagePrev");
+    if (btnGasPagePrev) {
+      btnGasPagePrev.addEventListener("click", () => {
+        if (currentGasPageStep > 0) renderGasPageStep(currentGasPageStep - 1);
+      });
+    }
+
+    const btnGasPageNext = $("#btnGasPageNext");
+    if (btnGasPageNext) {
+      btnGasPageNext.addEventListener("click", () => {
+        if (currentGasPageStep < GAS_PAGE_STEPS.length - 1) renderGasPageStep(currentGasPageStep + 1);
+      });
+    }
+
+    const btnPageCopyGas = $("#btnPageCopyGasCode");
+    if (btnPageCopyGas) {
+      btnPageCopyGas.addEventListener("click", async () => {
+        const code = `/**
+ * 학교생활기록부 올인원: 구글 시트 전용 통합 Apps Script
+ * 저작권: Copyright ⓒ 2026 math-tong. All rights reserved.
+ * 
+ * [탑재 기능]
+ * 1. =AI_SETUK(교과목, 탐구활동, [개별역량], [API키]) : 1,500 Byte 나이스 세특 자동 작성
+ * 2. =NEIS_BYTE(텍스트) : 나이스 3-byte 기준 글자수 정밀 자동 계산
+ * 3. =CHECK_BAN_WORDS(텍스트) : 2026 기재요령 금지어 즉시 검출
+ */
+
+function NEIS_BYTE(text) {
+  if (!text) return 0;
+  var str = text.toString();
+  var bytes = 0;
+  for (var i = 0; i < str.length; i++) {
+    var code = str.charCodeAt(i);
+    if (code === 10) bytes += 2;
+    else if (code <= 127) bytes += 1;
+    else bytes += 3;
+  }
+  return bytes;
+}
+
+function CHECK_BAN_WORDS(text) {
+  if (!text) return "정상";
+  var str = text.toString();
+  var bans = ["토익", "TOEIC", "토플", "TOEFL", "텝스", "TEPS", "경시대회", "올림피아드", "논문", "학회지", "도서출판", "발명특허", "부모", "아버지", "어머니", "교수", "의사", "검사", "변호사", "대표"];
+  var found = [];
+  for (var i = 0; i < bans.length; i++) {
+    if (str.indexOf(bans[i]) !== -1) found.push(bans[i]);
+  }
+  return (found.length > 0) ? ("⚠️ 금지어 검출: " + found.join(", ")) : "✅ 기재요령 적합";
+}
+
+function AI_SETUK(subject, activity, competency, userApiKey) {
+  if (!subject || !activity) return "교과목과 탐구활동을 입력해주세요.";
+  var apiKey = userApiKey || PropertiesService.getUserProperties().getProperty("GEMINI_API_KEY");
+  if (!apiKey) return "API 키가 필요합니다. 상단 메뉴 [⚡ 생기부 올인원] ➔ [API 키 등록]을 먼저 실행해주세요.";
+  
+  var prompt = "당신은 고등학교 대한민국 2026학년도 학교생활기록부 교과 세부능력 및 특기사항 작성 전문가입니다.\\n" +
+    "교과목: " + subject + "\\n" +
+    "수행활동/탐구주제: " + activity + "\\n" +
+    (competency ? ("학생개별역량: " + competency + "\\n") : "") +
+    "\\n[작성 원칙]\\n" +
+    "1. 나이스 바이트 기준 공백 포함 1,200 ~ 1,450 Byte 내외로 충실하게 작성.\\n" +
+    "2. 모든 문장은 '~함.', '~임.', '~을 규명함.' 등 명사형 종결어미로 끝낼 것.\\n" +
+    "3. 교내 교육과정 내 탐구 활동 중심으로 학생의 지적 호기심과 문제해결 과정을 구체적으로 기술.\\n" +
+    "4. 공인어학성적, 교외경시대회, 부모 직업 등 2026 기재요령 금지 표현 일체 배제.\\n" +
+    "결과 세특 문단만 바로 출력하세요.";
+    
+  var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
+  var payload = {
+    contents: [{ parts: [{ text: prompt }] }],
+    generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
+  };
+  
+  try {
+    var response = UrlFetchApp.fetch(url, {
+      method: "post",
+      contentType: "application/json",
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+    var json = JSON.parse(response.getContentText());
+    if (json.candidates && json.candidates[0] && json.candidates[0].content) {
+      return json.candidates[0].content.parts[0].text.trim();
+    }
+    return "생성 실패: " + (json.error ? json.error.message : "응답 없음");
+  } catch(e) {
+    return "API 호출 오류: " + e.toString();
+  }
+}
+
+function onOpen() {
+  SpreadsheetApp.getUi().createMenu("⚡ 생기부 올인원")
+    .addItem("🔑 Gemini API 키 등록", "promptApiKey")
+    .addSeparator()
+    .addItem("🔗 학교생활기록부 올인원 웹앱 열기", "openWebApp")
+    .addToUi();
+}
+
+function promptApiKey() {
+  var ui = SpreadsheetApp.getUi();
+  var res = ui.prompt("Gemini API 키 등록", "Google AI Studio에서 발급받은 무료 API 키를 입력하세요:", ui.ButtonSet.OK_CANCEL);
+  if (res.getSelectedButton() == ui.Button.OK) {
+    PropertiesService.getUserProperties().setProperty("GEMINI_API_KEY", res.getResponseText().trim());
+    ui.alert("API 키가 안전하게 저장되었습니다! 이제 =AI_SETUK() 수식을 바로 사용할 수 있습니다.");
+  }
+}
+
+function openWebApp() {
+  var html = HtmlService.createHtmlOutput("<script>window.open('https://neis-help-one.vercel.app', '_blank');google.script.host.close();</script>");
+  SpreadsheetApp.getUi().showModalDialog(html, "웹앱 여는 중...");
+}`;
+        try {
+          await navigator.clipboard.writeText(code);
+          const orig = btnPageCopyGas.textContent;
+          btnPageCopyGas.textContent = "✅ 복사 완료!";
+          btnPageCopyGas.style.background = "#15803d";
+          setTimeout(() => {
+            btnPageCopyGas.textContent = orig;
+            btnPageCopyGas.style.background = "#7c3aed";
+          }, 2000);
+        } catch(e) {
+          alert("클립보드 복사 실패");
+        }
+      });
+    }
+
+        updateCounselGSheetStatus();
     window.updateCounselGSheetStatus = updateCounselGSheetStatus;
 
     

@@ -1218,6 +1218,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <button type="button" class="counsel-sub-btn" data-counsel-sub="finder">📊 성적으로 대학 찾기</button>
           <button type="button" class="counsel-sub-btn" data-counsel-sub="nonsul">📝 논술전형·자료실</button>
           <button type="button" class="counsel-sub-btn" data-counsel-sub="records">✍️ 나이스 세특·마스터 시트 연동</button>
+          <button type="button" class="counsel-sub-btn" data-counsel-sub="gasguide" style="color:#7c3aed; font-weight:800;">📸 시트&amp;스크립트 매뉴얼</button>
           <button type="button" class="counsel-sub-btn" data-counsel-sub="settings">⚙️ 보안·관리자 설정</button>
         </nav>
 
@@ -1431,51 +1432,24 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         </div>
       </div>
 
-      <!-- 서브패널 4: 단일 마스터 시트 & 구글 시트 =AI() 관계형 자동화 워크벤치 -->
+      <!-- 서브패널 4: 단일 마스터 시트 & 나이스 세특 워크벤치 (세특 동기화 & 엑셀 점검 중심) -->
       <div class="counsel-sub-panel" id="counsel-sub-records" hidden>
-        <!-- 💡 구글 시트 =AI() 관계형 파이프라인 안내 카드 -->
-        <div class="wb-card" style="margin-bottom:20px; background:linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); border:1.5px solid #86efac;">
-          <div class="wb-card-title" style="margin-bottom:8px;">
-            <span style="display:flex; align-items:center; gap:8px;">
-              📊 구글 시트 관계형 마스터 시트 & <code style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:6px; font-size:14px;">=AI()</code> 무료 자동화
-            </span>
-            <span style="font-size:11.5px; font-weight:700; color:#15803d; background:#dcfce7; padding:3px 8px; border-radius:999px;">무료 구글 계정 100% 지원</span>
+        <!-- 🎯 핵심 기능 퀵 바: 세특 동기화 · 엑셀 다운로드 · 스크린샷 매뉴얼 (선생님 요청 완벽 구현) -->
+        <div class="counsel-quick-action-bar" style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:12px; padding:14px 18px; margin-bottom:18px; box-shadow:0 4px 14px rgba(0,0,0,0.04); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span style="font-size:14px; font-weight:800; color:#0f172a;">📊 학급 세특 동기화 &amp; 점검 센터</span>
+            <span class="privacy-badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac; font-size:11.5px; font-weight:700;">1학생 1행 마스터 연동</span>
           </div>
-          <p style="font-size:13px; color:var(--body); line-height:1.6; margin-bottom:12px;">
-            <strong>로컬에서는 100% 프라이버시가 안전하게 보장</strong>되며, 선생님 본인의 구글 계정으로 로그인 후 <strong>[관계형 마스터 시트 사본 만들기]</strong>를 실행하면, 
-            구글 시트 셀 안에서 <code style="font-weight:700; color:var(--rausch);">=AI(관찰기록, 목표대학)</code> 수식으로 전교생 세특 문구를 자동 완성할 수 있습니다!
-          </p>
-
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px; margin-bottom:12px;">
-            <div style="background:#ffffff; border:1px solid #bbf7d0; border-radius:8px; padding:12px;">
-              <strong style="color:#15803d; font-size:13.5px;">① 관계형 마스터 시트 사본 생성</strong>
-              <p style="font-size:12px; color:var(--muted); margin:4px 0 10px;">
-                학번, 이름, 9등급/5등급내신, 1·2·3지망, 세특초안이 가로 1행으로 이어지는 표준 템플릿입니다.
-              </p>
-              <a href="https://docs.google.com/spreadsheets/create" target="_blank" rel="noreferrer" class="btn secondary" style="font-size:12px; padding:5px 10px; display:inline-block; text-decoration:none;">
-                📥 새 구글 시트 열기 ↗
-              </a>
-            </div>
-
-            <div style="background:#ffffff; border:1px solid #bbf7d0; border-radius:8px; padding:12px;">
-              <strong style="color:#15803d; font-size:13.5px;">② Google AI Studio 무료 API 키</strong>
-              <p style="font-size:12px; color:var(--muted); margin:4px 0 10px;">
-                Gemini 무료 API(분당 15회 호출, 완전 무료) 키를 시트에 등록해 유료 결제 없이 =AI() 수식을 씁니다.
-              </p>
-              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" class="btn secondary" style="font-size:12px; padding:5px 10px; display:inline-block; text-decoration:none;">
-                🔑 무료 Gemini API 키 발급 ↗
-              </a>
-            </div>
-
-            <div style="background:#ffffff; border:1px solid #bbf7d0; border-radius:8px; padding:12px;">
-              <strong style="color:#15803d; font-size:13.5px;">③ 시트용 =AI() Apps Script 코드</strong>
-              <p style="font-size:12px; color:var(--muted); margin:4px 0 10px;">
-                구글 시트 메뉴 [확장 프로그램] → [Apps Script]에 붙여넣기만 하면 =AI() 함수가 바로 동작합니다.
-              </p>
-              <button type="button" class="btn secondary" id="btnCopySheetScript" style="font-size:12px; padding:5px 10px;">
-                📋 시트용 Apps Script 복사
-              </button>
-            </div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <button type="button" id="btnMasterDownloadExcel" class="btn primary" style="background:#2563eb; color:#ffffff; font-weight:800; font-size:13px; padding:8px 16px; border:none; border-radius:8px; cursor:pointer; box-shadow:0 3px 10px rgba(37,99,235,0.35);">
+              📥 2026 관계형 엑셀 서식 다운로드 (.xlsx)
+            </button>
+            <a href="https://docs.google.com/spreadsheets/d/1a8Kgl8-f2S50Y1zfQ7Kz-dNJmTGwIT1K/copy" target="_blank" rel="noreferrer" class="btn" style="background:#0f9d58; color:#ffffff; font-weight:700; font-size:12.5px; padding:8px 14px; border-radius:8px; text-decoration:none; box-shadow:0 2px 8px rgba(15,157,88,0.3);">
+              📋 구글 시트 사본 만들기 ↗
+            </a>
+            <button type="button" id="btnOpenGasManualTab" class="btn secondary" style="background:#ffffff; color:#7c3aed; border:1.5px solid #c4b5fd; font-weight:800; font-size:12.5px; padding:8px 14px; border-radius:8px; cursor:pointer;">
+              📸 Apps Script 스크린샷 매뉴얼 (별도 안내) ➔
+            </button>
           </div>
         </div>
 
@@ -1687,6 +1661,70 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           </div>
         </div>
       </div>
+
+      
+      <!-- 서브패널 5: 📸 구글 시트 복사 & Apps Script 연동 스크린샷 완벽 매뉴얼 (별도 전용 안내 페이지) -->
+      <div class="counsel-sub-panel" id="counsel-sub-gasguide" hidden>
+        <div class="wb-card" style="margin-bottom:20px; background:#ffffff; border:1.5px solid #c4b5fd; border-radius:14px; box-shadow:0 6px 20px rgba(124,58,237,0.08);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:14px; border-bottom:1px solid #f1f5f9; padding-bottom:14px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                <span style="font-size:12px; font-weight:800; background:#f5f3ff; color:#7c3aed; padding:3px 10px; border-radius:999px; border:1px solid #ddd6fe;">별도 안내 전용 페이지</span>
+                <h3 style="font-size:19px; font-weight:800; color:#0f172a; margin:0;">📸 구글 시트 복사 &amp; Apps Script 연동 스크린샷 완벽 매뉴얼</h3>
+              </div>
+              <p style="font-size:13.5px; color:#475569; margin:0;">
+                시트 복사부터 에디터 열기, 코드 붙여넣기, 최초 1회 Google 계정 승인(고급➔허용), URL 복사까지 실제 화면으로 안내합니다.
+              </p>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="https://docs.google.com/spreadsheets/d/1a8Kgl8-f2S50Y1zfQ7Kz-dNJmTGwIT1K/copy" target="_blank" rel="noreferrer" class="btn" style="background:#0f9d58; color:#ffffff; font-weight:700; font-size:13px; padding:8px 14px; border-radius:8px; text-decoration:none;">
+                📋 시트 사본 만들기 ↗
+              </a>
+              <button type="button" id="btnPageCopyGasCode" class="btn primary" style="background:#7c3aed; color:#fff; border:none; padding:8px 16px; font-size:13px; font-weight:800; border-radius:8px; cursor:pointer;">
+                📋 통합 스크립트 코드 복사
+              </button>
+            </div>
+          </div>
+
+          <!-- 단계별 선택 탭 바 (6개 단계) -->
+          <div id="gasPageStepTabs" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:16px;">
+            <button type="button" class="btn small gas-page-tab on" data-gas-step="0" style="padding:7px 14px; font-size:12.5px; font-weight:800; background:#7c3aed; color:#fff; border:none; border-radius:8px; cursor:pointer;">1. 시트 사본 만들기</button>
+            <button type="button" class="btn small gas-page-tab" data-gas-step="1" style="padding:7px 14px; font-size:12.5px; font-weight:700; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer;">2. Apps Script 열기</button>
+            <button type="button" class="btn small gas-page-tab" data-gas-step="2" style="padding:7px 14px; font-size:12.5px; font-weight:700; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer;">3. 코드 붙여넣기·저장</button>
+            <button type="button" class="btn small gas-page-tab" data-gas-step="3" style="padding:7px 14px; font-size:12.5px; font-weight:700; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer;">4. 새 배포 (웹 앱)</button>
+            <button type="button" class="btn small gas-page-tab" data-gas-step="4" style="padding:7px 14px; font-size:12.5px; font-weight:700; background:#f1f5f9; color:#dc2626; border:1.5px solid #fca5a5; border-radius:8px; cursor:pointer;">5. 계정 승인 (고급➔허용)</button>
+            <button type="button" class="btn small gas-page-tab" data-gas-step="5" style="padding:7px 14px; font-size:12.5px; font-weight:700; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer;">6. URL 복사 및 연동</button>
+          </div>
+
+          <!-- 스크린샷 그래픽 뷰어 프레임 -->
+          <div style="background:#0f172a; border-radius:12px; overflow:hidden; margin-bottom:16px; box-shadow:0 12px 30px rgba(0,0,0,0.25); text-align:center;">
+            <img id="gasPageViewerImg" src="assets/gas-step1.svg" alt="Apps Script Guide Step" style="width:100%; max-height:480px; height:auto; display:block; margin:0 auto;">
+          </div>
+
+          <!-- 단계 상세 설명 및 주의사항 박스 -->
+          <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; padding:16px 20px; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <h4 id="gasPageStepTitle" style="font-size:16px; font-weight:800; color:#0f172a; margin:0;">1단계: 관계형 구글 시트 마스터 템플릿 사본 만들기</h4>
+              <span id="gasPageStepCounter" style="font-size:13px; font-weight:800; color:#7c3aed; background:#f5f3ff; padding:3px 10px; border-radius:999px;">1 / 6</span>
+            </div>
+            <p id="gasPageStepDesc" style="font-size:14px; color:#334155; line-height:1.65; margin:0;">
+              상단의 <strong>[시트 사본 만들기]</strong> 버튼을 누르면 선생님 본인의 개인 Google 드라이브로 복사됩니다. 학생 정보는 외부 서버가 아닌 선생님 개인 드라이브에만 안전하게 보관됩니다.
+            </p>
+          </div>
+
+          <!-- 푸터 컨트롤 버튼 -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; gap:8px;">
+              <button type="button" id="btnGasPagePrev" class="btn secondary" disabled style="padding:8px 18px; font-size:13px; font-weight:700;">◀ 이전 단계</button>
+              <button type="button" id="btnGasPageNext" class="btn primary" style="padding:8px 18px; font-size:13px; font-weight:800; background:#7c3aed; color:#fff; border:none;">다음 단계 ▶</button>
+            </div>
+            <button type="button" onclick="switchCounselSubTab('records')" class="btn secondary" style="padding:8px 16px; font-size:13px; font-weight:700; color:#2563eb; border-color:#93c5fd;">
+              ↩ 세특 입력 &amp; 엑셀 점검 화면으로 돌아가기
+            </button>
+          </div>
+        </div>
+      </div>
+
 
       <!-- 서브패널 5: 보안 및 관리자 설정 -->
       <div class="counsel-sub-panel" id="counsel-sub-settings" hidden>
