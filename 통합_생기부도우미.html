@@ -197,6 +197,95 @@ body.font-gmarket { font-family: 'GmarketSans', 'SUIT Variable', sans-serif; }
 /* 초안 도우미 하단 고정 탭바는 상단 서브탭으로 통합했으므로 작은 화면에서만 선택 표시 */
 #panel-make .tabbar { display: none; }
 
+/* ── 우측 고정 AI 구독·초안 사이드바 (Aside 스타일 내장 사이드 패널) ── */
+.ai-sidebar-fab {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1100;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px 0 0 10px;
+  padding: 14px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: -3px 4px 16px rgba(37, 99, 235, 0.28);
+  transition: all .2s;
+  font-family: inherit;
+}
+.ai-sidebar-fab:hover { background: var(--primary-hover); padding-right: 14px; }
+body.sidebar-open .ai-sidebar-fab { display: none; }
+
+.ai-sidebar-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 420px;
+  max-width: 94vw;
+  height: 100vh;
+  background: #ffffff;
+  border-left: 1.5px solid var(--slate-200);
+  box-shadow: -8px 0 28px rgba(15, 23, 42, 0.12);
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(102%);
+  transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.sidebar-open .ai-sidebar-drawer { transform: translateX(0); }
+@media (min-width: 1280px) {
+  body.sidebar-open { padding-right: 420px; }
+  body.sidebar-open .op-top { right: 420px; }
+}
+.ai-sb-head {
+  padding: 14px 16px;
+  background: var(--slate-900);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.ai-sb-head h3 { margin: 0; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.ai-sb-close { background: rgba(255,255,255,0.14); color: #fff; border: none; border-radius: 6px; padding: 5px 10px; font-size: 12px; cursor: pointer; font-weight: 600; }
+.ai-sb-close:hover { background: rgba(255,255,255,0.25); }
+.ai-sb-body {
+  padding: 14px 16px 28px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ai-sb-box {
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: 10px;
+  padding: 12px;
+}
+.ai-sb-label { font-size: 12px; font-weight: 700; color: var(--slate-800); display: block; margin-bottom: 6px; }
+.ai-sb-providers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.ai-sb-prov {
+  border: 1.5px solid var(--slate-200);
+  background: #fff;
+  border-radius: 7px;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--slate-700);
+  font-family: inherit;
+}
+.ai-sb-prov.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+.ai-sb-prov small { display: block; font-size: 10.5px; font-weight: 500; color: var(--slate-600); margin-top: 2px; }
+
 /* 크롬 사이드 패널(Side Panel 380~650px) 최적화 */
 @media (max-width: 650px) {
   body { font-size: 13.5px; }
@@ -242,6 +331,7 @@ body.font-gmarket { font-family: 'GmarketSans', 'SUIT Variable', sans-serif; }
       </select>
     </div>
     <button id="btn-settings" class="ghost">규칙 설정</button>
+    <button id="btn-toggle-sidebar" type="button" class="btn-modern primary" style="padding:6px 12px; font-size:12.5px;">💬 AI 사이드바 열기</button>
   </div>
 </header>
 
@@ -1169,6 +1259,86 @@ body.font-gmarket { font-family: 'GmarketSans', 'SUIT Variable', sans-serif; }
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- ── 우측 고정 AI 구독·초안 사이드바 (웹 화면 내장형) ── -->
+<button type="button" class="ai-sidebar-fab" id="btnSidebarFab" title="우측 AI 초안·구독 사이드바 열기">💬 AI 사이드바 열기</button>
+
+<aside class="ai-sidebar-drawer" id="aiSidebar" aria-label="AI 구독 연동 및 초안 작성 사이드바">
+  <div class="ai-sb-head">
+    <h3>💬 AI 초안 · 구독 연동 사이드바</h3>
+    <button type="button" class="ai-sb-close" id="btnCloseSidebar">닫기 ✕</button>
+  </div>
+  <div class="ai-sb-body">
+    <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:9px 11px; font-size:12px; color:#166534; line-height:1.45;">
+      🛡️ <b>학생 개인정보 보호:</b> 반·번호는 기기에만 남고 <b>순수 수업 활동 사실</b>만 프롬프트로 구성됩니다.
+    </div>
+
+    <!-- 1. 연결할 AI 선택 -->
+    <div class="ai-sb-box">
+      <span class="ai-sb-label">1. 사용할 AI 구독/엔진 선택</span>
+      <div class="ai-sb-providers" id="sbProviderGroup">
+        <button type="button" class="ai-sb-prov active" data-sb-ai="claude">Claude<small>Pro / 무료 채팅</small></button>
+        <button type="button" class="ai-sb-prov" data-sb-ai="chatgpt">ChatGPT<small>Plus / 프로젝트</small></button>
+        <button type="button" class="ai-sb-prov" data-sb-ai="gemini">Gemini<small>API / 웹 채팅</small></button>
+      </div>
+    </div>
+
+    <!-- 2. 항목 및 관찰 메모 입력 (본문 02 초안 작성과 실시간 동기화) -->
+    <div class="ai-sb-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <span class="ai-sb-label" style="margin:0;">2. 항목 및 수업 관찰 메모</span>
+        <button type="button" class="link-btn" id="btnSbOpenFullMake" style="font-size:11.5px; color:var(--primary);">상세 설정 열기 →</button>
+      </div>
+      <div style="display:flex; gap:6px; margin-bottom:8px;">
+        <select id="sbAreaSelect" style="flex:1; padding:6px 8px; border:1px solid var(--slate-200); border-radius:6px; font-size:12.5px; font-family:inherit;">
+          <option value="setuk">교과세특 (500자 / 1,500B)</option>
+          <option value="haengteuk">행동특성 및 종합의견 (300자 / 900B)</option>
+          <option value="jayul">자율·자치활동 (500자 / 1,500B)</option>
+          <option value="dongari">동아리활동 (500자 / 1,500B)</option>
+          <option value="jinro">진로활동 (500자 / 1,500B)</option>
+        </select>
+        <input id="sbSubjectInput" type="text" placeholder="과목/동아리명" style="width:125px; padding:6px 8px; border:1px solid var(--slate-200); border-radius:6px; font-size:12.5px; font-family:inherit;">
+      </div>
+      <textarea id="sbMemoInput" rows="4" placeholder="수업 중 관찰한 학생의 탐구 주제, 수행 과정, 발표·성취 변화를 입력하세요 (학생 이름 제외)." style="width:100%; padding:8px 10px; border:1px solid var(--slate-200); border-radius:6px; font-size:13px; line-height:1.5; font-family:inherit; box-sizing:border-box;"></textarea>
+      <div id="sbPiiAlert" style="display:none; margin-top:6px; background:#fef2f2; border:1px solid #fca5a5; border-radius:6px; padding:6px 8px; font-size:11.5px; color:#991b1b;">
+        ⚠️ 학생 식별 의심 표현: <b id="sbPiiWords"></b>
+        <button type="button" id="btnSbMaskPii" style="margin-left:6px; border:1px solid #f87171; background:#fff; border-radius:4px; padding:1px 6px; font-size:11px; cursor:pointer;">'OOO' 마스킹</button>
+      </div>
+    </div>
+
+    <!-- 3. 실행 버튼 (우측 분할 팝업창으로 AI 열기 or Gemini API 즉시 생성) -->
+    <div class="ai-sb-box" style="background:#eff6ff; border-color:#bfdbfe;">
+      <span class="ai-sb-label" style="color:#1e40af;">3. 초안 생성 및 AI 창 연동</span>
+      <div style="display:flex; flex-direction:column; gap:7px;">
+        <button type="button" class="btn-modern primary" id="btnSbLaunchChat" style="width:100%; padding:10px; font-size:13px;">
+          🚀 프롬프트 자동 복사 + <span id="sbAiNameLabel">Claude</span> 우측 창 띄우기
+        </button>
+        <button type="button" class="btn-modern outline" id="btnSbRunGeminiApi" style="width:100%; padding:8px; font-size:12.5px; background:#fff;">
+          ⚡ Gemini 무료 API로 사이드바에서 즉시 생성
+        </button>
+      </div>
+      <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">
+        <button type="button" class="btn-modern outline" id="btnSbSkillCopy" style="flex:1; padding:5px 6px; font-size:11.5px; background:#fff;">지침만 복사</button>
+        <button type="button" class="btn-modern outline" id="btnSbSkillZip" style="flex:1; padding:5px 6px; font-size:11.5px; background:#fff;">스킬 .zip</button>
+        <button type="button" class="btn-modern outline" id="btnSbSkillMd" style="flex:1; padding:5px 6px; font-size:11.5px; background:#fff;">SKILL.md</button>
+      </div>
+    </div>
+
+    <!-- 4. 받은 문단 붙여넣기 & 실시간 바이트·금지어 점검 -->
+    <div class="ai-sb-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <span class="ai-sb-label" style="margin:0;">4. 완성 문단 점검 · 바이트 계산</span>
+        <span id="sbByteBadge" style="font-size:11.5px; font-weight:700; color:var(--primary);">0 Byte (0자)</span>
+      </div>
+      <textarea id="sbResultInput" rows="6" placeholder="AI 채팅에서 받은 문단을 여기에 붙여 넣거나 위 [즉시 생성]을 누르면 글자수(Byte)와 기재요령 금지 표현을 바로 점검합니다." style="width:100%; padding:8px 10px; border:1px solid var(--slate-200); border-radius:6px; font-size:13px; line-height:1.55; font-family:inherit; box-sizing:border-box;"></textarea>
+      <div id="sbCheckFindings" style="margin-top:6px; font-size:12px;"></div>
+      <div style="display:flex; gap:6px; margin-top:8px;">
+        <button type="button" class="btn-modern primary" id="btnSbCopyResult" style="flex:1; padding:8px; font-size:12.5px;">문단 복사</button>
+        <button type="button" class="btn-modern outline" id="btnSbCheckDetail" style="flex:1; padding:8px; font-size:12.5px;">정밀 점검·저장함 반영</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
 <!-- 1. 파일 점검 도우미 스크립트 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -1259,6 +1429,7 @@ body.font-gmarket { font-family: 'GmarketSans', 'SUIT Variable', sans-serif; }
       } else {
         piiWarnBox.style.display = 'none';
       }
+      if (sbMemo && sbMemo.value !== memoEl.value) sbMemo.value = memoEl.value;
     });
   }
 
@@ -1271,6 +1442,223 @@ body.font-gmarket { font-family: 'GmarketSans', 'SUIT Variable', sans-serif; }
       memoEl.value = v;
       memoEl.dispatchEvent(new Event('input', { bubbles: true }));
       piiWarnBox.style.display = 'none';
+    });
+  }
+
+  // ── 우측 고정 AI 사이드바 동작 및 양방향 동기화 ──
+  const btnToggleSb = document.getElementById('btn-toggle-sidebar');
+  const btnFabSb = document.getElementById('btnSidebarFab');
+  const btnCloseSb = document.getElementById('btnCloseSidebar');
+  const sbArea = document.getElementById('sbAreaSelect');
+  const sbSubj = document.getElementById('sbSubjectInput');
+  const sbMemo = document.getElementById('sbMemoInput');
+  const sbResult = document.getElementById('sbResultInput');
+  const sbByteBadge = document.getElementById('sbByteBadge');
+  const sbFindings = document.getElementById('sbCheckFindings');
+  const sbAiLabel = document.getElementById('sbAiNameLabel');
+  let sbProvider = 'claude';
+
+  function toggleSidebar(open) {
+    const isOpen = typeof open === 'boolean' ? open : !document.body.classList.contains('sidebar-open');
+    document.body.classList.toggle('sidebar-open', isOpen);
+    if (btnToggleSb) btnToggleSb.textContent = isOpen ? '💬 AI 사이드바 닫기' : '💬 AI 사이드바 열기';
+    if (isOpen && memoEl && sbMemo) sbMemo.value = memoEl.value;
+    const subjEl = document.getElementById('subject');
+    if (isOpen && subjEl && sbSubj && !sbSubj.value) sbSubj.value = subjEl.value;
+  }
+  if (btnToggleSb) btnToggleSb.addEventListener('click', () => toggleSidebar());
+  if (btnFabSb) btnFabSb.addEventListener('click', () => toggleSidebar(true));
+  if (btnCloseSb) btnCloseSb.addEventListener('click', () => toggleSidebar(false));
+
+  // 처음 열었을 때 바로 확인할 수 있도록 기본으로 사이드바를 열어 둠 (모바일 제외)
+  if (window.innerWidth >= 1024) {
+    toggleSidebar(true);
+  }
+
+  // AI 공급자 선택
+  const AI_URLS = {
+    claude: { name: 'Claude', url: 'https://claude.ai/new' },
+    chatgpt: { name: 'ChatGPT', url: 'https://chatgpt.com/' },
+    gemini: { name: 'Gemini', url: 'https://gemini.google.com/app' }
+  };
+  document.querySelectorAll('[data-sb-ai]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-sb-ai]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      sbProvider = btn.dataset.sbAi;
+      if (sbAiLabel && AI_URLS[sbProvider]) sbAiLabel.textContent = AI_URLS[sbProvider].name;
+    });
+  });
+
+  // 항목·과목·메모 동기화
+  if (sbArea) {
+    sbArea.addEventListener('change', () => {
+      const areaBtn = document.querySelector(`#areaGrid [data-area="${sbArea.value}"]`);
+      if (areaBtn) areaBtn.click();
+      updateSbResultCheck();
+    });
+  }
+  if (sbSubj) {
+    sbSubj.addEventListener('input', () => {
+      const subjEl = document.getElementById('subject');
+      const clubEl = document.getElementById('club');
+      if (sbArea && sbArea.value === 'dongari' && clubEl) {
+        clubEl.value = sbSubj.value;
+        clubEl.dispatchEvent(new Event('input', { bubbles: true }));
+      } else if (subjEl) {
+        subjEl.value = sbSubj.value;
+        subjEl.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
+  }
+  if (sbMemo) {
+    sbMemo.addEventListener('input', () => {
+      if (memoEl && memoEl.value !== sbMemo.value) {
+        memoEl.value = sbMemo.value;
+        memoEl.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      const words = detectPIIWords(sbMemo.value);
+      const alertBox = document.getElementById('sbPiiAlert');
+      const wordsEl = document.getElementById('sbPiiWords');
+      if (alertBox && wordsEl) {
+        if (words.length > 0) {
+          alertBox.style.display = 'block';
+          wordsEl.textContent = words.join(', ');
+        } else {
+          alertBox.style.display = 'none';
+        }
+      }
+    });
+  }
+  const btnSbMask = document.getElementById('btnSbMaskPii');
+  if (btnSbMask && sbMemo) {
+    btnSbMask.addEventListener('click', () => {
+      const words = detectPIIWords(sbMemo.value);
+      let v = sbMemo.value;
+      words.forEach(w => { v = v.split(w).join('OOO'); });
+      sbMemo.value = v;
+      sbMemo.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+
+  // 상세 설정 열기
+  const btnSbOpenFull = document.getElementById('btnSbOpenFullMake');
+  if (btnSbOpenFull) {
+    btnSbOpenFull.addEventListener('click', () => {
+      const makeTab = document.querySelector('#op-tabs [data-open="make"]');
+      if (makeTab) makeTab.click();
+    });
+  }
+
+  // 프롬프트 자동 복사 + 우측 분할 팝업창으로 AI 열기
+  const btnSbLaunch = document.getElementById('btnSbLaunchChat');
+  if (btnSbLaunch) {
+    btnSbLaunch.addEventListener('click', () => {
+      if (!sbMemo.value.trim()) {
+        alert('수업 관찰 메모를 먼저 입력해 주세요.');
+        sbMemo.focus();
+        return;
+      }
+      if (window.SMAction && window.SMAction.showPrompt) {
+        window.SMAction.showPrompt();
+        const promptOut = document.getElementById('promptOut');
+        if (promptOut && promptOut.value) {
+          navigator.clipboard.writeText(promptOut.value).catch(() => {});
+        }
+      }
+      const info = AI_URLS[sbProvider] || AI_URLS.claude;
+      const w = 520, h = Math.min(920, window.screen.availHeight - 40);
+      const left = Math.max(0, window.screen.availWidth - w - 10);
+      window.open(info.url, 'neis_ai_side_window', `width=${w},height=${h},left=${left},top=20,resizable=yes,scrollbars=yes`);
+    });
+  }
+
+  // Gemini API 즉시 생성 연동
+  const btnSbGemini = document.getElementById('btnSbRunGeminiApi');
+  if (btnSbGemini) {
+    btnSbGemini.addEventListener('click', () => {
+      if (!sbMemo.value.trim()) {
+        alert('수업 관찰 메모를 먼저 입력해 주세요.');
+        sbMemo.focus();
+        return;
+      }
+      const genBtn = document.getElementById('btnGenerate');
+      if (genBtn) genBtn.click();
+      const makeTab = document.querySelector('#op-tabs [data-open="make"]');
+      if (makeTab) makeTab.click();
+    });
+  }
+
+  // 스킬 버튼 연동
+  const bindSbSkill = (id, kind) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', () => {
+      if (window.SMAction && sbArea) window.SMAction.exportAreaSkill(sbArea.value, kind);
+    });
+  };
+  bindSbSkill('btnSbSkillCopy', 'copy');
+  bindSbSkill('btnSbSkillZip', 'zip');
+  bindSbSkill('btnSbSkillMd', 'md');
+
+  // 사이드바 결과 문단 실시간 바이트 및 금지 표현 점검
+  function updateSbResultCheck() {
+    if (!sbResult || !sbByteBadge) return;
+    const text = sbResult.value;
+    const area = sbArea ? sbArea.value : 'setuk';
+    const limitBytes = area === 'haengteuk' ? 900 : 1500;
+    const bytes = (window.SMChecks && window.SMChecks.countNeisBytes) ? window.SMChecks.countNeisBytes(text) : new TextEncoder().encode(text).length;
+    sbByteBadge.textContent = `${bytes.toLocaleString()} / ${limitBytes.toLocaleString()} Byte (${text.length}자)`;
+    sbByteBadge.style.color = bytes > limitBytes ? '#dc2626' : '#2563eb';
+
+    if (sbFindings && window.SMChecks && window.SMChecks.checkDraft) {
+      if (!text.trim()) {
+        sbFindings.innerHTML = '';
+        return;
+      }
+      const list = window.SMChecks.checkDraft(text, area, {}) || [];
+      if (!list.length) {
+        sbFindings.innerHTML = '<span style="color:#059669; font-weight:600;">✓ 금지 표현·형식 오류가 발견되지 않았습니다.</span>';
+      } else {
+        sbFindings.innerHTML = list.slice(0, 5).map(f =>
+          `<div style="color:${f.severity === 'violation' ? '#dc2626' : '#d97706'}; margin-top:3px;">• [${f.category}] ${f.term ? `<b>${f.term}</b> — ` : ''}${f.message || ''}</div>`
+        ).join('');
+      }
+    }
+  }
+  if (sbResult) sbResult.addEventListener('input', updateSbResultCheck);
+
+  const resultTextMain = document.getElementById('resultText');
+  if (resultTextMain && sbResult) {
+    resultTextMain.addEventListener('input', () => {
+      if (sbResult.value !== resultTextMain.value) {
+        sbResult.value = resultTextMain.value;
+        updateSbResultCheck();
+      }
+    });
+  }
+
+  const btnSbCopyRes = document.getElementById('btnSbCopyResult');
+  if (btnSbCopyRes && sbResult) {
+    btnSbCopyRes.addEventListener('click', () => {
+      if (!sbResult.value.trim()) return;
+      navigator.clipboard.writeText(sbResult.value).then(() => alert('문단을 복사했습니다.'));
+    });
+  }
+
+  const btnSbDetail = document.getElementById('btnSbCheckDetail');
+  if (btnSbDetail && sbResult) {
+    btnSbDetail.addEventListener('click', () => {
+      if (!sbResult.value.trim()) {
+        alert('점검할 문단을 먼저 입력하거나 붙여 넣어 주세요.');
+        return;
+      }
+      const pasteBack = document.getElementById('pasteBack');
+      if (pasteBack && window.SMAction) {
+        pasteBack.value = sbResult.value;
+        const makeTab = document.querySelector('#op-tabs [data-open="make"]');
+        if (makeTab) makeTab.click();
+        window.SMAction.checkPasted();
+      }
     });
   }
 
