@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>생기부 도우미 데스크톱 오피스 (이음스타일 듀얼 AI)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="onepage.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", "Pretendard", "NanumSquareNeo", "SUIT", sans-serif;
+      background: var(--page, #faf9f5);
+      color: var(--ink, #1f1e1d);
+    }
+    #desktop-container {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #left-pane {
+      flex: 1 1 52%;
+      min-width: 480px;
+      height: 100%;
+      border-right: 1px solid var(--hairline, #e6e3d8);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--canvas, #ffffff);
+    }
+    #splitter {
+      width: 6px;
+      cursor: col-resize;
+      background: var(--hairline, #e6e3d8);
+      transition: background 0.15s;
+      z-index: 50;
+      user-select: none;
+    }
+    #splitter:hover, #splitter.active {
+      background: var(--rausch, #ff385c);
+    }
+    #right-pane {
+      flex: 1 1 48%;
+      min-width: 420px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: var(--page, #faf9f5);
+      position: relative;
+    }
+    .pane-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--hairline, #e6e3d8);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      gap: 8px;
+      flex-wrap: wrap;
+      min-height: 44px;
+      box-sizing: border-box;
+    }
+    .ai-tabs {
+      display: inline-flex;
+      background: #f4f2ea;
+      padding: 3px;
+      border-radius: 999px;
+      gap: 2px;
+    }
+    .ai-tab-btn {
+      padding: 5px 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--ink-secondary, #65635f);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .ai-tab-btn:hover {
+      color: var(--ink, #1f1e1d);
+    }
+    .ai-tab-btn.active {
+      background: #ffffff;
+      color: var(--ink, #1f1e1d);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .pane-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .action-pill {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--hairline, #e6e3d8);
+      background: #ffffff;
+      color: var(--ink, #1f1e1d);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .action-pill:hover {
+      background: #fdfbf7;
+      border-color: #d0c8b6;
+    }
+    .action-pill.primary {
+      background: var(--rausch, #ff385c);
+      color: #ffffff;
+      border-color: var(--rausch, #ff385c);
+    }
+    .action-pill.primary:hover {
+      background: #e0284c;
+    }
+    .session-badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: #ebf8f2;
+      color: #108043;
+      border-radius: 999px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .pane-frame {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #ffffff;
+    }
+    #ai-notice-bar {
+      padding: 8px 14px;
+      background: #fef8ee;
+      border-bottom: 1px solid #fae1c3;
+      font-size: 12px;
+      color: #8c531b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #ai-notice-bar span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div id="desktop-container">
+    <!-- 왼쪽 창: 생기부 초안 & NEIS 검사기 -->
+    <div id="left-pane">
+      <div class="pane-toolbar">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <strong style="font-size:13.5px; letter-spacing:-0.2px;">🏫 생기부 올인원 도우미</strong>
+          <span style="font-size:11px; color:#888; background:#f0ede3; padding:2px 7px; border-radius:999px;">오프라인/로컬</span>
+        </div>
+        <div class="pane-actions">
+          <button class="action-pill" id="btn-left-reload" title="생기부 화면 새로고침">🔄 새로고침</button>
+        </div>
+      </div>
+      <iframe id="left-frame" class="pane-frame" src="preview.html"></iframe>
+    </div>
+
+    <!-- 중앙 분할 크기 조절 바 -->
+    <div id="splitter" title="마우스로 드래그하여 창 너비를 조절하세요"></div>
+
+    <!-- 오른쪽 창: Claude · ChatGPT · Gemini 구독 화면 -->
+    <div id="right-pane">
+      <div class="pane-toolbar">
+        <div class="ai-tabs" role="tablist">
+          <button class="ai-tab-btn active" data-url="https://claude.ai" data-service="Claude">
+            <span>🟣 Claude</span>
+          </button>
+          <button class="ai-tab-btn" data-url="https://chatgpt.com" data-service="ChatGPT">
+            <span>🟢 ChatGPT</span>
+          </button>
+          <button class="ai-tab-btn" data-url="https://gemini.google.com" data-service="Gemini">
+            <span>🔵 Gemini</span>
+          </button>
+          <button class="ai-tab-btn" data-url="https://wrtn.ai" data-service="뤼튼">
+            <span>🟡 뤼튼</span>
+          </button>
+        </div>
+
+        <div class="pane-actions">
+          <span class="session-badge" title="구독 계정 로그인이 영구적으로 유지됩니다">🔒 구독 유지</span>
+          <button class="action-pill primary" id="btn-sync-prompt" title="왼쪽에서 만든 프롬프트를 복사하여 AI 입력창으로 바로 전송 준비">⚡ 프롬프트 전송</button>
+          <button class="action-pill" id="btn-pull-answer" title="클립보드에 복사된 AI 답변을 왼쪽 생기부 초안 결과창으로 가져오기">📋 답변 가져오기</button>
+          <button class="action-pill" id="btn-ai-reload" title="AI 화면 새로고침">🔄</button>
+        </div>
+      </div>
+
+      <div id="ai-notice-bar">
+        <span>💡 <strong>이음오피스 스타일 구독 연동:</strong> Claude Pro / ChatGPT Plus 등 보유하신 유료 계정으로 한 번 로그인하시면 세션이 영구 유지됩니다.</span>
+        <button id="btn-open-popup-ai" class="action-pill" style="font-size:11px; padding:3px 8px;">새 창으로 분리 ↗</button>
+      </div>
+
+      <iframe id="right-frame" class="pane-frame" src="https://claude.ai" allow="clipboard-read; clipboard-write"></iframe>
+    </div>
+  </div>
+
+  <script>
+    // 1. 드래그로 좌우 분할 조절
+    const splitter = document.getElementById('splitter');
+    const leftPane = document.getElementById('left-pane');
+    const rightPane = document.getElementById('right-pane');
+    let isDragging = false;
+
+    splitter.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      splitter.classList.add('active');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      // iframe 위에 투명 레이어 올리거나 pointer-events 비활성화
+      leftPane.style.pointerEvents = 'none';
+      rightPane.style.pointerEvents = 'none';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const totalWidth = window.innerWidth;
+      const newLeftWidth = Math.max(380, Math.min(totalWidth - 380, e.clientX));
+      const leftPercent = (newLeftWidth / totalWidth) * 100;
+      leftPane.style.flex = `0 0 ${leftPercent}%`;
+      rightPane.style.flex = `0 0 ${100 - leftPercent}%`;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        splitter.classList.remove('active');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        leftPane.style.pointerEvents = '';
+        rightPane.style.pointerEvents = '';
+      }
+    });
+
+    // 2. AI 탭 전환 (Claude, ChatGPT, Gemini, 뤼튼)
+    const aiTabs = document.querySelectorAll('.ai-tab-btn');
+    const rightFrame = document.getElementById('right-frame');
+    let currentAiUrl = 'https://claude.ai';
+    let currentAiName = 'Claude';
+
+    aiTabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        aiTabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentAiUrl = btn.dataset.url;
+        currentAiName = btn.dataset.service;
+        rightFrame.src = currentAiUrl;
+      });
+    });
+
+    // 3. 새로고침 제어
+    document.getElementById('btn-left-reload').addEventListener('click', () => {
+      document.getElementById('left-frame').contentWindow.location.reload();
+    });
+    document.getElementById('btn-ai-reload').addEventListener('click', () => {
+      rightFrame.contentWindow.location.reload();
+    });
+
+    // 4. 새 창 분리 보기 지원
+    document.getElementById('btn-open-popup-ai').addEventListener('click', () => {
+      window.open(currentAiUrl, 'aiSubscriptionWindow', 'width=780,height=900,left=' + (window.screenX + 600));
+    });
+
+    // 5. 프롬프트 자동 복사 및 전송 연동
+    const leftFrame = document.getElementById('left-frame');
+    document.getElementById('btn-sync-prompt').addEventListener('click', async () => {
+      try {
+        const leftDoc = leftFrame.contentDocument || leftFrame.contentWindow.document;
+        // 왼쪽 생기부 도우미에서 생성된 프롬프트 또는 관찰기록 가져오기
+        const promptInput = leftDoc.getElementById('gen-prompt') || 
+                            leftDoc.getElementById('notes-input') || 
+                            leftDoc.querySelector('textarea');
+        let textToSend = '';
+        if (promptInput && promptInput.value.trim()) {
+          textToSend = promptInput.value.trim();
+        }
+
+        // 왼쪽 초안 도우미의 프롬프트 복사 버튼 트리거 시도
+        const copyBtn = leftDoc.getElementById('btn-copy-prompt') || 
+                        leftDoc.getElementById('btn-prompt-export');
+        if (copyBtn) copyBtn.click();
+
+        if (textToSend) {
+          await navigator.clipboard.writeText(textToSend);
+          alert(`⚡ [${currentAiName}] 전송용 프롬프트가 클립보드에 복사되었습니다!\n\n오른쪽 ${currentAiName} 입력창에서 Ctrl+V(붙여넣기) 후 엔터를 누르시면 즉시 답변이 생성됩니다.`);
+        } else {
+          alert('왼쪽에서 관찰 기록이나 프롬프트를 먼저 작성해 주세요!');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('프롬프트를 복사했습니다. 오른쪽 AI 입력창에 Ctrl+V로 붙여넣어 주세요.');
+      }
+    });
+
+    // 6. AI 답변 가져오기 연동
+    document.getElementById('btn-pull-answer').addEventListener('click', async () => {
+      try {
+        const clipText = await navigator.clipboard.readText();
+        if (!clipText || !clipText.trim()) {
+          alert('클립보드에 복사된 텍스트가 없습니다.\n\n오른쪽 AI 화면에서 원하는 답변을 복사(Ctrl+C)한 후 이 버튼을 눌러주세요.');
+          return;
+        }
+        const leftDoc = leftFrame.contentDocument || leftFrame.contentWindow.document;
+        const resultArea = leftDoc.getElementById('gen-result') || 
+                           leftDoc.getElementById('notes-input') || 
+                           leftDoc.querySelector('textarea');
+        if (resultArea) {
+          resultArea.value = clipText.trim();
+          resultArea.dispatchEvent(new Event('input', { bubbles: true }));
+          alert('✅ AI 답변이 왼쪽 생기부 초안 결과창으로 성공적으로 반영되었습니다!\n(바이트 수가 자동으로 계산되었습니다)');
+        }
+      } catch (err) {
+        alert('클립보드 읽기 권한을 허용해 주시거나, 오른쪽 답변을 복사한 후 왼쪽에 붙여넣어 주세요.');
+      }
+    });
+  </script>
+</body>
+</html>
