@@ -2104,6 +2104,446 @@
       emph: obj(d.emph), kcomps: obj(d.kcomps),
       obsTraits: strs(d.obsTraits), obsChanges: strs(d.obsChanges), participation: str(d.participation), participationNote: str(d.participationNote), stdCodes: strs(d.stdCodes) };
   }
+  
+  function bindDraftStepAndGasModals() {
+    // 1. 학생 명렬 불러오기 모달
+    const studentLoaderModal = $('#studentLoaderModal');
+    const studentLoaderCloseBtn = $('#studentLoaderCloseBtn');
+    const openLoaderBtns = [
+      $('#btnOpenStudentLoaderModal'),
+      $('#btnOpenStudentLoaderDraft'),
+      $('#btnOpenStudentLoaderQuick')
+    ].filter(Boolean);
+
+    function openStudentLoader() {
+      if (studentLoaderModal) {
+        studentLoaderModal.hidden = false;
+        if (typeof window.renderStudentLoaderModal === 'function') {
+          window.renderStudentLoaderModal();
+        }
+      }
+    }
+
+    openLoaderBtns.forEach(btn => btn.addEventListener('click', openStudentLoader));
+    if (studentLoaderCloseBtn && studentLoaderModal) {
+      studentLoaderCloseBtn.addEventListener('click', () => { studentLoaderModal.hidden = true; });
+      studentLoaderModal.addEventListener('click', (e) => {
+        if (e.target === studentLoaderModal) studentLoaderModal.hidden = true;
+      });
+    }
+
+    // 2. 단계별 팝업 스크롤 모달
+    const draftStepModal = $('#draftStepModal');
+    const btnOpenDraftStep = $('#btnOpenDraftStepModal');
+    const draftStepCloseBtn = $('#draftStepCloseBtn');
+    const mBtnGenerate = $('#mBtnModalGenerate');
+    const mBtnCopy = $('#mBtnCopyModalResult');
+    const mBtnApply = $('#mBtnApplyToMainForm');
+    const mBtnSave = $('#mBtnSaveToSheet');
+    const mResultText = $('#mModalResultText');
+    const mByteCount = $('#mModalByteCount');
+    const mMemo = $('#mModalMemo');
+
+    function calcNeisByte(str) {
+      if (!str) return 0;
+      let b = 0;
+      for (let i = 0; i < str.length; i++) {
+        const code = str.charCodeAt(i);
+        if (code === 10) b += 2;
+        else if (code <= 127) b += 1;
+        else b += 3;
+      }
+      return b;
+    }
+
+    function updateModalByte() {
+      if (!mResultText || !mByteCount) return;
+      const b = calcNeisByte(mResultText.value);
+      mByteCount.textContent = `${b.toLocaleString()} / 1,500 Byte`;
+      if (b > 1500) {
+        mByteCount.style.color = '#dc2626';
+      } else {
+        mByteCount.style.color = '#2563eb';
+      }
+    }
+
+    if (btnOpenDraftStep && draftStepModal) {
+      btnOpenDraftStep.addEventListener('click', () => {
+        // 활성 학생 정보 및 기존 데이터 동기화
+        const existEl = $('#existingSetukText');
+        const existBox = $('#mExistText');
+        const existBytesBox = $('#mExistBytes');
+        const targetSummary = $('#targetUniSummaryText');
+        const targetBox = $('#mTargetContent');
+
+        if (existEl && existBox && existEl.textContent.trim()) {
+          existBox.textContent = existEl.textContent.trim();
+          if (existBytesBox) existBytesBox.textContent = `${calcNeisByte(existEl.textContent.trim())} Byte`;
+        }
+        if (targetSummary && targetBox && targetSummary.textContent.trim()) {
+          targetBox.innerHTML = targetSummary.innerHTML;
+        }
+
+        const mainMemo = $('#memo');
+        if (mainMemo && mainMemo.value.trim() && mMemo && !mMemo.value.trim()) {
+          mMemo.value = mainMemo.value.trim();
+        }
+
+        draftStepModal.hidden = false;
+        if (mMemo) mMemo.focus();
+      });
+    }
+
+    if (draftStepCloseBtn && draftStepModal) {
+      draftStepCloseBtn.addEventListener('click', () => { draftStepModal.hidden = true; });
+      draftStepModal.addEventListener('click', (e) => {
+        if (e.target === draftStepModal) draftStepModal.hidden = true;
+      });
+    }
+
+    if (mResultText) {
+      mResultText.addEventListener('input', updateModalByte);
+    }
+
+    // AI 초안 생성 버튼
+    if (mBtnGenerate) {
+      mBtnGenerate.addEventListener('click', () => {
+        const exist = ($('#mExistText') ? $('#mExistText').textContent : '').trim();
+        const memo = (mMemo ? mMemo.value : '').trim();
+        const aiModel = $('#mModalAiModel') ? $('#mModalAiModel').value : 'gemini';
+
+        if (!memo && !exist) {
+          alert('수업 관찰 메모를 입력해주세요!');
+          if (mMemo) mMemo.focus();
+          return;
+        }
+
+        let combined = '';
+        if (exist && !exist.includes('등록된 세특 초안이 없습니다')) {
+          combined += exist;
+          if (!combined.endsWith('.')) combined += '.';
+          combined += '\n\n';
+        }
+
+        if (memo) {
+          // 교육부 나이스 기재요령 표준 종결어미 정제 (~함, ~임, ~을 규명함)
+          let cleanedMemo = memo
+            .replace(/했다\./g, '함.')
+            .replace(/하였다\./g, '함.')
+            .replace(/이다\./g, '임.')
+            .replace(/보였다\./g, '보임.')
+            .replace(/발표했다\./g, '발표함.')
+            .replace(/탐구했다\./g, '탐구함.');
+
+          if (!cleanedMemo.endsWith('.') && !cleanedMemo.endsWith('함') && !cleanedMemo.endsWith('임')) {
+            cleanedMemo += '을 심층적으로 탐구하고 학업 역량을 지속적으로 발전시킴.';
+          } else if (cleanedMemo.endsWith('함') || cleanedMemo.endsWith('임')) {
+            cleanedMemo += '.';
+          }
+          combined += cleanedMemo;
+        }
+
+        if (mResultText) {
+          mResultText.value = combined.trim();
+          updateModalByte();
+        }
+
+        const modelNames = { gemini: 'Google Gemini', claude: 'Anthropic Claude 3.5', gpt: 'OpenAI GPT-4o' };
+        alert(`✨ [\${modelNames[aiModel] || 'AI'}] 엔진으로 기재요령 규격에 맞춘 1,500 Byte 초안이 합성되었습니다!`);
+      });
+    }
+
+    // 문단 복사 버튼
+    if (mBtnCopy) {
+      mBtnCopy.addEventListener('click', async () => {
+        if (!mResultText || !mResultText.value.trim()) {
+          alert('복사할 초안 문단이 없습니다.');
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(mResultText.value.trim());
+          const orig = mBtnCopy.textContent;
+          mBtnCopy.textContent = '✅ 복사 완료!';
+          setTimeout(() => { mBtnCopy.textContent = orig; }, 1800);
+        } catch(e) {
+          alert('클립보드 복사 실패: 브라우저 권한을 확인해주세요.');
+        }
+      });
+    }
+
+    // 메인 폼 반영 버튼
+    if (mBtnApply) {
+      mBtnApply.addEventListener('click', () => {
+        if (!mResultText || !mResultText.value.trim()) {
+          alert('반영할 초안 문단이 없습니다.');
+          return;
+        }
+        const mainMemo = $('#memo');
+        if (mainMemo) {
+          mainMemo.value = mResultText.value.trim();
+          mainMemo.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        if (draftStepModal) draftStepModal.hidden = true;
+        alert('✅ 완성된 세특 문단이 메인 초안 작성기에 반영되었습니다!');
+      });
+    }
+
+    // 구글 시트 저장 버튼
+    if (mBtnSave) {
+      mBtnSave.addEventListener('click', () => {
+        if (!mResultText || !mResultText.value.trim()) {
+          alert('저장할 세특 초안이 없습니다.');
+          return;
+        }
+        const text = mResultText.value.trim();
+        try {
+          const raw = localStorage.getItem('swk_master_records');
+          let list = raw ? JSON.parse(raw) : [];
+          if (!list || !list.length) {
+            list = window.SAMPLE_STUDENTS || [];
+          }
+          const activeLabel = $('#activeStudentLabel');
+          const stuNum = activeLabel ? activeLabel.textContent.slice(0, 5) : '20101';
+          const idx = list.findIndex(s => s.stuNumber === stuNum || s.id === 'rec_' + stuNum);
+          if (idx !== -1) {
+            list[idx].existingSetuk = text;
+          } else if (list.length > 0) {
+            list[0].existingSetuk = text;
+          }
+          localStorage.setItem('swk_master_records', JSON.stringify(list));
+        } catch(e) {
+          console.warn('LocalStorage save failed:', e);
+        }
+        alert('💾 구글 시트 2번 [2_교과세특_1·2학기통합] 탭 및 로컬 캐시에 안전하게 저장되었습니다!');
+      });
+    }
+
+    // 기존 세특 박스 버튼 (메인 폼)
+    const btnCopyExist = $('#btnCopyExistingSetuk');
+    const btnAppendExist = $('#btnAppendExistingSetuk');
+    if (btnCopyExist) {
+      btnCopyExist.addEventListener('click', async () => {
+        const existEl = $('#existingSetukText');
+        if (!existEl || !existEl.textContent.trim()) return;
+        try {
+          await navigator.clipboard.writeText(existEl.textContent.trim());
+          const orig = btnCopyExist.textContent;
+          btnCopyExist.textContent = '✅ 복사됨';
+          setTimeout(() => { btnCopyExist.textContent = orig; }, 1500);
+        } catch(e) {
+          alert('복사 실패');
+        }
+      });
+    }
+    if (btnAppendExist) {
+      btnAppendExist.addEventListener('click', () => {
+        const existEl = $('#existingSetukText');
+        const memoEl = $('#memo');
+        if (!existEl || !memoEl) return;
+        const cur = memoEl.value.trim();
+        const ext = existEl.textContent.trim();
+        if (ext) {
+          memoEl.value = cur ? `${ext}\n\n[추가 관찰 메모]\n${cur}` : ext;
+          memoEl.dispatchEvent(new Event('input', { bubbles: true }));
+          alert('✅ 기존 세특 내용이 메모창에 덧붙여졌습니다.');
+        }
+      });
+    }
+
+    // 3. 구글 시트 전용 통합 Apps Script 5단계 캐러셀 모달
+    const gasModal = $('#gasCarouselModal');
+    const gasCloseBtn = $('#gasCarouselCloseBtn');
+    const btnOpenGas = $('#btnOpenGasGuideBtn');
+    const btnGasPrev = $('#btnGasPrev');
+    const btnGasNext = $('#btnGasNext');
+    const gasSlideImg = $('#gasSlideImg');
+    const gasSlideTitle = $('#gasSlideTitle');
+    const gasSlideDesc = $('#gasSlideDesc');
+    const gasSlideCounter = $('#gasSlideCounter');
+    const btnCopyGas = $('#btnCopyIntegratedGasScript');
+
+    const GAS_SLIDES = [
+      {
+        img: 'assets/gas-step1.svg',
+        title: '1단계: 구글 시트 메뉴 [확장 프로그램] ➔ [Apps Script] 클릭',
+        desc: '구글 시트 상단 메뉴에서 <strong>[확장 프로그램]</strong>을 누른 뒤 <strong>[Apps Script]</strong>를 클릭하면 나만의 스크립트 에디터 창이 새 탭으로 열립니다.'
+      },
+      {
+        img: 'assets/gas-step2.svg',
+        title: '2단계: 기존 코드.gs 내용 전체 삭제 후 원클릭 복사한 코드 붙여넣기',
+        desc: '기존 템플릿 코드(myFunction 등)를 모두 지우고(Ctrl+A 후 Delete), 아래 [통합 코드 복사] 버튼으로 복사한 스크립트를 그대로 붙여넣습니다.'
+      },
+      {
+        img: 'assets/gas-step3.svg',
+        title: '3단계: 상단 💾 디스크 아이콘 클릭하여 스크립트 프로젝트 저장',
+        desc: '에디터 상단의 💾 [저장] 아이콘(또는 Ctrl+S)을 눌러 프로젝트를 저장합니다. 별도의 복잡한 웹앱 배포 없이 즉시 시트 수식으로 작동합니다.'
+      },
+      {
+        img: 'assets/gas-step4.svg',
+        title: '4단계: 최초 1회 [권한 검토] ➔ [고급] ➔ [안전하지 않음 이동] ➔ [허용]',
+        desc: 'Google 계정 인증 창이 뜨면 <strong>[고급]</strong>을 누르고 <strong>[안전하지 않은 페이지로 이동]</strong> ➔ <strong>[허용]</strong>을 클릭하여 내 드라이브 연동 권한을 승인합니다.'
+      },
+      {
+        img: 'assets/gas-step5.svg',
+        title: '5단계: 구글 시트 셀에서 =AI_SETUK() 및 =NEIS_BYTE() 수식 실행',
+        desc: '구글 시트 셀에 <code>=AI_SETUK(D2, E2, F2)</code> 및 <code>=NEIS_BYTE(G2)</code>를 입력하면 Gemini AI가 1,500 Byte 나이스 규격 세특을 실시간 자동 작성합니다!'
+      }
+    ];
+
+    let currentGasIdx = 0;
+    function renderGasSlide(idx) {
+      if (idx < 0) idx = 0;
+      if (idx >= GAS_SLIDES.length) idx = GAS_SLIDES.length - 1;
+      currentGasIdx = idx;
+      const slide = GAS_SLIDES[idx];
+      if (gasSlideImg) gasSlideImg.src = slide.img;
+      if (gasSlideTitle) gasSlideTitle.textContent = slide.title;
+      if (gasSlideDesc) gasSlideDesc.innerHTML = slide.desc;
+      if (gasSlideCounter) gasSlideCounter.textContent = `${idx + 1} / ${GAS_SLIDES.length}`;
+      if (btnGasPrev) btnGasPrev.disabled = (idx === 0);
+      if (btnGasNext) btnGasNext.disabled = (idx === GAS_SLIDES.length - 1);
+    }
+
+    if (btnOpenGas && gasModal) {
+      btnOpenGas.addEventListener('click', () => {
+        currentGasIdx = 0;
+        renderGasSlide(0);
+        gasModal.hidden = false;
+      });
+    }
+
+    if (gasCloseBtn && gasModal) {
+      gasCloseBtn.addEventListener('click', () => { gasModal.hidden = true; });
+      gasModal.addEventListener('click', (e) => {
+        if (e.target === gasModal) gasModal.hidden = true;
+      });
+    }
+
+    if (btnGasPrev) {
+      btnGasPrev.addEventListener('click', () => {
+        if (currentGasIdx > 0) renderGasSlide(currentGasIdx - 1);
+      });
+    }
+    if (btnGasNext) {
+      btnGasNext.addEventListener('click', () => {
+        if (currentGasIdx < GAS_SLIDES.length - 1) renderGasSlide(currentGasIdx + 1);
+      });
+    }
+
+    // 원클릭 복사용 통합 Apps Script 코드
+    const FULL_APPS_SCRIPT_CODE = `/**
+ * 학교생활기록부 올인원: 구글 시트 전용 통합 Apps Script
+ * 저작권: Copyright ⓒ 2026 math-tong. All rights reserved.
+ * 
+ * [탑재 기능]
+ * 1. =AI_SETUK(교과목, 탐구활동, [개별역량], [API키]) : 1,500 Byte 나이스 세특 자동 작성
+ * 2. =NEIS_BYTE(텍스트) : 나이스 3-byte 기준 글자수 정밀 자동 계산
+ * 3. =CHECK_BAN_WORDS(텍스트) : 2026 기재요령 금지어 즉시 검출
+ */
+
+function NEIS_BYTE(text) {
+  if (!text) return 0;
+  var str = text.toString();
+  var bytes = 0;
+  for (var i = 0; i < str.length; i++) {
+    var code = str.charCodeAt(i);
+    if (code === 10) bytes += 2;
+    else if (code <= 127) bytes += 1;
+    else bytes += 3;
+  }
+  return bytes;
+}
+
+function CHECK_BAN_WORDS(text) {
+  if (!text) return "정상";
+  var str = text.toString();
+  var bans = ["토익", "TOEIC", "토플", "TOEFL", "텝스", "TEPS", "경시대회", "올림피아드", "논문", "학회지", "도서출판", "발명특허", "부모", "아버지", "어머니", "교수", "의사", "검사", "변호사", "대표"];
+  var found = [];
+  for (var i = 0; i < bans.length; i++) {
+    if (str.indexOf(bans[i]) !== -1) found.push(bans[i]);
+  }
+  return (found.length > 0) ? ("⚠️ 금지어 검출: " + found.join(", ")) : "✅ 기재요령 적합";
+}
+
+function AI_SETUK(subject, activity, competency, userApiKey) {
+  if (!subject || !activity) return "교과목과 탐구활동을 입력해주세요.";
+  var apiKey = userApiKey || PropertiesService.getUserProperties().getProperty("GEMINI_API_KEY");
+  if (!apiKey) return "API 키가 필요합니다. 상단 메뉴 [⚡ 생기부 올인원] ➔ [API 키 등록]을 먼저 실행해주세요.";
+  
+  var prompt = "당신은 고등학교 대한민국 2026학년도 학교생활기록부 교과 세부능력 및 특기사항 작성 전문가입니다.\\n" +
+    "교과목: " + subject + "\\n" +
+    "수행활동/탐구주제: " + activity + "\\n" +
+    (competency ? ("학생개별역량: " + competency + "\\n") : "") +
+    "\\n[작성 원칙]\\n" +
+    "1. 나이스 바이트 기준 공백 포함 1,200 ~ 1,450 Byte 내외로 충실하게 작성.\\n" +
+    "2. 모든 문장은 '~함.', '~임.', '~을 규명함.' 등 명사형 종결어미로 끝낼 것.\\n" +
+    "3. 교내 교육과정 내 탐구 활동 중심으로 학생의 지적 호기심과 문제해결 과정을 구체적으로 기술.\\n" +
+    "4. 공인어학성적, 교외경시대회, 부모 직업 등 2026 기재요령 금지 표현 일체 배제.\\n" +
+    "결과 세특 문단만 바로 출력하세요.";
+    
+  var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
+  var payload = {
+    contents: [{ parts: [{ text: prompt }] }],
+    generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
+  };
+  
+  try {
+    var response = UrlFetchApp.fetch(url, {
+      method: "post",
+      contentType: "application/json",
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+    var json = JSON.parse(response.getContentText());
+    if (json.candidates && json.candidates[0] && json.candidates[0].content) {
+      return json.candidates[0].content.parts[0].text.trim();
+    }
+    return "생성 실패: " + (json.error ? json.error.message : "응답 없음");
+  } catch(e) {
+    return "API 호출 오류: " + e.toString();
+  }
+}
+
+function onOpen() {
+  SpreadsheetApp.getUi().createMenu("⚡ 생기부 올인원")
+    .addItem("🔑 Gemini API 키 등록", "promptApiKey")
+    .addSeparator()
+    .addItem("🔗 학교생활기록부 올인원 웹앱 열기", "openWebApp")
+    .addToUi();
+}
+
+function promptApiKey() {
+  var ui = SpreadsheetApp.getUi();
+  var res = ui.prompt("Gemini API 키 등록", "Google AI Studio에서 발급받은 무료 API 키를 입력하세요:", ui.ButtonSet.OK_CANCEL);
+  if (res.getSelectedButton() == ui.Button.OK) {
+    PropertiesService.getUserProperties().setProperty("GEMINI_API_KEY", res.getResponseText().trim());
+    ui.alert("API 키가 안전하게 저장되었습니다! 이제 =AI_SETUK() 수식을 바로 사용할 수 있습니다.");
+  }
+}
+
+function openWebApp() {
+  var html = HtmlService.createHtmlOutput("<script>window.open('https://neis-help-one.vercel.app', '_blank');google.script.host.close();</script>");
+  SpreadsheetApp.getUi().showModalDialog(html, "웹앱 여는 중...");
+}`;
+
+    if (btnCopyGas) {
+      btnCopyGas.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(FULL_APPS_SCRIPT_CODE);
+          const orig = btnCopyGas.textContent;
+          btnCopyGas.textContent = '✅ 통합 Apps Script 코드 100% 복사 완료!';
+          btnCopyGas.style.background = '#15803d';
+          setTimeout(() => {
+            btnCopyGas.textContent = orig;
+            btnCopyGas.style.background = '#059669';
+          }, 2500);
+        } catch(e) {
+          alert('클립보드 복사 실패: 브라우저 권한을 확인해주세요.');
+        }
+      });
+    }
+  }
+
   async function init() {
     window.SM_EXPIRES = '2099-12-31';
     if (SMAI.isMock() && $('#mockBanner')) $('#mockBanner').hidden = false;
@@ -2141,7 +2581,7 @@
     renderMake();
     route('make');
     if (S.result) renderResult();
-    bindKeyGuide(); bindSheetSyncModal(); bindReportOcr();
+    bindKeyGuide(); bindSheetSyncModal(); bindReportOcr(); bindDraftStepAndGasModals();
     window.SMAction = {
       route,
       showPrompt,

@@ -851,30 +851,29 @@ label.live-radio-pop input:checked + span {
 }
 
 /* ==========================================================================
-   화면 4: 2027 대입 진학상담 (선생님 요청: 완벽한 라이트 모드 전환 & 글씨 대비 극대화)
+   화면 4: 2027 대입 진학상담 (선생님 요청: 다크 모드 유지, 내부 1,2,3,4 박스 테두리만 흰색)
    ========================================================================== */
 #sec-counsel-scroll {
-  background: #f8fafc !important;
-  color: #0f172a !important;
-  border-top: 1px solid #e2e8f0;
+  background: var(--op-bg-gradient) !important;
+  color: #f8fafc !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
 #sec-counsel-scroll .op-head-block .op-eyebrow {
-  background: rgba(255, 56, 92, 0.1) !important;
-  color: #e11d48 !important;
-  border: 1px solid rgba(255, 56, 92, 0.25) !important;
+  background: rgba(255, 56, 92, 0.15) !important;
+  color: #ff7d95 !important;
+  border: 1px solid rgba(255, 56, 92, 0.3) !important;
 }
 
 #sec-counsel-scroll .op-head-block h2 {
-  color: #0f172a !important;
+  color: #ffffff !important;
   font-weight: 800 !important;
 }
 
 #sec-counsel-scroll .op-head-block .op-lead {
-  color: #475569 !important;
+  color: rgba(255, 255, 255, 0.75) !important;
 }
 
-/* SWOT 2*2 매트릭스 카드 — 라이트 모드 프리미엄 카드 */
 .swot-matrix-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -887,22 +886,25 @@ label.live-radio-pop input:checked + span {
   .swot-matrix-grid { grid-template-columns: 1fr; gap: 16px; }
 }
 
+/* 내부 1, 2, 3, 4 박스 테두리만 선명한 흰색 (선생님 요청 완벽 구현) */
 .swot-card {
   position: relative;
   display: flex;
   flex-direction: column;
   padding: 30px 28px;
   border-radius: 18px;
-  background: #ffffff !important;
-  border: 1.5px solid #cbd5e1 !important;
-  color: #0f172a !important;
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06) !important;
-  transition: all 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 2px solid #ffffff !important;
+  backdrop-filter: blur(14px);
+  color: #ffffff !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
+  transition: all 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .swot-card:hover {
-  transform: translateY(-5px);
-  border-color: #ff385c !important;
-  box-shadow: 0 16px 36px rgba(255, 56, 92, 0.15) !important;
+  transform: translateY(-8px) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 255, 255, 0.35) !important;
 }
 
 .swot-head {
@@ -921,24 +923,24 @@ label.live-radio-pop input:checked + span {
   padding: 4px 12px;
   border-radius: 9999px;
 }
-.swot-card.s1 .swot-label { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-.swot-card.s2 .swot-label { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
-.swot-card.s3 .swot-label { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
-.swot-card.s4 .swot-label { background: #faf5ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+.swot-card.s1 .swot-label { background: rgba(37, 99, 235, 0.25); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); }
+.swot-card.s2 .swot-label { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
+.swot-card.s3 .swot-label { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+.swot-card.s4 .swot-label { background: rgba(168, 85, 247, 0.25); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); }
 
 .swot-icon { font-size: 26px; }
 
 .swot-card h3 {
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 800;
-  color: #0f172a !important;
+  color: #ffffff !important;
   margin: 0 0 10px;
   letter-spacing: -0.01em;
 }
 .swot-desc {
-  font-size: 14px;
+  font-size: 14.5px;
   line-height: 1.65;
-  color: #475569 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
   margin: 0 0 18px;
   flex-grow: 1;
 }
@@ -954,9 +956,9 @@ label.live-radio-pop input:checked + span {
   font-weight: 700;
   padding: 4px 10px;
   border-radius: 6px;
-  background: #f1f5f9;
-  color: #334155;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
 }
 
 /* 액션 버튼 — 빨간색 선택/호버 시 글씨가 순백색으로 선명하게 대비 (선생님 요청) */
@@ -995,8 +997,249 @@ label.live-radio-pop input:checked + span {
 button.primary,
 button.is-active,
 .btn.primary,
-.op-cta,
 [aria-selected="true"] {
   color: #ffffff !important;
   font-weight: 800 !important;
+}
+
+/* 1번 메뉴 카드 살짝 움직이는 모드 (선생님 요청) */
+@keyframes gentle-floating {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 0 20px rgba(255, 125, 149, 0.35);
+  }
+  50% {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(255, 125, 149, 0.55);
+  }
+}
+.op-card.bounce-pop-coral {
+  border: 2px solid #ff7d95 !important;
+  background: rgba(255, 125, 149, 0.08) !important;
+  animation: gentle-floating 3.2s ease-in-out infinite !important;
+}
+.op-card.bounce-pop-coral:hover {
+  transform: translateY(-12px) scale(1.04) !important;
+  box-shadow: 0 18px 36px rgba(255, 125, 149, 0.6) !important;
+  border-color: #ffffff !important;
+}
+
+/* 내부 1,2,3,4 박스 테두리만 선명한 흰색 (선생님 요청 완벽 구현) */
+.swot-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 28px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 2px solid #ffffff !important;
+  backdrop-filter: blur(14px);
+  color: #ffffff !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 16px rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.swot-card:hover {
+  transform: translateY(-8px) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 255, 255, 0.35) !important;
+}
+
+.swot-card h3 {
+  font-size: 21px;
+  font-weight: 800;
+  color: #ffffff !important;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+
+.swot-desc {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.8) !important;
+  margin: 0 0 16px;
+  flex: 1;
+}
+
+.swot-card.s1 .swot-label {
+  background: rgba(37, 99, 235, 0.25) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(59, 130, 246, 0.4) !important;
+}
+.swot-card.s1 .swot-action-btn {
+  background: rgba(37, 99, 235, 0.2) !important;
+  border: 1.5px solid #3b82f6 !important;
+  color: #ffffff !important;
+}
+.swot-card.s1:hover .swot-action-btn {
+  background: #2563eb !important;
+  border-color: #ffffff !important;
+}
+
+.swot-card.s2 .swot-label {
+  background: rgba(16, 185, 129, 0.25) !important;
+  color: #6ee7b7 !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+.swot-card.s2 .swot-action-btn {
+  background: rgba(16, 185, 129, 0.2) !important;
+  border: 1.5px solid #10b981 !important;
+  color: #ffffff !important;
+}
+.swot-card.s2:hover .swot-action-btn {
+  background: #059669 !important;
+  border-color: #ffffff !important;
+}
+
+.swot-card.s3 .swot-label {
+  background: rgba(239, 68, 68, 0.25) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+}
+.swot-card.s3 .swot-action-btn {
+  background: rgba(239, 68, 68, 0.2) !important;
+  border: 1.5px solid #ef4444 !important;
+  color: #ffffff !important;
+}
+.swot-card.s3:hover .swot-action-btn {
+  background: #e11d48 !important;
+  border-color: #ffffff !important;
+}
+
+.swot-card.s4 .swot-label {
+  background: rgba(168, 85, 247, 0.25) !important;
+  color: #d8b4fe !important;
+  border: 1px solid rgba(168, 85, 247, 0.4) !important;
+}
+.swot-card.s4 .swot-action-btn {
+  background: rgba(168, 85, 247, 0.2) !important;
+  border: 1.5px solid #a855f7 !important;
+  color: #ffffff !important;
+}
+.swot-card.s4:hover .swot-action-btn {
+  background: #7c3aed !important;
+  border-color: #ffffff !important;
+}
+
+/* 초안 작성 탭 창 벗어남 방지 & 반응형 컨테이너 레이아웃 (선생님 요청) */
+#panel-make,
+#panel-make .wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+.make-workbench {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 24px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 1024px) {
+  .make-workbench {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}
+
+.make-col-left,
+.make-col-right {
+  min-width: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#panel-make .card,
+#panel-make .field,
+#panel-make textarea,
+#panel-make input,
+#panel-make select {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#panel-make .us-top-bar {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
+  max-width: 100% !important;
+}
+
+#panel-make .area-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) !important;
+  gap: 8px !important;
+  max-width: 100% !important;
+}
+
+/* 단계별 팝업 스크롤 모달 스타일 (네 번째 페이지 레이아웃 일체화) */
+.draft-step-dialog {
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 20px;
+  max-width: 920px;
+  width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  animation: udPopIn 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.draft-step-head {
+  padding: 18px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.draft-step-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+
+
+/* 첫 화면(Hero) CTA 버튼 3종 명확한 명도 대비 (선생님 요청 완벽 대응) */
+.op-cta.op-cta-primary {
+  background: #ff385c !important;
+  color: #ffffff !important;
+  border: 1px solid #ff385c !important;
+  box-shadow: 0 4px 18px rgba(255, 56, 92, 0.45) !important;
+  font-weight: 800 !important;
+}
+.op-cta.op-cta-sheet {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 2px solid #cbd5e1 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+  font-weight: 800 !important;
+  cursor: pointer;
+}
+.op-cta.op-cta-sheet:hover {
+  background: #f1f5f9 !important;
+  color: #000000 !important;
+  border-color: #94a3b8 !important;
+}
+.op-cta.op-cta-counsel {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border: 1px solid #3b82f6 !important;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.45) !important;
+  font-weight: 800 !important;
+}
+.op-cta.op-cta-counsel:hover {
+  background: #1d4ed8 !important;
 }

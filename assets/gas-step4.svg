@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <filter id="shadow4" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg4)"/>
+  <!-- Permission Dialog Mock -->
+  <g transform="translate(100, 60)" filter="url(#shadow4)">
+    <rect width="600" height="330" rx="12" fill="#ffffff"/>
+    <text x="40" y="50" font-family="-apple-system, sans-serif" font-size="18" font-weight="800" fill="#0f172a">계정 액세스 권한 검토 (최초 1회만 필요)</text>
+    <p></p>
+    <rect x="40" y="70" width="520" height="120" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="60" y="105" font-family="-apple-system, sans-serif" font-size="13" fill="#334155">선생님 본인의 구글 계정으로 만든 스크립트이므로 안전합니다.</text>
+    <text x="60" y="135" font-family="-apple-system, sans-serif" font-size="13.5" font-weight="700" fill="#2563eb">1. [고급] 링크 클릭 ➔ 2. '안전하지 않은 페이지로 이동' 클릭</text>
+    <text x="60" y="165" font-family="-apple-system, sans-serif" font-size="13" fill="#64748b">※ Google 내부 보안 정책상 최초 1회 승인 과정입니다 (비인가 유출 없음)</text>
+    <g transform="translate(380, 250)">
+      <rect width="180" height="42" rx="8" fill="#10b981"/>
+      <text x="90" y="26" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-weight="800" fill="#ffffff">허용 (Allow) 클릭 ✓</text>
+    </g>
+  </g>
+  <!-- Step Badge -->
+  <g transform="translate(60, 415)">
+    <rect width="680" height="30" rx="6" fill="#7c3aed"/>
+    <text x="340" y="20" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="13" font-weight="800" fill="#ffffff">4단계: 최초 실행 시 [고급] ➔ [허용] 클릭하여 본인 계정 승인</text>
+  </g>
+</svg>

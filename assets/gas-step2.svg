@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <filter id="shadow2" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg2)"/>
+  <!-- Apps Script Editor Window -->
+  <g transform="translate(60, 40)" filter="url(#shadow2)">
+    <rect width="680" height="370" rx="12" fill="#1e1e1e"/>
+    <!-- Title Bar -->
+    <rect width="680" height="44" rx="12" fill="#2d2d2d"/>
+    <circle cx="24" cy="22" r="6" fill="#ef4444"/>
+    <circle cx="42" cy="22" r="6" fill="#f59e0b"/>
+    <circle cx="60" cy="22" r="6" fill="#10b981"/>
+    <text x="80" y="27" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" fill="#cbd5e1">Google Apps Script - 코드.gs</text>
+    <!-- Left File List -->
+    <rect x="0" y="44" width="160" height="326" fill="#252526"/>
+    <text x="16" y="72" font-family="-apple-system, sans-serif" font-size="11.5" font-weight="700" fill="#94a3b8">파일</text>
+    <rect x="10" y="85" width="140" height="28" rx="4" fill="#37373d"/>
+    <text x="24" y="103" font-family="-apple-system, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">📄 코드.gs</text>
+    <!-- Code Editor Area -->
+    <rect x="160" y="44" width="520" height="326" fill="#1e1e1e"/>
+    <!-- Old default code to delete -->
+    <rect x="175" y="70" width="490" height="90" rx="6" fill="rgba(239, 68, 68, 0.15)" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <text x="195" y="95" font-family="Courier New, monospace" font-size="13" fill="#f87171">function myFunction() {</text>
+    <text x="195" y="115" font-family="Courier New, monospace" font-size="13" fill="#f87171">  // 기본 생성된 이 코드는 모두 지워주세요 (Ctrl+A ➔ Delete)</text>
+    <text x="195" y="135" font-family="Courier New, monospace" font-size="13" fill="#f87171">}</text>
+    <text x="195" y="190" font-family="-apple-system, sans-serif" font-size="14" font-weight="800" fill="#38bdf8">➔ [통합 Apps Script 코드 복사] 버튼으로 복사한 전체 코드를 붙여넣습니다 (Ctrl+V)</text>
+  </g>
+  <!-- Step Badge -->
+  <g transform="translate(60, 415)">
+    <rect width="680" height="30" rx="6" fill="#059669"/>
+    <text x="340" y="20" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="13" font-weight="800" fill="#ffffff">2단계: 코드.gs 창이 뜨면 기존 내용을 지우고 전체 붙여넣기(Ctrl+V)</text>
+  </g>
+</svg>

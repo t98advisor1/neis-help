@@ -350,15 +350,24 @@
 
   
   function getUniAdigaUrl(uniName) {
-    if (ADIGA_UNI_CODES[uniName]) {
-      return `https://www.adiga.kr/ucp/uvt/uni/univDetail.do?menuId=PCUVTINF2000&unvCd=${ADIGA_UNI_CODES[uniName]}&searchSyr=2027`;
+    const clean = (uniName || "").replace(/대학교|대학/g, "").trim();
+    const cd = ADIGA_UNI_CODES[uniName] || ADIGA_UNI_CODES[clean] || ADIGA_UNI_CODES[clean + "대"] || ADIGA_UNI_CODES[clean + "대학교"];
+    if (cd) {
+      // 500 에러 없는 최신 공시 기준(2025) 상세 직행
+      return `https://www.adiga.kr/ucp/uvt/uni/univDetail.do?menuId=PCUVTINF2000&unvCd=${cd}&searchSyr=2025`;
     }
-    for (const [k, cd] of Object.entries(ADIGA_UNI_CODES)) {
-      if (cd && (uniName.includes(k) || k.includes(uniName))) {
-        return `https://www.adiga.kr/ucp/uvt/uni/univDetail.do?menuId=PCUVTINF2000&unvCd=${cd}&searchSyr=2027`;
+    for (const [k, c] of Object.entries(ADIGA_UNI_CODES)) {
+      if (c && (uniName.includes(k) || k.includes(clean))) {
+        return `https://www.adiga.kr/ucp/uvt/uni/univDetail.do?menuId=PCUVTINF2000&unvCd=${c}&searchSyr=2025`;
       }
     }
-    return getUniAdmissionUrl(uniName);
+    // 100% 안전한 어디가 공식 대학 검색창 1:1 직행 (오류 원천 차단)
+    return `https://www.adiga.kr/ucp/uvt/uni/univSearch.do?menuId=PCUVTINF1000&searchUnvNm=${encodeURIComponent(clean || uniName)}`;
+  }
+
+  function getUniPriorLearningUrl(uniName) {
+    const clean = (uniName || "").replace(/대학교|대학/g, "").trim();
+    return `https://www.google.com/search?q=${encodeURIComponent(clean + "대학교 2025 2026 선행학습 영향평가 보고서 논술 기출 문제 출제의도")}`;
   }
 
   function getUniAdmissionUrl(uniName) {
@@ -461,6 +470,101 @@
   const DEFAULT_STORAGE = "https://pub-xxx.r2.dev/pages/";
   const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000; // 30일 (1개월)
 
+  
+  // 5명 풍부한 샘플 학생 데이터 기본 탑재 (선생님 요청: 사전 입력된 데이터로 즉시 불러오기 지원)
+  const SAMPLE_STUDENTS = [
+    {
+      id: "rec_20101",
+      stuNumber: "20101",
+      stuName: "김태형",
+      stuMajor: "생명공학과 (바이오신약)",
+      grade9: 1.85,
+      grade5: 1.48,
+      mockExam: "3합 7등급 (국2 수1 영2 탐1)",
+      targetUni1: "고려대 생명공학부 (학업우수) · 1.78 [적정]",
+      targetUni2: "성균관대 융합생명공학 (융합형) · 1.92 [안정]",
+      targetUni3: "한양대 생명공학과 (지역균형) · 1.52 [소신]",
+      targetUni4: "중앙대 생명과학과 (CAU융합) · 1.98 [안정]",
+      targetUni5: "경희대 유전생명공학과 (네오르네상스) · 2.10 [안정]",
+      targetUni6: "건국대 줄기세포재생공학 (KU자기추천) · 2.25 [안정]",
+      existingSetuk: "삼투현상과 세포막 선택적 투과성에 대한 가설 검증 실험을 설계하고, 농도 차이에 따른 원형질 분리 과정을 현미경으로 정밀 관찰하여 인지질 이중층 구조의 물질 수송 메커니즘을 규명함. 최신 바이오 신약 기술 동향을 조사하여 생명윤리적 관점에서 발표함.",
+      subject: "생명과학Ⅰ",
+      status: "작성중"
+    },
+    {
+      id: "rec_20102",
+      stuNumber: "20102",
+      stuName: "박서준",
+      stuMajor: "컴퓨터공학과 (인공지능·빅데이터)",
+      grade9: 2.30,
+      grade5: 2.10,
+      mockExam: "3합 9등급 (미적/과탐 2합5)",
+      targetUni1: "서울시립대 컴퓨터과학부 (면접형) · 2.15 [적정]",
+      targetUni2: "건국대 컴퓨터공학부 (KU자기추천) · 2.28 [적정]",
+      targetUni3: "동국대 컴퓨터AI학부 (DoDream) · 2.42 [안정]",
+      targetUni4: "숭실대 컴퓨터학부 (SSU미래인재) · 2.48 [안정]",
+      targetUni5: "국민대 소프트웨어학부 (국민프런티어) · 2.65 [안정]",
+      targetUni6: "아주대 소프트웨어학과 (고교추천) · 2.10 [소신]",
+      existingSetuk: "정렬 알고리즘의 시간복잡도를 파이썬 코드로 직접 구현하여 정량 비교하고 데이터 규모에 따른 최적화 방안을 도출함. 자료구조의 효율적 설계를 통해 컴퓨팅 사고력과 알고리즘 문제해결 역량을 발휘함.",
+      subject: "정보",
+      status: "상담완료"
+    },
+    {
+      id: "rec_20103",
+      stuNumber: "20103",
+      stuName: "이지은",
+      stuMajor: "사회학과 (빅데이터 사회과학)",
+      grade9: 1.65,
+      grade5: 1.35,
+      mockExam: "3합 6등급 (국1 수2 영1 사1)",
+      targetUni1: "연세대 사회학과 (활동우수) · 1.58 [소신]",
+      targetUni2: "고려대 사회학과 (계열적합) · 1.72 [적정]",
+      targetUni3: "서강대 사회과학부 (일반) · 1.80 [안정]",
+      targetUni4: "성균관대 사회과학계열 (탐구형) · 1.85 [안정]",
+      targetUni5: "한양대 사회학과 (학생부교과) · 1.45 [소신]",
+      targetUni6: "이화여대 사회과학부 (미래인재) · 1.90 [안정]",
+      existingSetuk: "사회 불평등 현상과 교육 기회의 양극화에 관한 통계청 마이크로데이터를 활용하여 계층 간 소득 격차와 학업 성취도의 상관관계를 다변량 분석함.",
+      subject: "사회·문화",
+      status: "작성중"
+    },
+    {
+      id: "rec_20104",
+      stuNumber: "20104",
+      stuName: "정호석",
+      stuMajor: "화학공학과 (에너지·신소재)",
+      grade9: 2.15,
+      grade5: 1.85,
+      mockExam: "3합 8등급",
+      targetUni1: "한양대 화학공학과 (추천형) · 1.95 [소신]",
+      targetUni2: "중앙대 에너지화학공학 (CAU융합) · 2.12 [적정]",
+      targetUni3: "경희대 화학공학과 (네오) · 2.20 [안정]",
+      targetUni4: "인하대 화학공학과 (인하미래인재) · 2.35 [안정]",
+      targetUni5: "서울과기대 화공생명 (학교장추천) · 2.25 [안정]",
+      targetUni6: "아주대 응용화학생명 (ACE) · 2.40 [안정]",
+      existingSetuk: "이차전지 충방전 반응 메커니즘을 산화환원 전위와 연결하여 분석하고 전고체 배터리 전해질의 이온 전도도 향상 방안에 관한 학술 논문을 탐독하여 요약 발표함.",
+      subject: "화학Ⅰ",
+      status: "작성중"
+    },
+    {
+      id: "rec_20105",
+      stuNumber: "20105",
+      stuName: "민윤기",
+      stuMajor: "글로벌리더학부 / 행정학",
+      grade9: 1.92,
+      grade5: 1.62,
+      mockExam: "3합 7등급",
+      targetUni1: "성균관대 글로벌리더 (융합형) · 1.88 [적정]",
+      targetUni2: "한양대 행정학과 (학생부종합) · 1.95 [적정]",
+      targetUni3: "중앙대 공공인재학부 (CAU탐구) · 2.05 [안정]",
+      targetUni4: "한국외대 행정학과 (학교생활우수) · 2.15 [안정]",
+      targetUni5: "서울시립대 행정학과 (학생부종합) · 2.08 [안정]",
+      targetUni6: "경희대 행정학과 (네오르네상스) · 2.22 [안정]",
+      existingSetuk: "글로벌 기후위기 대응과 탄소중립 정책에 관한 UN 보고서를 원문으로 심층 독해하고, 3단 논증 구조의 영문 에세이를 작성하여 교내 정책 발표회에서 우수한 호응을 얻음.",
+      subject: "공통영어",
+      status: "1차완료"
+    }
+  ];
+
   const store = {
     // 1. 전체 관리자 설정
     getSuperPin() { return localStorage.getItem("swk_super_pin") || "admin2027!"; },
@@ -535,9 +639,18 @@
       return idx < 0;
     },
 
-    // 8. 단일 마스터 시트 상담/세특 기록 (1학생 1행 구조)
+    // 8. 단일 마스터 시트 상담/세특 기록 (1학생 1행 구조 & 샘플 5명 기본 탑재)
     masterRecords() {
-      try { return JSON.parse(localStorage.getItem("swk_master_records") || "[]"); } catch(e) { return []; }
+      try {
+        const raw = localStorage.getItem("swk_master_records");
+        if (raw) {
+          const list = JSON.parse(raw);
+          if (Array.isArray(list) && list.length > 0) return list;
+        }
+        return SAMPLE_STUDENTS;
+      } catch(e) {
+        return SAMPLE_STUDENTS;
+      }
     },
     saveMasterRecord(rec) {
       const list = this.masterRecords();
@@ -801,9 +914,11 @@
             <button class="fav-btn ${isFav ? 'on' : ''}" title="즐겨찾기" data-fav-id="${u.id}">★</button>
           </div>
 
-          <div class="uni-specs">
+          <div class="uni-specs" style="display:flex; flex-wrap:wrap; gap:5px; margin:8px 0 10px; align-items:center;">
             <span class="uni-spec-item">분류: ${escHtml(u.cat || "일반대학")}</span>
-            
+            <a href="${escHtml(getUniAdmissionUrl(u.name))}" target="_blank" rel="noreferrer" class="uni-quick-link" onclick="event.stopPropagation();" style="padding:2px 7px; font-size:11px; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:4px; text-decoration:none; font-weight:700;">🏫 입학처</a>
+            <a href="${escHtml(getUniAdigaUrl(u.name))}" target="_blank" rel="noreferrer" class="uni-quick-link" onclick="event.stopPropagation();" style="padding:2px 7px; font-size:11px; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; border-radius:4px; text-decoration:none; font-weight:700;">🎯 어디가</a>
+            <a href="${escHtml(getUniPriorLearningUrl(u.name))}" target="_blank" rel="noreferrer" class="uni-quick-link" onclick="event.stopPropagation();" style="padding:2px 7px; font-size:11px; background:#faf5ff; color:#7c3aed; border:1px solid #ddd6fe; border-radius:4px; text-decoration:none; font-weight:700;">📑 선행보고서</a>
           </div>
         </div>
 
@@ -941,6 +1056,11 @@
         } else if (val === "adiga") {
           const adigaUrl = getUniAdigaUrl(uni.name);
           window.open(adigaUrl, "_blank", "noopener,noreferrer");
+          $("#lblRadioResults input").checked = true;
+          $$(".ud-radio-item").forEach(lbl => lbl.classList.toggle("on", lbl.id === "lblRadioResults"));
+        } else if (val === "priorLearning") {
+          const plUrl = getUniPriorLearningUrl(uni.name);
+          window.open(plUrl, "_blank", "noopener,noreferrer");
           $("#lblRadioResults input").checked = true;
           $$(".ud-radio-item").forEach(lbl => lbl.classList.toggle("on", lbl.id === "lblRadioResults"));
         } else if (val === "scan") {
@@ -1184,10 +1304,10 @@
       }
     }
 
-    // 계열 필터 칩
-    $$("#counselSubFinder [data-finder-trk]").forEach(chip => {
+    // 계열 필터 칩 (하이픈 ID 지원 완벽 수정)
+    $$("#counsel-sub-finder [data-finder-trk], #counselSubFinder [data-finder-trk]").forEach(chip => {
       chip.addEventListener("click", () => {
-        $$("#counselSubFinder [data-finder-trk]").forEach(c => c.classList.remove("on"));
+        $$("#counsel-sub-finder [data-finder-trk], #counselSubFinder [data-finder-trk]").forEach(c => c.classList.remove("on"));
         chip.classList.add("on");
         appState.finderTrk = chip.dataset.finderTrk;
         renderFinder();
@@ -1195,9 +1315,9 @@
     });
 
     // 전형 유형 칩
-    $$("#counselSubFinder [data-finder-ty]").forEach(chip => {
+    $$("#counsel-sub-finder [data-finder-ty], #counselSubFinder [data-finder-ty]").forEach(chip => {
       chip.addEventListener("click", () => {
-        $$("#counselSubFinder [data-finder-ty]").forEach(c => c.classList.remove("on"));
+        $$("#counsel-sub-finder [data-finder-ty], #counselSubFinder [data-finder-ty]").forEach(c => c.classList.remove("on"));
         chip.classList.add("on");
         appState.finderTy = chip.dataset.finderTy;
         renderFinder();
@@ -1205,9 +1325,9 @@
     });
 
     // 지역 칩
-    $$("#counselSubFinder [data-finder-reg]").forEach(chip => {
+    $$("#counsel-sub-finder [data-finder-reg], #counselSubFinder [data-finder-reg]").forEach(chip => {
       chip.addEventListener("click", () => {
-        $$("#counselSubFinder [data-finder-reg]").forEach(c => c.classList.remove("on"));
+        $$("#counsel-sub-finder [data-finder-reg], #counselSubFinder [data-finder-reg]").forEach(c => c.classList.remove("on"));
         chip.classList.add("on");
         appState.finderReg = chip.dataset.finderReg;
         renderFinder();
@@ -1215,9 +1335,9 @@
     });
 
     // 오차 범위 칩
-    $$("#counselSubFinder [data-finder-range]").forEach(chip => {
+    $$("#counsel-sub-finder [data-finder-range], #counselSubFinder [data-finder-range]").forEach(chip => {
       chip.addEventListener("click", () => {
-        $$("#counselSubFinder [data-finder-range]").forEach(c => c.classList.remove("on"));
+        $$("#counsel-sub-finder [data-finder-range], #counselSubFinder [data-finder-range]").forEach(c => c.classList.remove("on"));
         chip.classList.add("on");
         appState.finderRange = parseFloat(chip.dataset.finderRange);
         renderFinder();
@@ -1277,15 +1397,22 @@
 
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td><strong style="color:var(--ink);">${escHtml(uName)}</strong> ${med ? `<span style="font-size:11px; color:#c13515;">(${med})</span>` : ''}</td>
+        <td>
+          <div><a href="${escHtml(getUniAdmissionUrl(uName))}" target="_blank" rel="noreferrer" style="color:#0f172a; font-weight:800; text-decoration:none;">${escHtml(uName)} ↗</a> ${med ? `<span style="font-size:11px; color:#c13515;">(${med})</span>` : ''}</div>
+          <div style="display:flex; gap:3px; margin-top:3px;">
+            <a href="${escHtml(getUniAdmissionUrl(uName))}" target="_blank" rel="noreferrer" style="font-size:10.5px; padding:1px 5px; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:3px; text-decoration:none; font-weight:700;">입학처</a>
+            <a href="${escHtml(getUniAdigaUrl(uName))}" target="_blank" rel="noreferrer" style="font-size:10.5px; padding:1px 5px; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; border-radius:3px; text-decoration:none; font-weight:700;">어디가</a>
+            <a href="${escHtml(getUniPriorLearningUrl(uName))}" target="_blank" rel="noreferrer" style="font-size:10.5px; padding:1px 5px; background:#faf5ff; color:#7c3aed; border:1px solid #ddd6fe; border-radius:3px; text-decoration:none; font-weight:700;">선행</a>
+          </div>
+        </td>
         <td><span class="uni-spec-item">${trkMap[trk] || trk}</span></td>
         <td><span class="uni-spec-item">${tyMap[ty] || ty}</span></td>
         <td><b>${escHtml(trnName)}</b></td>
-        <td><strong style="color:var(--rausch);">${g9.toFixed(2)}</strong> ${diffHtml}</td>
-        <td><span style="font-weight:700; color:#0f766e;">${g5 ? g5.toFixed(2) : '-'}</span></td>
+        <td><strong style="color:var(--rausch); font-size:14px;">${g9.toFixed(2)}</strong> ${diffHtml}</td>
+        <td><span style="font-weight:700; color:#0f766e; font-size:14px;">${g5 ? g5.toFixed(2) : '-'}</span></td>
         <td>
-          <button class="btn-primary" style="padding:4px 9px; font-size:11.5px;" data-f-uni="${escHtml(uName)}" data-f-trn="${escHtml(trnName)}">
-            ✍️ 세특/상담 담기
+          <button class="btn-primary" style="padding:6px 12px; font-size:12px; font-weight:800; background:#ff385c; color:#ffffff !important; border:none; border-radius:6px; cursor:pointer; box-shadow:0 2px 8px rgba(255,56,92,0.35); display:inline-flex; align-items:center; gap:4px;" data-f-uni="${escHtml(uName)}" data-f-trn="${escHtml(trnName)}">
+            🎯 6장 담기
           </button>
         </td>
       `;
@@ -1328,14 +1455,25 @@
       const [uName, trnName, num, method, csat, p] = n;
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td><strong style="color:var(--ink);">${escHtml(uName)}</strong></td>
+        <td><strong style="color:var(--ink); font-size:13.5px;">${escHtml(uName)}</strong></td>
         <td><b>${escHtml(trnName)}</b></td>
         <td>${escHtml(num)}명</td>
         <td>${escHtml(method)}</td>
         <td><span style="font-size:12px; color:${csat.startsWith('O') ? 'var(--rausch)' : 'var(--muted)'}; font-weight:700;">${escHtml(csat)}</span></td>
         <td>
-          <button class="btn-primary" style="padding:4px 9px; font-size:11.5px;">
-            ✍️ 세특/상담 담기
+          <a href="${escHtml(getUniPriorLearningUrl(uName))}" target="_blank" rel="noreferrer" class="btn secondary" style="padding:4px 9px; font-size:11.5px; color:#059669; border-color:#86efac; text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:700;">
+            📑 선행보고서 ↗
+          </a>
+        </td>
+        <td>
+          <div style="display:flex; gap:4px;">
+            <a href="${escHtml(getUniAdmissionUrl(uName))}" target="_blank" rel="noreferrer" style="padding:3px 7px; font-size:11px; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:4px; text-decoration:none; font-weight:700;">입학처</a>
+            <a href="${escHtml(getUniAdigaUrl(uName))}" target="_blank" rel="noreferrer" style="padding:3px 7px; font-size:11px; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; border-radius:4px; text-decoration:none; font-weight:700;">어디가</a>
+          </div>
+        </td>
+        <td>
+          <button class="btn-primary" style="padding:6px 12px; font-size:12px; font-weight:800; background:#ff385c; color:#ffffff !important; border:none; border-radius:6px; cursor:pointer; box-shadow:0 2px 8px rgba(255,56,92,0.35);">
+            🎯 6장 담기
           </button>
         </td>
       `;
@@ -1414,9 +1552,14 @@
         stuMajor: $("#stuMajor").value.trim(),
         grade9: $("#stuGrade9").value.trim(),
         grade5: $("#stuGrade5").value.trim(),
+        mockExam: $("#stuMockExam") ? $("#stuMockExam").value.trim() : "",
         targetUni1: $("#targetUni1").value.trim(),
         targetUni2: $("#targetUni2").value.trim(),
         targetUni3: $("#targetUni3").value.trim(),
+        targetUni4: $("#targetUni4") ? $("#targetUni4").value.trim() : "",
+        targetUni5: $("#targetUni5") ? $("#targetUni5").value.trim() : "",
+        targetUni6: $("#targetUni6") ? $("#targetUni6").value.trim() : "",
+        docsUrl: $("#stuDocsUrl") ? $("#stuDocsUrl").value.trim() : "",
         counselOpinion: $("#counselOpinion").value.trim(),
         stuCreative: $("#stuCreative").value.trim(),
         setukMemo: counselText ? counselText.value.trim() : "",
@@ -1525,9 +1668,14 @@ function NEIS_BYTE(text) {
     $("#stuMajor").value = "";
     $("#stuGrade9").value = "";
     $("#stuGrade5").value = "";
+    if ($("#stuMockExam")) $("#stuMockExam").value = "";
     $("#targetUni1").value = "";
     $("#targetUni2").value = "";
     $("#targetUni3").value = "";
+    if ($("#targetUni4")) $("#targetUni4").value = "";
+    if ($("#targetUni5")) $("#targetUni5").value = "";
+    if ($("#targetUni6")) $("#targetUni6").value = "";
+    if ($("#stuDocsUrl")) $("#stuDocsUrl").value = "";
     $("#counselOpinion").value = "";
     $("#stuCreative").value = "";
     $("#counselSetukMemo").value = "";
@@ -1539,15 +1687,38 @@ function NEIS_BYTE(text) {
 
   function openCounselWithUni(uniName, trnName = "", g9 = null, g5 = null) {
     switchCounselSubTab("records");
-    const targetField = $("#targetUni1");
     const fullUniDesc = `${uniName}${trnName ? ` (${trnName})` : ''}`;
-    targetField.value = fullUniDesc;
-    $("#currentCounselUniTag").textContent = `1지망 연동: ${fullUniDesc}`;
 
+    let slot = "1지망";
+    if (!$("#targetUni1").value.trim()) {
+      $("#targetUni1").value = fullUniDesc;
+      slot = "1지망";
+    } else if (!$("#targetUni2").value.trim()) {
+      $("#targetUni2").value = fullUniDesc;
+      slot = "2지망";
+    } else if (!$("#targetUni3").value.trim()) {
+      $("#targetUni3").value = fullUniDesc;
+      slot = "3지망";
+    } else if ($("#targetUni4") && !$("#targetUni4").value.trim()) {
+      $("#targetUni4").value = fullUniDesc;
+      slot = "4지망";
+    } else if ($("#targetUni5") && !$("#targetUni5").value.trim()) {
+      $("#targetUni5").value = fullUniDesc;
+      slot = "5지망";
+    } else if ($("#targetUni6") && !$("#targetUni6").value.trim()) {
+      $("#targetUni6").value = fullUniDesc;
+      slot = "6지망";
+    } else {
+      $("#targetUni1").value = fullUniDesc;
+      slot = "1지망 (수정)";
+    }
+
+    $("#currentCounselUniTag").textContent = `${slot} 연동: ${fullUniDesc}`;
     if (g9) $("#stuGrade9").value = Number(g9).toFixed(2);
     if (g5) $("#stuGrade5").value = Number(g5).toFixed(2);
 
     $("#stuName").focus();
+    alert(`🎯 [${fullUniDesc}]이(가) 학생의 ${slot}에 성공적으로 담겼습니다!`);
   }
 
   function renderMasterSheet(filterQuery = "") {
@@ -1623,11 +1794,20 @@ function NEIS_BYTE(text) {
             <td>${escHtml(r.stuMajor || '-')}</td>
             <td>${escHtml(r.grade9 || '-')}</td>
             <td>${escHtml(r.grade5 || '-')}</td>
-            <td><b>${escHtml(r.targetUni1 || '-')}</b></td>
-            <td>${escHtml(r.targetUni2 || '-')}</td>
-            <td>${escHtml(r.targetUni3 || '-')}</td>
+            <td><span style="font-size:11.5px; color:#2563eb; font-weight:700;">${escHtml(r.mockExam || '-')}</span></td>
+            <td>
+              <div style="font-size:12px;"><b>1:</b> ${escHtml(r.targetUni1 || '-')}</div>
+              ${r.targetUni2 ? `<div style="font-size:11px; color:#475569;"><b>2:</b> ${escHtml(r.targetUni2)}</div>` : ''}
+              ${r.targetUni3 ? `<div style="font-size:11px; color:#475569;"><b>3:</b> ${escHtml(r.targetUni3)}</div>` : ''}
+            </td>
+            <td>
+              ${r.targetUni4 ? `<div style="font-size:11px; color:#475569;"><b>4:</b> ${escHtml(r.targetUni4)}</div>` : '<span style="color:#94a3b8;">-</span>'}
+              ${r.targetUni5 ? `<div style="font-size:11px; color:#475569;"><b>5:</b> ${escHtml(r.targetUni5)}</div>` : ''}
+              ${r.targetUni6 ? `<div style="font-size:11px; color:#475569;"><b>6:</b> ${escHtml(r.targetUni6)}</div>` : ''}
+            </td>
             <td>${escHtml(r.counselOpinion || '-')}</td>
             <td>${escHtml(r.setukMemo || '-')}</td>
+            <td>${r.docsUrl ? `<a href="${escHtml(r.docsUrl)}" target="_blank" rel="noreferrer" style="color:#2563eb; font-weight:700; text-decoration:underline;">[Docs ↗]</a>` : '<span style="color:#94a3b8;">-</span>'}</td>
             <td><span style="font-weight:700; color:var(--done);">${escHtml(r.status || '완료')}</span></td>
             <td>
               <button class="btn-load-inline" style="color:var(--rausch); font-weight:700;">수정</button>
@@ -1647,9 +1827,14 @@ function NEIS_BYTE(text) {
     $("#stuMajor").value = rec.stuMajor || "";
     $("#stuGrade9").value = rec.grade9 || "";
     $("#stuGrade5").value = rec.grade5 || "";
+    if ($("#stuMockExam")) $("#stuMockExam").value = rec.mockExam || "";
     $("#targetUni1").value = rec.targetUni1 || "";
     $("#targetUni2").value = rec.targetUni2 || "";
     $("#targetUni3").value = rec.targetUni3 || "";
+    if ($("#targetUni4")) $("#targetUni4").value = rec.targetUni4 || "";
+    if ($("#targetUni5")) $("#targetUni5").value = rec.targetUni5 || "";
+    if ($("#targetUni6")) $("#targetUni6").value = rec.targetUni6 || "";
+    if ($("#stuDocsUrl")) $("#stuDocsUrl").value = rec.docsUrl || "";
     $("#counselOpinion").value = rec.counselOpinion || "";
     $("#stuCreative").value = rec.stuCreative || "";
     $("#counselSetukMemo").value = rec.setukMemo || "";
@@ -1664,11 +1849,17 @@ function NEIS_BYTE(text) {
     const list = store.masterRecords();
     if (list.length === 0) return alert("내보낼 상담 기록이 없습니다.");
 
-    const headers = ["학번", "이름", "희망학과", "9등급내신", "5등급추정", "1지망대학/전형", "2지망", "3지망", "담임상담의견", "자율/동아리/진로", "국영수탐세특", "행특", "진행상태", "수정일"];
+    const headers = [
+      "학번", "이름", "희망학과", "9등급내신", "2028_5등급추정", "모의고사성적_최저",
+      "1지망대학/전형", "2지망", "3지망", "4지망", "5지망", "6지망",
+      "담임상담종합의견", "자율/동아리/진로", "세특관찰기록", "행특종합의견",
+      "GoogleDocs일지", "진행상태", "수정일시"
+    ];
     const rows = list.map(r => [
-      r.stuNumber, r.stuName, r.stuMajor, r.grade9, r.grade5,
-      r.targetUni1, r.targetUni2, r.targetUni3, r.counselOpinion,
-      r.stuCreative, r.setukMemo, r.stuBehavior, r.status, r.updatedAt || r.createdAt
+      r.stuNumber, r.stuName, r.stuMajor, r.grade9, r.grade5, r.mockExam || "",
+      r.targetUni1, r.targetUni2, r.targetUni3, r.targetUni4 || "", r.targetUni5 || "", r.targetUni6 || "",
+      r.counselOpinion, r.stuCreative, r.setukMemo, r.stuBehavior,
+      r.docsUrl || "", r.status, r.updatedAt || r.createdAt
     ]);
 
     const csvContent = "\uFEFF" + [headers, ...rows].map(row =>
@@ -1993,3 +2184,113 @@ function NEIS_BYTE(text) {
     renderUnis();
   });
 })();
+
+
+  // 학생 데이터를 초안 작성기로 불러오기 (선생님 요청 완벽 구현)
+  window.loadStudentIntoDraft = function(target) {
+    let student = null;
+    const list = store.masterRecords();
+    if (typeof target === "string") {
+      student = list.find(s => s.id === target || s.stuNumber === target) || SAMPLE_STUDENTS[0];
+    } else if (target && typeof target === "object") {
+      student = target;
+    } else {
+      student = list[0] || SAMPLE_STUDENTS[0];
+    }
+    if (!student) return;
+
+    // 1. 초안 작성 화면으로 전환
+    if (typeof openPanel === "function") {
+      openPanel("make", true);
+    } else {
+      const btn = document.querySelector('[data-open="make"]');
+      if (btn) btn.click();
+    }
+
+    // 2. 반/번호 및 과목명 설정
+    if ($("#tagClass") && student.stuNumber) {
+      const numStr = String(student.stuNumber);
+      if (numStr.length >= 4) {
+        $("#tagClass").value = numStr.slice(1, 3).replace(/^0+/, "") || "1";
+        $("#tagNum").value = numStr.slice(3).replace(/^0+/, "") || "1";
+      }
+    }
+    if ($("#subject") && student.subject) {
+      $("#subject").value = student.subject;
+      if ($("#subjectField")) $("#subjectField").hidden = false;
+    }
+
+    // 3. 기존 세특 박스 채움
+    const existBox = $("#existingSetukBox");
+    const existText = $("#existingSetukText");
+    const existBytes = $("#existingSetukBytes");
+    if (existBox && existText) {
+      existBox.hidden = false;
+      const txt = student.existingSetuk || student.setukMemo || "현재 등록된 세특 초안이 없습니다. 아래에 새로운 관찰 메모를 작성해 주세요.";
+      existText.textContent = txt;
+      if (existBytes) {
+        let b = 0;
+        for (let i = 0; i < txt.length; i++) {
+          const code = txt.charCodeAt(i);
+          if (code === 10) b += 2; else if (code <= 127) b += 1; else b += 3;
+        }
+        existBytes.textContent = `${b} Byte`;
+      }
+    }
+
+    // 4. 4번 항목: 대입 진학상담 1~6지망 요약 스트립
+    const targetBox = $("#targetUniSummaryBox");
+    const targetText = $("#targetUniSummaryText");
+    if (targetBox && targetText) {
+      targetBox.hidden = false;
+      targetText.innerHTML = `
+        <strong>🎯 [${escHtml(student.stuName || '')} 학생 2027 대입 목표 (4번 항목 연동)]:</strong>
+        <span style="color:#0f172a; font-weight:700;">1지망: ${escHtml(student.targetUni1 || '미정')}</span> · 
+        <span>2지망: ${escHtml(student.targetUni2 || '-')}</span> · 
+        <span>3지망: ${escHtml(student.targetUni3 || '-')}</span>
+        ${student.mockExam ? ` · <span style="color:#2563eb; font-weight:700;">[모의고사 ${escHtml(student.mockExam)}]</span>` : ''}
+      `;
+    }
+
+    // 5. 상단 스트립 레이블 업데이트
+    const activeLabel = $("#activeStudentLabel");
+    if (activeLabel) {
+      activeLabel.textContent = `${student.stuNumber} ${student.stuName} (${student.subject || '교과'} · ${student.targetUni1 ? student.targetUni1.split(' ')[0] : '대입상담'})`;
+    }
+
+    if ($("#memo")) {
+      $("#memo").placeholder = `[${student.stuName}] 학생의 새로운 추가 수업 활동 사실과 성취 변화를 입력하세요...`;
+      $("#memo").focus();
+    }
+
+    alert(`✅ [${student.stuName}] 학생의 구글 시트 기존 세특 및 4번 대입 목표가 초안 작성기에 성공적으로 불러와졌습니다!`);
+  };
+
+  // 학생 명렬 모달 렌더링
+  window.renderStudentLoaderModal = function() {
+    const tbody = $("#studentLoaderTbody");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    const list = store.masterRecords();
+    list.forEach(s => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><b>${escHtml(s.stuNumber)}</b></td>
+        <td><strong style="color:#0f172a;">${escHtml(s.stuName)}</strong></td>
+        <td>${escHtml(s.subject || s.stuMajor || '공통')}</td>
+        <td style="font-size:12px; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escHtml(s.targetUni1 || '미정')}</td>
+        <td><span style="color:#059669; font-weight:700; font-size:11.5px;">${s.existingSetuk ? '세특 있음' : '작성대기'}</span></td>
+        <td>
+          <button class="btn-primary" style="padding:4px 10px; font-size:11.5px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+            불러오기 ➔
+          </button>
+        </td>
+      `;
+      tr.querySelector("button").addEventListener("click", () => {
+        window.loadStudentIntoDraft(s);
+        const modal = $("#studentLoaderModal");
+        if (modal) modal.hidden = true;
+      });
+      tbody.appendChild(tr);
+    });
+  };

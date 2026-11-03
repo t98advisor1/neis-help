@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <filter id="shadow3" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg3)"/>
+  <!-- Code Pasted Window -->
+  <g transform="translate(60, 40)" filter="url(#shadow3)">
+    <rect width="680" height="370" rx="12" fill="#1e1e1e"/>
+    <!-- Title Bar -->
+    <rect width="680" height="44" rx="12" fill="#2d2d2d"/>
+    <circle cx="24" cy="22" r="6" fill="#ef4444"/>
+    <circle cx="42" cy="22" r="6" fill="#f59e0b"/>
+    <circle cx="60" cy="22" r="6" fill="#10b981"/>
+    <text x="80" y="27" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" fill="#cbd5e1">Google Apps Script - 완성 코드 적용</text>
+    <!-- Code Editor with pasted code -->
+    <g transform="translate(30, 60)">
+      <text x="0" y="20" font-family="Courier New, monospace" font-size="12" fill="#6ee7b7">/** [2026 통합 학교생활기록부 &amp; 대입상담 커스텀 엔진] **/</text>
+      <rect x="-6" y="32" width="630" height="30" rx="4" fill="rgba(251, 191, 36, 0.2)" stroke="#f59e0b" stroke-width="1.5"/>
+      <text x="4" y="52" font-family="Courier New, monospace" font-size="13" font-weight="700" fill="#fbbf24">const GEMINI_API_KEY = "여기에_발급받은_무료_API_키_입력"; // (무료 키)</text>
+      <text x="0" y="90" font-family="Courier New, monospace" font-size="12" fill="#93c5fd">function AI_SETUK(memo, targetUni, major, subject) {</text>
+      <text x="20" y="110" font-family="Courier New, monospace" font-size="12" fill="#cbd5e1">// 나이스 1,500 Byte 준수 3단 구조 세특 자동 완성 엔진</text>
+      <text x="0" y="130" font-family="Courier New, monospace" font-size="12" fill="#93c5fd">}</text>
+      <text x="0" y="160" font-family="Courier New, monospace" font-size="12" fill="#c084fc">function NEIS_BYTE(text) {</text>
+      <text x="20" y="180" font-family="Courier New, monospace" font-size="12" fill="#cbd5e1">// 한글 3Byte, 엔터 2Byte 교육부 공식 나이스 글자수 계산</text>
+      <text x="0" y="200" font-family="Courier New, monospace" font-size="12" fill="#c084fc">}</text>
+      <!-- Save Button Highlight -->
+      <g transform="translate(440, 230)">
+        <rect width="180" height="42" rx="8" fill="#2563eb" stroke="#60a5fa" stroke-width="2"/>
+        <text x="90" y="26" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-weight="800" fill="#ffffff">💾 저장 (Ctrl + S)</text>
+      </g>
+    </g>
+  </g>
+  <!-- Step Badge -->
+  <g transform="translate(60, 415)">
+    <rect width="680" height="30" rx="6" fill="#e11d48"/>
+    <text x="340" y="20" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="13" font-weight="800" fill="#ffffff">3단계: 무료 API 키 입력 후 상단 디스켓 아이콘(💾 저장, Ctrl+S) 클릭</text>
+  </g>
+</svg>

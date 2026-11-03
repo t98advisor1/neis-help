@@ -484,9 +484,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         <li>나이스 분량(Byte) 검사</li><li>금지 표현 사전</li><li>특기사항 초안 작성</li><li>133개 대학 2027 입결DB</li><li>2028 5등급제 환산</li><li>구글 시트 1:1 실시간 연동</li>
       </ul>
       <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:8px;">
-        <a class="op-cta reveal" style="--d:.32s; margin-top:0;" href="#menu">시작하기 <span aria-hidden="true">↓</span></a>
-        <button type="button" class="op-cta reveal" id="heroBtnGoogleSync" style="--d:.36s; margin-top:0; background:#ffffff; color:#1e293b; border:1px solid #cbd5e1; cursor:pointer; font-weight:700;">구글 계정 시트 동기화</button>
-        <a class="op-cta reveal" style="--d:.40s; margin-top:0; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; font-weight:700;" href="#sec-counsel-scroll">대입 진학상담 바로가기 ↓</a>
+        <a class="op-cta op-cta-primary reveal" style="--d:.32s; margin-top:0;" href="#menu">시작하기 <span aria-hidden="true">↓</span></a>
+        <button type="button" class="op-cta op-cta-sheet reveal" id="heroBtnGoogleSync" style="--d:.36s; margin-top:0;">📊 구글 시트 연동</button>
+        <a class="op-cta op-cta-counsel reveal" style="--d:.40s; margin-top:0;" href="#sec-counsel-scroll">🎯 대입 진학상담 바로가기 ↓</a>
       </div>
       <p class="op-caution reveal" style="--d:.4s">[주의] 본 프로그램은 참고용 자료입니다. 최종 판단은 반드시 교사가 직접 확인해 주세요.</p>
     </div>
@@ -510,7 +510,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <p class="op-lead">학교생활기록부 관찰 메모 초안 작성부터 엑셀·PDF 일괄 점검, 133개 대학 대입 진학상담까지 한곳에서 유기적으로 연결됩니다.</p>
     </div>
     <div class="op-cards">
-      <button class="op-card reveal" style="--d:.06s" data-open="make">
+      <button class="op-card bounce-pop-coral reveal" style="--d:.06s" data-open="make">
         <span class="no">01 · DRAFTING</span>
         <span class="ic">✏️</span>
         <b>생기부 초안 작성</b>
@@ -619,15 +619,36 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
             <h2 class="op-panel-title">생기부 초안 작성</h2>
             <p class="op-panel-sub" style="margin:0;">수업 중 관찰한 활동 메모로 2026학년도 기재요령 기준 문단을 작성하고 바이트·금지 표현을 점검합니다. <span id="rulesBadge" class="privacy-badge" style="margin-left:6px;">2026 기재요령 기준</span></p>
           </div>
-          <nav class="us-seg" aria-label="초안 작성 하위 메뉴">
-            <a href="#make" data-tab-link="make" class="is-active" aria-current="page">초안 작성</a>
-            <a href="#saved" data-tab-link="saved">저장함 · 엑셀</a>
-            <a href="#library" data-tab-link="library">참고 예시 · 내 규칙</a>
-            <a href="#guide" data-tab-link="guide">AI 연결 · API 설정</a>
-          </nav>
-          <div id="viewWidthSeg" hidden>
-            <button type="button" data-width="wide">넓게</button>
-            <button type="button" data-width="narrow">좁게</button>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <button type="button" id="btnOpenDraftStepModal" class="btn primary" style="background:#2563eb; border:none; padding:8px 16px; font-size:13px; font-weight:800; border-radius:999px; box-shadow:0 4px 14px rgba(37,99,235,0.4); cursor:pointer;">
+              ⚡ 팝업 스크롤 단계별 작성 모드 ➔
+            </button>
+            <nav class="us-seg" aria-label="초안 작성 하위 메뉴">
+              <a href="#make" data-tab-link="make" class="is-active" aria-current="page">초안 작성</a>
+              <a href="#saved" data-tab-link="saved">저장함 · 엑셀</a>
+              <a href="#library" data-tab-link="library">참고 예시 · 내 규칙</a>
+              <a href="#guide" data-tab-link="guide">AI 연결 · API 설정</a>
+            </nav>
+          </div>
+        </div>
+
+        <!-- 📊 구글 시트 실시간 연동 스트립 (샘플 5명 데이터 탑재) -->
+        <div id="gsyncMakeBar" style="background:linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border:1.5px solid #93c5fd; border-radius:12px; padding:12px 18px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span>
+            <strong style="font-size:13px; color:#1e3a8a;">구글 시트 실시간 연동 활성화:</strong>
+            <span id="activeStudentLabel" style="font-size:13.5px; font-weight:800; color:#0f172a; background:#ffffff; padding:3px 10px; border-radius:6px; border:1px solid #bfdbfe;">
+              20101 김태형 (생명과학Ⅰ · 고려대 1지망)
+            </span>
+            <span id="activeStudentByteBadge" style="font-size:11.5px; font-weight:700; color:#059669; background:#dcfce7; padding:2px 8px; border-radius:999px;">기존 420 Byte 입력됨</span>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button type="button" id="btnOpenStudentLoaderModal" class="btn secondary" style="padding:5px 12px; font-size:12px; font-weight:700; background:#ffffff; border:1px solid #93c5fd; color:#1d4ed8; border-radius:6px; cursor:pointer;">
+              📋 학생 선택 · 불러오기 ↗
+            </button>
+            <button type="button" id="btnOpenGasGuideBtn" class="btn secondary" style="padding:5px 12px; font-size:12px; font-weight:700; background:#ffffff; border:1px solid #86efac; color:#15803d; border-radius:6px; cursor:pointer;">
+              📑 Apps Script 사용법 ↗
+            </button>
           </div>
         </div>
 
@@ -696,13 +717,42 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
               </div>
 
               <div class="card">
-                <h2 class="card-title"><span class="step">2</span> 수업 관찰 메모</h2>
+                <h2 class="card-title"><span class="step">2</span> 수업 관찰 메모 (구글 시트 연동)</h2>
+                
+                <!-- 🎯 4번 항목: 대입 진학상담 1~6지망 목표 요약 스트립 (선생님 요청 완벽 구현) -->
+                <div id="targetUniSummaryBox" style="background:#f8fafc; border:1.5px solid #cbd5e1; border-left:4px solid #2563eb; border-radius:8px; padding:10px 14px; margin-bottom:12px; font-size:12.5px; color:#334155; line-height:1.5;">
+                  <div id="targetUniSummaryText">
+                    <strong>🎯 2027 대입 진학 목표 (4번 항목 연동):</strong>
+                    <span style="color:#0f172a; font-weight:700;">1지망 고려대 생명공학부 (학업우수 1.78 [적정])</span> · 
+                    <span>2지망 성균관대 융합생명 (1.92 [안정])</span> · 
+                    <span>3지망 한양대 생명공학 (1.52 [소신])</span>
+                    <span style="color:#2563eb; font-weight:700; margin-left:6px;">[모의고사 3합 7등급 / 4합8 충족 유력]</span>
+                  </div>
+                </div>
+
+                <!-- 💡 현재까지 구글 시트에 입력된 세특 내용 (선생님 요청 완벽 구현) -->
+                <div id="existingSetukBox" style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:10px; padding:12px 14px; margin-bottom:14px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <span style="font-size:12.5px; font-weight:800; color:#15803d; display:flex; align-items:center; gap:6px;">
+                      📄 현재까지 구글 시트에 입력된 세특 내용
+                      <span id="existingSetukBytes" style="font-size:11px; background:#dcfce7; padding:2px 6px; border-radius:4px; font-weight:700;">420 Byte</span>
+                    </span>
+                    <div style="display:flex; gap:6px;">
+                      <button type="button" id="btnCopyExistingSetuk" class="btn ghost small" style="padding:2px 8px; font-size:11.5px; color:#15803d; border-color:#86efac;">📋 복사</button>
+                      <button type="button" id="btnAppendExistingSetuk" class="btn ghost small" style="padding:2px 8px; font-size:11.5px; color:#1e40af; border-color:#bfdbfe;">+ 관찰 메모에 덧붙이기</button>
+                    </div>
+                  </div>
+                  <div id="existingSetukText" style="font-size:13px; color:#1e293b; line-height:1.6; background:#ffffff; border:1px solid #bbf7d0; border-radius:6px; padding:8px 12px; max-height:120px; overflow-y:auto;">
+                    삼투현상과 세포막 선택적 투과성에 대한 가설 검증 실험을 설계하고, 농도 차이에 따른 원형질 분리 과정을 현미경으로 정밀 관찰하여 인지질 이중층 구조의 물질 수송 메커니즘을 규명함. 최신 바이오 신약 기술 동향을 조사하여 생명윤리적 관점에서 발표함.
+                  </div>
+                </div>
+
                 <div id="piiWarningBox" class="caution" style="display:none; margin-bottom:12px; padding:10px 14px;">
                   <strong>학생 식별 표현 감지:</strong> <span id="piiDetectedWords"></span>
                   <button type="button" id="btnMaskPII" class="ghost" style="margin-left:8px; padding:2px 8px; font-size:13px;">'OOO'으로 바꾸기</button>
                 </div>
-                <label class="label" for="memo">무엇을, 어떻게 했고, 어떤 변화가 있었는지 적어 주세요 (학생 이름·학교명 제외)</label>
-                <textarea id="memo" rows="6" placeholder="예: 기후 변화 영어 기사를 읽고 3문장으로 요약해 발표함. 발표 뒤 질문을 던져 토의를 이끔. 동료 피드백을 반영해 쉬운 표현으로 수정본을 다시 제출함."></textarea>
+                <label class="label" for="memo">✏️ 새로운 추가 수업 관찰 메모 입력 (구글 시트에 추가할 활동 사실을 적어 주세요)</label>
+                <textarea id="memo" rows="5" placeholder="예: 추가 실험에서 세포막 물질 수송 단백질 모델을 직접 제작하고, 효소 반응 속도론과 연결하여 탐구 보고서를 완성함."></textarea>
                 <div id="memoNotes" style="margin-top:8px;"></div>
 
                 <details class="obs" id="obsBox">
@@ -1370,7 +1420,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
                   <th>모집인원</th>
                   <th>전형방법</th>
                   <th>수능최저</th>
-                  <th>세특/상담 담기</th>
+                  <th>선행학습 영향평가</th>
+                  <th>입학처 &amp; 어디가</th>
+                  <th>수시 6장 담기</th>
                 </tr>
               </thead>
               <tbody id="counselNonsulTbody"></tbody>
@@ -1475,19 +1527,50 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label" for="targetUni1">1지망 대학 / 전형명 (핵심 목표) *</label>
-              <input class="form-input" id="targetUni1" type="text" placeholder="예: 한양대 컴퓨터소프트웨어 (논술전형)">
+            <!-- 수시 6장 대학·전형 지원 전략 라인업 (구글 시트 1:1 동기화) -->
+            <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:14px; margin-bottom:14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span style="font-size:13.5px; font-weight:800; color:#0f172a;">🎯 2027 수시 6장 지원 전략 라인업</span>
+                <span style="font-size:11px; font-weight:700; color:#1d4ed8; background:#dbeafe; padding:2px 8px; border-radius:999px;">구글 시트 1:1 동기화</span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:10px; margin-bottom:10px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="targetUni1" style="font-size:11.5px; font-weight:700; color:#1e293b;">1지망 (핵심) *</label>
+                  <input class="form-input" id="targetUni1" type="text" placeholder="예: 고려대 생명공학(학우) · 1.78 [적정]">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="targetUni2" style="font-size:11.5px; font-weight:700; color:#1e293b;">2지망</label>
+                  <input class="form-input" id="targetUni2" type="text" placeholder="예: 성균관대 융합(융합형) · 1.92 [안정]">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="targetUni3" style="font-size:11.5px; font-weight:700; color:#1e293b;">3지망</label>
+                  <input class="form-input" id="targetUni3" type="text" placeholder="예: 한양대 생명(지균) · 1.52 [소신]">
+                </div>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:10px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="targetUni4" style="font-size:11.5px; font-weight:700; color:#1e293b;">4지망</label>
+                  <input class="form-input" id="targetUni4" type="text" placeholder="예: 중앙대 생명(CAU) · 1.98 [안정]">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="targetUni5" style="font-size:11.5px; font-weight:700; color:#1e293b;">5지망</label>
+                  <input class="form-input" id="targetUni5" type="text" placeholder="예: 경희대 유전(네오) · 2.10 [안정]">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="targetUni6" style="font-size:11.5px; font-weight:700; color:#1e293b;">6지망</label>
+                  <input class="form-input" id="targetUni6" type="text" placeholder="예: 건국대 줄기세포(KU) · 2.25 [안정]">
+                </div>
+              </div>
             </div>
 
             <div class="form-grid-2">
               <div class="form-group">
-                <label class="form-label" for="targetUni2">2지망 대학 / 전형</label>
-                <input class="form-input" id="targetUni2" type="text" placeholder="예: 중앙대 소프트웨어 (CAU융합)">
+                <label class="form-label" for="stuMockExam">모의고사 성적 &amp; 수능최저 진단</label>
+                <input class="form-input" id="stuMockExam" type="text" placeholder="예: 6모 국수영탐 2/1/2/1 (3합 7등급 유력)">
               </div>
               <div class="form-group">
-                <label class="form-label" for="targetUni3">3지망 대학 / 전형</label>
-                <input class="form-input" id="targetUni3" type="text" placeholder="예: 숭실대 AI융합 (학생부우수자)">
+                <label class="form-label" for="stuDocsUrl">Google Docs 1:1 상담일지 링크</label>
+                <input class="form-input" id="stuDocsUrl" type="url" placeholder="예: https://docs.google.com/document/d/...">
               </div>
             </div>
 
@@ -1562,12 +1645,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
                   <th>이름</th>
                   <th>희망학과</th>
                   <th>9등급</th>
-                  <th>5등급추정</th>
-                  <th>1지망 대학/전형</th>
-                  <th>2지망</th>
-                  <th>3지망</th>
+                  <th>5등급</th>
+                  <th>모의고사(최저)</th>
+                  <th>수시 1~3지망</th>
+                  <th>수시 4~6지망</th>
                   <th>담임상담의견</th>
                   <th>세특관찰기록</th>
+                  <th>Docs일지</th>
                   <th>상태</th>
                   <th>수정</th>
                 </tr>
@@ -1753,7 +1837,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         </label>
         <label class="ud-radio-item live-radio-pop" id="lblRadioAdiga">
           <input type="radio" name="udAction" value="adiga">
-          <span>대학어디가 입결 조회</span>
+          <span>대학어디가 1:1 직행</span>
+        </label>
+        <label class="ud-radio-item live-radio-pop" id="lblRadioPriorLearning">
+          <input type="radio" name="udAction" value="priorLearning">
+          <span>📑 선행학습 영향평가 보고서</span>
         </label>
         <label class="ud-radio-item live-radio-pop" id="lblRadioScan">
           <input type="radio" name="udAction" value="scan">
@@ -2456,6 +2544,156 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <!-- 자바스크립트로 133개 대학 카드 렌더링 -->
   </div>
 </dialog>
+
+
+<!-- ── 4화면 스타일 단계별 팝업 스크롤 세특 작성 모달 (DraftStepDialog) ── -->
+<div class="viewer-modal-backdrop" id="draftStepModal" hidden>
+  <div class="draft-step-dialog">
+    <div class="draft-step-head">
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <h2 style="font-size:18px; font-weight:800; color:#0f172a; margin:0;">📝 단계별 생기부 초안 작성 &amp; 구글 시트 연동</h2>
+        <span style="font-size:11.5px; font-weight:700; color:#1d4ed8; background:#dbeafe; padding:3px 8px; border-radius:999px;">팝업 스크롤 집중 모드</span>
+      </div>
+      <button class="v-close-btn" id="draftStepCloseBtn" style="padding:6px 14px; font-size:13px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer; font-weight:700;">✕ 닫기</button>
+    </div>
+    
+    <div class="draft-step-body">
+      <!-- 4번 항목: 목표 대학 수시 6장 스트립 -->
+      <div id="mTargetStrip" style="background:#f8fafc; border:1.5px solid #cbd5e1; border-left:4px solid #2563eb; border-radius:8px; padding:12px 16px; margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:800; color:#1e293b; margin-bottom:4px;">🎯 4번 대입 진학상담 연동 현황:</div>
+        <div id="mTargetContent" style="font-size:13px; color:#334155;">
+          <strong>1지망:</strong> 고려대 생명공학부 [학종 1.78 적정] · <strong>2지망:</strong> 성균관대 융합생명 [1.92 안정] · <strong>3지망:</strong> 한양대 [1.52 소신]
+        </div>
+      </div>
+
+      <!-- 기존 세특 내용 확인 박스 -->
+      <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:10px; padding:14px; margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="color:#15803d; font-size:13.5px;">📄 현재까지 구글 시트에 입력된 세특 내용</strong>
+          <span id="mExistBytes" style="font-size:11.5px; font-weight:700; color:#15803d; background:#dcfce7; padding:2px 8px; border-radius:999px;">420 Byte</span>
+        </div>
+        <div id="mExistText" style="background:#ffffff; border:1px solid #bbf7d0; border-radius:6px; padding:10px 14px; font-size:13px; color:#1e293b; line-height:1.6; max-height:110px; overflow-y:auto;">
+          삼투현상과 세포막 선택적 투과성에 대한 가설 검증 실험을 설계하고...
+        </div>
+      </div>
+
+      <!-- 추가 관찰 메모 입력 -->
+      <div style="margin-bottom:16px;">
+        <label class="form-label" style="font-size:13.5px; font-weight:800; color:#0f172a; margin-bottom:6px; display:block;">
+          ✏️ 추가 수업 관찰 메모 입력 (새로운 관찰 사실)
+        </label>
+        <textarea id="mModalMemo" rows="4" class="form-input" style="width:100%; border:1.5px solid #cbd5e1; border-radius:8px; padding:10px 12px; font-size:13.5px;" placeholder="오늘 수업 중 관찰된 학생의 구체적 탐구활동과 문제해결 과정을 적어주세요..."></textarea>
+      </div>
+
+      <!-- AI 모델 선택 및 초안 생성 버튼 -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:13px; font-weight:700; color:#334155;">AI 생성 엔진:</span>
+          <select id="mModalAiModel" style="padding:5px 10px; font-size:12.5px; border-radius:6px; border:1.5px solid #cbd5e1; font-weight:700;">
+            <option value="gemini" selected>Google Gemini (무료/빠름)</option>
+            <option value="claude">Anthropic Claude 3.5 (심층 윤문)</option>
+            <option value="gpt">OpenAI GPT-4o (정밀 문장)</option>
+          </select>
+        </div>
+        <button type="button" id="mBtnModalGenerate" class="btn primary" style="background:#ff385c; color:#fff; border:none; padding:10px 20px; font-size:14px; font-weight:800; border-radius:8px; cursor:pointer; box-shadow:0 4px 14px rgba(255,56,92,0.4);">
+          🚀 나이스 1,500 Byte 초안 생성하기
+        </button>
+      </div>
+
+      <!-- 완성 문단 결과 영역 -->
+      <div id="mResultBox" style="margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <strong style="font-size:13.5px; color:#0f172a;">✨ 최종 완성 세특 초안 (기존 내용 + 추가 메모 결합)</strong>
+          <span id="mModalByteCount" style="font-size:12px; font-weight:800; color:#2563eb;">0 / 1,500 Byte</span>
+        </div>
+        <textarea id="mModalResultText" rows="6" class="form-input" style="width:100%; border:1.5px solid #cbd5e1; border-radius:8px; padding:12px; font-size:13.5px; line-height:1.6;" placeholder="AI 초안 생성 버튼을 누르면 기존 세특과 추가 메모가 유기적으로 연결된 완성 문단이 출력됩니다..."></textarea>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <button type="button" id="mBtnCopyModalResult" class="btn secondary" style="padding:8px 16px; font-size:13px; font-weight:700;">📋 문단 복사</button>
+        <div style="display:flex; gap:8px;">
+          <button type="button" id="mBtnApplyToMainForm" class="btn secondary" style="padding:8px 16px; font-size:13px; font-weight:700; color:#2563eb; border-color:#93c5fd;">메인 폼에 반영</button>
+          <button type="button" id="mBtnSaveToSheet" class="btn primary" style="padding:8px 20px; font-size:13px; font-weight:800; background:#059669; border:none; color:#fff; border-radius:8px; cursor:pointer;">💾 구글 시트 저장 및 동기화</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 구글 시트 실시간 학생 명렬 불러오기 모달 (StudentLoaderModal) ── -->
+<div class="viewer-modal-backdrop" id="studentLoaderModal" hidden>
+  <div class="uni-detail-dialog" style="max-width:860px; max-height:85vh; overflow:hidden; display:flex; flex-direction:column;">
+    <div class="uni-detail-head">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <h2 style="font-size:18px; font-weight:800; color:#0f172a; margin:0;">📊 구글 시트 실시간 학생 명렬표 &amp; 세특 불러오기</h2>
+        <span style="font-size:11px; font-weight:700; color:#15803d; background:#dcfce7; padding:2px 8px; border-radius:999px;">샘플 5명 탑재</span>
+      </div>
+      <button class="v-close-btn" id="studentLoaderCloseBtn" style="padding:6px 12px; font-size:13px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer;">✕ 닫기</button>
+    </div>
+    <div style="padding:16px 20px; overflow-y:auto; flex:1;">
+      <p style="font-size:13px; color:#475569; margin-bottom:12px;">
+        학생을 선택하면 <strong>[현재까지 입력된 세특]</strong>과 <strong>[4번 대입 1~6지망 목표]</strong>가 초안 작성기에 즉시 로드됩니다.
+      </p>
+      <div class="finder-table-wrapper">
+        <table class="m-table">
+          <thead>
+            <tr>
+              <th>학번</th>
+              <th>이름</th>
+              <th>과목</th>
+              <th>수시 1지망 목표</th>
+              <th>기존 세특 현황</th>
+              <th>불러오기</th>
+            </tr>
+          </thead>
+          <tbody id="studentLoaderTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 구글 시트 전용 통합 Apps Script 5단계 캐러셀 모달 (GasCarouselModal) ── -->
+<div class="viewer-modal-backdrop" id="gasCarouselModal" hidden>
+  <div class="uni-detail-dialog" style="max-width:880px; max-height:90vh; overflow-y:auto;">
+    <div class="uni-detail-head">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <h2 style="font-size:18px; font-weight:800; color:#0f172a; margin:0;">⚡ 구글 시트 전용 통합 Apps Script 5단계 실무 캐러셀 가이드</h2>
+        <span style="font-size:11.5px; font-weight:700; color:#2563eb; background:#eff6ff; padding:2px 8px; border-radius:999px;">실제 화면 안내</span>
+      </div>
+      <button class="v-close-btn" id="gasCarouselCloseBtn" style="padding:6px 12px; font-size:13px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer;">✕ 닫기</button>
+    </div>
+    
+    <div style="padding:20px 24px;">
+      <!-- 캐러셀 슬라이드 뷰어 -->
+      <div id="gasSlideViewer" style="background:#0f172a; border-radius:12px; overflow:hidden; margin-bottom:16px; box-shadow:0 10px 25px rgba(0,0,0,0.3); min-height:360px; display:flex; align-items:center; justify-content:center;">
+        <img id="gasSlideImg" src="assets/gas-step1.svg" alt="Apps Script Step Guide" style="width:100%; height:auto; display:block;">
+      </div>
+
+      <!-- 슬라이드 단계 설명 카드 -->
+      <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; padding:14px 18px; margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <h3 id="gasSlideTitle" style="font-size:16px; font-weight:800; color:#0f172a; margin:0;">1단계: 구글 시트 메뉴 [확장 프로그램] ➔ [Apps Script] 클릭</h3>
+          <span id="gasSlideCounter" style="font-size:13px; font-weight:800; color:#2563eb; background:#eff6ff; padding:2px 10px; border-radius:999px;">1 / 5</span>
+        </div>
+        <p id="gasSlideDesc" style="font-size:13.5px; color:#334155; line-height:1.6; margin:0;">
+          구글 시트 상단 메뉴에서 <strong>[확장 프로그램]</strong>을 누른 뒤 <strong>[Apps Script]</strong>를 클릭하면 나만의 스크립트 에디터 창이 새 탭으로 열립니다.
+        </p>
+      </div>
+
+      <!-- 네비게이션 컨트롤 & 코드 복사 버튼 -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; gap:8px;">
+          <button type="button" id="btnGasPrev" class="btn secondary" style="padding:8px 16px; font-size:13px; font-weight:700;">◀ 이전 단계</button>
+          <button type="button" id="btnGasNext" class="btn primary" style="padding:8px 16px; font-size:13px; font-weight:700; background:#2563eb; color:#fff; border:none;">다음 단계 ▶</button>
+        </div>
+        <button type="button" id="btnCopyIntegratedGasScript" class="btn primary" style="padding:10px 22px; font-size:13.5px; font-weight:800; background:#059669; color:#fff; border:none; border-radius:8px; cursor:pointer; box-shadow:0 4px 14px rgba(5,150,105,0.4);">
+          📋 구글 시트용 통합 Apps Script 코드 1초 복사
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
