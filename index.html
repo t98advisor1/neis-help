@@ -1280,21 +1280,24 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <div class="finder-header">
             <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
               <div>
-                <h3 class="finder-title">🎯 내신 등급별 지원 가능 대학·전형 탐색 (5등급제 추정 병기)</h3>
-                <p class="finder-desc">학생의 교과 평균 등급을 입력하면 현행 9등급제 등록자 평균선과 <strong>2028 개편 5등급제 환산 추정선</strong>을 함께 분석합니다.</p>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                  <span style="font-size:11.5px; font-weight:800; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:999px; border:1px solid #86efac;">2028 개편 상담 최적화</span>
+                  <h3 class="finder-title" style="margin:0;">🎯 내신 등급별 지원 가능 대학·전형 탐색 (5등급제 기준)</h3>
+                </div>
+                <p class="finder-desc" style="margin:0;">현재 고1 등 <strong>2028 개편 5등급제 대상 학생</strong>의 내신 등급을 기준으로 133개 대학 지원 가능권(안정·적정·소신)을 분석합니다.</p>
               </div>
               <div style="background:var(--page); border:1px solid var(--hairline); border-radius:var(--r-full); padding:3px; display:inline-flex; gap:2px;">
-                <button class="chip on" id="modeGrade9" style="font-size:12px; padding:4px 12px;">9등급제(현행)</button>
-                <button class="chip" id="modeGrade5" style="font-size:12px; padding:4px 12px;">5등급제(개편안)</button>
+                <button class="chip on" id="modeGrade5" style="font-size:12px; padding:4px 14px; font-weight:800; background:#0f766e; color:#fff;">5등급제(상담 기준)</button>
+                <button class="chip" id="modeGrade9" style="font-size:12px; padding:4px 14px;">9등급제(참고용)</button>
               </div>
             </div>
           </div>
 
           <div class="finder-control-grid">
             <div class="grade-box">
-              <label for="counselGradeInput" id="counselGradeInputLabel">학생 내신 (9등급제 기준)</label>
-              <input class="grade-input-large" id="counselGradeInput" type="number" step="0.05" min="1.0" max="9.0" value="2.50">
-              <span style="font-size:12px; font-weight:700; color:var(--muted);" id="counselGradeConvertedHint">≈ 2028 5등급제 추정: 2.11등급</span>
+              <label for="counselGradeInput" id="counselGradeInputLabel" style="font-weight:800; color:#0f766e;">학생 내신 (2028 5등급제 기준) *</label>
+              <input class="grade-input-large" id="counselGradeInput" type="number" step="0.05" min="1.0" max="5.0" value="1.85">
+              <span style="font-size:12px; font-weight:700; color:#2563eb;" id="counselGradeConvertedHint">≈ 9등급제 환산 약 2.18등급</span>
             </div>
 
             <div>
@@ -1344,9 +1347,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
                   <th>계열</th>
                   <th>전형유형</th>
                   <th>전형명</th>
-                  <th>9등급제 (등록자 평균)</th>
-                  <th>2028 5등급제 추정</th>
-                  <th>세특/상담 담기</th>
+                  <th style="color:#0f766e; font-weight:800; background:#f0fdf4;">🌟 2028 5등급제 (합격선 기준)</th>
+                  <th style="color:#64748b;">9등급제 (전년도 참고)</th>
+                  <th>수시 6장 담기</th>
                 </tr>
               </thead>
               <tbody id="counselFinderTbody"></tbody>
@@ -1518,12 +1521,12 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <div class="form-grid-2">
               <div class="form-group">
-                <label class="form-label" for="stuGrade9">9등급제 내신</label>
-                <input class="form-input" id="stuGrade9" type="number" step="0.01" placeholder="예: 2.15">
+                <label class="form-label" for="stuGrade5" style="color:#0f766e; font-weight:800;">2028 5등급제 내신 (상담 기준) *</label>
+                <input class="form-input" id="stuGrade5" type="number" step="0.01" placeholder="예: 1.48 (1.00~5.00)" style="border-color:#0f766e; font-weight:700;">
               </div>
               <div class="form-group">
-                <label class="form-label" for="stuGrade5">2028 5등급제 추정</label>
-                <input class="form-input" id="stuGrade5" type="number" step="0.01" placeholder="예: 1.85">
+                <label class="form-label" for="stuGrade9">9등급제 환산 내신 (참고용 자동계산)</label>
+                <input class="form-input" id="stuGrade9" type="number" step="0.01" placeholder="예: 1.85 (자동 환산)" style="background:#f8fafc;">
               </div>
             </div>
 
@@ -1644,8 +1647,8 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
                   <th>학번</th>
                   <th>이름</th>
                   <th>희망학과</th>
-                  <th>9등급</th>
-                  <th>5등급</th>
+                  <th style="color:#0f766e; font-weight:800;">5등급제(기준)</th>
+                  <th style="color:#64748b;">9등급(참고)</th>
                   <th>모의고사(최저)</th>
                   <th>수시 1~3지망</th>
                   <th>수시 4~6지망</th>
@@ -1872,7 +1875,17 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   <footer class="app-footer">
     <span id="visit-counter" class="visit-counter"></span>
     <span class="build" id="build" title="화면 코드가 마지막으로 바뀐 때입니다. 고친 내용이 안 보이면 새로고침(⌘⇧R) 해 주세요."></span>
-    <span class="copyright">Copyright ⓒ 2026 math-tong. All rights reserved.</span>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <span class="copyright">Copyright ⓒ 2026 <a href="https://blog.naver.com/math-tong" target="_blank" rel="noreferrer" style="color:#ff385c; font-weight:800; text-decoration:none;">math-tong ↗</a>. All rights reserved.</span>
+        <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap; font-size:13px;">
+          <a href="https://t-ong.vercel.app" target="_blank" rel="noreferrer" style="color:#15803d; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#f0fdf4; padding:3px 10px; border-radius:999px; border:1px solid #bbf7d0;">
+            📱 모바일 교무수첩 (t-ong) ↗
+          </a>
+          <a href="https://blog.naver.com/math-tong" target="_blank" rel="noreferrer" style="color:#2563eb; font-weight:700; text-decoration:none;">
+            ✍️ math-tong 공식 블로그 (교사 연구실) ↗
+          </a>
+        </div>
+      </div>
   </footer>
 </section>
 
@@ -2091,7 +2104,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         <span style="font-size:11px; color:var(--muted);">Cloudflare R2 초고속 CDN 분산 제공</span>
       </div>
       <div class="viewer-attribution-box" style="width:100%;">
-        <strong>📌 저작권 및 출처 안내:</strong> 본 시스템의 전체적인 내용은 수학 교과서, 학교생활기록부 기재요령 매뉴얼 및 동료 교사들의 생기부 초안 문구를 참고하여 작성되었습니다. 디자인과 전체적인 시스템 구성은 개발자(math-tong)에게 있으며, 1·2학년 담임선생님의 생기부 및 진학 상담 부담을 덜어드리기 위해 정성껏 제작된 관계형 데이터 솔루션입니다.
+        <strong>📌 저작권 및 출처 안내:</strong> 본 시스템의 전체적인 내용은 수학 교과서, 학교생활기록부 기재요령 매뉴얼 및 동료 교사들의 생기부 초안 문구를 참고하여 작성되었습니다. 디자인과 전체적인 시스템 구성은 개발자(<a href="https://blog.naver.com/math-tong" target="_blank" rel="noreferrer" style="color:#ff385c; font-weight:800; text-decoration:underline;">math-tong</a>)에게 있으며, <a href="https://t-ong.vercel.app" target="_blank" rel="noreferrer" style="color:#059669; font-weight:800; text-decoration:underline;">모바일 교무수첩(t-ong)</a>과 함께, 1·2학년 담임선생님의 생기부 및 진학 상담 부담을 덜어드리기 위해 정성껏 제작된 관계형 데이터 솔루션입니다.
       </div>
     </div>
   </div>

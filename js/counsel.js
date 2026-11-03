@@ -701,9 +701,9 @@
     nonsulOnly: false,
     favsOnly: false,
 
-    finderMode: "9",
-    finderGrade9: 2.50,
-    finderGrade5: 2.11,
+    finderMode: "5", // 2028 개편 5등급제 기본 상담 모드
+    finderGrade5: 1.85,
+    finderGrade9: 2.18,
     finderTrk: "인",
     finderTy: "전체",
     finderReg: "전체",
@@ -1363,10 +1363,10 @@
     if (!tbody || typeof GRADEDB === "undefined") return;
     tbody.innerHTML = "";
 
-    const targetG9 = appState.finderGrade9 || 2.50;
+    const isMode5 = (appState.finderMode === "5");
+    const targetG5 = appState.finderGrade5 || 1.85;
+    const targetG9 = appState.finderGrade9 || (targetG5 ? calcGrade9(targetG5) : 2.18);
     const range = appState.finderRange || 0.3;
-    const minG = targetG9 - range;
-    const maxG = targetG9 + range;
 
     const filtered = GRADEDB.filter(r => {
       const [trk, reg, ty, uName, trnName, g9, fillRate, page, med] = r;
@@ -1378,12 +1378,23 @@
         if (appState.finderReg === "비수도권" && reg !== "비") return false;
       }
 
-      if (g9 == null || g9 < minG || g9 > maxG) return false;
+      if (g9 == null) return false;
+      const g5 = calcGrade5(g9);
+
+      if (isMode5) {
+        if (g5 == null || Math.abs(g5 - targetG5) > range) return false;
+      } else {
+        if (Math.abs(g9 - targetG9) > range) return false;
+      }
       return true;
     });
 
-    // 등록자 평균 내림차순 정렬
-    filtered.sort((a, b) => a[5] - b[5]);
+    // 5등급제 기준 또는 9등급제 기준 오름차순 정렬 (합격선 우수 순)
+    if (isMode5) {
+      filtered.sort((a, b) => (calcGrade5(a[5]) || 9) - (calcGrade5(b[5]) || 9));
+    } else {
+      filtered.sort((a, b) => a[5] - b[5]);
+    }
 
     if (countEl) countEl.textContent = filtered.length.toLocaleString();
 
@@ -1401,11 +1412,14 @@
       const [trk, reg, ty, uName, trnName, g9, fillRate, page, med] = r;
       const g5 = calcGrade5(g9);
 
-      const diff = g9 - targetG9;
+      // 기준 등급에 따른 판정 diff 계산
+      const compVal = isMode5 ? g5 : g9;
+      const targetVal = isMode5 ? targetG5 : targetG9;
+      const diff = compVal - targetVal;
       let diffHtml = "";
       if (Math.abs(diff) < 0.05) diffHtml = '<span style="color:#0a7d55; font-size:11.5px; font-weight:700;">(적정)</span>';
-      else if (diff > 0) diffHtml = `<span style="color:#2563eb; font-size:11.5px;">(+${diff.toFixed(2)} 안정)</span>`;
-      else diffHtml = `<span style="color:#dc2626; font-size:11.5px;">(${diff.toFixed(2)} 소신)</span>`;
+      else if (diff > 0) diffHtml = `<span style="color:#2563eb; font-size:11.5px; font-weight:700;">(+${diff.toFixed(2)} 안정)</span>`;
+      else diffHtml = `<span style="color:#dc2626; font-size:11.5px; font-weight:700;">(${diff.toFixed(2)} 소신)</span>`;
 
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -1420,8 +1434,12 @@
         <td><span class="uni-spec-item">${trkMap[trk] || trk}</span></td>
         <td><span class="uni-spec-item">${tyMap[ty] || ty}</span></td>
         <td><b>${escHtml(trnName)}</b></td>
-        <td><strong style="color:var(--rausch); font-size:14px;">${g9.toFixed(2)}</strong> ${diffHtml}</td>
-        <td><span style="font-weight:700; color:#0f766e; font-size:14px;">${g5 ? g5.toFixed(2) : '-'}</span></td>
+        <td style="background:#f0fdf4;">
+          <strong style="color:#0f766e; font-size:15px; font-weight:900;">${g5 ? g5.toFixed(2) : '-'}</strong> ${diffHtml}
+        </td>
+        <td>
+          <span style="color:#64748b; font-size:12.5px; font-weight:600;">${g9.toFixed(2)}</span>
+        </td>
         <td>
           <button class="btn-primary" style="padding:6px 12px; font-size:12px; font-weight:800; background:#ff385c; color:#ffffff !important; border:none; border-radius:6px; cursor:pointer; box-shadow:0 2px 8px rgba(255,56,92,0.35); display:inline-flex; align-items:center; gap:4px;" data-f-uni="${escHtml(uName)}" data-f-trn="${escHtml(trnName)}">
             🎯 6장 담기
@@ -1734,6 +1752,27 @@
     }
 
     // 🎯 학급 세특 동기화 & 점검 센터 핵심 액션 바
+    
+    // 5등급제 <-> 9등급제 실시간 상호 자동 계산 바인딩 (2028 개편 최적화)
+    const stuG5Input = $("#stuGrade5");
+    const stuG9Input = $("#stuGrade9");
+    if (stuG5Input && stuG9Input) {
+      stuG5Input.addEventListener("input", () => {
+        const val5 = parseFloat(stuG5Input.value);
+        if (!isNaN(val5) && val5 >= 1.0 && val5 <= 5.0) {
+          const val9 = calcGrade9(val5);
+          if (val9) stuG9Input.value = val9.toFixed(2);
+        }
+      });
+      stuG9Input.addEventListener("input", () => {
+        const val9 = parseFloat(stuG9Input.value);
+        if (!isNaN(val9) && val9 >= 1.0 && val9 <= 9.0) {
+          const val5 = calcGrade5(val9);
+          if (val5) stuG5Input.value = val5.toFixed(2);
+        }
+      });
+    }
+
     const btnDlExcel = $("#btnMasterDownloadExcel");
     if (btnDlExcel) {
       btnDlExcel.addEventListener("click", () => {
@@ -2165,8 +2204,8 @@ function NEIS_BYTE(text) {
             <td><b>${escHtml(r.stuNumber)}</b></td>
             <td><strong style="color:var(--ink);">${escHtml(r.stuName)}</strong></td>
             <td>${escHtml(r.stuMajor || '-')}</td>
-            <td>${escHtml(r.grade9 || '-')}</td>
-            <td>${escHtml(r.grade5 || '-')}</td>
+            <td><strong style="color:#0f766e; font-size:13.5px; font-weight:800;">${r.grade5 ? Number(r.grade5).toFixed(2) : '-'}</strong></td>
+            <td><span style="color:#64748b; font-size:12px;">${r.grade9 ? Number(r.grade9).toFixed(2) : '-'}</span></td>
             <td><span style="font-size:11.5px; color:#2563eb; font-weight:700;">${escHtml(r.mockExam || '-')}</span></td>
             <td>
               <div style="font-size:12px;"><b>1:</b> ${escHtml(r.targetUni1 || '-')}</div>
