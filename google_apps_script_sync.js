@@ -43,6 +43,32 @@ function doGet(e) {
       });
     }
 
+    // === [사용자 승인 상태 조회 API] ===
+    if (action === "check_access") {
+      var email = (e.parameter.email || "").trim().toLowerCase();
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var appSheet = ss.getSheetByName("사용자승인") || ss.getSheetByName("승인관리");
+      if (!appSheet) {
+        return jsonResponse({ found: false, approved: false, status: "no_sheet" });
+      }
+      var rows = appSheet.getDataRange().getValues();
+      for (var i = 1; i < rows.length; i++) {
+        var rowEmail = String(rows[i][3]).trim().toLowerCase();
+        if (rowEmail === email) {
+          var status = String(rows[i][6]).trim();
+          var isApproved = (status === "승인" || status.toLowerCase() === "true" || status.toLowerCase() === "approved");
+          return jsonResponse({
+            found: true,
+            approved: isApproved,
+            status: status,
+            name: rows[i][1],
+            school: rows[i][2]
+          });
+        }
+      }
+      return jsonResponse({ found: false, approved: false, status: "not_found" });
+    }
+
     if (action === "getStudents") {
       var data = sheet.getDataRange().getValues();
       if (data.length <= 1) {
@@ -146,6 +172,29 @@ function doPost(e) {
 
         return jsonResponse({ success: true, action: "updated", row: foundRow, student: sName });
       }
+    }
+
+    // === [사용자 승인 신청 제출 API] ===
+    if (action === "apply_access") {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var appSheet = ss.getSheetByName("사용자승인");
+      if (!appSheet) {
+        appSheet = ss.insertSheet("사용자승인");
+        appSheet.appendRow(["신청일시", "교사성명", "소속학교", "이메일", "연락처/직위", "신청사유", "승인상태", "메모"]);
+        appSheet.getRange("A1:H1").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
+      }
+      var now = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
+      appSheet.appendRow([
+        now,
+        body.name || "",
+        body.school || "",
+        (body.email || "").trim().toLowerCase(),
+        body.phone || "",
+        body.reason || "",
+        "대기",
+        ""
+      ]);
+      return jsonResponse({ success: true, message: "사용 승인 신청이 성공적으로 접수되었습니다. 관리자 승인 후 이용 가능합니다." });
     }
 
     return jsonResponse({ success: false, error: "지원하지 않는 POST action: " + action });

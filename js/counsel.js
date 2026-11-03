@@ -2544,6 +2544,11 @@ function NEIS_BYTE(text) {
       if (base) store.setStorageBase(base);
       if (gsheet !== undefined) store.setGSheetUrl(gsheet);
 
+      const adminGas = $("#settingAdminGasApprovalUrl") ? $("#settingAdminGasApprovalUrl").value.trim() : "";
+      if (window.Gatekeeper) {
+        window.Gatekeeper.setGasUrl(adminGas);
+      }
+
       alert(`일반 설정이 저장되었습니다.\n• 교사 비밀번호: ${store.getSubPin()}\n• 스토리지 경로: ${store.getStorageBase()}`);
       updateAuthBadge();
     });
@@ -2553,6 +2558,31 @@ function NEIS_BYTE(text) {
       updateAuthBadge();
       alert("보안 잠금이 적용되었습니다.");
     });
+
+    // 게이트키퍼 잠금 테스트 버튼
+    const btnTestLock = $("#btnTestGatekeeperLock");
+    if (btnTestLock) {
+      btnTestLock.addEventListener("click", () => {
+        if (window.Gatekeeper) {
+          window.Gatekeeper.logout();
+        }
+      });
+    }
+
+    // 승인 지원 Apps Script 복사 버튼
+    const btnCopyGas = $("#btnCopyApprovalGasScript");
+    if (btnCopyGas) {
+      btnCopyGas.addEventListener("click", async () => {
+        try {
+          const res = await fetch("/google_apps_script_dual_relational.js");
+          const code = await res.text();
+          await navigator.clipboard.writeText(code);
+          alert("📋 사용자 승인 지원 구글 시트 통합 Apps Script 코드가 클립보드에 복사되었습니다!\n\n선생님의 구글 시트 [확장 프로그램] > [Apps Script]에 붙여넣고 [새 배포(웹 앱)]하시면 [사용자승인] 탭에서 원클릭 승인이 가능합니다.");
+        } catch(e) {
+          alert("코드 복사 실패: " + e.message);
+        }
+      });
+    }
 
     $("#btnClearMasterData").addEventListener("click", () => {
       if (confirm("정말로 모든 단일 마스터 시트 상담 기록과 즐겨찾기를 삭제하시겠습니까?")) {
@@ -2567,6 +2597,9 @@ function NEIS_BYTE(text) {
     if ($("#settingSubPin")) $("#settingSubPin").value = store.getSubPin();
     if ($("#settingStorageBase")) $("#settingStorageBase").value = store.getStorageBase();
     if ($("#settingGSheet")) $("#settingGSheet").value = store.getGSheetUrl();
+    if ($("#settingAdminGasApprovalUrl") && window.Gatekeeper) {
+      $("#settingAdminGasApprovalUrl").value = window.Gatekeeper.getGasUrl();
+    }
     if ($("#settingExpiryView")) $("#settingExpiryView").textContent = store.getGlobalExpiry();
   }
 

@@ -572,7 +572,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <button role="tab" data-open="prompts" aria-selected="false">AI 프롬프트 · 스킬</button>
     <button role="tab" data-open="guide" aria-selected="false">기재요령 검색</button>
     <button role="tab" data-open="counsel" aria-selected="false" class="op-tab-counsel">2027 대입 진학상담</button>
-    <button role="tab" data-open="ocr" aria-selected="false" class="op-tab-ocr" id="tabBtnOcr">학생 보고서 OCR</button>
+    <button role="tab" data-open="ocr" aria-selected="false" class="op-tab-ocr" id="tabBtnOcr">📸 학생 보고서 AI 판독 &amp; 자동화</button>
   </nav>
 
   <div class="op-panels workspace-white-box">
@@ -1762,6 +1762,22 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
             <span style="font-size:11.5px; color:var(--muted)">Google Apps Script 웹앱 URL을 입력하시면 학생 저장 시 구글 시트로 자동 전송됩니다.</span>
           </div>
 
+          <!-- 사용자 승인 관리 구글 시트 연동 설정 (관리자 전용) -->
+          <div class="form-group" style="margin-top:20px; padding:18px 20px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+              <label class="form-label" style="font-size:14px; font-weight:800; color:#0f172a; margin:0;" for="settingAdminGasApprovalUrl">🔒 비공개 운영 &amp; 사용자 승인 관리 구글 시트 웹앱 URL</label>
+              <span style="font-size:11px; font-weight:800; color:#15803d; background:#dcfce7; padding:2px 8px; border-radius:999px;">관리자 전용</span>
+            </div>
+            <input class="form-input" id="settingAdminGasApprovalUrl" type="url" placeholder="https://script.google.com/macros/s/AKfycb.../exec" style="width:100%; font-family:monospace; font-size:12.5px; margin-bottom:8px;">
+            <p style="font-size:12px; color:#475569; margin:0 0 12px 0; line-height:1.5;">
+              선생님의 구글 시트에 <code>[사용자승인]</code> 탭이 자동 생성되며, 승인 신청 교사의 성명·학교·이메일이 기록됩니다. 시트에서 상태를 <strong>'승인'</strong>으로 변경하시면 교사가 즉시 로그인할 수 있습니다.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" id="btnCopyApprovalGasScript" class="btn secondary" style="font-size:12px; font-weight:700; padding:6px 14px;">📋 사용자 승인 통합 Apps Script 복사</button>
+              <button type="button" id="btnTestGatekeeperLock" class="btn secondary" style="font-size:12px; font-weight:700; color:#dc2626; border-color:#fca5a5; padding:6px 14px;">🔒 게이트키퍼 잠금 테스트 (로그아웃)</button>
+            </div>
+          </div>
+
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:16px; border-top:1px solid var(--hairline); flex-wrap:wrap; gap:10px;">
             <div style="display:flex; gap:8px;">
               <button type="button" class="btn secondary" id="btnLockNow">🔒 즉시 보안 잠금</button>
@@ -2382,16 +2398,93 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   </div>
 </dialog>
 
-<!-- 학생 보고서 다중 이미지 Gemini Vision OCR 자동 판독기 모달 -->
-<dialog id="ocrModal" style="max-width:920px; width:95vw; border:none; border-radius:16px; padding:0; box-shadow:0 25px 60px rgba(0,0,0,0.3); background:#ffffff; overflow:hidden;">
-  <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid #e2e8f0; background:#f8fafc;">
+<!-- 학생 보고서 AI 판독 & 프롬프트 일괄 자동화 센터 모달 -->
+<dialog id="ocrModal" style="max-width:960px; width:95vw; border:none; border-radius:18px; padding:0; box-shadow:0 25px 60px rgba(0,0,0,0.35); background:#ffffff; overflow:hidden;">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 24px; border-bottom:1px solid #e2e8f0; background:#f8fafc;">
     <div>
-      <b style="font-size:16px; font-weight:800; color:#0f172a;">학생 탐구보고서 다중 이미지 OCR 자동 판독기</b>
-      <span style="font-size:12px; color:#64748b; margin-left:8px;">Gemini 2.0 / 1.5 Pro 멀티모달 비전 자동화</span>
+      <b style="font-size:17px; font-weight:800; color:#0f172a;">📸 학생 탐구보고서 AI 판독 &amp; 프롬프트 일괄 자동화 센터</b>
+      <span style="font-size:12px; color:#64748b; margin-left:8px;">Gemini 젬스(Gems) · 대화형 프롬프트 · 비전 멀티모달 OCR</span>
     </div>
     <button type="button" class="btn small" onclick="document.getElementById('ocrModal').close()">✕ 닫기</button>
   </div>
-  <div style="padding:20px;">
+
+  <!-- 모달 내부 서브 탭 -->
+  <div class="ocr-tab-nav">
+    <button type="button" class="ocr-tab-btn is-active" data-ocr-tab="gems">🤖 1. Gemini 젬스 &amp; 프롬프트 일괄 자동화 가이드 (교사 실무 1순위 추천)</button>
+    <button type="button" class="ocr-tab-btn" data-ocr-tab="vision">⚡ 2. 웹 브라우저 직접 Vision OCR 판독기</button>
+  </div>
+
+  <!-- 탭 1: Gemini 젬스 & 프롬프트 자동화 가이드 -->
+  <div id="ocr-pane-gems" class="ocr-tab-pane" style="max-height:80vh; overflow-y:auto; padding:20px 24px;">
+    <!-- 핵심 안내 배너 -->
+    <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:12px; padding:16px 20px; margin-bottom:20px;">
+      <h3 style="font-size:15px; font-weight:800; color:#1e40af; margin:0 0 6px 0;">💡 왜 브라우저 낱장 판독보다 '프롬프트 &amp; 젬스'가 10배 더 강력한가요?</h3>
+      <p style="font-size:13.5px; color:#1e293b; line-height:1.6; margin:0;">
+        선생님께서 학급 30명의 탐구보고서를 스마트폰으로 찰칵찰칵 촬영한 뒤, <strong>Google Gemini(gemini.google.com)</strong>나 <strong>ChatGPT</strong>에 사진 20~30장을 한꺼번에 올리고 아래 <strong>[마스터 프롬프트]</strong>를 전송하면, 1분 만에 <strong>[학번 / 성명 / 과목 / 탐구주제 / 나이스 3단계 세특 초안(500자)]</strong>이 완벽한 <strong>구글 시트/엑셀 복사용 표</strong>로 자동 추출됩니다!
+      </p>
+    </div>
+
+    <!-- 1초 복사 마스터 프롬프트 카드 -->
+    <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:18px 20px; margin-bottom:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <div>
+          <b style="font-size:15px; font-weight:800; color:#0f172a;">📋 학생 보고서 ➔ 구글 시트 일괄 추출 표준 마스터 프롬프트</b>
+          <span style="font-size:12px; color:#64748b; margin-left:6px;">(Gems 지침 또는 대화창에 복사해서 사용)</span>
+        </div>
+        <button type="button" id="btnCopyOcrMasterPrompt" class="btn primary" style="background:#059669; color:#fff; font-weight:800; font-size:13px; padding:8px 18px; border-radius:8px; border:none; cursor:pointer; box-shadow:0 3px 10px rgba(5,150,105,0.35);">
+          📋 표준 프롬프트 1초 복사
+        </button>
+      </div>
+      <pre style="background:#1e293b; color:#e2e8f0; padding:16px; border-radius:8px; font-size:12.5px; line-height:1.6; white-space:pre-wrap; word-break:break-all; max-height:220px; overflow-y:auto; margin:0; font-family:monospace;">당신은 대한민국 고등학교 학교생활기록부 및 과목별 세부능력및특기사항(세특) 기재요령 전문가입니다.
+첨부된 학생들의 탐구보고서(또는 수행평가 결과물) 이미지를 정밀 분석하여, 구글 스프레드시트 및 엑셀에 바로 붙여넣을 수 있는 [마크다운 표] 형식으로 일괄 추출해 주세요.
+
+[표 필수 열 구성 (구글 시트/엑셀 복사용)]:
+| 학번 | 성명 | 과목명 | 탐구주제(보고서제목) | 핵심역량키워드 | 나이스 3단계 세특 초안(동기-과정-성장 400~500자) |
+
+[세특 초안 작성 원칙]:
+1. [동기 - 탐구활동 - 배우고느낀점(성장)] 3단계 구조를 유기적으로 연결된 완성된 한 문단으로 작성할 것.
+2. 나이스 기준 공백 포함 400~500자 내외(1,200~1,500 Byte)로 풍부하고 구체적인 문장체로 서술할 것.
+3. 교육부 기재금지 사항(교외 수상실적, 공인어학성적, 외부기관명, 특정 도서 저자명 등)은 100% 배제할 것.
+4. 단순 지식 나열이 아니라, 학생이 어떤 의문과 가설을 가지고 어떤 탐구·실험·분석 과정을 거쳤는지 관찰 가능한 사실 위주로 개별화하여 서술할 것.
+
+응답은 백틱(```) 마크다운 표 형식으로 깔끔하게 출력해 주세요.</pre>
+    </div>
+
+    <!-- 5단계 실전 그래픽 캐러셀 가이드 -->
+    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:20px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+        <h4 style="font-size:15px; font-weight:800; color:#0f172a; margin:0;">⚡ Gemini 젬스(Gems) 3분 제작 및 보고서 일괄 자동화 5단계</h4>
+        <a href="https://gemini.google.com/gems" target="_blank" rel="noopener noreferrer" class="btn secondary" style="font-size:12.5px; font-weight:700; color:#2563eb; text-decoration:none; padding:6px 12px; border-radius:6px; border:1px solid #93c5fd;">
+          🚀 Google Gemini Gems 바로가기 ↗
+        </a>
+      </div>
+
+      <!-- 이미지 뷰어 -->
+      <div style="background:#0f172a; border-radius:10px; overflow:hidden; margin-bottom:14px; min-height:300px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(0,0,0,0.2);">
+        <img id="gemSlideImg" src="assets/gemini-gem-step1.svg" alt="Gemini Gems Step" style="width:100%; height:auto; display:block;">
+      </div>
+
+      <!-- 단계 설명 -->
+      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:12px 16px; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <strong id="gemSlideTitle" style="font-size:14.5px; color:#0f172a;">1단계: 학생 탐구보고서 사진 촬영 및 준비</strong>
+          <span id="gemSlideCounter" style="font-size:12px; font-weight:800; color:#2563eb; background:#eff6ff; padding:2px 8px; border-radius:999px;">1 / 5</span>
+        </div>
+        <p id="gemSlideDesc" style="font-size:13px; color:#475569; line-height:1.5; margin:0;">
+          스마트폰으로 학생들의 탐구보고서 또는 수행평가 결과물 사진을 촬영합니다. (JPG, PNG, PDF 모두 지원)
+        </p>
+      </div>
+
+      <!-- 컨트롤 버튼 -->
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <button type="button" id="btnGemPrev" class="btn secondary" style="padding:7px 16px; font-size:13px; font-weight:700;">◀ 이전 단계</button>
+        <button type="button" id="btnGemNext" class="btn primary" style="padding:7px 16px; font-size:13px; font-weight:700; background:#2563eb; color:#fff; border:none;">다음 단계 ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 탭 2: 웹 브라우저 직접 이미지 Vision OCR 판독기 -->
+  <div id="ocr-pane-vision" class="ocr-tab-pane ocr-hidden" style="max-height:80vh; overflow-y:auto; padding:20px;">
     <!-- 드래그 & 드롭 업로드 영역 -->
     <div id="ocrDropZone" style="border:2px dashed #93c5fd; background:#eff6ff; border-radius:12px; padding:28px 20px; text-align:center; cursor:pointer; transition:all 0.2s;">
       <div style="font-size:15px; font-weight:700; color:#1e40af; margin-bottom:4px;">학생들의 탐구보고서 사진이나 스캔본 이미지를 끌어다 놓으세요</div>
@@ -2771,6 +2864,106 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     </div>
   </div>
 </div>
+
+<!-- ── 비공개 서비스 전면 승인 게이트키퍼 오버레이 (Gatekeeper Modal) ── -->
+<div id="appGatekeeperOverlay" class="gk-backdrop gk-hidden">
+  <div class="gk-dialog">
+    <!-- 게이트키퍼 헤더 -->
+    <div class="gk-header">
+      <div class="gk-brand-row">
+        <span class="gk-lock-icon">🔒</span>
+        <div>
+          <span class="gk-badge">비공개 시범 운영 · 교사 승인제</span>
+          <h2 class="gk-title">학교생활기록부 올인원: 상담부터 기록까지</h2>
+        </div>
+      </div>
+      <p class="gk-desc">
+        본 플랫폼은 2028 개편 5등급제 대입 진학상담 및 나이스 세특 1:1 동기화 연구를 위해, <strong>사전 승인을 받은 선생님에 한하여 제한적으로 제공</strong>되는 비공개 서비스입니다.
+      </p>
+    </div>
+
+    <!-- 탭 네비게이션 -->
+    <div class="gk-nav">
+      <button type="button" class="gk-tab-btn is-active" data-gk-tab="apply">📝 1. 사용 승인 신청</button>
+      <button type="button" class="gk-tab-btn" data-gk-tab="check">🔑 2. 승인 확인 &amp; 입장</button>
+      <button type="button" class="gk-tab-btn" data-gk-tab="master">⚡ 3. 관리자 마스터 키</button>
+    </div>
+
+    <!-- 탭 패널 1: 승인 신청 -->
+    <div class="gk-tab-pane" id="gk-pane-apply">
+      <form id="gkApplyForm" class="gk-form">
+        <div class="gk-form-grid">
+          <div class="gk-field">
+            <label class="gk-label" for="gkInputName">선생님 성함 *</label>
+            <input type="text" id="gkInputName" class="gk-input" placeholder="예: 홍길동" required autocomplete="name">
+          </div>
+          <div class="gk-field">
+            <label class="gk-label" for="gkInputSchool">소속 고등학교 *</label>
+            <input type="text" id="gkInputSchool" class="gk-input" placeholder="예: 한국고등학교" required>
+          </div>
+        </div>
+        <div class="gk-field">
+          <label class="gk-label" for="gkInputEmail">구글 이메일 (계정) *</label>
+          <input type="email" id="gkInputEmail" class="gk-input" placeholder="예: teacher@gmail.com" required autocomplete="email">
+          <span class="gk-hint">※ 승인 확인 시 본 이메일로 로그인하므로 정확히 입력해 주세요.</span>
+        </div>
+        <div class="gk-field">
+          <label class="gk-label" for="gkInputPhone">연락처 및 담당 학년 (선택)</label>
+          <input type="text" id="gkInputPhone" class="gk-input" placeholder="예: 010-1234-5678 / 1학년 담임">
+        </div>
+        <div class="gk-field">
+          <label class="gk-label" for="gkInputReason">신청 사유 및 활용 계획</label>
+          <textarea id="gkInputReason" class="gk-textarea" rows="2" placeholder="예: 2028 개편 5등급제 학생 진학상담 및 학급 세특 작성을 위해 신청합니다."></textarea>
+        </div>
+        <button type="submit" id="gkBtnSubmitApply" class="gk-btn-primary">🚀 사용 승인 신청서 제출하기</button>
+        <div id="gkApplyResultMsg" class="gk-msg-box"></div>
+      </form>
+    </div>
+
+    <!-- 탭 패널 2: 승인 확인 -->
+    <div class="gk-tab-pane gk-hidden" id="gk-pane-check">
+      <form id="gkCheckForm" class="gk-form">
+        <p style="font-size:13.5px; color:#475569; line-height:1.6; margin-bottom:14px;">
+          사용 승인 신청을 제출하신 선생님께서는 등록하신 <strong>구글 이메일</strong>을 입력하시면 실시간으로 승인 상태를 확인하여 바로 입장하실 수 있습니다.
+        </p>
+        <div class="gk-field">
+          <label class="gk-label" for="gkInputCheckEmail">신청하신 구글 이메일 주소</label>
+          <input type="email" id="gkInputCheckEmail" class="gk-input" placeholder="예: teacher@gmail.com" required autocomplete="email">
+        </div>
+        <button type="submit" id="gkBtnCheckApproval" class="gk-btn-primary" style="background:#059669;">✅ 승인 상태 확인 &amp; 워크벤치 입장</button>
+        <div id="gkCheckResultMsg" class="gk-msg-box"></div>
+      </form>
+    </div>
+
+    <!-- 탭 패널 3: 관리자 마스터 키 -->
+    <div class="gk-tab-pane gk-hidden" id="gk-pane-master">
+      <form id="gkMasterForm" class="gk-form">
+        <p style="font-size:13.5px; color:#475569; line-height:1.6; margin-bottom:14px;">
+          관리자(math-tong) 또는 사전 초대 코드를 부여받으신 선생님은 마스터 패스코드로 즉시 입장하실 수 있습니다.
+        </p>
+        <div class="gk-field">
+          <label class="gk-label" for="gkInputMasterPin">마스터 패스코드</label>
+          <input type="password" id="gkInputMasterPin" class="gk-input" placeholder="패스코드 입력 (기본: tong2026!)" required>
+        </div>
+        <button type="submit" class="gk-btn-primary" style="background:#7c3aed;">🔓 마스터 키로 즉시 입장</button>
+        <div id="gkMasterResultMsg" class="gk-msg-box"></div>
+      </form>
+    </div>
+
+    <!-- 푸터 패밀리 링크 -->
+    <div class="gk-footer">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <span style="font-size:12px; color:#64748b;">Copyright ⓒ 2026 <strong>math-tong</strong>. All rights reserved.</span>
+        <div style="display:flex; gap:12px; font-size:12px;">
+          <a href="https://blog.naver.com/math-tong" target="_blank" rel="noopener noreferrer" style="color:#2563eb; font-weight:700; text-decoration:none;">✍️ math-tong 공식 블로그 ↗</a>
+          <a href="https://t-ong.vercel.app" target="_blank" rel="noopener noreferrer" style="color:#059669; font-weight:700; text-decoration:none;">📱 모바일 교무수첩 ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/gatekeeper.js?v=20261104-1"></script>
 
 </body>
 </html>
