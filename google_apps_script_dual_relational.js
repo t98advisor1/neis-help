@@ -89,7 +89,35 @@ function NEIS_BYTES(text) {
  * @return {string} AI가 작성한 초안
  * @customfunction
  */
+
+// ==========================================
+// [신규] 숨겨진/보호된 '_설정_프롬프트지침' 탭에서 지침 자동 참조
+// ==========================================
+function getSystemPromptInstructions() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("_설정_프롬프트지침") || ss.getSheetByName("설정_프롬프트지침");
+  if (!sheet) {
+    return "당신은 고등학교 생기부 및 세특 전문 교사입니다. 기재요령을 준수하여 [동기-과정-성장] 3단 구조로 공백포함 400자 내외로 작성하세요.";
+  }
+
+  var data = sheet.getRange("B2:B8").getValues();
+  var parts = [];
+  for (var i = 0; i < data.length; i++) {
+    var val = String(data[i][0] || "").trim();
+    if (val) parts.push(val);
+  }
+
+  if (parts.length === 0) {
+    return "당신은 고등학교 생기부 및 세특 전문 교사입니다. 기재요령을 준수하여 [동기-과정-성장] 3단 구조로 공백포함 400자 내외로 작성하세요.";
+  }
+  return parts.join("\n");
+}
+
 function AI(prompt, context1, context2) {
+  if (!prompt && !context1) return "";
+  
+  var fullText = String(prompt || "") + " " + String(context1 || "") + " " + String(context2 || "");
+  var sysPrompt = getSystemPromptInstructions();
   if (!prompt && !context1) return "";
   
   var fullText = String(prompt || "") + " " + String(context1 || "") + " " + String(context2 || "");
@@ -109,7 +137,7 @@ function AI(prompt, context1, context2) {
     var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
     var payload = {
       contents: [{
-        parts: [{ text: "당신은 고등학교 생기부 및 세특 전문 교사입니다. 다음 지시에 맞춰 핵심 역량 중심의 개별화된 세특 문장을 작성하세요 (공백포함 400자 내외):\n\n" + fullText }]
+        parts: [{ text: sysPrompt + "\n\n[작성 대상 활동 내용]:\n" + fullText }]
       }],
       generationConfig: { temperature: 0.3, maxOutputTokens: 600 }
     };
@@ -258,6 +286,14 @@ function doGet(e) {
   var action = (e && e.parameter && e.parameter.action) || "ping";
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getActiveSheet();
+
+  if (action === "getPromptRules") {
+    var promptRules = getSystemPromptInstructions();
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      rules: promptRules
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
 
   if (action === "ping") {
     return ContentService.createTextOutput(JSON.stringify({
