@@ -572,6 +572,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <button role="tab" data-open="prompts" aria-selected="false">AI 프롬프트 · 스킬</button>
     <button role="tab" data-open="guide" aria-selected="false">기재요령 검색</button>
     <button role="tab" data-open="counsel" aria-selected="false" class="op-tab-counsel">2027 대입 진학상담</button>
+    <button role="tab" data-open="notebook" aria-selected="false" class="op-tab-notebook" id="tabBtnNotebook">📱 모바일 교무수첩 (교과세특)</button>
     <button role="tab" data-open="ocr" aria-selected="false" class="op-tab-ocr" id="tabBtnOcr">📸 학생 보고서 AI 판독 &amp; 자동화</button>
   </nav>
 
@@ -1791,6 +1792,73 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
   
     <!-- ── 4화면: 2027학년도 대입 진학상담 & 대학 진학성적 분석 스크롤 전용 섹션 ── -->
+        <!-- ── 패널 7: 📱 통합 모바일 교무수첩 & 교과담임 관찰노트 (구글 시트 실시간 동기화) ── -->
+    <div class="op-panel hidden" id="panel-notebook" role="tabpanel">
+      <div class="wb-card" style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:16px; padding:20px 24px; box-shadow:0 10px 30px rgba(0,0,0,0.05); margin-bottom:24px;">
+        <!-- 상단 헤더 & 컨트롤 바 -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px; border-bottom:1px solid #f1f5f9; padding-bottom:14px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span style="font-size:12px; font-weight:800; background:#f5f3ff; color:#7c3aed; padding:3px 10px; border-radius:999px; border:1px solid #ddd6fe;">교과담임 전용 · 모바일 최적화</span>
+              <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0;">📱 모바일 교무수첩 &amp; 교과 세특 관찰노트</h2>
+            </div>
+            <p style="font-size:13.5px; color:#475569; margin:0;">
+              수업 중 스마트폰으로 학생 관찰 메모를 작성하면 <strong>선생님의 교과 구글 시트에 실시간 자동 동기화</strong>되며, 교무실 PC에서 나이스 1,500 Byte 세특으로 즉시 윤문됩니다.
+            </p>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <span id="nbSyncBadge" class="privacy-badge" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a; font-size:12px; font-weight:700;">🟡 연동 대기</span>
+            <button type="button" id="nbBtnPullSheet" class="btn secondary" style="font-size:12.5px; font-weight:700; padding:7px 12px;">📥 시트에서 불러오기</button>
+            <button type="button" id="nbBtnExportExcel" class="btn primary" style="background:#0f9d58; color:#fff; font-size:12.5px; font-weight:800; border:none; padding:7px 14px; border-radius:8px;">📥 엑셀(.xlsx) 내보내기</button>
+            <button type="button" id="nbBtnConfigGas" class="btn secondary" style="font-size:12.5px; font-weight:700; color:#7c3aed; border-color:#c4b5fd; padding:7px 12px;">⚙️ 교과시트 연동</button>
+          </div>
+        </div>
+
+        <!-- 필터 바: 교과목 선택 & 학급 칩 -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 16px; margin-bottom:16px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <label for="nbSubjectSelect" style="font-size:13.5px; font-weight:800; color:#0f172a;">📚 담당 교과목:</label>
+            <select id="nbSubjectSelect" class="form-input" style="padding:6px 12px; font-size:13.5px; font-weight:700; border-radius:8px; border:1.5px solid #cbd5e1; background:#ffffff;">
+              <option value="경제수학" selected>경제수학</option>
+              <option value="공통수학">공통수학</option>
+              <option value="수학I">수학I</option>
+              <option value="수학II">수학II</option>
+              <option value="미적분">미적분</option>
+              <option value="확률과통계">확률과통계</option>
+              <option value="통합사회">통합사회</option>
+              <option value="통합과학">통합과학</option>
+              <option value="과학탐구실험">과학탐구실험</option>
+              <option value="경제">경제</option>
+              <option value="정치와법">정치와법</option>
+              <option value="물리학">물리학</option>
+              <option value="화학">화학</option>
+              <option value="생명과학">생명과학</option>
+              <option value="지구과학">지구과학</option>
+              <option value="영어">영어</option>
+            </select>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:13.5px; font-weight:800; color:#0f172a;">🏫 학급 선택:</span>
+            <div id="nbClassChips" style="display:inline-flex; gap:6px;"></div>
+          </div>
+        </div>
+
+        <!-- 수업 중 원터치 빠른 태그 삽입 바 -->
+        <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:10px 14px; margin-bottom:16px; display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+          <span style="font-size:12px; font-weight:800; color:#1e40af;">⚡ 원터치 빠른 역량 칩 (터치 시 활성 학생 메모에 자동 추가):</span>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('탐구질문')">💡 탐구질문</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('가설검증실험')">🔬 가설검증실험</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('정량데이터분석')">📊 정량데이터분석</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('모둠토의리더십')">🗣️ 모둠토의리더십</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('교과연계독서')">📚 교과연계독서</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('문제해결우수')">🌟 문제해결우수</button>
+        </div>
+
+        <!-- 학생별 관찰노트 카드 리스트 (모바일 반응형) -->
+        <div id="nbStudentList" style="display:flex; flex-direction:column; gap:14px;"></div>
+      </div>
+    </div>
+
     <section class="op-screen" id="sec-counsel-scroll">
   <div class="op-head-block reveal">
     <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
@@ -2965,5 +3033,6 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 <script src="js/gatekeeper.js?v=20261104-1"></script>
 
+<script src="js/notebook.js?v=20261104-1"></script>
 </body>
 </html>

@@ -43,6 +43,31 @@ function doGet(e) {
       });
     }
 
+    // === [교과담임 모바일 교무수첩 관찰메모 조회 API] ===
+    if (action === "get_subject_memos") {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var subSheet = ss.getSheetByName("교과담임_세특") || ss.getSheetByName("1_교과명렬_관찰기록");
+      if (!subSheet) {
+        return jsonResponse({ success: true, list: [] });
+      }
+      var data = subSheet.getDataRange().getValues();
+      var list = [];
+      for (var r = 1; r < data.length; r++) {
+        var row = data[r];
+        if (!row[0] && !row[1]) continue;
+        list.push({
+          studentId: row[0],
+          name: row[1],
+          subject: row[2],
+          memo: row[3],
+          tags: row[4],
+          draft: row[5],
+          updatedAt: row[6]
+        });
+      }
+      return jsonResponse({ success: true, list: list });
+    }
+
     // === [사용자 승인 상태 조회 API] ===
     if (action === "check_access") {
       var email = (e.parameter.email || "").trim().toLowerCase();
@@ -172,6 +197,44 @@ function doPost(e) {
 
         return jsonResponse({ success: true, action: "updated", row: foundRow, student: sName });
       }
+    }
+
+    // === [교과담임 모바일 교무수첩 관찰메모 동기화 저장 API] ===
+    if (action === "save_subject_memo") {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var subSheet = ss.getSheetByName("교과담임_세특") || ss.getSheetByName("1_교과명렬_관찰기록");
+      if (!subSheet) {
+        subSheet = ss.insertSheet("교과담임_세특");
+        subSheet.appendRow(["학번", "성명", "과목명", "수업관찰메모", "핵심역량태그", "세특초안(1500B)", "최종동기화일시"]);
+        subSheet.getRange("A1:G1").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
+      }
+      var sId = String(body.studentId || "").trim();
+      var sName = String(body.studentName || "").trim();
+      var subName = body.subject || "일반교과";
+      var memo = body.memo || "";
+      var tags = body.tags || "";
+      var draft = body.draft || "";
+      var now = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
+
+      var data = subSheet.getDataRange().getValues();
+      var foundRow = -1;
+      for (var r = 1; r < data.length; r++) {
+        if ((sId && String(data[r][0]).trim() === sId) || (sName && String(data[r][1]).trim() === sName)) {
+          foundRow = r + 1;
+          break;
+        }
+      }
+      if (foundRow === -1) {
+        subSheet.appendRow([sId, sName, subName, memo, tags, draft, now]);
+        foundRow = subSheet.getLastRow();
+      } else {
+        if (subName) subSheet.getRange(foundRow, 3).setValue(subName);
+        subSheet.getRange(foundRow, 4).setValue(memo);
+        if (tags) subSheet.getRange(foundRow, 5).setValue(tags);
+        if (draft) subSheet.getRange(foundRow, 6).setValue(draft);
+        subSheet.getRange(foundRow, 7).setValue(now);
+      }
+      return jsonResponse({ success: true, message: "교과담임 시트 동기화 완료", row: foundRow });
     }
 
     // === [사용자 승인 신청 제출 API] ===

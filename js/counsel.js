@@ -768,6 +768,21 @@
 
   function switchCounselSubTab(tab) {
     appState.currentSubTab = tab;
+    // 패널이 숨겨져 있으면 보이도록 처리
+    const counselPanel = document.getElementById("panel-counsel");
+    if (counselPanel && counselPanel.classList.contains("hidden")) {
+      counselPanel.classList.remove("hidden");
+      ["make", "usage", "check", "prompts", "guide", "notebook"].forEach(p => {
+        const el = document.getElementById("panel-" + p);
+        if (el) el.classList.add("hidden");
+      });
+      document.querySelectorAll("#op-tabs button").forEach(b => {
+        const on = b.dataset.open === "counsel";
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    }
+
     $$(".counsel-sub-btn").forEach(b => {
       b.classList.toggle("is-active", b.dataset.counselSub === tab);
     });
@@ -779,8 +794,14 @@
     else if (tab === "finder") renderFinder();
     else if (tab === "nonsul") renderNonsulTable();
     else if (tab === "records") renderMasterSheet();
+    else if (tab === "gasguide") {
+      const stepTabs = $$(".gas-page-tab");
+      if (stepTabs.length > 0) stepTabs[0].click();
+    }
     else if (tab === "settings") loadSettingsView();
   }
+  window.switchCounselSubTab = switchCounselSubTab;
+  window.openCounselSubTab = switchCounselSubTab;
 
   /* ---------- 1. 대학·전형 검색 모듈 ---------- */
   function initUniSearch() {
@@ -2611,8 +2632,8 @@ function NEIS_BYTE(text) {
     calcGrade9
   };
 
-  /* DOM 준비 후 초기화 */
-  document.addEventListener("DOMContentLoaded", () => {
+  /* DOM 준비 후 초기화 (Resilient Boot) */
+  function bootCounsel() {
     initCounselSubTabs();
     initLiveDataModal();
     initUniSearch();
@@ -2627,7 +2648,13 @@ function NEIS_BYTE(text) {
 
     // 초기 데이터 렌더링
     renderUnis();
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", bootCounsel);
+  } else {
+    bootCounsel();
+  }
 })();
 
 

@@ -230,7 +230,9 @@
 
   window.ReportOCR = OCR;
 
-  document.addEventListener('DOMContentLoaded', () => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => OCR.initModalGuide());
+  } else {
     OCR.initModalGuide();
-  });
+  }
 })();

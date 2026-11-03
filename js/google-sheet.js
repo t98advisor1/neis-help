@@ -354,7 +354,9 @@
 
   window.GoogleSheet = GoogleSheet;
 
-  document.addEventListener('DOMContentLoaded', () => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => GoogleSheet.updateStatusBadge());
+  } else {
     GoogleSheet.updateStatusBadge();
-  });
+  }
 })();

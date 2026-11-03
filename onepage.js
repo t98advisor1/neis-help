@@ -6,7 +6,7 @@
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 
-const PANELS = ['usage', 'make', 'check', 'prompts', 'guide', 'counsel'];
+const PANELS = ['usage', 'make', 'check', 'prompts', 'guide', 'counsel', 'notebook'];
 const workspace = $('#workspace');
 
 /* ── 메뉴 전환 ── */
@@ -28,6 +28,7 @@ function openPanel(id, scroll) {
   try { history.replaceState(null, '', '#' + id); } catch (e) { /* file:// 등 */ }
   if (scroll && workspace) workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+window.openPanel = openPanel;
 $$('[data-open]').forEach((el) => el.addEventListener('click', (e) => {
   e.preventDefault();
   if (el.dataset.open === 'ocr') {

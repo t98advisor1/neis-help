@@ -409,7 +409,9 @@
 
   window.Gatekeeper = Gatekeeper;
 
-  document.addEventListener('DOMContentLoaded', () => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => Gatekeeper.init());
+  } else {
     Gatekeeper.init();
-  });
+  }
 })();
