@@ -768,17 +768,29 @@
 
   
   window.openCounselSubTab = function(tab) {
-    if (typeof openPanel === "function") {
-      openPanel("counsel", true);
-    } else {
-      const btn = document.querySelector('[data-open="counsel"]');
-      if (btn) btn.click();
+    if (typeof window.openPanel === "function") {
+      window.openPanel("counsel", false);
     }
-    setTimeout(() => {
-      if (typeof switchCounselSubTab === "function") {
-        switchCounselSubTab(tab);
-      }
-    }, 100);
+    const counselPanel = document.getElementById("panel-counsel");
+    if (counselPanel) {
+      counselPanel.classList.remove("hidden");
+      ["make", "usage", "check", "prompts", "guide", "notebook"].forEach(p => {
+        const el = document.getElementById("panel-" + p);
+        if (el) el.classList.add("hidden");
+      });
+      document.querySelectorAll("#op-tabs button").forEach(b => {
+        const on = b.dataset.open === "counsel";
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    }
+
+    switchCounselSubTab(tab || "unis");
+
+    const target = document.getElementById("workspace") || counselPanel;
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   function switchCounselSubTab(tab) {
@@ -816,7 +828,6 @@
     else if (tab === "settings") loadSettingsView();
   }
   window.switchCounselSubTab = switchCounselSubTab;
-  window.openCounselSubTab = switchCounselSubTab;
 
   /* ---------- 1. 대학·전형 검색 모듈 ---------- */
   function initUniSearch() {
@@ -2667,6 +2678,22 @@ function NEIS_BYTE(text) {
 
     // 초기 데이터 렌더링
     renderUnis();
+
+    // 4번째 페이지 바로가기 버튼 및 카드 전역 연동
+    const btnFull = document.getElementById("btnOpenFullCounsel");
+    if (btnFull) {
+      btnFull.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.openCounselSubTab("unis");
+      });
+    }
+
+    document.querySelectorAll("[data-counsel-action]").forEach(card => {
+      card.addEventListener("click", () => {
+        const act = card.getAttribute("data-counsel-action");
+        if (act) window.openCounselSubTab(act);
+      });
+    });
   }
 
   if (document.readyState === 'loading') {

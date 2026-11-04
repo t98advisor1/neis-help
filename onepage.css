@@ -2266,3 +2266,88 @@ body.gk-scroll-locked .op-hero-inner {
   border-color: #3b82f6;
   transform: translateY(-1px);
 }
+
+/* ── 교사용 2단계 인증 카드 레이아웃 ── */
+.gk-two-step-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 10px;
+}
+@media (max-width: 640px) {
+  .gk-two-step-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+.gk-step-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.gk-step-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.gk-step-badge {
+  background: #2563eb;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.gk-step-desc {
+  font-size: 12px;
+  color: #cbd5e1;
+  margin: 0 0 10px;
+  line-height: 1.45;
+}
+.gk-auth-success-box {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+.gk-btn-change-acc {
+  background: none;
+  border: 1px solid #10b981;
+  color: #10b981;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.gk-btn-final-verify {
+  width: 100%;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.gk-btn-final-verify:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
+}

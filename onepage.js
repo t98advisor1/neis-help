@@ -107,12 +107,13 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
  * 소개·메뉴 화면에서는 휠이 한 번 오면 다음/이전 화면으로 넘기고, 넘어가는 동안(잠금)에는
  * 이어서 들어오는 휠(트랙패드 관성 포함)을 무시한다. 내용 화면 안에서는 평소처럼 스크롤된다.
  * 키보드·터치는 css 스냅이 맡는다. */
-const stops = ['hero', 'menu', 'workspace'].map((id) => document.getElementById(id));
+const stops = ['hero', 'menu', 'workspace', 'sec-counsel-scroll'].map((id) => document.getElementById(id)).filter(Boolean);
 let locked = false;
 let lastScrollAt = 0;
 window.addEventListener('scroll', () => { lastScrollAt = performance.now(); }, { passive: true });
 
 function goTo(el) {
+  if (!el) return;
   locked = true;
   window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
   setTimeout(() => { locked = false; }, 900);
@@ -129,7 +130,7 @@ window.addEventListener('wheel', (e) => {
   tops.forEach((t, k) => { if (Math.abs(t - y) < Math.abs(tops[i] - y)) i = k; });
   const atStop = Math.abs(tops[i] - y) < 6;
   if (e.deltaY > 0) {
-    if (i < 2 && atStop) { e.preventDefault(); goTo(stops[i + 1]); }
+    if (i < stops.length - 1 && atStop) { e.preventDefault(); goTo(stops[i + 1]); }
   } else if (i > 0 && atStop && performance.now() - lastScrollAt > 250) {
     // 내용 화면 맨 위에서 더 올리면 메뉴로. 막 스크롤하던 관성은 제외한다.
     e.preventDefault(); goTo(stops[i - 1]);
