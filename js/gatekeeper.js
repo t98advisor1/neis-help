@@ -31,6 +31,61 @@
   ];
 
   // 자동 승인 이메일 도메인 판별 (@sch.hs.kr, @sch.hs.k, @goedu.kr, @goe.go.kr, @korea.kr 및 학교/교육청 계정)
+  
+  // 교사 소속 학교 및 이메일 기반 최종 승인 판정 함수
+  // - 신천고등학교 (@sch.hs.kr 또는 신천고 소속 @goedu.kr) -> 3개월 즉시 자동승인
+  // - 신천고 외 타 학교 교육청 계정 (@goedu.kr, @korea.kr) -> 관리자 검토 대기
+  // - 일반 개인 계정 (@gmail.com 등) -> 차단
+  function checkTeacherApproval({ email, school }) {
+    const cleanEmail = String(email || '').trim().toLowerCase();
+    const cleanSchool = String(school || '').trim();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      return {
+        auto: false,
+        status: 'invalid_email',
+        school: cleanSchool || '학교 미지정',
+        badge: '이메일 형식 오류',
+        message: '올바른 교사 이메일 주소를 입력해 주세요.'
+      };
+    }
+
+    const [idPart, rawDomain] = cleanEmail.split('@');
+    const domain = rawDomain.replace(/\.hs\.k$/, '.hs.kr').replace(/goedu\.kr\d+$/, 'goedu.kr');
+    const isSincheon = cleanSchool.includes('신천');
+
+    // 1. 신천고등학교 공식 도메인 (@sch.hs.kr) 또는 신천고 소속 경기도교육청 계정 (@goedu.kr + 신천고)
+    if (domain === 'sch.hs.kr' || (domain === 'goedu.kr' && isSincheon)) {
+      return {
+        auto: true,
+        status: 'approved_sincheon',
+        school: '신천고등학교',
+        normalizedEmail: `${idPart}@${domain}`,
+        badge: '🎉 신천고등학교 공식 교사 3개월 즉시 자동승인',
+        message: '✅ [신천고등학교] 공식 교사 계정 확인이 완료되었습니다!\n앞으로 3개월(90일) 동안 모든 생기부 점검 및 대입 진학상담 기능이 잠금 해제됩니다.'
+      };
+    }
+
+    // 2. 신천고등학교가 아닌 타 학교 교육청 계정 (@goedu.kr, @goe.go.kr, @korea.kr, *.hs.kr 등)
+    if (domain === 'goedu.kr' || domain === 'goe.go.kr' || domain === 'korea.kr' || domain.endsWith('.hs.kr') || domain.endsWith('.edu.kr')) {
+      return {
+        auto: false,
+        status: 'pending_other_goedu',
+        school: cleanSchool || '경기도교육청 소속교',
+        badge: '⏳ 교육청 계정 관리자 추가 승인 대기',
+        message: `⚠️ [${cleanSchool || '소속학교'}] 교육청 계정(${cleanEmail}) 신청이 접수되었습니다.\n\n신천고등학교 외 타 학교 교육청 계정은 관리자의 추가 승인 후 활성화됩니다. 신천고등학교 선생님이신 경우 학교명을 '신천고등학교'로 선택해 주시거나 마스터키를 이용해 주세요.`
+      };
+    }
+
+    // 3. 일반 개인 이메일 계정 (@gmail.com, @naver.com 등)
+    return {
+      auto: false,
+      status: 'rejected_personal',
+      school: cleanSchool || '일반 계정',
+      badge: '⛔ 교사용 공식 계정 필요',
+      message: `❌ 본 서비스는 교사용 전용 서비스입니다.\n\n개인 이메일(${cleanEmail})은 사용할 수 없으며, 신천고(@sch.hs.kr) 또는 교육청(@goedu.kr) 계정으로 입력해 주시기 바랍니다.`
+    };
+  }
+
   function checkAutoApproveDomain(email) {
     const clean = String(email || '').trim().toLowerCase();
     if (!clean.includes('@')) return { auto: false, reason: '이메일 형식이 올바르지 않습니다.' };
@@ -822,7 +877,76 @@
     },
 
     // 2단계 통합 교사 승인 실행 (1단계 구글 로그인 + 2단계 소속 학교 조합)
+    
+    // 교사 직접 승인 실행 (클라우드 콘솔 설정 여부와 무관하게 100% 즉시 승인)
+    executeDirectTeacherApproval() {
+      const resultMsg = document.getElementById('gkApplyResultMsg');
+      const schoolInput = document.getElementById('gkInputSchool');
+      const emailInput = document.getElementById('gkInputEmail');
+
+      const curSchool = (schoolInput ? schoolInput.value.trim() : '') || '신천고등학교';
+      const curEmail = (emailInput ? emailInput.value.trim() : '') || (this.currentGoogleAuth ? this.currentGoogleAuth.email : '');
+
+      if (!curEmail || !curEmail.includes('@')) {
+        alert('올바른 교사 이메일 주소를 입력해 주세요. (예: t98@sch.hs.kr 또는 @goedu.kr)');
+        if (emailInput) emailInput.focus();
+        return { success: false, reason: 'no_email' };
+      }
+
+      const decision = checkTeacherApproval({ email: curEmail, school: curSchool });
+
+      if (decision.auto) {
+        // [자동승인 대상]: 신천고등학교 (@sch.hs.kr 또는 신천고 소속 @goedu.kr)
+        const teacherName = curEmail.split('@')[0] + ' 선생님';
+        this.submitApplication({
+          name: teacherName,
+          school: decision.school,
+          email: decision.normalizedEmail || curEmail,
+          status: '승인(신천고_자동승인)',
+          authMethod: 'direct_school_approval'
+        });
+
+        this.authorize({
+          email: decision.normalizedEmail || curEmail,
+          name: teacherName,
+          school: decision.school,
+          role: 'teacher',
+          authProvider: 'school_verified',
+          badge: decision.badge
+        });
+
+        if (resultMsg) {
+          resultMsg.className = 'gk-msg-box is-success';
+          resultMsg.innerHTML = `<strong>${escapeHtml(decision.badge)}</strong><br>${escapeHtml(decision.message)}`;
+        }
+
+        alert(decision.message);
+        return { success: true, auto: true };
+      } else {
+        // [대기 및 제한 대상]: 신천고 외 타 학교 교육청 계정 또는 일반 개인 계정
+        const teacherName = curEmail.split('@')[0] + ' 선생님';
+        this.submitApplication({
+          name: teacherName,
+          school: decision.school,
+          email: curEmail,
+          status: decision.status === 'pending_other_goedu' ? '대기(타학교_goedu)' : '대기(일반이메일)',
+          authMethod: 'direct_school_approval'
+        });
+
+        if (resultMsg) {
+          resultMsg.className = decision.status === 'pending_other_goedu' ? 'gk-msg-box is-warn' : 'gk-msg-box is-error';
+          resultMsg.innerHTML = `<strong>${escapeHtml(decision.badge)}</strong><br>${escapeHtml(decision.message).replace(/\n/g, '<br>')}`;
+        }
+
+        alert(decision.message);
+        return { success: false, auto: false, message: decision.message };
+      }
+    },
+
     verifyTwoStepApproval() {
+      return this.executeDirectTeacherApproval();
+    },
+    _legacyVerifyTwoStepApproval() {
       const resultMsg = document.getElementById('gkApplyResultMsg');
       const schoolInput = document.getElementById('gkInputSchool');
       const curSchool = (schoolInput ? schoolInput.value.trim() : '') || '신천고등학교';
@@ -1221,6 +1345,43 @@
       }
 
       // [2단계 최종 승인 버튼]
+      
+      // [교사 직접 승인 폼 제출 - 클라우드 콘솔 불필요 1초 즉시 승인]
+      const directForm = document.getElementById('gkDirectTeacherForm');
+      if (directForm) {
+        directForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.executeDirectTeacherApproval();
+        });
+      }
+      const btnDirectSubmit = document.getElementById('gkBtnSubmitDirect');
+      if (btnDirectSubmit && !directForm) {
+        btnDirectSubmit.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.executeDirectTeacherApproval();
+        });
+      }
+
+      // 빠른 이메일 도메인 칩 (@sch.hs.kr, @goedu.kr)
+      document.querySelectorAll('[data-email-domain]').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+          e.preventDefault();
+          const domain = chip.getAttribute('data-email-domain');
+          const autoSchool = chip.getAttribute('data-auto-school');
+          const emailInput = document.getElementById('gkInputEmail');
+          const schoolInput = document.getElementById('gkInputSchool');
+          if (emailInput) {
+            const cur = emailInput.value.trim();
+            const idPart = cur.includes('@') ? cur.split('@')[0] : cur;
+            emailInput.value = (idPart || 't98') + '@' + domain;
+            emailInput.focus();
+          }
+          if (autoSchool && schoolInput) {
+            schoolInput.value = autoSchool;
+          }
+        });
+      });
+
       const btnFinal = document.getElementById('gkBtnFinalVerify');
       if (btnFinal) {
         btnFinal.addEventListener('click', () => this.verifyTwoStepApproval());

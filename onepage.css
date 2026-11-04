@@ -1611,39 +1611,38 @@ body.gk-scroll-locked .op-hero-inner {
 
 /* 인증 카드: 화면 중앙에 떠서 학교 선택 및 이메일/Google 로그인이 한눈에 100% 보이도록 배치 */
 .gk-hero-card {
-  position: absolute !important;
-  top: calc(var(--op-h) + (100vh - var(--op-h)) * 0.46) !important;
+  position: fixed !important;
+  top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
   width: min(840px, 94vw) !important;
   max-width: 840px !important;
+  max-height: calc(100vh - 40px) !important;
+  overflow-y: auto !important;
   margin: 0 !important;
-  z-index: 55 !important;
-  background: rgba(15, 23, 42, 0.95) !important;
+  z-index: 9999 !important;
+  background: rgba(15, 23, 42, 0.96) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
-  border: 2px solid rgba(96, 165, 250, 0.6) !important;
+  border: 2px solid rgba(96, 165, 250, 0.7) !important;
   border-radius: 18px !important;
-  box-shadow: 0 24px 65px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.15) inset !important;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.15) inset !important;
   color: #f8fafc !important;
-  padding: 16px 20px !important;
+  padding: 20px 24px !important;
   box-sizing: border-box !important;
-  animation: gkCardAppear 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  overflow: visible !important;
+  animation: gkCardAppear 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-@media (max-height: 680px) {
+@media (max-height: 720px) {
   .gk-hero-card {
-    top: calc(var(--op-h) + 12px) !important;
-    transform: translateX(-50%) !important;
-    max-height: calc(100vh - var(--op-h) - 24px) !important;
-    overflow-y: auto !important;
+    max-height: calc(100vh - 20px) !important;
+    padding: 14px 18px !important;
   }
 }
 
 @keyframes gkCardAppear {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 10px)); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
 }
 
 @keyframes gkPulseAlert {
