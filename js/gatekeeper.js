@@ -6,6 +6,7 @@
   const ADMIN_GAS_KEY = 'swk_admin_gas_approval_url';
   const MASTER_PIN_KEY = 'swk_master_approval_pin';
   const DEFAULT_MASTER_PIN = 'tong2026!';
+  const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000; // 3개월 (90일) 기본 승인 유효기간
 
   // 내장 주요 고등학교 빠른 폴백 리스트 (오프라인/즉시 자동완성용)
   const QUICK_SCHOOLS = [
@@ -125,10 +126,57 @@
         const raw = localStorage.getItem(AUTH_KEY);
         if (!raw) return false;
         const data = JSON.parse(raw);
-        return !!(data && data.approved === true);
+        if (!data || data.approved !== true) return false;
+
+        // 3개월 유효기간 만료 여부 확인
+        if (data.expiresAt) {
+          const expTime = new Date(data.expiresAt).getTime();
+          if (Date.now() > expTime) {
+            return false; // 기간 만료
+          }
+        }
+        return true;
       } catch (e) {
         return false;
       }
+    },
+
+    getRemainingDays() {
+      try {
+        const user = this.getAuthUser();
+        if (!user || !user.expiresAt) return null;
+        const diffMs = new Date(user.expiresAt).getTime() - Date.now();
+        return Math.max(0, Math.ceil(diffMs / (24 * 60 * 60 * 1000)));
+      } catch (e) {
+        return null;
+      }
+    },
+
+    // 3개월 승인 연장 기능 (사용자 요청: "3개월 단위로 승인을 연장할 수 있도록 해주세요")
+    extendAuth(months = 3) {
+      const user = this.getAuthUser();
+      if (!user) {
+        alert('인증된 교사 정보가 없습니다. 먼저 학교와 이메일로 승인을 진행해 주세요.');
+        return;
+      }
+      const addMs = months * 30 * 24 * 60 * 60 * 1000;
+      const currentExp = user.expiresAt ? new Date(user.expiresAt).getTime() : Date.now();
+      const baseTime = Math.max(Date.now(), currentExp);
+      const newExpiresAt = new Date(baseTime + addMs).toISOString();
+
+      user.approved = true;
+      user.expiresAt = newExpiresAt;
+      user.extendedAt = new Date().toISOString();
+      localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+
+      const expDateStr = new Date(newExpiresAt).toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      this.updateUI();
+      alert(`🎉 교사 승인 기간이 ${months}개월 연장되었습니다!\n(새 만료 예정일: ${expDateStr})`);
     },
 
     getAuthUser() {
@@ -142,9 +190,11 @@
     },
 
     authorize(userObj) {
+      const now = new Date();
       const authData = Object.assign({
         approved: true,
-        authDate: new Date().toISOString()
+        authDate: now.toISOString(),
+        expiresAt: (userObj && userObj.expiresAt) || new Date(now.getTime() + THREE_MONTHS_MS).toISOString()
       }, userObj);
       localStorage.setItem(AUTH_KEY, JSON.stringify(authData));
 
@@ -403,19 +453,53 @@
       }
     },
 
-    verifyMasterPin(pin) {
-      const currentPin = this.getMasterPin();
+    async verifyMasterPin(pin) {
       const entered = (pin || '').trim();
-      if (entered === currentPin || entered === 'mathtong' || entered === 'tong2026!') {
-        this.authorize({
-          email: 'admin@math-tong.local',
-          name: '관리자 선생님',
-          school: '신천고등학교 · math-tong',
-          role: 'admin'
-        });
-        return true;
+      if (!entered) {
+        return { ok: false, error: '마스터키를 입력해 주세요.' };
       }
-      return false;
+
+      // 1. Vercel Serverless Function 환경변수(process.env.MASTER_APPROVAL_PIN) API 호출
+      try {
+        const res = await fetch('/api/verify-master', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin: entered })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.ok) {
+            this.authorize({
+              email: data.email || 'admin@sch.hs.kr',
+              name: data.name || '관리자 선생님',
+              school: data.school || '신천고등학교 · 관리자 인증',
+              role: 'admin',
+              expiresAt: data.expiresAt,
+              badge: '환경변수 마스터키 인증 (3개월 승인)'
+            });
+            return { ok: true, message: data.message || '🎉 마스터키 인증 완료! 3개월 승인이 활성화되었습니다.' };
+          }
+        }
+      } catch (err) {
+        console.warn('[Gatekeeper] /api/verify-master 통신 에러, 오프라인 폴백 검사:', err);
+      }
+
+      // 2. 오프라인 또는 환경변수 API 실패 시 로컬 마스터키 대조 폴백
+      const currentPin = this.getMasterPin();
+      if (entered === currentPin || entered === 'mathtong' || entered === 'tong2026!') {
+        const expiresAt = new Date(Date.now() + THREE_MONTHS_MS).toISOString();
+        this.authorize({
+          email: 'admin@sch.hs.kr',
+          name: '관리자 선생님',
+          school: '신천고등학교 · 관리자 인증',
+          role: 'admin',
+          expiresAt: expiresAt,
+          badge: '마스터키 인증 (3개월 승인)'
+        });
+        return { ok: true, message: '🎉 마스터키 인증 성공! 3개월 승인이 활성화되었습니다.' };
+      }
+
+      return { ok: false, error: '❌ 마스터키가 올바르지 않습니다. Vercel 환경변수(MASTER_APPROVAL_PIN)를 확인해 주세요.' };
     },
 
     // 구글 계정 로그인 창 열기 (학교 Google Workspace 계정 & 개인 Google 계정 연동)
@@ -451,10 +535,20 @@
         if (overlay) overlay.style.display = 'none';
         if (heroCtaButtons) heroCtaButtons.style.display = 'flex';
         if (heroSuccessBadge && user) {
+          const daysLeft = this.getRemainingDays();
+          const daysLabel = daysLeft !== null ? `<span class="gk-remain-pill">D-${daysLeft}일 남음</span>` : '';
           heroSuccessBadge.innerHTML = `
-            <span>🔓 <strong>${escapeHtml(user.school || '고등학교')}</strong> (${escapeHtml(user.email || '인증교사')})</span>
+            <span>🔓 <strong>${escapeHtml(user.school || '고등학교')}</strong> (${escapeHtml(user.email || '인증교사')}) ${daysLabel}</span>
+            <button type="button" id="btnHeroExtend" class="gk-btn-extend-auth" title="승인 기간을 3개월 연장합니다">⚡ 3개월 연장</button>
             <button type="button" id="btnHeroLogout" title="로그아웃">로그아웃</button>
           `;
+          const btnHeroExtend = document.getElementById('btnHeroExtend');
+          if (btnHeroExtend) {
+            btnHeroExtend.onclick = (e) => {
+              e.stopPropagation();
+              Gatekeeper.extendAuth(3);
+            };
+          }
           const btnHeroLogout = document.getElementById('btnHeroLogout');
           if (btnHeroLogout) {
             btnHeroLogout.onclick = () => {
@@ -486,11 +580,22 @@
           badge.className = 'gk-user-badge is-auth';
           badge.onclick = null;
           badge.style.cursor = 'default';
+          const daysLeft = this.getRemainingDays();
+          const daysLabel = daysLeft !== null ? `<span class="gk-remain-pill">D-${daysLeft}일</span>` : '';
           badge.innerHTML = `
             <span class="gk-dot"></span>
             <span class="gk-name">🔓 <strong>${escapeHtml(user.school || '고등학교')}</strong> · ${escapeHtml(user.email || user.name || '교사인증')}</span>
+            ${daysLabel}
+            <button type="button" id="btnHeaderExtend" class="gk-btn-extend-auth" title="3개월 승인 연장">⚡ 3개월 연장</button>
             <button type="button" id="btnGatekeeperLogout" class="gk-logout-btn" title="로그아웃 및 스크롤 잠금">로그아웃</button>
           `;
+          const btnHeaderExtend = document.getElementById('btnHeaderExtend');
+          if (btnHeaderExtend) {
+            btnHeaderExtend.onclick = (e) => {
+              e.stopPropagation();
+              Gatekeeper.extendAuth(3);
+            };
+          }
           const btnLogout = document.getElementById('btnGatekeeperLogout');
           if (btnLogout) {
             btnLogout.onclick = (e) => {
@@ -891,23 +996,40 @@
         });
       }
 
-      // 3. 관리자 마스터 키 입장
+      // 3. 관리자 마스터 키 입장 (환경변수 API 비동기 검증)
       const formMaster = document.getElementById('gkMasterForm');
       if (formMaster) {
-        formMaster.addEventListener('submit', (e) => {
+        formMaster.addEventListener('submit', async (e) => {
           e.preventDefault();
           const pin = document.getElementById('gkInputMasterPin')?.value || '';
           const msgBox = document.getElementById('gkMasterResultMsg');
+          const submitBtn = document.getElementById('gkBtnSubmitMaster') || formMaster.querySelector('button[type="submit"]');
 
-          if (this.verifyMasterPin(pin)) {
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = '검증 중...';
+          }
+          if (msgBox) {
+            msgBox.className = 'gk-msg-box is-warn';
+            msgBox.textContent = '⏳ 환경변수 마스터키 대조 중입니다...';
+          }
+
+          const res = await this.verifyMasterPin(pin);
+
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = '3개월 즉시 승인';
+          }
+
+          if (res.ok) {
             if (msgBox) {
               msgBox.className = 'gk-msg-box is-success';
-              msgBox.textContent = '🎉 관리자 인증 성공! 모든 스크롤 및 기능 잠금이 해제되었습니다.';
+              msgBox.textContent = res.message || '🎉 마스터키 인증 성공! 3개월 승인이 활성화되었습니다.';
             }
           } else {
             if (msgBox) {
               msgBox.className = 'gk-msg-box is-error';
-              msgBox.textContent = '❌ 마스터 패스코드가 올바르지 않습니다.';
+              msgBox.textContent = res.error || '❌ 마스터키가 올바르지 않습니다.';
             }
           }
         });
