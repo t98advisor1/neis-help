@@ -759,6 +759,10 @@
             scope: 'email profile openid',
             error_callback: (err) => {
               console.warn('[Gatekeeper] OAuth error callback:', err);
+              if (err && (err.type === 'popup_closed' || err.type === 'user_cancelled' || err.message === 'Popup closed')) {
+                // 사용자가 팝업을 닫았거나 취소한 경우에는 도움말 모달을 띄우지 않음
+                return;
+              }
               this.openOriginHelpModal();
             },
             callback: async (tokenResponse) => {
