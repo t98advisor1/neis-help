@@ -561,7 +561,8 @@
       } else {
         this.lockScroll();
         if (overlay) overlay.style.display = 'block';
-        if (heroCtaButtons) heroCtaButtons.style.display = 'none';
+        if (heroCtaButtons) heroCtaButtons.style.display = 'flex';
+        if (heroSuccessBadge) heroSuccessBadge.innerHTML = '';
       }
 
       // 상단 헤더 사용자 상태 뱃지 갱신

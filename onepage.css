@@ -1600,21 +1600,45 @@ body.gk-scroll-locked {
 }
 
 /* 히어로 텍스트 내부 인플레이스 인증 카드 */
+/* 미인증 상태: 기존의 화면구성은 그대로 보여주되 글씨와 화면을 반투명하게 */
+body.gk-scroll-locked .op-hero-inner {
+  opacity: 0.35 !important;
+  filter: blur(0.5px);
+  pointer-events: none !important;
+  user-select: none !important;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+/* 인증 카드: 화면 중앙에 떠서 학교 선택 및 이메일/Google 로그인이 한눈에 100% 보이도록 배치 */
 .gk-hero-card {
-  position: relative !important;
-  width: 100% !important;
-  max-width: 680px !important;
-  margin: 8px 0 16px 0 !important;
-  background: rgba(15, 23, 42, 0.88) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(96, 165, 250, 0.5) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-  color: #f8fafc;
-  padding: 14px 18px;
-  box-sizing: border-box;
-  animation: gkCardAppear 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: absolute !important;
+  top: calc(var(--op-h) + (100vh - var(--op-h)) * 0.46) !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(840px, 94vw) !important;
+  max-width: 840px !important;
+  margin: 0 !important;
+  z-index: 55 !important;
+  background: rgba(15, 23, 42, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 2px solid rgba(96, 165, 250, 0.6) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 24px 65px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.15) inset !important;
+  color: #f8fafc !important;
+  padding: 16px 20px !important;
+  box-sizing: border-box !important;
+  animation: gkCardAppear 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  overflow: visible !important;
+}
+
+@media (max-height: 680px) {
+  .gk-hero-card {
+    top: calc(var(--op-h) + 12px) !important;
+    transform: translateX(-50%) !important;
+    max-height: calc(100vh - var(--op-h) - 24px) !important;
+    overflow-y: auto !important;
+  }
 }
 
 @keyframes gkCardAppear {
