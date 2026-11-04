@@ -262,27 +262,45 @@ function doPost(e) {
       return jsonResponse({ success: true, message: "교과담임 시트 동기화 완료", row: foundRow });
     }
 
-    // === [사용자 승인 신청 제출 API] ===
+    // === [사용자 승인 신청 제출 API (신천고/교육청 자동승인 + 타 계정 수동승인)] ===
     if (action === "apply_access") {
       var ss = SpreadsheetApp.getActiveSpreadsheet();
       var appSheet = ss.getSheetByName("사용자승인");
       if (!appSheet) {
         appSheet = ss.insertSheet("사용자승인");
-        appSheet.appendRow(["신청일시", "교사성명", "소속학교", "이메일", "연락처/직위", "신청사유", "승인상태", "메모"]);
+        appSheet.appendRow(["신청일시", "교사성명", "소속학교", "이메일", "연락처/과목", "신청사유", "승인상태", "메모"]);
         appSheet.getRange("A1:H1").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
       }
       var now = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
+      var targetEmail = (body.email || "").trim().toLowerCase();
+
+      // 신천고(@sch.hs.kr) 또는 경기도교육청(@goedu.kr) 도메인은 시트에서 자동으로 "승인" 처리!
+      var initialStatus = "대기";
+      var note = "";
+      if (targetEmail.endsWith("@sch.hs.kr") || targetEmail.endsWith("@goedu.kr")) {
+        initialStatus = "승인";
+        note = "학교 공식 계정 자동승인";
+      }
+
       appSheet.appendRow([
         now,
         body.name || "",
         body.school || "",
-        (body.email || "").trim().toLowerCase(),
-        body.phone || "",
+        targetEmail,
+        body.phone || body.subject || "",
         body.reason || "",
-        "대기",
-        ""
+        initialStatus,
+        note
       ]);
-      return jsonResponse({ success: true, message: "사용 승인 신청이 성공적으로 접수되었습니다. 관리자 승인 후 이용 가능합니다." });
+
+      return jsonResponse({
+        success: true,
+        approved: initialStatus === "승인",
+        status: initialStatus,
+        message: initialStatus === "승인"
+          ? "학교 공식 계정 확인 완료! 3개월 이용 권한이 자동으로 승인되었습니다."
+          : "사용 승인 신청이 완료되었습니다. 관리자 승인 후 3개월간 이용하실 수 있습니다."
+      });
     }
 
     // === [관리자 승인 상태 변경 API (3개월 권한 부여)] ===

@@ -484,141 +484,137 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <!-- ── 1화면: 소개 (기존 Vercel Hero 디자인 유지) ── -->
 <section class="op-screen op-hero" id="hero">
   <!-- ── [사용자 요청] 기존 화면 구성을 그대로 보여주면서 그 위에 크게 떠있는 교사 인증 오버레이 카드 ── -->
-  <!-- ── 교사 인증 오버레이 카드 (신청 ➔ 시트/대시보드 승인 ➔ 3개월 로그인 체계) ── -->
+  <!-- ── 교사 인증 오버레이 카드 (Google 계정 로그인 ➔ 교사 승인 확인 ➔ 3개월 로그인 유지) ── -->
   <div id="appGatekeeperOverlay" class="gk-hero-card">
     <!-- 대형 교사용 안내 배너 -->
     <div class="gk-prominent-banner">
       <div class="gk-banner-main-row">
-        <span class="gk-badge-pill">🔒 교사 승인제 서비스</span>
+        <span class="gk-badge-pill">🔒 교사용 전용 연구 서비스</span>
         <h2 class="gk-banner-title">학교생활기록부 올인원: 교사 승인 및 로그인</h2>
       </div>
       <p class="gk-banner-sub">
-        본 시스템은 현직 교사의 업무 경감을 위한 비공개 연구 플랫폼입니다.<br>
-        <strong>[사용 승인 신청]</strong> 후 관리자(math-tong)의 구글 시트 승인 또는 <strong>관리자 비밀번호 대시보드</strong>를 통해 승인되면 <strong>3개월간 자유롭게 이용</strong>하실 수 있습니다.
+        본 시스템은 현직 선생님의 생기부 기재 및 대입 진학상담 연구를 위한 교사 전용 서비스입니다.<br>
+        <strong>Google 계정으로 로그인</strong> 후 승인 상태를 확인하시면 <strong>3개월간 로그인 없이 자유롭게 이용</strong>하실 수 있습니다.
       </p>
     </div>
 
     <div class="gk-header-compact">
       <div class="gk-tab-nav" style="display:flex; gap:6px;">
-        <button type="button" class="gk-tab-btn is-active" data-gk-tab="apply">📝 1. 사용 승인 신청</button>
-        <button type="button" class="gk-tab-btn" data-gk-tab="login">🔑 2. 승인 확인 &amp; 로그인 (3개월)</button>
-        <button type="button" class="gk-tab-btn" data-gk-tab="admin">⚡ 3. 관리자 마스터키 &amp; 대시보드</button>
+        <button type="button" class="gk-tab-btn is-active" data-gk-tab="google">Google 계정 로그인 &amp; 승인</button>
+        <button type="button" class="gk-tab-btn" data-gk-tab="manual">학교 계정 직접 입력</button>
+        <button type="button" class="gk-tab-btn" data-gk-tab="master">⚡ 관리자 마스터키</button>
       </div>
       <span class="gk-duration-badge">⏱️ 승인 시 3개월 유지</span>
     </div>
 
-    <!-- 탭 1: 사용 승인 신청 -->
-    <div class="gk-tab-pane" id="gk-pane-apply">
-      <form id="gkApplyFormFull" style="display:flex; flex-direction:column; gap:10px;">
+    <!-- 탭 1: Google 계정 로그인 & 승인 (1순위 메인) -->
+    <div class="gk-tab-pane" id="gk-pane-google">
+      <!-- 1단계: Google 계정 로그인 버튼 영역 -->
+      <div id="gkGoogleSignArea" style="background:#ffffff; border:1.5px solid #bfdbfe; border-radius:12px; padding:18px 20px; box-shadow:0 4px 12px rgba(37,99,235,0.06); text-align:center;">
+        <div style="font-size:14px; font-weight:800; color:#0f172a; margin-bottom:4px;">1단계: Google 계정으로 로그인</div>
+        <p style="font-size:12px; color:#64748b; margin:0 0 14px;">선생님의 계정(@sch.hs.kr, @goedu.kr 또는 개인 Google 계정)으로 로그인해 주세요.</p>
+        
+        <div id="g_id_onload_container" style="display:flex; justify-content:center; margin-bottom:10px;"></div>
+        
+        <button type="button" id="gkBtnGoogleLoginFallback" class="gk-btn-google-primary" style="margin:0 auto; padding:10px 18px; font-size:13.5px; font-weight:700; border-radius:8px; display:inline-flex; align-items:center; gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          <span>Google 계정으로 로그인하기</span>
+        </button>
+      </div>
+
+      <!-- 2단계: 로그인 후 계정 정보 & 승인 신청/상태 확인 영역 -->
+      <div id="gkGoogleProfileArea" class="gk-hidden" style="margin-top:12px;">
+        <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div>
+            <span style="font-size:11px; font-weight:800; color:#2563eb; background:#dbeafe; padding:2px 7px; border-radius:999px;">Google 인증 계정</span>
+            <div style="font-size:14px; font-weight:800; color:#0f172a; margin-top:2px;">
+              <span id="gkVerifiedName">선생님</span> (<span id="gkVerifiedEmail" style="font-family:monospace; color:#2563eb;"></span>)
+            </div>
+          </div>
+          <button type="button" id="btnChangeGoogleUser" style="background:#fff; border:1px solid #cbd5e1; border-radius:6px; padding:4px 8px; font-size:11.5px; cursor:pointer;">계정 변경</button>
+        </div>
+
+        <div id="gkGoogleApplyFormWrap">
+          <form id="gkGoogleApplyForm" style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div style="position:relative;">
+                <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">소속 고등학교 *</label>
+                <div style="display:flex; gap:4px;">
+                  <input type="text" id="gkGoogleSchool" class="gk-input-mini" placeholder="예: 신천고등학교" required value="신천고등학교">
+                  <button type="button" id="gkBtnSearchSchoolGoogle" class="gk-btn-search-school" title="학교 검색">🔍</button>
+                </div>
+                <div id="gkSchoolDropdownGoogle" class="gk-school-dropdown gk-hidden"></div>
+              </div>
+              <div>
+                <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">담당 과목 / 학년 (선택)</label>
+                <input type="text" id="gkGoogleSubject" class="gk-input-mini" placeholder="예: 1학년 공통수학">
+              </div>
+            </div>
+
+            <div>
+              <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">신청 사유 / 메모 (선택)</label>
+              <input type="text" id="gkGoogleReason" class="gk-input-mini" placeholder="예: 2026 기재요령 세특 연구 및 대입 진학상담">
+            </div>
+
+            <div style="display:flex; gap:8px; margin-top:4px;">
+              <button type="submit" id="gkBtnSubmitGoogleApp" class="gk-btn-final-verify" style="flex:1; background:#2563eb;">
+                📋 교사 사용 승인 신청하기
+              </button>
+              <button type="button" id="gkBtnCheckGoogleStatus" class="gk-btn-final-verify" style="flex:1; background:#059669;">
+                ✅ 승인 상태 확인 &amp; 입장
+              </button>
+            </div>
+            <div id="gkGoogleStatusMsg" class="gk-msg-box"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 탭 2: 학교 계정 직접 입력 (구글 로그인 오류 시 비상 대체용) -->
+    <div class="gk-tab-pane gk-hidden" id="gk-pane-manual">
+      <form id="gkManualForm" style="display:flex; flex-direction:column; gap:10px;">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
           <div>
-            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">선생님 성함 (또는 닉네임) *</label>
-            <input type="text" id="gkApplyName" class="gk-input-mini" placeholder="예: 김선생, 수학통, 홍길동" required autocomplete="name">
+            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">선생님 성함 *</label>
+            <input type="text" id="gkManualName" class="gk-input-mini" placeholder="예: 홍길동" required autocomplete="name">
           </div>
-          <div style="position:relative;">
+          <div>
             <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">소속 고등학교 *</label>
-            <div style="display:flex; gap:4px;">
-              <input type="text" id="gkApplySchool" class="gk-input-mini" placeholder="예: 신천고등학교" required value="신천고등학교">
-              <button type="button" id="gkBtnSearchSchoolApp" class="gk-btn-search-school" title="학교 검색">🔍</button>
-            </div>
-            <div id="gkSchoolDropdownApp" class="gk-school-dropdown gk-hidden"></div>
+            <input type="text" id="gkManualSchool" class="gk-input-mini" placeholder="예: 신천고등학교" required value="신천고등학교">
           </div>
         </div>
 
         <div style="display:grid; grid-template-columns:1.2fr 0.8fr; gap:10px;">
           <div>
-            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">학교/교육청 계정 또는 이메일 *</label>
-            <input type="email" id="gkApplyEmail" class="gk-input-mini" placeholder="예: teacher@sch.hs.kr 또는 @goedu.kr" required autocomplete="email">
+            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">선생님 이메일 *</label>
+            <input type="email" id="gkManualEmail" class="gk-input-mini" placeholder="선생님계정@sch.hs.kr 또는 @goedu.kr" required autocomplete="email">
           </div>
           <div>
-            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">담당 과목 / 학년 (선택)</label>
-            <input type="text" id="gkApplySubject" class="gk-input-mini" placeholder="예: 1학년 공통수학">
+            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">담당 과목 / 학년</label>
+            <input type="text" id="gkManualSubject" class="gk-input-mini" placeholder="예: 1학년 공통수학">
           </div>
         </div>
 
-        <div>
-          <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">신청 사유 및 메모 (선택)</label>
-          <input type="text" id="gkApplyReason" class="gk-input-mini" placeholder="예: 2026 기재요령 세특 작성 및 대입 진학상담 연구">
+        <div style="display:flex; gap:8px; margin-top:4px;">
+          <button type="submit" id="gkBtnSubmitManualApp" class="gk-btn-final-verify" style="flex:1; background:#2563eb;">
+            📋 교사 사용 승인 신청하기
+          </button>
+          <button type="button" id="gkBtnCheckManualStatus" class="gk-btn-final-verify" style="flex:1; background:#059669;">
+            ✅ 승인 상태 확인 &amp; 입장
+          </button>
         </div>
-
-        <button type="submit" id="gkBtnSubmitApp" class="gk-btn-final-verify" style="margin-top:6px; background:#2563eb;">
-          📋 관리자에게 사용 승인 신청 전송 (구글 시트 접수)
-        </button>
-        <p style="font-size:11.5px; color:#64748b; margin:2px 0 0; text-align:center;">
-          ※ 제출 즉시 관리자 구글 시트로 접수되며, 관리자 승인 후 <strong>[2. 승인 확인 &amp; 로그인]</strong> 탭에서 3개월간 이용하실 수 있습니다.
-        </p>
-        <div id="gkApplyFormResultMsg" class="gk-msg-box"></div>
+        <div id="gkManualStatusMsg" class="gk-msg-box"></div>
       </form>
     </div>
 
-    <!-- 탭 2: 승인 확인 & 로그인 (3개월) -->
-    <div class="gk-tab-pane gk-hidden" id="gk-pane-login">
-      <form id="gkLoginForm" style="display:flex; flex-direction:column; gap:10px;">
-        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; font-size:12px; color:#15803d; line-height:1.45;">
-          💡 <strong>승인 완료 안내:</strong> 관리자(math-tong) 선생님의 구글 시트 또는 대시보드에서 승인이 완료된 이메일을 입력하시면 <strong>3개월간 로그인 상태가 유지</strong>됩니다.
-        </div>
-        <div>
-          <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">신청하신 이메일 주소</label>
-          <input type="email" id="gkLoginEmail" class="gk-input-mini" placeholder="예: teacher@sch.hs.kr 또는 @goedu.kr" required autocomplete="email">
-        </div>
-        <button type="submit" id="gkBtnCheckLogin" class="gk-btn-final-verify" style="background:#059669;">
-          ✅ 승인 상태 확인 &amp; 3개월 로그인 입장
-        </button>
-        <div id="gkLoginResultMsg" class="gk-msg-box"></div>
+    <!-- 탭 3: 관리자 마스터키 -->
+    <div class="gk-tab-pane gk-hidden" id="gk-pane-master">
+      <form id="gkMasterForm" style="display:flex; gap:8px; align-items:center; padding:14px 0; flex-wrap:wrap;">
+        <span style="font-size:12.5px; color:#0f172a; font-weight:700;">⚡ 관리자 마스터 비밀번호:</span>
+        <input type="password" id="gkInputMasterPin" class="gk-input-mini" placeholder="비밀번호(MASTER_APPROVAL_PIN) 입력" required style="max-width:240px;">
+        <button type="submit" id="gkBtnSubmitMaster" class="gk-btn-submit-mini" style="background:#7c3aed;">관리자로 즉시 입장</button>
+        <div id="gkMasterResultMsg" class="gk-msg-box" style="margin:4px 0 0; width:100%;"></div>
       </form>
-    </div>
-
-    <!-- 탭 3: 관리자 마스터키 & 승인 대시보드 -->
-    <div class="gk-tab-pane gk-hidden" id="gk-pane-admin">
-      <div id="gkAdminAuthWrap">
-        <form id="gkMasterForm" style="display:flex; gap:8px; align-items:center; padding:10px 0; flex-wrap:wrap;">
-          <span style="font-size:12.5px; color:#0f172a; font-weight:700;">⚡ 관리자 마스터 비밀번호:</span>
-          <input type="password" id="gkInputMasterPin" class="gk-input-mini" placeholder="비밀번호(MASTER_APPROVAL_PIN) 입력" required style="max-width:240px;">
-          <button type="submit" id="gkBtnSubmitMaster" class="gk-btn-submit-mini" style="background:#7c3aed;">대시보드 열기</button>
-          <div id="gkMasterResultMsg" class="gk-msg-box" style="margin:4px 0 0; width:100%;"></div>
-        </form>
-      </div>
-
-      <div id="gkAdminDashboardWrap" class="gk-hidden" style="margin-top:8px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
-          <div>
-            <strong style="font-size:14px; color:#0f172a;">👑 관리자 사용자 승인 대시보드</strong>
-            <span id="gkApplicantCountBadge" style="font-size:11.5px; color:#64748b; margin-left:6px;"></span>
-          </div>
-          <div style="display:flex; gap:6px;">
-            <button type="button" id="btnAdminRefresh" class="btn small" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; font-size:11.5px; padding:4px 9px;">🔄 새로고침</button>
-            <button type="button" id="btnAdminEnterWorkbench" class="btn small" style="background:#7c3aed; color:#fff; border:none; font-size:11.5px; font-weight:700; padding:4px 10px;">⚡ 관리자로 즉시 입장</button>
-          </div>
-        </div>
-
-        <div style="max-height:260px; overflow-y:auto; border:1px solid #cbd5e1; border-radius:8px; background:#fff;">
-          <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
-            <thead style="background:#f8fafc; border-bottom:1px solid #e2e8f0; position:sticky; top:0;">
-              <tr>
-                <th style="padding:7px 10px;">신청일시</th>
-                <th style="padding:7px 10px;">성함</th>
-                <th style="padding:7px 10px;">소속학교</th>
-                <th style="padding:7px 10px;">이메일</th>
-                <th style="padding:7px 10px;">상태</th>
-                <th style="padding:7px 10px; text-align:center;">승인/반려 관리</th>
-              </tr>
-            </thead>
-            <tbody id="gkAdminApplicantListBody">
-              <tr>
-                <td colspan="6" style="padding:20px; text-align:center; color:#94a3b8;">신청 목록을 불러오는 중...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div style="margin-top:10px; padding:10px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <span style="font-size:11.5px; font-weight:700; color:#475569;">📊 연동된 관리자 구글 시트 웹앱 URL (GAS):</span>
-            <button type="button" id="btnSaveAdminGasUrl" style="background:#2563eb; color:#fff; border:none; border-radius:4px; padding:3px 8px; font-size:11px; cursor:pointer;">저장 및 테스트</button>
-          </div>
-          <input type="url" id="gkInputAdminGasUrl" class="gk-input-mini" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%; font-size:11.5px;">
-        </div>
-      </div>
     </div>
   </div>
 

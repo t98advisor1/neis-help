@@ -600,4 +600,36 @@
     }
   };
 
+  // 30명 모의 학급 미리보기 렌더링 함수 전역 등록
+  window.renderMock30Table = function() {
+    const tbody = document.getElementById('tbodyMock30Preview');
+    if (!tbody || !window.MOCK_CLASS_30_HOMEROOM) return;
+    tbody.innerHTML = window.MOCK_CLASS_30_HOMEROOM.map(s => `
+      <tr style="border-bottom:1px solid #e2e8f0;">
+        <td style="padding:7px 10px; font-family:monospace; font-weight:700;">${s.stuNumber}</td>
+        <td style="padding:7px 10px; font-weight:800; color:#0f172a;">${s.stuName}</td>
+        <td style="padding:7px 10px; color:#2563eb;">${s.stuMajor}</td>
+        <td style="padding:7px 10px; color:#059669; font-weight:700;">${s.grade5}</td>
+        <td style="padding:7px 10px; color:#64748b;">${s.grade9}</td>
+        <td style="padding:7px 10px; font-size:11.5px;">${s.targetUni1 || '-'}</td>
+        <td style="padding:7px 10px; font-weight:600;">${s.subject || '공통수학1'}</td>
+        <td style="padding:7px 10px; font-size:11px; color:#475569; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${s.existingSetuk}">${s.existingSetuk}</td>
+      </tr>
+    `).join('');
+  };
+
+  // 30명 엑셀 다운로드 바인딩
+  document.addEventListener('DOMContentLoaded', () => {
+    const btnEx = document.getElementById('btnPreviewDownloadExcel');
+    if (btnEx) {
+      btnEx.addEventListener('click', () => {
+        if (window.GoogleSheet && typeof window.GoogleSheet.downloadRelationalExcel === 'function') {
+          window.GoogleSheet.downloadRelationalExcel();
+        } else {
+          alert('엑셀 생성 모듈을 준비 중입니다.');
+        }
+      });
+    }
+  });
+
 })();

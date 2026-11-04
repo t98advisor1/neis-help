@@ -479,27 +479,42 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // === [사용자 승인 신청 제출 API] ===
+    // === [사용자 승인 신청 제출 API (신천고/교육청 자동승인 + 타 계정 수동승인)] ===
     if (action === "apply_access") {
       var appSheet = ss.getSheetByName("사용자승인");
       if (!appSheet) {
         appSheet = ss.insertSheet("사용자승인");
-        appSheet.appendRow(["신청일시", "교사성명", "소속학교", "이메일", "연락처/직위", "신청사유", "승인상태", "메모"]);
+        appSheet.appendRow(["신청일시", "교사성명", "소속학교", "이메일", "연락처/과목", "신청사유", "승인상태", "메모"]);
         appSheet.getRange("A1:H1").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
       }
       var now = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
+      var targetEmail = (body.email || "").trim().toLowerCase();
+      var initialStatus = "대기";
+      var note = "";
+      if (targetEmail.endsWith("@sch.hs.kr") || targetEmail.endsWith("@goedu.kr")) {
+        initialStatus = "승인";
+        note = "학교 공식 계정 자동승인";
+      }
+
       appSheet.appendRow([
         now,
         body.name || "",
         body.school || "",
-        (body.email || "").trim().toLowerCase(),
-        body.phone || "",
+        targetEmail,
+        body.phone || body.subject || "",
         body.reason || "",
-        body.status || (/(@sch\.hs\.kr?|@goedu\.kr|@goe\.go\.kr|@korea\.kr|\.hs\.kr)$/i.test((body.email || "").trim()) ? "승인" : "대기"),
-        "소속·이메일 인증"
+        initialStatus,
+        note
       ]);
-      return ContentService.createTextOutput(JSON.stringify({ success: true, message: "사용 승인 신청이 성공적으로 접수되었습니다. 관리자 승인 후 이용 가능합니다." }))
-        .setMimeType(ContentService.MimeType.JSON);
+
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        approved: initialStatus === "승인",
+        status: initialStatus,
+        message: initialStatus === "승인"
+          ? "학교 공식 계정 확인 완료! 3개월 이용 권한이 자동으로 승인되었습니다."
+          : "사용 승인 신청이 완료되었습니다. 관리자 승인 후 3개월간 이용하실 수 있습니다."
+      })).setMimeType(ContentService.MimeType.JSON);
     }
 
     return ContentService.createTextOutput(JSON.stringify({ success: false, error: "알 수 없는 POST action" }))
