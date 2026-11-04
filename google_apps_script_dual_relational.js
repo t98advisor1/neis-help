@@ -367,53 +367,80 @@ function NEIS_BYTES(text) {
 // ==========================================
 // [신규] 숨겨진/보호된 '_설정_프롬프트지침' 탭에서 지침 자동 참조
 // ==========================================
+// ==========================================
+// [신규] 스킬 지침 셀($B$5) 우선 참조 및 커스텀 함수 엔진
+// ==========================================
 function getSystemPromptInstructions() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("_설정_프롬프트지침") || ss.getSheetByName("설정_프롬프트지침");
+  var sheet = ss.getSheetByName("0_AI함수_사용안내_및_스킬지침") ||
+              ss.getSheetByName("0_AI함수_사용안내") ||
+              ss.getSheetByName("_설정_프롬프트지침") ||
+              ss.getSheetByName("설정_프롬프트지침");
   if (!sheet) {
-    return "당신은 고등학교 생기부 및 세특 전문 교사입니다. 기재요령을 준수하여 [동기-과정-성장] 3단 구조로 공백포함 400자 내외로 작성하세요.";
+    return "당신은 고등학교 생기부 및 세특 전문 교사입니다. 교육부 훈령 기재요령을 준수하여 [동기-과정-성장] 3단 논법으로 1,500 Byte(한글 500자) 이내, 개조식 종결(~함, ~임)으로 작성하세요. 사교육, 수상경력, 공인어학시험, 외부경시대회 언급은 엄격히 금지됩니다.";
   }
 
-  var data = sheet.getRange("B2:B8").getValues();
-  var parts = [];
-  for (var i = 0; i < data.length; i++) {
-    var val = String(data[i][0] || "").trim();
-    if (val) parts.push(val);
-  }
+  // 1순위: B5 셀 단독 조회 (스킬 지침 텍스트)
+  try {
+    var b5 = String(sheet.getRange("B5").getValue() || "").trim();
+    if (b5.length > 20) return b5;
+  } catch(e) {}
 
-  if (parts.length === 0) {
-    return "당신은 고등학교 생기부 및 세특 전문 교사입니다. 기재요령을 준수하여 [동기-과정-성장] 3단 구조로 공백포함 400자 내외로 작성하세요.";
-  }
-  return parts.join("\n");
+  // 2순위: B2:B8 범위 조합
+  try {
+    var data = sheet.getRange("B2:B8").getValues();
+    var parts = [];
+    for (var i = 0; i < data.length; i++) {
+      var val = String(data[i][0] || "").trim();
+      if (val) parts.push(val);
+    }
+    if (parts.length > 0) return parts.join("\n");
+  } catch(e) {}
+
+  return "교육부 훈령 기재요령 준수 3단 논법 1,500 Byte 작성.";
 }
 
-function AI(prompt, context1, context2) {
+/**
+ * 구글 시트 셀 안에서 제미나이 AI를 호출하는 커스텀 함수
+ * @param {string} prompt 지시사항 또는 활동내용
+ * @param {string} [context1] 추가 맥락 1 (예: 과목명 또는 학생 특성)
+ * @param {string} [context2] 추가 맥락 2 (예: 희망진로)
+ * @param {string} [customGuideline] 셀에 기록된 스킬 지침 (예: '0_AI함수_사용안내_및_스킬지침'!$B$5)
+ * @return {string} AI가 작성한 초안
+ * @customfunction
+ */
+function AI(prompt, context1, context2, customGuideline) {
   if (!prompt && !context1) return "";
   
   var fullText = String(prompt || "") + " " + String(context1 || "") + " " + String(context2 || "");
-  var sysPrompt = getSystemPromptInstructions();
-  if (!prompt && !context1) return "";
   
-  var fullText = String(prompt || "") + " " + String(context1 || "") + " " + String(context2 || "");
+  // 1순위: 파라미터로 직접 전달된 스킬 지침 셀 텍스트
+  var sysPrompt = "";
+  if (customGuideline && String(customGuideline).trim().length > 10) {
+    sysPrompt = String(customGuideline).trim();
+  } else {
+    // 2순위: 시트 첫 번째 탭 '0_AI함수_사용안내_및_스킬지침'의 B5 또는 설정탭 B2:B8
+    sysPrompt = getSystemPromptInstructions();
+  }
   
   // 캐싱 적용 (동일 입력에 대한 과도한 API 호출 방지)
   var cache = CacheService.getDocumentCache();
-  var cacheKey = "ai_" + Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, fullText)).slice(0, 30);
-  var cached = cache.get(cacheKey);
+  var cacheKey = "ai_" + Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, fullText + sysPrompt)).slice(0, 30);
+  var cached = cache ? cache.get(cacheKey) : null;
   if (cached) return cached;
 
   var apiKey = getGeminiApiKey();
   if (!apiKey || apiKey.includes("YOUR_API_KEY")) {
-    return "[안내] 상단 메뉴 [생기부·대입 도우미] > [API 키 설정]에서 Gemini API 키를 먼저 등록해 주세요.";
+    return "[안내] 상단 메뉴 [🎓 NEIS 생기부 마스터] > [🔑 Gemini API Key 등록]에서 API 키를 먼저 등록해 주세요.";
   }
 
   try {
     var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
     var payload = {
       contents: [{
-        parts: [{ text: sysPrompt + "\n\n[작성 대상 활동 내용]:\n" + fullText }]
+        parts: [{ text: "[작성 지침 및 기재요령]:\n" + sysPrompt + "\n\n[학생 활동 관찰 데이터]:\n" + fullText }]
       }],
-      generationConfig: { temperature: 0.3, maxOutputTokens: 600 }
+      generationConfig: { temperature: 0.35, maxOutputTokens: 700 }
     };
 
     var res = UrlFetchApp.fetch(url, {
@@ -428,10 +455,10 @@ function AI(prompt, context1, context2) {
     
     if (resultText) {
       resultText = resultText.trim();
-      cache.put(cacheKey, resultText, 21600); // 6시간 캐시
+      if (cache) cache.put(cacheKey, resultText, 21600); // 6시간 캐시
       return resultText;
     }
-    return "생성 실패: 응답 없음";
+    return "생성 실패: AI 모델 응답 없음";
   } catch(e) {
     return "API 호출 오류: " + e.toString();
   }
@@ -439,24 +466,42 @@ function AI(prompt, context1, context2) {
 
 /**
  * 3단 구조(동기-활동-성장) 과목별 세특 초안 생성 커스텀 함수
- * @param {string} subject 과목명 (예: 경제)
- * @param {string} activity 학생 탐구활동 내용
- * @param {string} careerHope 학생 희망진로/학과 (선택)
- * @return {string} 세특 초안
+ * @param {string} subject 과목명 (예: 경제, 수학I)
+ * @param {string} activity 학생 탐구활동 및 수행평가 관찰 내용
+ * @param {string} [careerHope] 학생 희망진로/학과 (선택)
+ * @param {string} [skillCell] '0_AI함수_사용안내_및_스킬지침'!$B$5 와 같은 지침 셀 참조 (선택)
+ * @return {string} 1,500 Byte 3단 논법 세특 초안
  * @customfunction
  */
-function AI_SETUK(subject, activity, careerHope) {
+function AI_SETUK(subject, activity, careerHope, skillCell) {
   if (!activity) return "";
   var prompt = subject + " 과목 세부능력 및 특기사항 작성. " +
-               (careerHope ? "학생 희망분야: " + careerHope + ". " : "") +
-               "활동내용: " + activity + ". " +
-               "지침: '탐구동기 - 구체적 탐구과정 및 역량 - 배운 점과 성장'의 3단계 유기적 흐름으로 나이스 기재요령을 엄격히 준수하여 400~500자 내외로 작성할 것.";
-  return AI(prompt);
+               (careerHope ? "희망 진로: " + careerHope + ". " : "") +
+               "수업 관찰 및 탐구 내용: " + activity + ". " +
+               "지침: '탐구 동기 및 계기 ➔ 자기주도적 탐구 수행 과정 ➔ 배움과 학업적/역량적 성장'의 3단계 흐름으로 완성할 것.";
+  return AI(prompt, "", "", skillCell);
 }
 
-// ==========================================
-// 2. 다부서 동아리/진로활동 자동 합산 기능
-// ==========================================
+/**
+ * 학급 담임용 행동특성 및 종합의견 초안 생성 커스텀 함수
+ * @param {string} studentName 학생 성명
+ * @param {string} obsAutonomy 자율/인성/리더십 관찰 메모
+ * @param {string} obsCareer 동아리/진로/학업 관찰 메모
+ * @param {string} [personality] 교사가 파악한 핵심 인성 및 강점 키워드
+ * @param {string} [skillCell] '0_AI함수_사용안내_및_스킬지침'!$B$5 스킬 지침 셀
+ * @return {string} 행동특성 및 종합의견 초안 (1,500 Byte 이내)
+ * @customfunction
+ */
+function AI_HAENGTEUK(studentName, obsAutonomy, obsCareer, personality, skillCell) {
+  if (!obsAutonomy && !obsCareer) return "";
+  var prompt = "학생 성명: " + (studentName || "학생") + "\n" +
+               "자율·인성·학급기여 관찰: " + (obsAutonomy || "성실하고 책임감 있게 학급 활동에 임함") + "\n" +
+               "동아리·진로·학업역량 관찰: " + (obsCareer || "자기주도적으로 학업과 진로 탐구에 몰입함") + "\n" +
+               (personality ? "교사 총평 키워드: " + personality + "\n" : "") +
+               "작성 요청: 교육부 훈령 기재요령을 준수하여 인성과 잠재력이 돋보이도록 행동특성 및 종합의견 400~500자(1,500 Byte 이내)를 개조식 종결어미(~함, ~임)로 작성할 것.";
+  return AI(prompt, "", "", skillCell);
+}
+
 function aggregateClubActivities() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getActiveSheet();
