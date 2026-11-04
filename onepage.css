@@ -1555,3 +1555,453 @@ button.is-active,
   border-color: #93c5fd !important;
   box-shadow: 0 6px 18px rgba(37, 99, 235, 0.08) !important;
 }
+
+
+/* ==========================================================================
+   미니멀 교사 승인 하단 도크 & 스크롤 잠금 & 학교알리미 자동완성 & Google 로그인 스타일
+   ========================================================================== */
+html.gk-scroll-locked,
+body.gk-scroll-locked {
+  overflow: hidden !important;
+  height: 100vh !important;
+  overscroll-behavior: none !important;
+}
+
+.gk-compact-dock {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(980px, 96vw);
+  z-index: 99990;
+  pointer-events: auto;
+}
+.gk-compact-dock.gk-hidden {
+  display: none !important;
+}
+
+.gk-minimized-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.94);
+  border: 1.5px solid rgba(59, 130, 246, 0.55);
+  border-radius: 999px;
+  padding: 8px 18px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(12px);
+}
+.gk-compact-dock.is-minimized .gk-minimized-bar {
+  display: flex;
+}
+.gk-compact-dock.is-minimized .gk-dialog {
+  display: none !important;
+}
+.gk-expand-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.gk-compact-dock .gk-dialog {
+  max-width: 100%;
+  width: 100%;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(96, 165, 250, 0.45);
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.65);
+  color: #f8fafc;
+  overflow: visible;
+  padding: 12px 16px;
+  box-sizing: border-box;
+}
+
+@keyframes gkPulseAlert {
+  0%, 100% { transform: scale(1); border-color: rgba(96, 165, 250, 0.45); }
+  35% { transform: scale(1.015); border-color: #fbbf24; box-shadow: 0 0 28px rgba(251, 191, 36, 0.55); }
+}
+.gk-pulse-alert {
+  animation: gkPulseAlert 0.6s ease-in-out 2;
+}
+
+.gk-header-compact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.gk-badge-mini {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 9px;
+  border-radius: 999px;
+}
+.gk-title-mini {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+.gk-compact-dock .gk-tab-btn {
+  flex: none;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  border-radius: 6px;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+}
+.gk-compact-dock .gk-tab-btn.is-active {
+  background: #2563eb;
+  color: #ffffff;
+}
+.gk-min-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  padding: 4px 9px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.gk-min-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.gk-compact-dock .gk-tab-pane {
+  padding: 0;
+}
+
+.gk-dual-auth-grid {
+  display: grid;
+  grid-template-columns: 1.75fr 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+@media (max-width: 820px) {
+  .gk-dual-auth-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gk-compact-form {
+  margin: 0;
+}
+.gk-compact-row {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 10px;
+}
+@media (max-width: 680px) {
+  .gk-compact-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gk-field-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.gk-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.gk-label-mini {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #cbd5e1;
+}
+.gk-quick-chips {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+.gk-chip {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  color: #e2e8f0;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.gk-chip.is-accent {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #6ee7b7;
+}
+.gk-chip:hover {
+  background: #2563eb;
+  border-color: #60a5fa;
+  color: #ffffff;
+}
+
+.gk-input-mini {
+  width: 100%;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+.gk-input-mini:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.gk-btn-search-school {
+  background: #334155;
+  color: #ffffff;
+  border: 1px solid #475569;
+  border-radius: 7px;
+  padding: 0 10px;
+  font-size: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.gk-btn-search-school:hover {
+  background: #2563eb;
+}
+
+.gk-btn-submit-mini {
+  background: #10b981;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 7px;
+  padding: 7px 12px;
+  font-size: 12.5px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+}
+.gk-btn-submit-mini:hover {
+  background: #059669;
+}
+
+/* 학교알리미 API 검색 드롭다운 (위쪽으로 펼쳐져 화면 잘림 방지) */
+.gk-school-dropdown {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 210px;
+  overflow-y: auto;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1.5px solid #3b82f6;
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  z-index: 100005;
+  padding: 4px;
+}
+.gk-school-dropdown.gk-hidden {
+  display: none !important;
+}
+.gk-school-loading,
+.gk-school-empty {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #475569;
+  text-align: center;
+}
+.gk-school-item {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 7px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.gk-school-item:hover {
+  background: #eff6ff;
+}
+.gk-school-item-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: #0f172a;
+}
+.gk-school-badge {
+  font-size: 10.5px;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.gk-school-item-sub {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* 우측 Google 계정 로그인 인라인 카드 */
+.gk-google-inline-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+}
+.gk-google-inline-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #ffffff;
+}
+.gk-google-inline-sub {
+  margin: 0;
+  font-size: 11px;
+  color: #cbd5e1;
+  line-height: 1.35;
+}
+.gk-google-inline-sub code {
+  color: #93c5fd;
+  font-weight: 700;
+}
+.gk-btn-google {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: #ffffff;
+  color: #0f172a !important;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.gk-btn-google:hover {
+  background: #f8fafc;
+  border-color: #3b82f6;
+  transform: translateY(-1px);
+}
+
+/* 스크롤 잠금 토스트 알림 */
+.gk-scroll-toast {
+  position: fixed;
+  top: 66px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-12px);
+  background: rgba(15, 23, 42, 0.95);
+  color: #f8fafc;
+  border: 1.5px solid #fbbf24;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 12.5px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  z-index: 100000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.22s ease;
+  white-space: nowrap;
+  max-width: 92vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gk-scroll-toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Google 계정 로그인 모달 */
+.gk-google-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  z-index: 100010;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.gk-google-modal-backdrop.gk-hidden {
+  display: none !important;
+}
+.gk-google-modal-card {
+  background: #ffffff;
+  color: #0f172a;
+  width: min(420px, 94vw);
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  border: 1px solid #e2e8f0;
+}
+.gk-google-domain-pill {
+  background: #f1f5f9;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.gk-google-domain-pill:hover {
+  background: #dbeafe;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+.gk-google-input {
+  width: 100%;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: #0f172a;
+  box-sizing: border-box;
+}
+.gk-google-submit-btn {
+  width: 100%;
+  background: #1a73e8;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.gk-google-submit-btn:hover {
+  background: #1557b0;
+}

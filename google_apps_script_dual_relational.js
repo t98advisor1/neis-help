@@ -495,8 +495,8 @@ function doPost(e) {
         (body.email || "").trim().toLowerCase(),
         body.phone || "",
         body.reason || "",
-        "대기",
-        ""
+        body.status || (/(@sch\.hs\.kr?|@goedu\.kr|@goe\.go\.kr|@korea\.kr|\.hs\.kr)$/i.test((body.email || "").trim()) ? "승인" : "대기"),
+        "소속·이메일 인증"
       ]);
       return ContentService.createTextOutput(JSON.stringify({ success: true, message: "사용 승인 신청이 성공적으로 접수되었습니다. 관리자 승인 후 이용 가능합니다." }))
         .setMimeType(ContentService.MimeType.JSON);

@@ -44,6 +44,16 @@ const USE = [
             ['처음엔 그대로', '기본값이 2026학년도 기재요령 기준으로 맞춰져 있습니다.'],
             ['직접 추가', '학교만의 금지어와 허용 표현을 더할 수 있습니다. 고친 내용은 이 브라우저에만 저장됩니다.'],
             ['규칙 파일', '고친 규칙을 파일로 내보내 동료 교사와 나눌 수 있습니다. 규칙만 담기고 생기부 내용은 담기지 않습니다.']] },
+  { short: '대입 진학상담·입결', title: '6. 대입 진학상담 · 실시간 경쟁률 (추가 기능)', sub: '기존 생기부 점검에 더해 133개 대학 수시 입결·5등급 환산·실시간 경쟁률을 한 화면에서 확인합니다.',
+    mock: `<div class="mock">${MOCK_TOP}<div class="mock-content"><div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#1e40af">🎯 2027 대입 진학상담 · 133개 대학 입결 & 실시간 경쟁률</div><div class="mock-row" style="border-color:#93c5fd;background:#eff6ff"><span>🏫 대학·전형 검색 (어디가 1:1 직행 + 입학처)</span><span style="margin-left:auto;color:#1d4ed8;font-weight:700">133개교</span></div><div class="mock-row"><span>📡 진학사·유웨이 실시간 경쟁률 API</span><span style="margin-left:auto;color:#059669;font-weight:700">LIVE 연동</span></div><div class="mock-row"><span>📐 9등급 ↔ 2028 개편 5등급제 자동 환산</span><span style="margin-left:auto;color:#7c3aed;font-weight:700">1,095개 전형</span></div></div></div>`,
+    notes: [['생기부 + 대입 통합', '기존 생기부 작성·파일 점검 기능은 그대로 유지하면서 대입 진학상담 자료가 함께 연결됩니다.'],
+            ['검증된 어디가 링크', '133개 대학 모두 대교협 대학어디가(adiga.kr) 고유코드(unvCd) 및 입학처 공식 페이지로 연결됩니다.'],
+            ['실시간 경쟁률 API', '진학사어플라이·유웨이어플라이 실시간 경쟁률 데이터를 API로 불러와 전형별·학과별 현황을 확인합니다.']] },
+  { short: '구글 시트 =AI() 연동', title: '7. 구글 시트 =AI() 관계형 대시보드 (추가 기능)', sub: '학생 명렬표 대시보드와 영역별 생기부·상담기록을 구글 시트로 유기적으로 연결합니다.',
+    mock: `<div class="mock">${MOCK_TOP}<div class="mock-content"><div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#065f46">📊 학생 명렬표 대시보드 ↔ 창체·세특·상담기록 1:1 연동</div><div class="mock-row" style="border-color:#6ee7b7;background:#ecfdf5"><span>1_학급_종합대시보드 (학번 ID 기준 자동 집계)</span></div><div class="mock-row"><span>=AI_SETUK(과목, 관찰메모, 희망진로) 무료 Gemini 호출</span></div><div class="mock-row"><span>=NEIS_BYTES(텍스트) 나이스 바이트 실시간 계산</span></div></div></div>`,
+    notes: [['로컬 기본 + 시트 연동', '기본 작업은 브라우저 로컬에서 즉시 작동하며, 구글 시트 연동 시 명렬표 대시보드와 관계형으로 동기화됩니다.'],
+            ['무료 =AI() 커스텀 함수', '사이드바 없이 구글 시트 셀 안에서 =AI(), =AI_SETUK() 수식으로 무료 Gemini API를 호출해 문구를 생성합니다.'],
+            ['유기적 대시보드', '학생 명렬표(학번 ID)를 중심으로 자율·동아리·진로·교과세특·대입상담 기록이 한눈에 연결됩니다.']] },
 ];
 
 /* ── 검사 규칙: rules.js 에서 읽어 그린다 ── */

@@ -349,11 +349,22 @@
 
 
   
+  function findUniObj(uniName) {
+    if (typeof UNIS === "undefined" || !uniName) return null;
+    return UNIS.find(u => u.name === uniName) || UNIS.find(u => matchUniName(uniName, u.name)) || null;
+  }
+
   function getUniAdigaUrl(uniName) {
+    const uObj = findUniObj(uniName);
+    if (uObj && uObj.unvCd) {
+      return `https://www.adiga.kr/ucp/uvt/uni/univDetail.do?menuId=PCUVTINF2000&unvCd=${uObj.unvCd}&searchSyr=2025`;
+    }
+    if (uObj && uObj.adigaUrl) {
+      return uObj.adigaUrl;
+    }
     const clean = (uniName || "").replace(/대학교|대학/g, "").trim();
     const cd = ADIGA_UNI_CODES[uniName] || ADIGA_UNI_CODES[clean] || ADIGA_UNI_CODES[clean + "대"] || ADIGA_UNI_CODES[clean + "대학교"];
     if (cd) {
-      // 500 에러 없는 최신 공시 기준(2025) 상세 직행
       return `https://www.adiga.kr/ucp/uvt/uni/univDetail.do?menuId=PCUVTINF2000&unvCd=${cd}&searchSyr=2025`;
     }
     for (const [k, c] of Object.entries(ADIGA_UNI_CODES)) {
@@ -361,8 +372,7 @@
         return `https://www.adiga.kr/ucp/uvt/uni/univDetail.do?menuId=PCUVTINF2000&unvCd=${c}&searchSyr=2025`;
       }
     }
-    // 100% 안전한 어디가 공식 대학 검색창 1:1 직행 (오류 원천 차단)
-    return `https://www.adiga.kr/ucp/uvt/uni/univSearch.do?menuId=PCUVTINF1000&searchUnvNm=${encodeURIComponent(clean || uniName)}`;
+    return `https://www.adiga.kr/man/sch/searchView.do?menuId=PCMANSCH5001&checkMiss=1&search=${encodeURIComponent(clean || uniName)}`;
   }
 
   function getUniPriorLearningUrl(uniName) {
@@ -371,10 +381,15 @@
   }
 
   function getUniAdmissionUrl(uniName) {
-    if (UNI_URLS[uniName]) return UNI_URLS[uniName];
-    for (const [k, u] of Object.entries(UNI_URLS)) {
-      if (uniName.includes(k) || k.includes(uniName)) return u;
+    const uObj = findUniObj(uniName);
+    if (uObj && uObj.admissionUrl && !uObj.admissionUrl.includes("search.naver.com")) {
+      return uObj.admissionUrl;
     }
+    if (UNI_URLS[uniName] && !UNI_URLS[uniName].includes("search.naver.com")) return UNI_URLS[uniName];
+    for (const [k, u] of Object.entries(UNI_URLS)) {
+      if ((uniName.includes(k) || k.includes(uniName)) && !u.includes("search.naver.com")) return u;
+    }
+    if (uObj && uObj.admissionUrl) return uObj.admissionUrl;
     return `https://search.naver.com/search.naver?query=${encodeURIComponent(uniName + " 입학처")}`;
   }
 
@@ -1174,7 +1189,11 @@
     if (fillEl) fillEl.textContent = "...";
     if (tuitionEl) tuitionEl.textContent = "...";
 
-    fetch('/api/live-data?uni=' + encodeURIComponent(uniName))
+    const uObj = findUniObj(uniName);
+    const ratioParam = uObj && uObj.ratioUrl ? '&ratioUrl=' + encodeURIComponent(uObj.ratioUrl) : '';
+    const unvCdParam = uObj && uObj.unvCd ? '&unvCd=' + encodeURIComponent(uObj.unvCd) : '';
+
+    fetch('/api/live-data?uni=' + encodeURIComponent(uniName) + ratioParam + unvCdParam)
       .then(res => res.json())
       .then(data => {
         if (!data || data.error) throw new Error(data ? data.error : 'No data');
@@ -1185,7 +1204,7 @@
         if (employEl && data.academyInfo) employEl.textContent = data.academyInfo.employRate;
         if (fillEl && data.academyInfo) fillEl.textContent = data.academyInfo.fillRate;
         if (tuitionEl && data.academyInfo) tuitionEl.textContent = data.academyInfo.tuition;
-        if (applyLink && data.applyUrl) applyLink.href = data.applyUrl;
+        if (applyLink && (data.ratioUrl || data.applyUrl)) applyLink.href = data.ratioUrl || data.applyUrl;
       })
       .catch(err => {
         console.warn('Live data fetch failed:', err);
