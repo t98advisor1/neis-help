@@ -372,7 +372,7 @@ function NEIS_BYTES(text) {
 // ==========================================
 function getSystemPromptInstructions() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("0_AI함수_사용안내_및_스킬지침") ||
+  var sheet = ss.getSheetByName("_스킬지침") || ss.getSheetByName("0_AI함수_사용안내_및_스킬지침") ||
               ss.getSheetByName("0_AI함수_사용안내") ||
               ss.getSheetByName("_설정_프롬프트지침") ||
               ss.getSheetByName("설정_프롬프트지침");
@@ -674,26 +674,54 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  // === [사용자 승인 상태 조회 API] ===
+  // === [사용자 승인 상태 조회 API — '2_교사승인명단' 체크박스(A열) & 3개월(90일) 만료 자동 확인] ===
   if (action === "check_access") {
     var email = (e.parameter.email || "").trim().toLowerCase();
-    var appSheet = ss.getSheetByName("사용자승인") || ss.getSheetByName("승인관리");
+    var chkSheet = ss.getSheetByName("2_교사승인명단");
+    if (chkSheet) {
+      var rows = chkSheet.getDataRange().getValues();
+      for (var i = 4; i < rows.length; i++) {
+        var rowEmail = String(rows[i][3] || "").trim().toLowerCase();
+        if (rowEmail === email) {
+          var isChecked = (rows[i][0] === true || String(rows[i][0]).toUpperCase() === "TRUE" || String(rows[i][0]).trim() === "승인");
+          var extCount = Math.max(1, Number(rows[i][1]) || 1);
+          var baseDate = rows[i][8] ? new Date(rows[i][8]) : new Date();
+          if (isNaN(baseDate.getTime())) baseDate = new Date();
+          var expDate = new Date(baseDate.getTime() + extCount * 90 * 24 * 60 * 60 * 1000);
+          var remDays = Math.ceil((expDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000));
+          var valid = isChecked && remDays >= 0;
+          return ContentService.createTextOutput(JSON.stringify({
+            found: true,
+            approved: valid,
+            expired: isChecked && remDays < 0,
+            remainingDays: remDays,
+            expiresAt: expDate.toISOString(),
+            extensionCount: extCount,
+            status: valid ? "승인" : (isChecked ? "기간만료" : "대기"),
+            name: rows[i][4] || "",
+            school: rows[i][5] || "",
+            subject: rows[i][6] || ""
+          })).setMimeType(ContentService.MimeType.JSON);
+        }
+      }
+    }
+    var appSheet = ss.getSheetByName("사용자승인") || ss.getSheetByName("승인관리") || ss.getSheetByName("_교사인증_승인관리");
     if (!appSheet) {
       return ContentService.createTextOutput(JSON.stringify({ found: false, approved: false, status: "no_sheet" }))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    var rows = appSheet.getDataRange().getValues();
-    for (var i = 1; i < rows.length; i++) {
-      var rowEmail = String(rows[i][3]).trim().toLowerCase();
-      if (rowEmail === email) {
-        var status = String(rows[i][6]).trim();
-        var isApproved = (status === "승인" || status.toLowerCase() === "true" || status.toLowerCase() === "approved");
+    var rows2 = appSheet.getDataRange().getValues();
+    for (var j = 1; j < rows2.length; j++) {
+      var rEmail = String(rows2[j][3] || rows2[j][1] || "").trim().toLowerCase();
+      if (rEmail === email) {
+        var st = String(rows2[j][6] || rows2[j][5] || "").trim();
+        var ok = (st === "승인" || st === "승인완료" || st.toLowerCase() === "true" || st.toLowerCase() === "approved");
         return ContentService.createTextOutput(JSON.stringify({
           found: true,
-          approved: isApproved,
-          status: status,
-          name: rows[i][1],
-          school: rows[i][2]
+          approved: ok,
+          status: st,
+          name: rows2[j][1] || rows2[j][2] || "",
+          school: rows2[j][2] || rows2[j][3] || ""
         })).setMimeType(ContentService.MimeType.JSON);
       }
     }

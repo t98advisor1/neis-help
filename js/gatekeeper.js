@@ -125,12 +125,17 @@
       this.switchModalTab(tab);
     },
 
-    closeModal() {
+    closeModal(force = false) {
+      if (!force && !this.isAuthorized()) {
+        alert('🔒 관리자 승인 완료 후 이용하실 수 있습니다.\nGoogle 계정 로그인 후 승인을 확인하거나 관리자 마스터키를 입력해 주세요.');
+        return;
+      }
       const overlay = document.getElementById('appGatekeeperOverlay');
       if (overlay) {
         overlay.classList.add('gk-hidden');
         overlay.style.display = 'none';
       }
+      document.body.classList.remove('gk-locked');
       document.querySelectorAll('.gk-google-modal-backdrop').forEach(el => {
         el.classList.add('gk-hidden');
         el.style.display = 'none';
@@ -439,15 +444,17 @@
         }
       }
 
-      // 인증 상태 시 오버레이 화면 완전 은닉
+      // 인증 상태 시 오버레이 화면 완전 은닉, 미인증 시 본문 잠금(gk-locked)
       const overlay = document.getElementById('appGatekeeperOverlay');
       if (overlay) {
         if (isAuth) {
           overlay.classList.add('gk-hidden');
           overlay.style.display = 'none';
+          document.body.classList.remove('gk-locked');
         } else {
           overlay.classList.remove('gk-hidden');
           overlay.style.display = 'block';
+          document.body.classList.add('gk-locked');
         }
       }
 

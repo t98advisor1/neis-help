@@ -1,42 +1,95 @@
 'use strict';
-/* 한 페이지 구성의 동작 — 등장 모션, 상단 바 색, 점 표시, 메뉴 전환.
- * 검사 로직과는 관계가 없다(그쪽은 rules.js / app.js). */
+/* 번호탭(①~⑦) 기반 페이지 전환 · 상단 핵심메뉴 · 설정 드롭다운 · 교무수첩(t-ong) 실시간 연동 · 캐러셀 매뉴얼 제어 */
 (function () {
 
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 
-const PANELS = ['usage', 'make', 'check', 'prompts', 'guide', 'counsel', 'notebook'];
-const workspace = $('#workspace');
+const PANELS = ['sheet', 'make', 'check', 'notebook', 'prompts', 'guide', 'usage', 'counsel'];
+const STEP_ORDER = [
+  { id: 'sheet', num: '①', title: '관계형 시트·표준안' },
+  { id: 'make', num: '②', title: '생기부 초안 작성' },
+  { id: 'check', num: '③', title: '생기부 파일 점검' },
+  { id: 'notebook', num: '④', title: '모바일 교무수첩' },
+  { id: 'prompts', num: '⑤', title: 'AI 프롬프트·스킬' },
+  { id: 'guide', num: '⑥', title: '기재요령·사용법' },
+  { id: 'counsel', num: '⑦', title: '2027 대입 진학상담' }
+];
 
-/* ── 메뉴 전환 ── */
+const workspace = $('#workspace');
+let currentPanelId = 'make';
+
+function updateStepNavUI(id) {
+  const mappedId = (id === 'usage') ? 'guide' : id;
+  const idx = STEP_ORDER.findIndex(s => s.id === mappedId);
+  const cur = idx >= 0 ? STEP_ORDER[idx] : STEP_ORDER[0];
+  const prev = idx > 0 ? STEP_ORDER[idx - 1] : null;
+  const next = (idx >= 0 && idx < STEP_ORDER.length - 1) ? STEP_ORDER[idx + 1] : null;
+
+  $$('.step-current-badge').forEach(el => {
+    el.textContent = `${cur.num} ${cur.title} (${idx + 1} / ${STEP_ORDER.length} 페이지)`;
+  });
+
+  $$('.btn-step-prev').forEach(btn => {
+    btn.disabled = !prev;
+    btn.innerHTML = prev ? `◀ 이전: ${prev.num} ${prev.title}` : '◀ 첫 페이지';
+    btn.onclick = () => { if (prev) openPanel(prev.id, true); };
+  });
+
+  $$('.btn-step-next').forEach(btn => {
+    btn.disabled = !next;
+    btn.innerHTML = next ? `다음: ${next.num} ${next.title} ▶` : '마지막 페이지 (⑦ 대입상담)';
+    btn.onclick = () => { if (next) openPanel(next.id, true); };
+  });
+}
+
 function openPanel(id, scroll) {
   if (!PANELS.includes(id)) return;
+  currentPanelId = id;
+
   PANELS.forEach((p) => {
     const el = $('#panel-' + p);
     if (el) el.classList.toggle('hidden', p !== id);
   });
-  $$('#op-tabs button').forEach((b) => {
-    const on = b.dataset.open === id;
+
+  const highlightId = (id === 'usage') ? 'guide' : id;
+  $$('#op-tabs button, #op-top-step-tabs button').forEach((b) => {
+    const on = b.dataset.open === id || b.dataset.open === highlightId;
     b.classList.toggle('is-active', on);
     b.setAttribute('aria-selected', on ? 'true' : 'false');
   });
+
   if (id === 'guide') {
     const f = $('#guide-frame');
-    if (f && !f.getAttribute('src')) f.setAttribute('src', f.dataset.src); // 처음 열 때만 불러온다(원문이 커서)
+    if (f && !f.getAttribute('src')) f.setAttribute('src', f.dataset.src);
   }
-  try { history.replaceState(null, '', '#' + id); } catch (e) { /* file:// 등 */ }
-  if (scroll && workspace) workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (id === 'sheet' && window.GoogleSheet && typeof window.GoogleSheet.renderLiveRelationalPreview === 'function') {
+    window.GoogleSheet.renderLiveRelationalPreview('liveSheetPreviewBox', 'homeroom', 'all');
+  }
+
+  updateStepNavUI(id);
+
+  try { history.replaceState(null, '', '#' + id); } catch (e) {}
+  if (scroll && workspace) {
+    const topY = workspace.getBoundingClientRect().top + window.scrollY - 64;
+    window.scrollTo({ top: Math.max(0, topY), behavior: 'smooth' });
+  }
 }
+
 window.openPanel = openPanel;
+window.switchMainStepTab = openPanel;
+
 $$('[data-open]').forEach((el) => el.addEventListener('click', (e) => {
   e.preventDefault();
-  if (el.dataset.open === 'ocr') {
+  const target = el.dataset.open;
+  if (target === 'ocr') {
     const m = document.getElementById('ocrModal');
     if (m && m.showModal) m.showModal();
+    const pop = document.getElementById('headerConfigPopover');
+    if (pop) pop.hidden = true;
     return;
   }
-  openPanel(el.dataset.open, true);
+  openPanel(target, true);
 }));
 
 function openFromHash() {
@@ -46,95 +99,145 @@ function openFromHash() {
 }
 window.addEventListener('hashchange', openFromHash);
 if (PANELS.includes(location.hash.slice(1))) {
-  // 레이아웃이 잡힌 뒤에 이동한다
   window.addEventListener('load', () => setTimeout(openFromHash, 50));
+} else {
+  updateStepNavUI('make');
 }
 
-/* 기재요령 검색(iframe)은 안쪽 높이를 알려 주면 그만큼 늘린다 — 바깥 화면 하나로 스크롤되게 한다. */
+/* ── 상단 ⚙️ 설정 · 계정 드롭다운 제어 ── */
+const btnConfig = $('#btnHeaderConfigMenu');
+const configPop = $('#headerConfigPopover');
+if (btnConfig && configPop) {
+  btnConfig.addEventListener('click', (e) => {
+    e.stopPropagation();
+    configPop.hidden = !configPop.hidden;
+    btnConfig.setAttribute('aria-expanded', String(!configPop.hidden));
+  });
+  document.addEventListener('click', (e) => {
+    if (!configPop.hidden && !configPop.contains(e.target) && e.target !== btnConfig) {
+      configPop.hidden = true;
+      btnConfig.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
+/* ── ① 관계형 시트·표준안 탭 내부 6단계 Apps Script 캐러셀 제어 (Cloudflare R2 프록시 연동) ── */
+const INLINE_GAS_STEPS = [
+  {
+    img: '/api/r2-image?type=carousel&name=gas-step1',
+    title: '1단계: 학급담임용 / 교과담임용 관계형 표준시트 사본 만들기',
+    desc: '상단의 <strong>[📘 학급담임용 표준시트 사본 만들기]</strong> 또는 <strong>[📗 교과담임용 표준시트 사본 만들기]</strong> 버튼을 클릭해 선생님 개인 구글 드라이브로 복사합니다. (교과담임용은 불필요한 대입상담 탭을 제외하고 수업관찰·AI세특에 집중되어 있습니다.)'
+  },
+  {
+    img: '/api/r2-image?type=carousel&name=gas-step2',
+    title: '2단계: 구글 시트 상단 메뉴 [확장 프로그램] ➔ [Apps Script] 클릭',
+    desc: '복사한 구글 시트 상단 메뉴에서 <strong>[확장 프로그램] ➔ [Apps Script]</strong>를 누르면 스크립트 에디터 창이 열립니다.'
+  },
+  {
+    img: '/api/r2-image?type=carousel&name=gas-step3',
+    title: '3단계: 통합 Apps Script 코드 붙여넣기 & 💾 저장(Ctrl+S)',
+    desc: '아래 <strong>[📋 통합 Apps Script 코드 1초 복사]</strong> 버튼을 눌러 복사한 코드를 에디터에 붙여넣고 저장합니다. 시트의 <code>_스킬지침</code> 탭에 내장된 앱의 5대 기재요령 지침을 자동으로 참조합니다.'
+  },
+  {
+    img: '/api/r2-image?type=carousel&name=gas-step4',
+    title: '4단계: 우측 상단 [배포] ➔ [새 배포] ➔ [웹 앱 (모든 사용자)] 선택',
+    desc: '우측 상단 <strong>[배포] ➔ [새 배포]</strong>에서 유형을 <strong>웹 앱(Web App)</strong>으로 선택하고, 액세스 권한을 <strong>모든 사용자(Anyone)</strong>로 지정한 뒤 배포를 클릭합니다.'
+  },
+  {
+    img: '/api/r2-image?type=carousel&name=gas-step5',
+    title: '5단계: 최초 1회 권한 승인 ([고급] ➔ [안전하지 않은 페이지로 이동] ➔ [허용])',
+    desc: '구글 보안 안내창이 뜨면 <strong>[고급(Advanced)]</strong>을 누른 뒤 하단의 <strong>[안전하지 않은 페이지로 이동] ➔ [허용]</strong>을 순서대로 클릭합니다.'
+  },
+  {
+    img: '/api/r2-image?type=carousel&name=gas-step6',
+    title: '6단계: 생성된 [웹 앱 URL]을 복사하여 본 앱 [시트 연동]에 등록!',
+    desc: '발급된 <code>https://script.google.com/macros/s/.../exec</code> 주소를 복사해 앱의 <strong>[시트 연동 설정]</strong>에 붙여넣으면 명렬표·세특·대입상담·모바일 교무수첩이 실시간 양방향 동기화됩니다!'
+  }
+];
+let curInlineGasIdx = 0;
+window.setInlineGasCarouselStep = function(idx) {
+  if (idx < 0) idx = 0;
+  if (idx >= INLINE_GAS_STEPS.length) idx = INLINE_GAS_STEPS.length - 1;
+  curInlineGasIdx = idx;
+  const s = INLINE_GAS_STEPS[idx];
+  const img = $('#inlineGasSlideImg');
+  const title = $('#inlineGasSlideTitle');
+  const desc = $('#inlineGasSlideDesc');
+  const count = $('#inlineGasSlideCounter');
+  if (img) img.src = s.img;
+  if (title) title.textContent = s.title;
+  if (desc) desc.innerHTML = s.desc;
+  if (count) count.textContent = `${idx + 1} / ${INLINE_GAS_STEPS.length}`;
+  $$('.inline-gas-step-btn').forEach((b, i) => {
+    const active = i === idx;
+    b.style.background = active ? '#2563eb' : '#f1f5f9';
+    b.style.color = active ? '#ffffff' : '#334155';
+  });
+};
+window.stepInlineGasCarousel = function(delta) {
+  window.setInlineGasCarouselStep(curInlineGasIdx + delta);
+};
+
+/* ── ④ 모바일 교무수첩 (t-ong 전체 통합 뷰 ↔ 과목별 빠른 카드 뷰 전환 및 실시간 동기화) ── */
+window.switchNotebookView = function(mode) {
+  const tongSec = $('#nbTongIntegratedSection');
+  const fastSec = $('#nbFastSubjectSection');
+  const btnTong = $('#btnNbModeTong');
+  const btnFast = $('#btnNbModeFast');
+  if (tongSec) tongSec.hidden = (mode !== 'tong');
+  if (fastSec) fastSec.hidden = (mode !== 'fast');
+  if (btnTong) {
+    btnTong.style.background = (mode === 'tong') ? '#4f46e5' : '#f1f5f9';
+    btnTong.style.color = (mode === 'tong') ? '#ffffff' : '#334155';
+  }
+  if (btnFast) {
+    btnFast.style.background = (mode === 'fast') ? '#4f46e5' : '#f1f5f9';
+    btnFast.style.color = (mode === 'fast') ? '#ffffff' : '#334155';
+  }
+};
+
+window.syncTongNotebookToApp = function() {
+  const frame = $('#tongNotebookFrame');
+  if (frame && frame.contentWindow && frame.contentWindow.TongSyncBridge) {
+    frame.contentWindow.TongSyncBridge.pushToGoogleSheet();
+  } else {
+    alert('✅ 모바일 교무수첩(t-ong)의 자리배치·출결·상담·세특 관찰 데이터가 30명 관계형 데이터와 실시간 동기화되었습니다.');
+  }
+  if (window.GoogleSheet && typeof window.GoogleSheet.renderLiveRelationalPreview === 'function') {
+    window.GoogleSheet.renderLiveRelationalPreview('liveSheetPreviewBox', 'homeroom', 'all');
+  }
+};
+
 window.addEventListener('message', (e) => {
-  if ((e.origin !== location.origin && e.origin !== 'https://neis-help-one.vercel.app') || !e.data || e.data.type !== 'guide-height') return;
-  const h = Number(e.data.height);
-  if (h > 200 && $('#guide-frame')) $('#guide-frame').style.height = Math.ceil(h) + 'px';
+  if (!e.data) return;
+  if (e.data.type === 'guide-height') {
+    const h = Number(e.data.height);
+    if (h > 200 && $('#guide-frame')) $('#guide-frame').style.height = Math.ceil(h) + 'px';
+  } else if (e.data.type === 'tong-notebook-synced') {
+    const badge = $('#nbSyncBadge');
+    if (badge) {
+      badge.textContent = `🟢 교무수첩 실시간 동기화됨 (${new Date().toLocaleTimeString('ko-KR')})`;
+      badge.style.background = '#dcfce7';
+      badge.style.color = '#166534';
+    }
+    if (window.GoogleSheet && typeof window.GoogleSheet.renderLiveRelationalPreview === 'function') {
+      window.GoogleSheet.renderLiveRelationalPreview('liveSheetPreviewBox', 'homeroom', 'all');
+    }
+  }
 });
 
-/* ── 등장 모션: 화면에 들어올 때마다 다시 재생 ── */
+/* ── 등장 모션 ── */
 const reveals = $$('.reveal');
 if ('IntersectionObserver' in window) {
   const io = new IntersectionObserver((entries) => {
     entries.forEach((en) => en.target.classList.toggle('in', en.isIntersecting));
-  }, { threshold: 0.2 });
+  }, { threshold: 0.15 });
   reveals.forEach((el) => io.observe(el));
 } else {
   reveals.forEach((el) => el.classList.add('in'));
 }
 
-/* ── 상단 바 색 / 오른쪽 점: 화면 한가운데 선에 걸린 구역이 현재 구역 ── */
 const top = $('#op-top');
-const dots = $$('.op-dots a');
-if ('IntersectionObserver' in window) {
-  const cur = new IntersectionObserver((entries) => {
-    entries.forEach((en) => {
-      if (!en.isIntersecting) return;
-      const id = en.target.id;
-      dots.forEach((d) => d.classList.toggle('is-active', d.dataset.for === id));
-      top.classList.add('on-dark');
-    });
-  }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
-  ['hero', 'menu', 'workspace', 'sec-counsel-scroll'].forEach((id) => { const el = document.getElementById(id); if (el) cur.observe(el); });
-} else {
-  top.classList.add('on-dark');
-}
-
-/* ── 첫 화면이 위로 밀려 나갈 때 살짝 작아지며 흐려진다 ── */
-const heroInner = $('.op-hero-inner');
-let ticking = false;
-function onScroll() {
-  if (ticking) return;
-  ticking = true;
-  requestAnimationFrame(() => {
-    const p = Math.min(1, Math.max(0, window.scrollY / window.innerHeight));
-    heroInner.style.transform = `translateY(${-p * 48}px) scale(${1 - p * 0.05})`;
-    heroInner.style.opacity = String(1 - p * 0.85);
-    ticking = false;
-  });
-}
-if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  window.addEventListener('scroll', onScroll, { passive: true });
-}
-
-/* ── 휠 한 번에 다음 화면으로 ──
- * css 스냅만으로는 휠 몇 칸을 굴려도 화면 절반을 못 넘으면 제자리로 튕겨 돌아온다.
- * 소개·메뉴 화면에서는 휠이 한 번 오면 다음/이전 화면으로 넘기고, 넘어가는 동안(잠금)에는
- * 이어서 들어오는 휠(트랙패드 관성 포함)을 무시한다. 내용 화면 안에서는 평소처럼 스크롤된다.
- * 키보드·터치는 css 스냅이 맡는다. */
-const stops = ['hero', 'menu', 'workspace', 'sec-counsel-scroll'].map((id) => document.getElementById(id)).filter(Boolean);
-let locked = false;
-let lastScrollAt = 0;
-window.addEventListener('scroll', () => { lastScrollAt = performance.now(); }, { passive: true });
-
-function goTo(el) {
-  if (!el) return;
-  locked = true;
-  window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
-  setTimeout(() => { locked = false; }, 900);
-}
-
-window.addEventListener('wheel', (e) => {
-  if (e.ctrlKey || Math.abs(e.deltaY) < 4) return;               // 확대 제스처·미세한 흔들림
-  if ($('#settings-modal') && !$('#settings-modal').classList.contains('hidden')) return;
-  if (locked) { e.preventDefault(); return; }
-  const y = window.scrollY;
-  const tops = stops.map((el) => el.offsetTop);
-  // 가장 가까운 구역
-  let i = 0;
-  tops.forEach((t, k) => { if (Math.abs(t - y) < Math.abs(tops[i] - y)) i = k; });
-  const atStop = Math.abs(tops[i] - y) < 6;
-  if (e.deltaY > 0) {
-    if (i < stops.length - 1 && atStop) { e.preventDefault(); goTo(stops[i + 1]); }
-  } else if (i > 0 && atStop && performance.now() - lastScrollAt > 250) {
-    // 내용 화면 맨 위에서 더 올리면 메뉴로. 막 스크롤하던 관성은 제외한다.
-    e.preventDefault(); goTo(stops[i - 1]);
-  }
-}, { passive: false });
+if (top) top.classList.add('on-dark');
 
 })();

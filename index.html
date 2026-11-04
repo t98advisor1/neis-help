@@ -439,37 +439,61 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <a class="op-brand" href="#hero" aria-label="처음 화면으로">
       <span class="op-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 10h14M9 16h14M9 22h9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></span>
       <span class="op-brand-name">학교생활기록부 올인원</span>
-      <span class="op-brand-sub">상담부터 기록까지</span>
     </a>
-    <span class="privacy-badge op-badge" title="업로드한 파일과 학생 데이터는 서버로 전송되지 않고 브라우저 안에서만 안전하게 처리됩니다.">
-      <span style="font-size:12px;">🔒</span> 로컬 보안
-    </span>
   </div>
 
-  <div class="op-top-actions">
-    <!-- 글꼴 선택기 -->
-    <select id="fontSelect" class="op-font-select" aria-label="글꼴 선택" title="화면 글꼴 변경">
-      <option value="nanum">Aa 나눔스퀘어</option>
-      <option value="suit">Aa SUIT</option>
-      <option value="score">Aa 에스코어</option>
-      <option value="gmarket">Aa Gmarket</option>
-    </select>
+  <!-- 상단 핵심 기능 번호탭 바로가기 메뉴 (⑦ 대입 진학상담은 맨 마지막 배치) -->
+  <nav class="op-top-step-nav" id="op-top-step-tabs" aria-label="핵심 기능 번호탭 바로가기">
+    <button type="button" class="op-top-step-btn" data-open="sheet">① 관계형 시트·표준안</button>
+    <button type="button" class="op-top-step-btn is-active" data-open="make">② 생기부 초안 작성</button>
+    <button type="button" class="op-top-step-btn" data-open="check">③ 생기부 파일 점검</button>
+    <button type="button" class="op-top-step-btn" data-open="notebook">④ 모바일 교무수첩</button>
+    <button type="button" class="op-top-step-btn" data-open="prompts">⑤ AI 프롬프트·스킬</button>
+    <button type="button" class="op-top-step-btn" data-open="guide">⑥ 기재요령·사용법</button>
+    <button type="button" class="op-top-step-btn" data-open="counsel">⑦ 2027 대입 진학상담</button>
+  </nav>
 
-    <!-- 구글 시트 연동 (차분하고 세련된 시트 상태 버튼) -->
-    <button id="btn-sheet-sync" type="button" class="op-nav-btn" title="구글 시트 동기화 설정">
+  <div class="op-top-actions">
+    <button id="btn-sheet-sync" type="button" class="op-nav-btn" title="구글 시트 표준안 및 동기화 설정">
       <span class="btn-icon">📊</span>
       <span id="sheetSyncStatusLabel">시트 연동</span>
       <span id="sheetSyncStatusBadge" class="sheet-status-dot"></span>
     </button>
 
-    <!-- 규칙 설정 (정돈된 헤더 버튼) -->
-    <button id="btn-settings" type="button" class="op-nav-btn" title="생기부 점검 규칙 설정">
-      <span class="btn-icon">⚙️</span>
-      <span>규칙 설정</span>
-    </button>
-
-    <!-- 교사 승인 / 사용자 뱃지 -->
-    <div id="gatekeeperUserBadge" class="gk-user-badge"></div>
+    <!-- ⚙️ 설정 · 계정 통합 메뉴 (글꼴 선택, 로그인/승인 상태, 규칙 설정, 관리자 승인 시트 수납) -->
+    <div class="header-config-wrap">
+      <button type="button" id="btnHeaderConfigMenu" class="op-nav-btn" aria-expanded="false" title="글꼴 · 계정 승인 · 점검 규칙 설정">
+        <span>⚙️ 설정 · 계정</span>
+      </button>
+      <div id="headerConfigPopover" class="header-config-popover" hidden>
+        <div class="header-config-row">
+          <span class="header-config-label">👤 교사 로그인 &amp; 3개월 승인 상태</span>
+          <div id="gatekeeperUserBadge" class="gk-user-badge" style="justify-content:flex-start;"></div>
+        </div>
+        <div class="header-config-row">
+          <label class="header-config-label" for="fontSelect">🔤 화면 글꼴(폰트) 선택</label>
+          <select id="fontSelect" class="op-font-select" aria-label="글꼴 선택" style="background:#f8fafc; color:#0f172a; border:1px solid #cbd5e1; width:100%; padding:7px 10px; border-radius:8px;">
+            <option value="nanum">Aa 나눔스퀘어</option>
+            <option value="suit">Aa SUIT</option>
+            <option value="score">Aa 에스코어</option>
+            <option value="gmarket">Aa Gmarket</option>
+          </select>
+        </div>
+        <div class="header-config-row">
+          <span class="header-config-label">🛠️ 점검 규칙 &amp; AI 보고서 판독기</span>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button id="btn-settings" type="button" class="btn small" style="flex:1; background:#0f172a !important; color:#fff !important; border:none !important; padding:7px 10px !important; border-radius:8px !important; font-size:12px; font-weight:700; cursor:pointer;">⚙️ 금지어·규칙 설정</button>
+            <button type="button" data-open="ocr" class="btn small" style="flex:1; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:7px 10px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">📸 보고서 AI 판독</button>
+          </div>
+        </div>
+        <div class="header-config-row">
+          <span class="header-config-label">👑 관리자 전용 (교사 3개월 승인 시트)</span>
+          <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" rel="noreferrer" style="display:block; text-align:center; background:#f0fdf4; color:#15803d; border:1px solid #86efac; padding:7px 10px; border-radius:8px; font-size:12px; font-weight:800; text-decoration:none;">
+            📋 교사 승인 관리 구글시트 열기 ↗
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -486,7 +510,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   <!-- ── [사용자 요청] 기존 화면 구성을 그대로 보여주면서 그 위에 크게 떠있는 교사 인증 오버레이 카드 ── -->
   <!-- ── 교사 인증 오버레이 카드 (Google 계정 로그인 ➔ 교사 승인 확인 ➔ 3개월 로그인 유지) ── -->
   <div id="appGatekeeperOverlay" class="gk-hero-card">
-    <button type="button" class="gk-overlay-close-btn" onclick="window.Gatekeeper.closeModal()" title="창 닫기 (화면 둘러보기)" style="position:absolute; top:16px; right:18px; width:34px; height:34px; border-radius:50%; border:1.5px solid #cbd5e1; background:#ffffff; color:#475569; font-size:16px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.1); z-index:20;">✕</button>
+    <!-- 미승인 상태에서는 창 닫기(✕) 우회 불가: 반드시 Google 로그인 후 관리자 시트 승인(3개월) 또는 마스터키 인증 필요 -->
     <!-- 대형 교사용 안내 배너 -->
     <div class="gk-prominent-banner">
       <div class="gk-banner-main-row">
@@ -612,14 +636,18 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       </form>
     </div>
 
-    <!-- 탭 3: 관리자 마스터키 -->
+    <!-- 탭 3: 관리자 마스터키 & 교사 승인 시트 바로가기 -->
     <div class="gk-tab-pane gk-hidden" id="gk-pane-master">
-      <form id="gkMasterForm" style="display:flex; gap:8px; align-items:center; padding:14px 0; flex-wrap:wrap;">
+      <form id="gkMasterForm" style="display:flex; gap:8px; align-items:center; padding:10px 0; flex-wrap:wrap;">
         <span style="font-size:12.5px; color:#0f172a; font-weight:700;">⚡ 관리자 마스터 비밀번호:</span>
         <input type="password" id="gkInputMasterPin" class="gk-input-mini" placeholder="비밀번호(MASTER_APPROVAL_PIN) 입력" required style="max-width:240px;">
         <button type="submit" id="gkBtnSubmitMaster" class="gk-btn-submit-mini" style="background:#7c3aed;">관리자로 즉시 입장</button>
         <div id="gkMasterResultMsg" class="gk-msg-box" style="margin:4px 0 0; width:100%;"></div>
       </form>
+      <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:10px 14px; font-size:12px; color:#166534; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <span>👑 <strong>교사 승인 관리 구글시트:</strong> [2_교사승인명단] 탭의 <strong>A열 체크박스(☑️)</strong>를 체크하면 해당 교사에게 3개월(90일) 이용권이 즉시 부여됩니다.</span>
+        <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" rel="noreferrer" style="background:#16a34a; color:#fff; padding:5px 12px; border-radius:6px; font-weight:800; text-decoration:none; white-space:nowrap;">승인 구글시트 열기 ↗</a>
+      </div>
     </div>
   </div>
 
@@ -716,19 +744,140 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <h2>학교생활기록부 초안 작성</h2>
       <p class="op-lead">수업 관찰 메모로 나이스 기재요령에 맞춘 완성도 높은 세특 문단을 도출하고 실시간 바이트와 금지어를 점검합니다.</p>
     </div>
-  <nav class="op-tabs" id="op-tabs" role="tablist" aria-label="메뉴">
+  <nav class="op-tabs" id="op-tabs" role="tablist" aria-label="번호탭 페이지 메뉴">
     <a class="op-up" href="#menu" title="메뉴 화면으로">↑ 메뉴</a>
-    <button role="tab" data-open="make" class="is-active" aria-selected="true">생기부 초안 작성</button>
-    <button role="tab" data-open="usage" aria-selected="false">사용법 · 검사 규칙</button>
-    <button role="tab" data-open="check" aria-selected="false">생기부 점검하기</button>
-    <button role="tab" data-open="prompts" aria-selected="false">AI 프롬프트 · 스킬</button>
-    <button role="tab" data-open="guide" aria-selected="false">기재요령 검색</button>
-    <button role="tab" data-open="counsel" aria-selected="false" class="op-tab-counsel">2027 대입 진학상담</button>
-    <button role="tab" data-open="notebook" aria-selected="false" class="op-tab-notebook" id="tabBtnNotebook">📱 모바일 교무수첩 (교과세특)</button>
-    <button role="tab" data-open="ocr" aria-selected="false" class="op-tab-ocr" id="tabBtnOcr">📸 학생 보고서 AI 판독 &amp; 자동화</button>
+    <button role="tab" data-open="sheet" aria-selected="false">① 관계형 시트·표준안</button>
+    <button role="tab" data-open="make" class="is-active" aria-selected="true">② 생기부 초안 작성</button>
+    <button role="tab" data-open="check" aria-selected="false">③ 생기부 파일 점검</button>
+    <button role="tab" data-open="notebook" aria-selected="false" class="op-tab-notebook" id="tabBtnNotebook">④ 모바일 교무수첩 (t-ong 통합)</button>
+    <button role="tab" data-open="prompts" aria-selected="false">⑤ AI 프롬프트·스킬</button>
+    <button role="tab" data-open="guide" aria-selected="false">⑥ 기재요령·사용법</button>
+    <button role="tab" data-open="counsel" aria-selected="false" class="op-tab-counsel">⑦ 2027 대입 진학상담</button>
   </nav>
 
+  <!-- 상단 번호탭 페이지 이동 바 (화면 점프 없이 이전/다음 페이지 전환) -->
+  <div class="step-page-nav-bar" id="stepPageNavBarTop">
+    <button type="button" class="btn-step-prev">◀ 이전 페이지</button>
+    <span class="step-current-badge">② 생기부 초안 작성 (2 / 7 페이지)</span>
+    <button type="button" class="btn-step-next">다음: ③ 생기부 파일 점검 ▶</button>
+  </div>
+
   <div class="op-panels workspace-white-box">
+
+    <!-- ── 패널 ①: 관계형 구글 시트 표준안 (학급담임용 / 교과담임용 / 교사승인용) & 실시간 데이터 점검 & 캐러셀 설명서 ── -->
+    <div class="op-panel hidden" id="panel-sheet" role="tabpanel">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
+        <div>
+          <span style="font-size:12px; font-weight:800; color:#1d4ed8; background:#dbeafe; padding:3px 10px; border-radius:999px;">① 관계형 데이터 표준 서식 &amp; 실시간 동기화 허브</span>
+          <h2 class="op-panel-title" style="margin:6px 0 4px;">관계형 구글 시트 표준안 (학급담임용 · 교과담임용 · 교사승인용)</h2>
+          <p class="op-panel-sub" style="margin:0;">학생 명렬표(학번·성명) 1회 입력으로 창체·행특·교과세특·대입상담·상담기록·모바일교무수첩이 유기적으로 연결되며, 대시보드에서 누락 항목 점검 및 입력 탭 바로가기(🏠 홈버튼 포함)를 지원합니다.</p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" id="btnSheetPanelCopyGas" class="btn primary" style="background:#7c3aed; color:#fff; border:none; padding:9px 16px; border-radius:8px; font-weight:800; cursor:pointer;">📋 통합 Apps Script 코드 1초 복사</button>
+          <button type="button" onclick="window.GoogleSheet && window.GoogleSheet.openModal()" class="btn secondary" style="padding:9px 14px; border-radius:8px; font-weight:700; cursor:pointer;">⚙️ 내 구글시트 Web App URL 연결</button>
+        </div>
+      </div>
+
+      <!-- 3종 표준 구글 시트 카드 그리드 -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; margin-bottom:24px;">
+        <!-- 1. 학급 담임용 표준시트 -->
+        <div style="background:#eff6ff; border:2px solid #93c5fd; border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; font-weight:800; background:#1d4ed8; color:#fff; padding:3px 10px; border-radius:999px;">학급 담임교사용 (전 영역 통합)</span>
+            <span style="font-size:11.5px; color:#1e40af; font-weight:700;">8개 탭 유기적 연동</span>
+          </div>
+          <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0f172a;">📘 [학급담임용] 생기부·진학상담 관계형 표준시트</h3>
+          <p style="margin:0; font-size:12.5px; color:#334155; line-height:1.55;">
+            <strong>포함 탭:</strong> <code>0_사용안내(홈)</code> · <code>1_대시보드(결손진단·✏️입력링크)</code> · <code>2_학생명렬표</code> · <code>3_창체_행특(=AI_HAENGTEUK)</code> · <code>4_대입상담(수시6장)</code> · <code>5_상담기록(누적)</code> · <code>6_교과세특_연동</code> · <code>_스킬지침(5대 지침 내장)</code>
+          </p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:auto;">
+            <a href="https://docs.google.com/spreadsheets/d/12lGdMCyRGWpTlmG3vaXX18oeTcX2maJ_5Pfo9CJ4kfc/copy" target="_blank" rel="noreferrer" style="flex:1; text-align:center; background:#1d4ed8; color:#fff; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:800; text-decoration:none;">📄 내 드라이브로 사본 만들기 ↗</a>
+            <a href="https://docs.google.com/spreadsheets/d/12lGdMCyRGWpTlmG3vaXX18oeTcX2maJ_5Pfo9CJ4kfc/edit" target="_blank" rel="noreferrer" style="background:#fff; color:#1d4ed8; border:1px solid #93c5fd; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:700; text-decoration:none;">👁️ 표준시트 열람 ↗</a>
+          </div>
+          <button type="button" onclick="window.GoogleSheet && window.GoogleSheet.downloadHomeroomExcel()" style="width:100%; background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; padding:8px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">📥 학급담임용 관계형 엑셀(.xlsx) 다운로드</button>
+        </div>
+
+        <!-- 2. 교과 담임용 표준시트 (대입상담 제외) -->
+        <div style="background:#faf5ff; border:2px solid #d8b4fe; border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; font-weight:800; background:#7e22ce; color:#fff; padding:3px 10px; border-radius:999px;">교과 전담교사용 (대입상담 제외)</span>
+            <span style="font-size:11.5px; color:#6b21a8; font-weight:700;">수업관찰 ➔ AI세특 특화</span>
+          </div>
+          <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0f172a;">📗 [교과담임용] 교과세특·수업관찰 관계형 표준시트</h3>
+          <p style="margin:0; font-size:12.5px; color:#334155; line-height:1.55;">
+            <strong>포함 탭:</strong> <code>0_사용안내(홈)</code> · <code>1_대시보드(미작성·1500B 초과진단)</code> · <code>2_수강생명렬표</code> · <code>3_수업관찰_기록(누적)</code> · <code>4_AI세특_작성(자동취합·=AI_SETUK)</code> · <code>5_담임시트_내보내기(학급담임 6번탭 직결)</code> · <code>_스킬지침</code>
+          </p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:auto;">
+            <a href="https://docs.google.com/spreadsheets/d/1937g7YLFMUl918tYeOVasaC6o6c01HM2hw_-2F2Y-bg/copy" target="_blank" rel="noreferrer" style="flex:1; text-align:center; background:#7e22ce; color:#fff; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:800; text-decoration:none;">📄 내 드라이브로 사본 만들기 ↗</a>
+            <a href="https://docs.google.com/spreadsheets/d/1937g7YLFMUl918tYeOVasaC6o6c01HM2hw_-2F2Y-bg/edit" target="_blank" rel="noreferrer" style="background:#fff; color:#7e22ce; border:1px solid #d8b4fe; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:700; text-decoration:none;">👁️ 표준시트 열람 ↗</a>
+          </div>
+          <button type="button" onclick="window.GoogleSheet && window.GoogleSheet.downloadSubjectExcel()" style="width:100%; background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; padding:8px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">📥 교과담임용 관계형 엑셀(.xlsx) 다운로드</button>
+        </div>
+
+        <!-- 3. 관리자용 교사 승인 대시보드 시트 -->
+        <div style="background:#f0fdf4; border:2px solid #86efac; border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; font-weight:800; background:#15803d; color:#fff; padding:3px 10px; border-radius:999px;">관리자 전용 · 3개월 승인제</span>
+            <span style="font-size:11.5px; color:#166534; font-weight:700;">체크박스 원클릭 승인</span>
+          </div>
+          <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0f172a;">👑 [관리자용] 교사 승인 · 3개월 이용권 관리 시트</h3>
+          <p style="margin:0; font-size:12.5px; color:#334155; line-height:1.55;">
+            <strong>포함 탭:</strong> <code>0_관리자안내</code> · <code>1_승인대시보드(승인대기·만료예정 집계)</code> · <code>2_교사승인명단(A열 ☑️체크 시 90일 부여, B열 연장횟수로 3개월 단위 연장)</code>
+          </p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:auto;">
+            <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" rel="noreferrer" style="flex:1; text-align:center; background:#15803d; color:#fff; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:800; text-decoration:none;">👑 교사 승인 관리 시트 열기 ↗</a>
+            <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/copy" target="_blank" rel="noreferrer" style="background:#fff; color:#15803d; border:1px solid #86efac; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:700; text-decoration:none;">사본 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 실시간 동기화 관계형 구글시트 구성 & 30명 누락 진단 프리뷰 -->
+      <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:14px; padding:18px; margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+          <div>
+            <h3 style="margin:0; font-size:16px; font-weight:800; color:#0f172a;">📊 실시간 데이터 동기화 구글시트 구조 &amp; 학생별 누락 항목 대시보드 점검</h3>
+            <p style="margin:2px 0 0; font-size:12.5px; color:#475569;">시트의 <code>1_대시보드</code>와 동일하게 어떤 학생의 어떤 영역(창체·행특, 수시 6지망, 상담기록, 수업관찰)이 부족한지 실시간 진단하고, 클릭 즉시 작성 화면으로 불러옵니다.</p>
+          </div>
+        </div>
+        <div id="liveSheetPreviewBox"></div>
+      </div>
+
+      <!-- Apps Script 연동 6단계 캐러셀 설명서 (Cloudflare R2 이미지 프록시 연동) -->
+      <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:14px; padding:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+          <div>
+            <span style="font-size:11.5px; font-weight:800; color:#7c3aed; background:#f5f3ff; padding:3px 9px; border-radius:999px;">초보 선생님도 3분 완성 · Cloudflare R2 보호 그래픽</span>
+            <h3 style="margin:4px 0 0; font-size:16.5px; font-weight:800; color:#0f172a;">📸 구글 시트 &amp; Apps Script 연결 6단계 캐러셀 설명서</h3>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(0)" style="background:#2563eb; color:#fff; font-weight:700;">1. 시트 사본</button>
+            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(1)" style="background:#f1f5f9; color:#334155; font-weight:700;">2. Apps Script 열기</button>
+            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(2)" style="background:#f1f5f9; color:#334155; font-weight:700;">3. 코드 붙여넣기</button>
+            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(3)" style="background:#f1f5f9; color:#334155; font-weight:700;">4. 웹 앱 배포</button>
+            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(4)" style="background:#f1f5f9; color:#334155; font-weight:700;">5. 권한 허용(고급)</button>
+            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(5)" style="background:#f1f5f9; color:#334155; font-weight:700;">6. URL 연동 완료</button>
+          </div>
+        </div>
+        <div style="background:#0f172a; border-radius:12px; overflow:hidden; margin-bottom:14px; text-align:center;">
+          <img id="inlineGasSlideImg" src="/api/r2-image?type=carousel&amp;name=gas-step1" alt="Apps Script 연동 캐러셀 가이드" style="width:100%; max-height:420px; height:auto; display:block; margin:0 auto;">
+        </div>
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="flex:1; min-width:260px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <strong id="inlineGasSlideTitle" style="font-size:15px; color:#0f172a;">1단계: 학급담임용 / 교과담임용 관계형 표준시트 사본 만들기</strong>
+              <span id="inlineGasSlideCounter" style="font-size:12px; font-weight:800; color:#2563eb; background:#eff6ff; padding:2px 8px; border-radius:999px;">1 / 6</span>
+            </div>
+            <p id="inlineGasSlideDesc" style="margin:0; font-size:13px; color:#334155; line-height:1.55;">
+              상단의 <strong>[📘 학급담임용 표준시트 사본 만들기]</strong> 또는 <strong>[📗 교과담임용 표준시트 사본 만들기]</strong> 버튼을 클릭해 선생님 개인 구글 드라이브로 복사합니다.
+            </p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn secondary" onclick="window.stepInlineGasCarousel(-1)" style="padding:8px 14px; font-weight:700;">◀ 이전</button>
+            <button type="button" class="btn primary" onclick="window.stepInlineGasCarousel(1)" style="padding:8px 16px; background:#2563eb; color:#fff; border:none; font-weight:800;">다음 단계 ▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- ── 패널 1: 사용법 · 검사 규칙 (usage-section.css 디자인 통일) ── -->
     <div class="op-panel hidden" id="panel-usage" role="tabpanel">
@@ -1964,9 +2113,36 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
   
     <!-- ── 4화면: 2027학년도 대입 진학상담 & 대학 진학성적 분석 스크롤 전용 섹션 ── -->
-        <!-- ── 패널 7: 📱 통합 모바일 교무수첩 & 교과담임 관찰노트 (구글 시트 실시간 동기화) ── -->
+        <!-- ── 패널 ④: 📱 통합 모바일 교무수첩 (t-ong 전체 기능 탑재 + 교과 세특 실시간 관계형 동기화) ── -->
     <div class="op-panel hidden" id="panel-notebook" role="tabpanel">
       <div class="wb-card" style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:16px; padding:20px 24px; box-shadow:0 10px 30px rgba(0,0,0,0.05); margin-bottom:24px;">
+        <!-- 교무수첩 모드 전환 바 (t-ong 통합 교무수첩 ↔ 과목별 세특 빠른 관찰카드) -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; padding-bottom:14px; border-bottom:2px solid #e2e8f0;">
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" id="btnNbModeTong" onclick="window.switchNotebookView('tong')" style="padding:9px 18px; border-radius:999px; border:none; background:#4f46e5; color:#ffffff; font-size:13.5px; font-weight:800; cursor:pointer; box-shadow:0 4px 12px rgba(79,70,229,0.3);">
+              🏫 통합 모바일 교무수첩 (자리배치 · 출결 · 교실도크 · 일정 · 학생종합 · 상담 · 세특)
+            </button>
+            <button type="button" id="btnNbModeFast" onclick="window.switchNotebookView('fast')" style="padding:9px 18px; border-radius:999px; border:1px solid #cbd5e1; background:#f1f5f9; color:#334155; font-size:13.5px; font-weight:700; cursor:pointer;">
+              ⚡ 과목별 수업관찰 빠른 카드 &amp; 나이스 바이트 점검
+            </button>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <span id="nbSyncBadge" class="privacy-badge" style="background:#dcfce7; color:#166534; border:1px solid #86efac; font-size:12px; font-weight:700;">🟢 30명 관계형 실시간 연동됨</span>
+            <button type="button" onclick="window.syncTongNotebookToApp()" class="btn primary" style="background:#2563eb; color:#fff; border:none; padding:7px 14px; border-radius:8px; font-size:12.5px; font-weight:800; cursor:pointer;">📤 교무수첩 기록 구글시트 즉시 동기화</button>
+            <a href="/tong/index.html" target="_blank" rel="noreferrer" class="btn secondary" style="padding:7px 12px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none; color:#0f172a;">🖥️ 새 창으로 크게 열기 ↗</a>
+          </div>
+        </div>
+
+        <!-- [서브뷰 1] t-ong.vercel.app 전체 통합 교무수첩 (자리배치·출결·교실운영도크·일정·학생종합기록 실시간 연동) -->
+        <div id="nbTongIntegratedSection">
+          <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:10px 14px; margin-bottom:12px; font-size:12.5px; color:#1e3a8a; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <span>💡 <strong>실시간 관계형 연동 안내:</strong> 아래 교무수첩에서 기록하는 <strong>학생별 상담 메모 · 교과 관찰/세특 · 출결 · 칭찬포인트 · 자리배치</strong>는 학급 30명 관계형 데이터 및 구글 시트와 즉시 연동됩니다.</span>
+          </div>
+          <iframe id="tongNotebookFrame" src="/tong/index.html" title="통합 모바일 교무수첩 (t-ong)" style="width:100%; height:840px; border:1.5px solid #cbd5e1; border-radius:14px; background:#ffffff; display:block;"></iframe>
+        </div>
+
+        <!-- [서브뷰 2] 과목별 수업관찰 빠른 카드 뷰 -->
+        <div id="nbFastSubjectSection" hidden>
         <!-- 상단 헤더 & 컨트롤 바 -->
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px; border-bottom:1px solid #f1f5f9; padding-bottom:14px;">
           <div>
@@ -2028,10 +2204,18 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <!-- 학생별 관찰노트 카드 리스트 (모바일 반응형) -->
         <div id="nbStudentList" style="display:flex; flex-direction:column; gap:14px;"></div>
+        </div><!-- /#nbFastSubjectSection -->
       </div>
     </div>
 
-    <section class="op-screen" id="sec-counsel-scroll">
+    <!-- 하단 번호탭 페이지 이동 바 -->
+    <div class="step-page-nav-bar" id="stepPageNavBarBottom">
+      <button type="button" class="btn-step-prev">◀ 이전 페이지</button>
+      <span class="step-current-badge">② 생기부 초안 작성 (2 / 7 페이지)</span>
+      <button type="button" class="btn-step-next">다음: ③ 생기부 파일 점검 ▶</button>
+    </div>
+
+    <section class="op-screen" id="sec-counsel-scroll" style="display:none;">
   <div class="op-head-block reveal">
     <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
       <div>
@@ -2258,14 +2442,14 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <div class="viewer-modal-backdrop" id="authModal" hidden>
   <div class="auth-modal-dialog">
     <div class="auth-modal-icon">🔐</div>
-    <h3 class="auth-modal-title">상담 교사 전용 인증</h3>
+    <h3 class="auth-modal-title">저장된 대입자료 이미지 보안 인증 (0909)</h3>
     <p class="auth-modal-desc">
       대입 참고자료 원본을 열람하려면<br>
       설정하신 교사용 비밀번호를 입력해 주세요.<br>
       <small style="color:var(--muted);">(1회 로그인 시 로컬 브라우저에서 1개월간 유지됩니다)</small>
     </p>
     <form id="authForm" onsubmit="return false;">
-      <input class="auth-input" id="authInputPin" type="password" placeholder="비밀번호 입력" autocomplete="current-password">
+      <input class="auth-input" id="authInputPin" type="password" placeholder="열람 비밀번호 입력 (0909)" autocomplete="current-password">
       <div class="auth-err-msg" id="authErrMsg"></div>
       <div style="display:flex; gap:8px;">
         <button type="button" class="btn secondary" id="authCancelBtn" style="flex:1;">취소</button>
@@ -2564,23 +2748,34 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <button type="button" class="btn small" onclick="document.getElementById('sheetSyncModal').close()">✕</button>
   </div>
   <div style="padding:20px; font-size:13.5px; color:#334155; line-height:1.6; max-height:80vh; overflow-y:auto;">
-    <!-- 관계형 서식 2종 (구글 시트 사본 & 엑셀 다운로드) -->
-    <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:16px; margin-bottom:18px; display:flex; flex-direction:column; gap:12px;">
+    <!-- 학급 담임용 / 교과 담임용(대입상담 제외) / 교사 승인용 표준 구글 시트 -->
+    <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:16px; margin-bottom:18px; display:flex; flex-direction:column; gap:12px;">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <b style="font-size:14px; color:#0f172a;">📊 2026 관계형 표준 서식 (자동 바이트 계산 &amp; 명렬표 VLOOKUP 연계)</b>
-        <span style="font-size:12px; color:#059669; font-weight:700;">✓ 자동 바이트 수식 · 학번 자동 연계 포함</span>
+        <b style="font-size:14px; color:#0f172a;">📊 역할별 맞춤 관계형 구글 시트 표준안 (학급담임용 vs 교과담임용 분리)</b>
+        <span style="font-size:12px; color:#059669; font-weight:700;">✓ 대시보드 결손 체크 · 🏠 홈버튼 · _스킬지침 내장</span>
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a href="https://docs.google.com/spreadsheets/create" target="_blank" rel="noreferrer" class="btn" style="flex:1; min-width:240px; padding:10px 16px; background:#0f9d58; color:#ffffff; font-weight:700; font-size:13.5px; border-radius:8px; text-decoration:none; text-align:center; box-shadow:0 2px 8px rgba(15,157,88,0.3);">
-          ✨ 새 구글 시트 만들기 ↗
-        </a>
-        <button type="button" id="btnDownloadExcelTemplate" class="btn" style="flex:1; min-width:240px; padding:10px 16px; background:#2563eb; color:#ffffff; font-weight:700; font-size:13.5px; border-radius:8px; border:none; cursor:pointer; text-align:center; box-shadow:0 2px 8px rgba(37,99,235,0.3);">
-          📥 관계형 엑셀 서식 다운로드 (.xlsx)
-        </button>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div style="background:#eff6ff; border:1px solid #93c5fd; border-radius:10px; padding:12px;">
+          <div style="font-weight:800; color:#1e3a8a; font-size:13px; margin-bottom:4px;">📘 ① 학급 담임용 표준시트</div>
+          <div style="font-size:11.5px; color:#475569; margin-bottom:8px;">명렬표 · 창체/행특 · 대입상담(수시6장) · 상담기록 · 교과세특 연동</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <a href="https://docs.google.com/spreadsheets/d/12lGdMCyRGWpTlmG3vaXX18oeTcX2maJ_5Pfo9CJ4kfc/copy" target="_blank" rel="noreferrer" class="btn small" style="background:#1d4ed8; color:#fff; text-decoration:none; font-weight:700; padding:6px 10px; border-radius:6px;">사본 만들기 ↗</a>
+            <button type="button" id="btnDownloadExcelTemplate" class="btn small" style="background:#fff; color:#1d4ed8; border:1px solid #93c5fd; font-weight:700; padding:6px 10px; border-radius:6px; cursor:pointer;">엑셀(.xlsx)</button>
+          </div>
+        </div>
+        <div style="background:#faf5ff; border:1px solid #d8b4fe; border-radius:10px; padding:12px;">
+          <div style="font-weight:800; color:#6b21a8; font-size:13px; margin-bottom:4px;">📗 ② 교과 담임용 표준시트 (대입상담 제외)</div>
+          <div style="font-size:11.5px; color:#475569; margin-bottom:8px;">수강생명렬표 · 수업관찰 누적 · =AI_SETUK 작성 · 담임시트 내보내기</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <a href="https://docs.google.com/spreadsheets/d/1937g7YLFMUl918tYeOVasaC6o6c01HM2hw_-2F2Y-bg/copy" target="_blank" rel="noreferrer" class="btn small" style="background:#7e22ce; color:#fff; text-decoration:none; font-weight:700; padding:6px 10px; border-radius:6px;">사본 만들기 ↗</a>
+            <button type="button" id="btnDownloadSubjectExcelTemplate" class="btn small" style="background:#fff; color:#7e22ce; border:1px solid #d8b4fe; font-weight:700; padding:6px 10px; border-radius:6px; cursor:pointer;">엑셀(.xlsx)</button>
+          </div>
+        </div>
       </div>
-      <p style="font-size:12px; color:#64748b; margin:0; line-height:1.5;">
-        * '1_학급명렬표'에 학번과 이름을 넣으면, 교과세특/창체/대입상담 탭에서 학번만 입력해도 이름이 자동 출력되며 글자수(Byte)가 실시간 자동 계산됩니다.
-      </p>
+      <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:12px;">
+        <span style="color:#166534; font-weight:700;">👑 관리자용 교사 승인 &amp; 3개월 이용권 관리 구글시트 (A열 체크박스 승인)</span>
+        <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" rel="noreferrer" style="color:#15803d; font-weight:800; text-decoration:underline;">승인 시트 열기 ↗</a>
+      </div>
     </div>
 
     <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 14px; margin-bottom:16px;">
@@ -3100,7 +3295,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <div style="padding:20px 24px;">
       <!-- 캐러셀 슬라이드 뷰어 -->
       <div id="gasSlideViewer" style="background:#0f172a; border-radius:12px; overflow:hidden; margin-bottom:16px; box-shadow:0 10px 25px rgba(0,0,0,0.3); min-height:360px; display:flex; align-items:center; justify-content:center;">
-        <img id="gasSlideImg" src="assets/gas-step1.svg" alt="Apps Script Step Guide" style="width:100%; height:auto; display:block;">
+        <img id="gasSlideImg" src="/api/r2-image?type=carousel&amp;name=gas-step1" alt="Apps Script Step Guide" style="width:100%; height:auto; display:block;">
       </div>
 
       <!-- 슬라이드 단계 설명 카드 -->
