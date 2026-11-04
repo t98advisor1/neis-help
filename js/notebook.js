@@ -62,9 +62,15 @@
           this.data = JSON.parse(raw);
         } else {
           this.data = JSON.parse(JSON.stringify(SAMPLE_STUDENTS_BY_CLASS));
+          if (window.MOCK_CLASS_30_SUBJECT && Array.isArray(window.MOCK_CLASS_30_SUBJECT)) {
+            this.data['1'] = JSON.parse(JSON.stringify(window.MOCK_CLASS_30_SUBJECT));
+          }
         }
       } catch (e) {
         this.data = JSON.parse(JSON.stringify(SAMPLE_STUDENTS_BY_CLASS));
+        if (window.MOCK_CLASS_30_SUBJECT && Array.isArray(window.MOCK_CLASS_30_SUBJECT)) {
+          this.data['1'] = JSON.parse(JSON.stringify(window.MOCK_CLASS_30_SUBJECT));
+        }
       }
     },
 

@@ -80,7 +80,18 @@
         });
       });
 
-      // 2. 프롬프트 복사 버튼
+      // 2. 젬스 스킬 파일 저장 버튼
+      const btnSaveSkill = document.getElementById('btnSaveOcrSkill');
+      if (btnSaveSkill) {
+        btnSaveSkill.addEventListener('click', () => {
+          OCR.downloadSkillFile();
+          const origText = btnSaveSkill.textContent;
+          btnSaveSkill.textContent = '💾 스킬 파일 저장 완료!';
+          setTimeout(() => { btnSaveSkill.textContent = origText; }, 2500);
+        });
+      }
+
+      // 2-1. 프롬프트 복사 버튼
       const btnCopy = document.getElementById('btnCopyOcrMasterPrompt');
       if (btnCopy) {
         btnCopy.addEventListener('click', async () => {

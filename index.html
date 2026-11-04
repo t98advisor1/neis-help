@@ -433,23 +433,44 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <body class="font-nanum">
 
 <!-- ── 고정 상단 바 (기존 Vercel 디자인 그대로 유지) ── -->
+<!-- ── 고정 상단 바 (균형 잡힌 대칭 레이아웃 & 시트 연동 개선) ── -->
 <header class="op-top" id="op-top">
-  <a class="op-brand" href="#hero" aria-label="처음 화면으로">
-    <span class="op-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 10h14M9 16h14M9 22h9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></span>
-    <span class="op-brand-name">학교생활기록부 올인원: 상담부터 기록까지</span>
-  </a>
-  <span class="privacy-badge op-badge" title="업로드한 파일과 작성 내용은 서버로 전송되지 않고 이 브라우저 안에서만 처리됩니다.">🔒 파일 외부 전송 없음</span>
-  <select id="fontSelect" class="op-font-select" aria-label="글꼴 선택" title="화면 글꼴 변경">
-    <option value="nanum">글꼴: 나눔스퀘어 네오</option>
-    <option value="suit">글꼴: SUIT</option>
-    <option value="score">글꼴: 에스코어 드림</option>
-    <option value="gmarket">글꼴: Gmarket Sans</option>
-  </select>
-  <button id="btn-settings" class="ghost">규칙 설정</button>
-  <button id="btn-sheet-sync" type="button" class="ghost" style="border:1px solid #cbd5e1; display:flex; align-items:center; gap:6px;">
-    <span id="sheetSyncStatusBadge" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#94a3b8;"></span>
-    <span id="sheetSyncStatusLabel">구글 시트 연동</span>
-  </button>
+  <div class="op-top-left">
+    <a class="op-brand" href="#hero" aria-label="처음 화면으로">
+      <span class="op-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 10h14M9 16h14M9 22h9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></span>
+      <span class="op-brand-name">학교생활기록부 올인원</span>
+      <span class="op-brand-sub">상담부터 기록까지</span>
+    </a>
+    <span class="privacy-badge op-badge" title="업로드한 파일과 학생 데이터는 서버로 전송되지 않고 브라우저 안에서만 안전하게 처리됩니다.">
+      <span style="font-size:12px;">🔒</span> 로컬 보안
+    </span>
+  </div>
+
+  <div class="op-top-actions">
+    <!-- 글꼴 선택기 -->
+    <select id="fontSelect" class="op-font-select" aria-label="글꼴 선택" title="화면 글꼴 변경">
+      <option value="nanum">Aa 나눔스퀘어</option>
+      <option value="suit">Aa SUIT</option>
+      <option value="score">Aa 에스코어</option>
+      <option value="gmarket">Aa Gmarket</option>
+    </select>
+
+    <!-- 구글 시트 연동 (차분하고 세련된 시트 상태 버튼) -->
+    <button id="btn-sheet-sync" type="button" class="op-nav-btn" title="구글 시트 동기화 설정">
+      <span class="btn-icon">📊</span>
+      <span id="sheetSyncStatusLabel">시트 연동</span>
+      <span id="sheetSyncStatusBadge" class="sheet-status-dot"></span>
+    </button>
+
+    <!-- 규칙 설정 (정돈된 헤더 버튼) -->
+    <button id="btn-settings" type="button" class="op-nav-btn" title="생기부 점검 규칙 설정">
+      <span class="btn-icon">⚙️</span>
+      <span>규칙 설정</span>
+    </button>
+
+    <!-- 교사 승인 / 사용자 뱃지 -->
+    <div id="gatekeeperUserBadge" class="gk-user-badge"></div>
+  </div>
 </header>
 
 <!-- 오른쪽 화면 이동 점 (4장 구성) -->
@@ -463,119 +484,141 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <!-- ── 1화면: 소개 (기존 Vercel Hero 디자인 유지) ── -->
 <section class="op-screen op-hero" id="hero">
   <!-- ── [사용자 요청] 기존 화면 구성을 그대로 보여주면서 그 위에 크게 떠있는 교사 인증 오버레이 카드 ── -->
+  <!-- ── 교사 인증 오버레이 카드 (신청 ➔ 시트/대시보드 승인 ➔ 3개월 로그인 체계) ── -->
   <div id="appGatekeeperOverlay" class="gk-hero-card">
     <!-- 대형 교사용 안내 배너 -->
     <div class="gk-prominent-banner">
       <div class="gk-banner-main-row">
-        <span class="gk-badge-pill">🔒 교사용 전용 서비스</span>
-        <h2 class="gk-banner-title">교사용으로 제작된 앱입니다. 교사만 접속가능합니다.</h2>
+        <span class="gk-badge-pill">🔒 교사 승인제 서비스</span>
+        <h2 class="gk-banner-title">학교생활기록부 올인원: 교사 승인 및 로그인</h2>
       </div>
       <p class="gk-banner-sub">
-        소속 학교(신천고등학교) 및 교사 이메일(<strong>@sch.hs.kr</strong>, <strong>@goedu.kr</strong>) 입력 시 <strong>3개월간 모든 기능이 즉시 자동 승인</strong>됩니다.<br>
-        <span style="color:#93c5fd; font-size:11.5px;">※ 복잡한 구글 클라우드 콘솔 설정 없이 원클릭으로 즉시 잠금이 해제됩니다.</span>
+        본 시스템은 현직 교사의 업무 경감을 위한 비공개 연구 플랫폼입니다.<br>
+        <strong>[사용 승인 신청]</strong> 후 관리자(math-tong)의 구글 시트 승인 또는 <strong>관리자 비밀번호 대시보드</strong>를 통해 승인되면 <strong>3개월간 자유롭게 이용</strong>하실 수 있습니다.
       </p>
     </div>
 
     <div class="gk-header-compact">
       <div class="gk-tab-nav" style="display:flex; gap:6px;">
-        <button type="button" class="gk-tab-btn is-active" data-gk-tab="apply">🏫 소속 학교 · 교사 이메일 인증 (3개월 즉시 승인)</button>
-        <button type="button" class="gk-tab-btn" data-gk-tab="master">⚡ 마스터키 입력</button>
+        <button type="button" class="gk-tab-btn is-active" data-gk-tab="apply">📝 1. 사용 승인 신청</button>
+        <button type="button" class="gk-tab-btn" data-gk-tab="login">🔑 2. 승인 확인 &amp; 로그인 (3개월)</button>
+        <button type="button" class="gk-tab-btn" data-gk-tab="admin">⚡ 3. 관리자 마스터키 &amp; 대시보드</button>
       </div>
-      <span class="gk-duration-badge">⏱️ 3개월 이용 승인</span>
+      <span class="gk-duration-badge">⏱️ 승인 시 3개월 유지</span>
     </div>
 
-    <!-- 메인 탭: 소속 학교 + 교사 이메일 즉시 자동승인 (클라우드 콘솔 불필요) -->
+    <!-- 탭 1: 사용 승인 신청 -->
     <div class="gk-tab-pane" id="gk-pane-apply">
-      <div class="gk-two-step-grid">
-        <!-- 1단계: Google 계정 로그인 (1순위 필수) -->
-        <div class="gk-step-card" id="gkStep1Card" style="border:1.5px solid #bfdbfe; background:#ffffff; box-shadow:0 4px 14px rgba(37,99,235,0.06);">
-          <div class="gk-step-header">
-            <span class="gk-step-badge" style="background:#2563eb;">1단계 (필수)</span>
-            <strong style="color:#0f172a; font-size:13.5px;">Google 계정 로그인</strong>
+      <form id="gkApplyFormFull" style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div>
+            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">선생님 성함 (또는 닉네임) *</label>
+            <input type="text" id="gkApplyName" class="gk-input-mini" placeholder="예: 김선생, 수학통, 홍길동" required autocomplete="name">
           </div>
-          <p class="gk-step-desc" style="font-size:12px; color:#475569; margin-bottom:8px; line-height:1.45;">
-            신천고(<strong>@sch.hs.kr</strong>) 또는 경기도교육청(<strong>@goedu.kr</strong>) Google 계정으로 로그인해 주세요.
-          </p>
-
-          <!-- 로그인 전 구글 버튼 영역 -->
-          <div id="gkGoogleLoginActionWrap">
-            <button type="button" id="gkBtnGoogleLogin" class="gk-btn-google-primary" style="width:100%; justify-content:center; padding:10px 14px; font-size:13.5px; font-weight:800; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.35);">
-              <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-              <span>Google 계정으로 로그인</span>
-            </button>
-            <div id="g_id_onload_container" style="margin-top:6px;"></div>
-
-            <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
-              <button type="button" id="btnShowOriginHelp" style="font-size:11px; color:#93c5fd; text-decoration:underline; background:none; border:none; cursor:pointer; padding:0;">
-                💡 401 오류(no registered origin) 발생 시 해결 안내
-              </button>
+          <div style="position:relative;">
+            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">소속 고등학교 *</label>
+            <div style="display:flex; gap:4px;">
+              <input type="text" id="gkApplySchool" class="gk-input-mini" placeholder="예: 신천고등학교" required value="신천고등학교">
+              <button type="button" id="gkBtnSearchSchoolApp" class="gk-btn-search-school" title="학교 검색">🔍</button>
             </div>
-          </div>
-
-          <!-- 로그인 후 계정 정보 표시 박스 -->
-          <div id="gkGoogleAuthSuccessWrap" class="gk-auth-success-box gk-hidden">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:20px;">✅</span>
-              <div>
-                <strong id="gkLoggedUserName" style="color:#10b981; font-size:13px;">Google 인증 완료</strong>
-                <div id="gkLoggedUserEmail" style="color:#cbd5e1; font-size:12px; font-family:monospace;"></div>
-              </div>
-            </div>
-            <button type="button" id="btnChangeGoogleAccount" class="gk-btn-change-acc">계정 변경</button>
+            <div id="gkSchoolDropdownApp" class="gk-school-dropdown gk-hidden"></div>
           </div>
         </div>
 
-        <!-- 2단계: 소속 학교 & 교사 이메일 확인 (워크스페이스 차단 시 100% 프리패스) -->
-        <div class="gk-step-card" id="gkStep2Card" style="border:1.5px solid #bbf7d0; background:#ffffff; box-shadow:0 4px 14px rgba(16,185,129,0.06);">
-          <div class="gk-step-header">
-            <span class="gk-step-badge" style="background:#059669;">2단계</span>
-            <strong style="color:#0f172a; font-size:13.5px;">소속 학교 및 교사 이메일 확인</strong>
+        <div style="display:grid; grid-template-columns:1.2fr 0.8fr; gap:10px;">
+          <div>
+            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">학교/교육청 계정 또는 이메일 *</label>
+            <input type="email" id="gkApplyEmail" class="gk-input-mini" placeholder="예: teacher@sch.hs.kr 또는 @goedu.kr" required autocomplete="email">
           </div>
-          <div style="display:flex; gap:4px; position:relative; margin-bottom:6px;">
-            <input type="text" id="gkInputSchool" class="gk-input-mini" placeholder="소속 학교 (예: 신천고등학교)" autocomplete="off" value="신천고등학교" required>
-            <button type="button" id="gkBtnSearchSchool" class="gk-btn-search-school" title="학교알리미 API 검색">🔍</button>
-            <div id="gkSchoolDropdown" class="gk-school-dropdown gk-hidden"></div>
+          <div>
+            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">담당 과목 / 학년 (선택)</label>
+            <input type="text" id="gkApplySubject" class="gk-input-mini" placeholder="예: 1학년 공통수학">
           </div>
-
-          <div class="gk-quick-chips" style="margin:2px 0 4px;">
-            <button type="button" class="gk-chip" data-email-domain="sch.hs.kr" data-auto-school="신천고등학교">🏫 @sch.hs.kr (신천고)</button>
-            <button type="button" class="gk-chip" data-email-domain="goedu.kr" data-auto-school="신천고등학교">🏛️ @goedu.kr (경기도교육청)</button>
-          </div>
-          <div style="display:flex; gap:4px; margin-bottom:6px;">
-            <input type="email" id="gkInputEmail" class="gk-input-mini" placeholder="선생님아이디@sch.hs.kr 또는 @goedu.kr" autocomplete="email" value="t98@sch.hs.kr" required style="font-size:12.5px;">
-          </div>
-
-          <p style="margin:2px 0 8px; font-size:11px; color:#64748b; line-height:1.4;">
-            ※ 신천고 소속 교사는 콘솔 설정 없이 <strong>3개월 즉시 자동승인</strong>됩니다.
-          </p>
-
-          <button type="button" id="gkBtnFinalVerify" class="gk-btn-final-verify">
-            🔓 교사 승인 및 즉시 입장 (3개월)
-          </button>
         </div>
-      </div>
 
-      <!-- 구글 콘솔 401 오류 발생 시 비상 잠금 해제 바로가기 -->
-      <div style="margin-top:12px; padding:10px 14px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <div style="font-size:11.5px; color:#475569;">
-          ⚠️ Google 콘솔 설정 전이거나 401 오류 발생 시:
+        <div>
+          <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">신청 사유 및 메모 (선택)</label>
+          <input type="text" id="gkApplyReason" class="gk-input-mini" placeholder="예: 2026 기재요령 세특 작성 및 대입 진학상담 연구">
         </div>
-        <button type="button" id="gkBtnEmergencySincheon" style="background:#0284c7; color:#fff; border:none; border-radius:6px; padding:5px 12px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-          ⚡ 신천고 교사 계정(t98@sch.hs.kr)으로 즉시 3개월 잠금 해제 ➔
+
+        <button type="submit" id="gkBtnSubmitApp" class="gk-btn-final-verify" style="margin-top:6px; background:#2563eb;">
+          📋 관리자에게 사용 승인 신청 전송 (구글 시트 접수)
         </button>
-      </div>
-
-      <div id="gkApplyResultMsg" class="gk-msg-box" style="margin-top:10px;"></div>
+        <p style="font-size:11.5px; color:#64748b; margin:2px 0 0; text-align:center;">
+          ※ 제출 즉시 관리자 구글 시트로 접수되며, 관리자 승인 후 <strong>[2. 승인 확인 &amp; 로그인]</strong> 탭에서 3개월간 이용하실 수 있습니다.
+        </p>
+        <div id="gkApplyFormResultMsg" class="gk-msg-box"></div>
+      </form>
     </div>
 
-    <!-- 탭 패널 2: 관리자 마스터 키 (환경변수 검증) -->
-    <div class="gk-tab-pane gk-hidden" id="gk-pane-master">
-      <form id="gkMasterForm" style="display:flex; gap:8px; align-items:center; padding:6px 0; flex-wrap:wrap;">
-        <span style="font-size:12.5px; color:#0f172a; font-weight:700; white-space:nowrap;">⚡ 환경변수 마스터키:</span>
-        <input type="password" id="gkInputMasterPin" class="gk-input-mini" placeholder="마스터키(MASTER_APPROVAL_PIN) 입력" required style="max-width:260px;">
-        <button type="submit" id="gkBtnSubmitMaster" class="gk-btn-submit-mini" style="background:#7c3aed;">3개월 즉시 승인</button>
-        <div id="gkMasterResultMsg" class="gk-msg-box" style="margin:4px 0 0; width:100%;"></div>
+    <!-- 탭 2: 승인 확인 & 로그인 (3개월) -->
+    <div class="gk-tab-pane gk-hidden" id="gk-pane-login">
+      <form id="gkLoginForm" style="display:flex; flex-direction:column; gap:10px;">
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; font-size:12px; color:#15803d; line-height:1.45;">
+          💡 <strong>승인 완료 안내:</strong> 관리자(math-tong) 선생님의 구글 시트 또는 대시보드에서 승인이 완료된 이메일을 입력하시면 <strong>3개월간 로그인 상태가 유지</strong>됩니다.
+        </div>
+        <div>
+          <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">신청하신 이메일 주소</label>
+          <input type="email" id="gkLoginEmail" class="gk-input-mini" placeholder="예: teacher@sch.hs.kr 또는 @goedu.kr" required autocomplete="email">
+        </div>
+        <button type="submit" id="gkBtnCheckLogin" class="gk-btn-final-verify" style="background:#059669;">
+          ✅ 승인 상태 확인 &amp; 3개월 로그인 입장
+        </button>
+        <div id="gkLoginResultMsg" class="gk-msg-box"></div>
       </form>
+    </div>
+
+    <!-- 탭 3: 관리자 마스터키 & 승인 대시보드 -->
+    <div class="gk-tab-pane gk-hidden" id="gk-pane-admin">
+      <div id="gkAdminAuthWrap">
+        <form id="gkMasterForm" style="display:flex; gap:8px; align-items:center; padding:10px 0; flex-wrap:wrap;">
+          <span style="font-size:12.5px; color:#0f172a; font-weight:700;">⚡ 관리자 마스터 비밀번호:</span>
+          <input type="password" id="gkInputMasterPin" class="gk-input-mini" placeholder="비밀번호(MASTER_APPROVAL_PIN) 입력" required style="max-width:240px;">
+          <button type="submit" id="gkBtnSubmitMaster" class="gk-btn-submit-mini" style="background:#7c3aed;">대시보드 열기</button>
+          <div id="gkMasterResultMsg" class="gk-msg-box" style="margin:4px 0 0; width:100%;"></div>
+        </form>
+      </div>
+
+      <div id="gkAdminDashboardWrap" class="gk-hidden" style="margin-top:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+          <div>
+            <strong style="font-size:14px; color:#0f172a;">👑 관리자 사용자 승인 대시보드</strong>
+            <span id="gkApplicantCountBadge" style="font-size:11.5px; color:#64748b; margin-left:6px;"></span>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button type="button" id="btnAdminRefresh" class="btn small" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; font-size:11.5px; padding:4px 9px;">🔄 새로고침</button>
+            <button type="button" id="btnAdminEnterWorkbench" class="btn small" style="background:#7c3aed; color:#fff; border:none; font-size:11.5px; font-weight:700; padding:4px 10px;">⚡ 관리자로 즉시 입장</button>
+          </div>
+        </div>
+
+        <div style="max-height:260px; overflow-y:auto; border:1px solid #cbd5e1; border-radius:8px; background:#fff;">
+          <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+            <thead style="background:#f8fafc; border-bottom:1px solid #e2e8f0; position:sticky; top:0;">
+              <tr>
+                <th style="padding:7px 10px;">신청일시</th>
+                <th style="padding:7px 10px;">성함</th>
+                <th style="padding:7px 10px;">소속학교</th>
+                <th style="padding:7px 10px;">이메일</th>
+                <th style="padding:7px 10px;">상태</th>
+                <th style="padding:7px 10px; text-align:center;">승인/반려 관리</th>
+              </tr>
+            </thead>
+            <tbody id="gkAdminApplicantListBody">
+              <tr>
+                <td colspan="6" style="padding:20px; text-align:center; color:#94a3b8;">신청 목록을 불러오는 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:10px; padding:10px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:11.5px; font-weight:700; color:#475569;">📊 연동된 관리자 구글 시트 웹앱 URL (GAS):</span>
+            <button type="button" id="btnSaveAdminGasUrl" style="background:#2563eb; color:#fff; border:none; border-radius:4px; padding:3px 8px; font-size:11px; cursor:pointer;">저장 및 테스트</button>
+          </div>
+          <input type="url" id="gkInputAdminGasUrl" class="gk-input-mini" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%; font-size:11.5px;">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1604,6 +1647,12 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
                 <span id="masterSyncStatusText"><strong>구글 시트 4번째 탭 [4_대입상담_진학기록]</strong>과 1:1 실시간 양방향 동기화 대상 항목입니다.</span>
               </div>
               <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button type="button" id="btnLoadMock30Master" class="btn secondary" style="font-size:11.5px; padding:4px 9px; font-weight:800; background:#f0fdf4; color:#166534; border:1px solid #86efac; cursor:pointer;" onclick="window.load30StudentsRelationalData && window.load30StudentsRelationalData();">
+                  📥 30명 모의 학급 불러오기
+                </button>
+                <button type="button" id="btnOpenMockSheetPreview" class="btn secondary" style="font-size:11.5px; padding:4px 9px; font-weight:700; background:#fff; color:#2563eb; border:1px solid #93c5fd; cursor:pointer;" onclick="document.getElementById('dialogRelationalSheetPreview') && document.getElementById('dialogRelationalSheetPreview').showModal(); window.renderMock30Table && window.renderMock30Table();">
+                  📋 30명 관계형 시트 미리보기
+                </button>
                 <button type="button" id="btnPullFromGSheet" class="btn secondary" style="font-size:11.5px; padding:4px 9px; font-weight:700; background:#fff;">
                   📥 시트에서 불러오기
                 </button>
@@ -2310,7 +2359,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         <span style="font-size:11px; color:var(--muted);">Cloudflare R2 초고속 CDN 분산 제공</span>
       </div>
       <div class="viewer-attribution-box" style="width:100%;">
-        <strong>📌 저작권 및 출처 안내:</strong> 본 시스템의 전체적인 내용은 수학 교과서, 학교생활기록부 기재요령 매뉴얼 및 동료 교사들의 생기부 초안 문구를 참고하여 작성되었습니다. 디자인과 전체적인 시스템 구성은 개발자(<a href="https://blog.naver.com/math-tong" target="_blank" rel="noreferrer" style="color:#ff385c; font-weight:800; text-decoration:underline;">math-tong</a>)에게 있으며, <a href="https://t-ong.vercel.app" target="_blank" rel="noreferrer" style="color:#059669; font-weight:800; text-decoration:underline;">모바일 교무수첩(t-ong)</a>과 함께, 1·2학년 담임선생님의 생기부 및 진학 상담 부담을 덜어드리기 위해 정성껏 제작된 관계형 데이터 솔루션입니다.
+        <strong>📌 저작권 및 출처 안내:</strong> 본 시스템의 전체적인 내용은 수학 교과서, 학교생활기록부 기재요령 매뉴얼 및 동료 교사들의 생기부 초안 문구를 참고하여 작성되었습니다. 디자인과 전체적인 시스템 구성은 개발자(<a href="https://blog.naver.com/math-tong" target="_blank" rel="noreferrer" style="color:#ff385c; font-weight:800; text-decoration:underline;">math-tong</a>)에게 있으며, 과 함께, 1·2학년 담임선생님의 생기부 및 진학 상담 부담을 덜어드리기 위해 정성껏 제작된 관계형 데이터 솔루션입니다.
       </div>
     </div>
   </div>
@@ -2621,6 +2670,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <b style="font-size:15px; font-weight:800; color:#0f172a;">📋 학생 보고서 ➔ 구글 시트 일괄 추출 표준 마스터 프롬프트</b>
           <span style="font-size:12px; color:#64748b; margin-left:6px;">(Gems 지침 또는 대화창에 복사해서 사용)</span>
         </div>
+        <button type="button" id="btnSaveOcrSkill" class="btn secondary" style="background:#eff6ff; color:#1d4ed8; font-weight:800; font-size:12.5px; padding:8px 14px; border-radius:8px; border:1.5px solid #93c5fd; cursor:pointer;">
+          💾 젬스 스킬 파일(.md) 저장
+        </button>
         <button type="button" id="btnCopyOcrMasterPrompt" class="btn primary" style="background:#059669; color:#fff; font-weight:800; font-size:13px; padding:8px 18px; border-radius:8px; border:none; cursor:pointer; box-shadow:0 3px 10px rgba(5,150,105,0.35);">
           📋 표준 프롬프트 1초 복사
         </button>
@@ -2676,6 +2728,26 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   <!-- 탭 2: 웹 브라우저 직접 이미지 Vision OCR 판독기 -->
   <div id="ocr-pane-vision" class="ocr-tab-pane ocr-hidden" style="max-height:80vh; overflow-y:auto; padding:20px;">
     <!-- 드래그 & 드롭 업로드 영역 -->
+    <!-- 3단계 직관적 비전OCR 사용 가이드 배너 -->
+    <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:14px 18px; margin-bottom:16px;">
+      <div style="font-size:13.5px; font-weight:800; color:#0f172a; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+        <span>🔍</span> <span>학생 보고서 직접 비전OCR 3단계 사용 방법</span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+          <div style="font-weight:800; color:#2563eb; font-size:12px; margin-bottom:3px;">1단계: 보고서 사진 준비</div>
+          <div style="font-size:11.5px; color:#475569; line-height:1.45;">학생이 제출한 수기/인쇄 탐구보고서, 수행평가 결과물 사진 촬영 (JPG, PNG, PDF)</div>
+        </div>
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+          <div style="font-weight:800; color:#059669; font-size:12px; margin-bottom:3px;">2단계: 드래그 &amp; 업로드</div>
+          <div style="font-size:11.5px; color:#475569; line-height:1.45;">아래 파란색 영역에 사진들을 끌어다 놓으면 Gemini AI가 학번, 이름, 과목, 주제 자동 판독</div>
+        </div>
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+          <div style="font-weight:800; color:#7c3aed; font-size:12px; margin-bottom:3px;">3단계: 세특 반영 &amp; 시트 저장</div>
+          <div style="font-size:11.5px; color:#475569; line-height:1.45;">동기-과정-성장 3단계 500자 세특 초안을 워크벤치에 1초 반영하거나 시트로 즉시 전송</div>
+        </div>
+      </div>
+    </div>
     <div id="ocrDropZone" style="border:2px dashed #93c5fd; background:#eff6ff; border-radius:12px; padding:28px 20px; text-align:center; cursor:pointer; transition:all 0.2s;">
       <div style="font-size:15px; font-weight:700; color:#1e40af; margin-bottom:4px;">학생들의 탐구보고서 사진이나 스캔본 이미지를 끌어다 놓으세요</div>
       <div style="font-size:12.5px; color:#64748b;">JPG, PNG, WebP 지원 (여러 장 한꺼번에 일괄 업로드 가능)</div>
@@ -2721,6 +2793,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <script src="js/xlsx.js?v=20261021-sk1"></script>
 <script src="js/app.js?v=20261103-vercel-theme"></script>
 
+<script src="js/mock-class-30.js"></script>
 <script src="onepage.js"></script>
 <script>
 (function () {
@@ -3170,6 +3243,52 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     </div>
   </div>
 </div>
+
+
+<!-- 30명 모의 학급 관계형 구글 시트 미리보기 모달 -->
+<dialog id="dialogRelationalSheetPreview" style="max-width:960px; width:95vw; border:none; border-radius:16px; padding:0; box-shadow:0 25px 50px -12px rgba(0,0,0,0.35); overflow:hidden;">
+  <div style="background:#1e293b; color:#fff; padding:14px 20px; display:flex; justify-content:space-between; align-items:center;">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-size:18px;">📊</span>
+      <strong style="font-size:15px;">2026/2028 1학년 1반 30명 모의 학급 관계형 시트 명세 미리보기</strong>
+    </div>
+    <button type="button" class="btn small" style="background:#334155; color:#fff; border:none; padding:4px 10px; border-radius:6px; cursor:pointer;" onclick="document.getElementById('dialogRelationalSheetPreview').close()">✕ 닫기</button>
+  </div>
+  <div style="padding:16px 20px; background:#f8fafc; max-height:75vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+      <span style="font-size:12.5px; color:#475569;">
+        담임 마스터 시트와 교과담임 세특 시트가 <strong>학번(Key)</strong>을 통해 1:1 관계형으로 연결된 실제 데이터입니다.
+      </span>
+      <div style="display:flex; gap:6px;">
+        <button type="button" id="btnPreviewDownloadExcel" class="btn small" style="background:#16a34a; color:#fff; border:none; font-weight:700; padding:6px 12px; border-radius:6px; cursor:pointer;">
+          ⬇️ 30명 엑셀 (.xlsx) 다운로드
+        </button>
+        <button type="button" class="btn small" style="background:#2563eb; color:#fff; border:none; font-weight:700; padding:6px 12px; border-radius:6px; cursor:pointer;" onclick="window.load30StudentsRelationalData && window.load30StudentsRelationalData(); document.getElementById('dialogRelationalSheetPreview').close();">
+          📥 워크벤치에 30명 즉시 반영
+        </button>
+      </div>
+    </div>
+    <div style="border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; background:#fff;">
+      <div style="overflow-x:auto; max-height:450px;">
+        <table id="tableMock30Preview" style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+          <thead style="background:#f1f5f9; border-bottom:2px solid #cbd5e1; position:sticky; top:0;">
+            <tr>
+              <th style="padding:8px 10px;">학번</th>
+              <th style="padding:8px 10px;">성명</th>
+              <th style="padding:8px 10px;">희망계열/학과</th>
+              <th style="padding:8px 10px;">5등급제</th>
+              <th style="padding:8px 10px;">9등급제</th>
+              <th style="padding:8px 10px;">목표대학 1지망</th>
+              <th style="padding:8px 10px;">교과목</th>
+              <th style="padding:8px 10px;">3단계 세특 초안 (동기-과정-성장)</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyMock30Preview"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</dialog>
 
 </body>
 </html>

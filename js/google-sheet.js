@@ -103,18 +103,23 @@
       const hasHr = !!this.getHomeroomUrl();
       const hasSub = !!this.getSubjectUrl();
 
+      const btn = document.getElementById('btn-sheet-sync');
       if (hasHr && hasSub) {
-        badge.style.background = '#22c55e';
-        label.textContent = '담임·교과 시트 연동';
+        badge.style.background = '#10b981';
+        label.textContent = '담임·교과 연동';
+        if (btn) btn.classList.add('is-connected');
       } else if (hasHr) {
         badge.style.background = '#3b82f6';
         label.textContent = '담임 시트 연동';
+        if (btn) btn.classList.add('is-connected');
       } else if (hasSub) {
         badge.style.background = '#8b5cf6';
         label.textContent = '교과 시트 연동';
+        if (btn) btn.classList.add('is-connected');
       } else {
         badge.style.background = '#94a3b8';
-        label.textContent = '구글 시트 미연결';
+        label.textContent = '시트 연동';
+        if (btn) btn.classList.remove('is-connected');
       }
     }
   };
@@ -151,56 +156,45 @@
       wsNotice['!cols'] = [{ wch: 85 }];
       XLSX.utils.book_append_sheet(wb, wsNotice, "0_공지사항_사용안내");
 
-      // 탭 2: 1_학급_종합대시보드 (1학기·2학기 한눈에 보는 대시보드 + 탭 바로가기 링크)
+      // 탭 2: 1_학급_종합대시보드 (1학년 1반 30명 모의 학급 전체 데이터 연계)
+      const studentsList = (window.MOCK_CLASS_30_HOMEROOM && window.MOCK_CLASS_30_HOMEROOM.length > 0)
+        ? window.MOCK_CLASS_30_HOMEROOM
+        : [
+            { stuNumber: "10101", stuName: "김태형", stuMajor: "생명공학과 (바이오신약)", status: "1차완료" },
+            { stuNumber: "10102", stuName: "박서준", stuMajor: "컴퓨터공학과 (인공지능)", status: "작성중" },
+            { stuNumber: "10103", stuName: "이지은", stuMajor: "사회학과 (빅데이터)", status: "수시확정" }
+          ];
+
+      const dashRows = studentsList.map((s, idx) => {
+        const rowIdx = idx + 4;
+        return [
+          idx + 1,
+          s.stuNumber,
+          s.stuName,
+          s.stuMajor || "진로미정",
+          { f: `IFERROR(VLOOKUP(B${rowIdx}, '2_교과세특_1·2학기통합'!A:G, 7, FALSE), 0)` },
+          { f: `IFERROR(VLOOKUP(B${rowIdx}, '2_교과세특_1·2학기통합'!A:H, 8, FALSE), 0)` },
+          { f: `HYPERLINK("#'2_교과세특_1·2학기통합'!A${idx + 2}", "[✏️ 세특 기록]")` },
+          { f: `COUNTIFS('3_창의적체험활동_통합'!A:A, B${rowIdx}, '3_창의적체험활동_통합'!C:C, "자율활동")` },
+          { f: `COUNTIFS('3_창의적체험활동_통합'!A:A, B${rowIdx}, '3_창의적체험활동_통합'!C:C, "동아리활동")` },
+          { f: `COUNTIFS('3_창의적체험활동_통합'!A:A, B${rowIdx}, '3_창의적체험활동_통합'!C:C, "진로활동")` },
+          s.targetUni1 || "미상담",
+          s.grade5 ? `5등급(${s.grade5})/9등급(${s.grade9 || '-'})` : "-",
+          { f: `HYPERLINK("#'4_대입상담_진학기록'!A${idx + 2}", "[📋 상담 일지]")` },
+          s.status === "수시확정" ? "100%" : (s.status === "1차완료" ? "70%" : "30%")
+        ];
+      });
+
       const dashData = [
-        ["2026학년도 학급 종합 대시보드 (1학기·2학기 통합 컨트롤타워)"],
-        ["* [사용법] B열과 C열에 학생 명렬표(학번, 성명)를 넣으면 1학기·2학기 세특과 창체, 목표대학이 실시간 자동 집계됩니다."],
-        [],
+        ["2026학년도 1학년 1반 학교생활기록부 & 진학상담 종합 관리 대시보드 (30명 학급)"],
+        ["※ B열에 학번, C열에 성명을 등록하면 오른쪽의 세특 작성 현황 및 창체, 상담 일지가 자동으로 연계됩니다."],
         [
-          "번호", "학번(ID)", "성명", "희망학과·진로",
-          "1학기 세특(바이트)", "2학기 세특(바이트)", "세특 바로가기",
-          "자율(1500B)", "동아리(1500B)", "진로(2100B)",
-          "1지망 목표대학", "2028 5등급환산", "상담 바로가기", "종합 진행률"
+          "번호", "학번", "성명", "희망진로 / 전공",
+          "1학기 세특 바이트", "2학기 세특 바이트", "세특 바로가기",
+          "자율활동(건)", "동아리(건)", "진로활동(건)",
+          "1지망 목표대학", "내신 평균", "상담일지 바로가기", "진행률"
         ],
-        [
-          1, "20101", "김태형", "생명공학과 (바이오신약)",
-          { f: "IFERROR(VLOOKUP(B4, '2_교과세특_1·2학기통합'!A:G, 7, FALSE), 0)" },
-          { f: "IFERROR(VLOOKUP(B4, '2_교과세특_1·2학기통합'!A:H, 8, FALSE), 0)" },
-          { f: 'HYPERLINK("#\'2_교과세특_1·2학기통합\'!A2", "[✏️ 세특 기록]")' },
-          { f: "COUNTIFS('3_창의적체험활동_통합'!A:A, B4, '3_창의적체험활동_통합'!C:C, \"자율활동\")" },
-          { f: "COUNTIFS('3_창의적체험활동_통합'!A:A, B4, '3_창의적체험활동_통합'!C:C, \"동아리활동\")" },
-          { f: "COUNTIFS('3_창의적체험활동_통합'!A:A, B4, '3_창의적체험활동_통합'!C:C, \"진로활동\")" },
-          { f: "IFERROR(VLOOKUP(B4, '4_대입상담_진학기록'!A:C, 3, FALSE), \"미상담\")" },
-          { f: "IFERROR(VLOOKUP(B4, '4_대입상담_진학기록'!A:J, 10, FALSE), \"-\")" },
-          { f: 'HYPERLINK("#\'4_대입상담_진학기록\'!A2", "[📋 상담 일지]")' },
-          "100%"
-        ],
-        [
-          2, "20102", "박서준", "컴퓨터공학과 (인공지능·빅데이터)",
-          { f: "IFERROR(VLOOKUP(B5, '2_교과세특_1·2학기통합'!A:G, 7, FALSE), 0)" },
-          { f: "IFERROR(VLOOKUP(B5, '2_교과세특_1·2학기통합'!A:H, 8, FALSE), 0)" },
-          { f: 'HYPERLINK("#\'2_교과세특_1·2학기통합\'!A3", "[✏️ 세특 기록]")' },
-          { f: "COUNTIFS('3_창의적체험활동_통합'!A:A, B5, '3_창의적체험활동_통합'!C:C, \"자율활동\")" },
-          { f: "COUNTIFS('3_창의적체험활동_통합'!A:A, B5, '3_창의적체험활동_통합'!C:C, \"동아리활동\")" },
-          { f: "COUNTIFS('3_창의적체험활동_통합'!A:A, B5, '3_창의적체험활동_통합'!C:C, \"진로활동\")" },
-          { f: "IFERROR(VLOOKUP(B5, '4_대입상담_진학기록'!A:C, 3, FALSE), \"미상담\")" },
-          { f: "IFERROR(VLOOKUP(B5, '4_대입상담_진학기록'!A:J, 10, FALSE), \"-\")" },
-          { f: 'HYPERLINK("#\'4_대입상담_진학기록\'!A3", "[📋 상담 일지]")' },
-          "50%"
-        ],
-        [
-          3, "20103", "이지은", "경영학과 (빅데이터 마케팅)",
-          { f: "IFERROR(VLOOKUP(B6, '2_교과세특_1·2학기통합'!A:G, 7, FALSE), 0)" },
-          { f: "IFERROR(VLOOKUP(B6, '2_교과세특_1·2학기통합'!A:H, 8, FALSE), 0)" },
-          { f: 'HYPERLINK("#\'2_교과세특_1·2학기통합\'!A4", "[✏️ 세특 기록]")' },
-          { f: "COUNTIFS('3_창의적체험활동_통합'!A:A, B6, '3_창의적체험활동_통합'!C:C, \"자율활동\")" },
-          { f: "COUNTIFS('3_창의적체험활동_통합'!A:A, B6, '3_창의적체험활동_통합'!C:C, \"동아리활동\")" },
-          { f: "COUNTIFS('3_창의적체험활동_통합'!A:A, B6, '3_창의적체험활동_통합'!C:C, \"진로활동\")" },
-          { f: "IFERROR(VLOOKUP(B6, '4_대입상담_진학기록'!A:C, 3, FALSE), \"미상담\")" },
-          { f: "IFERROR(VLOOKUP(B6, '4_대입상담_진학기록'!A:J, 10, FALSE), \"-\")" },
-          { f: 'HYPERLINK("#\'4_대입상담_진학기록\'!A4", "[📋 상담 일지]")' },
-          "0%"
-        ]
+        ...dashRows
       ];
       const wsDash = XLSX.utils.aoa_to_sheet(dashData);
       wsDash['!cols'] = [

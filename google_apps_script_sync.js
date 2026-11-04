@@ -94,6 +94,31 @@ function doGet(e) {
       return jsonResponse({ found: false, approved: false, status: "not_found" });
     }
 
+    // === [관리자 승인 신청 목록 조회 API] ===
+    if (action === "list_applicants") {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var appSheet = ss.getSheetByName("사용자승인") || ss.getSheetByName("승인관리");
+      if (!appSheet) {
+        return jsonResponse({ success: true, applicants: [] });
+      }
+      var rows = appSheet.getDataRange().getValues();
+      var list = [];
+      for (var i = 1; i < rows.length; i++) {
+        if (!rows[i][3]) continue;
+        list.push({
+          date: rows[i][0],
+          name: rows[i][1],
+          school: rows[i][2],
+          email: rows[i][3],
+          phone: rows[i][4],
+          reason: rows[i][5],
+          status: rows[i][6] || "대기",
+          memo: rows[i][7] || ""
+        });
+      }
+      return jsonResponse({ success: true, applicants: list });
+    }
+
     if (action === "getStudents") {
       var data = sheet.getDataRange().getValues();
       if (data.length <= 1) {
@@ -258,6 +283,33 @@ function doPost(e) {
         ""
       ]);
       return jsonResponse({ success: true, message: "사용 승인 신청이 성공적으로 접수되었습니다. 관리자 승인 후 이용 가능합니다." });
+    }
+
+    // === [관리자 승인 상태 변경 API (3개월 권한 부여)] ===
+    if (action === "update_approval") {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var appSheet = ss.getSheetByName("사용자승인") || ss.getSheetByName("승인관리");
+      if (!appSheet) {
+        return jsonResponse({ success: false, error: "사용자승인 시트가 없습니다." });
+      }
+      var targetEmail = (body.email || "").trim().toLowerCase();
+      var newStatus = body.status || "승인";
+      var rows = appSheet.getDataRange().getValues();
+      var updated = false;
+      for (var i = 1; i < rows.length; i++) {
+        var rowEmail = String(rows[i][3]).trim().toLowerCase();
+        if (rowEmail === targetEmail) {
+          appSheet.getRange(i + 1, 7).setValue(newStatus);
+          if (body.memo) appSheet.getRange(i + 1, 8).setValue(body.memo);
+          updated = true;
+          break;
+        }
+      }
+      if (!updated) {
+        var now = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
+        appSheet.appendRow([now, body.name || "선생님", body.school || "", targetEmail, body.phone || "", "대시보드 직접 승인", newStatus, body.memo || ""]);
+      }
+      return jsonResponse({ success: true, message: "승인 상태가 [" + newStatus + "](으)로 업데이트되었습니다." });
     }
 
     return jsonResponse({ success: false, error: "지원하지 않는 POST action: " + action });

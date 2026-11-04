@@ -666,7 +666,7 @@
       return idx < 0;
     },
 
-    // 8. 단일 마스터 시트 상담/세특 기록 (1학생 1행 구조 & 샘플 5명 기본 탑재)
+    // 8. 단일 마스터 시트 상담/세특 기록 (1학생 1행 구조 & 30명 모의 학급 지원)
     masterRecords() {
       try {
         const raw = localStorage.getItem("swk_master_records");
@@ -674,9 +674,12 @@
           const list = JSON.parse(raw);
           if (Array.isArray(list) && list.length > 0) return list;
         }
+        if (window.MOCK_CLASS_30_HOMEROOM && window.MOCK_CLASS_30_HOMEROOM.length > 0) {
+          return window.MOCK_CLASS_30_HOMEROOM;
+        }
         return SAMPLE_STUDENTS;
       } catch(e) {
-        return SAMPLE_STUDENTS;
+        return (window.MOCK_CLASS_30_HOMEROOM && window.MOCK_CLASS_30_HOMEROOM.length > 0) ? window.MOCK_CLASS_30_HOMEROOM : SAMPLE_STUDENTS;
       }
     },
     saveMasterRecord(rec) {
