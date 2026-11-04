@@ -1222,12 +1222,16 @@
   const onEnter = (sel, fn) => $(sel).addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) fn(); });
   // 컴퓨터 화면 폭 고르기(사용자 요청 2026-10-22): 넓게(기본, 모니터 폭에 맞춤) / 좁게(폰과 비슷한 폭). 위 띠 오른쪽, 900px 이상에서만 보임
   function renderViewWidth() {
+    const seg = $('#viewWidthSeg');
+    if (!seg) return;
     const w = document.documentElement.dataset.width === 'narrow' ? 'narrow' : 'wide';
-    $$('#viewWidthSeg button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.width === w)));
+    $('#viewWidthSeg button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.width === w)));
   }
   function bindViewWidth() {
     renderViewWidth();
-    $('#viewWidthSeg').addEventListener('click', (e) => {
+    const seg = $('#viewWidthSeg');
+    if (!seg) return;
+    seg.addEventListener('click', (e) => {
       const b = e.target.closest('[data-width]'); if (!b) return;
       if (b.dataset.width === 'narrow') document.documentElement.dataset.width = 'narrow'; else delete document.documentElement.dataset.width;
       SMStore.set(K.viewWidth, b.dataset.width);
@@ -1754,8 +1758,8 @@
     let currentGemStep = 1;
     const gemsImg = $('#gemsGuideImg');
     const gemsDesc = $('#gemsGuideDesc');
-    const gemsPrev = $('#gemsGuidePrev');
-    const gemsNext = $('#gemsGuideNext');
+    const gemsPrev = $('#btnGemPrev') || $('#gemsGuidePrev');
+    const gemsNext = $('#btnGemNext') || $('#gemsGuideNext');
     const gemsTabs = $$('#gemsGuideTabs .step-tab');
     const gemsCopyBox = $('#gemsPromptCopyBox');
 
@@ -1957,6 +1961,101 @@
         } catch (err) {
           alert('코드 복사 실패: google_apps_script_dual_relational.js 파일을 확인하세요.');
         }
+      });
+    }
+
+    // [버튼 수정] 관계형 엑셀 서식 다운로드 (.xlsx)
+    const btnDownloadTemplate = $('#btnDownloadExcelTemplate');
+    if (btnDownloadTemplate) {
+      btnDownloadTemplate.addEventListener('click', () => {
+        try {
+          if (typeof XLSX === 'undefined') {
+            alert('엑셀 라이브러리(SheetJS)가 아직 준비되지 않았습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.');
+            return;
+          }
+          const wb = XLSX.utils.book_new();
+
+          // 1. 학급명렬표
+          const ws1Data = [
+            ['학번', '성명', '성별', '비고'],
+            ['10101', '강하늘', '남', '반장'],
+            ['10102', '김민서', '여', '부반장'],
+            ['10103', '박도윤', '남', ''],
+            ['10104', '서지우', '여', '']
+          ];
+          const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
+          XLSX.utils.book_append_sheet(wb, ws1, '1_학급명렬표');
+
+          // 2. 교과세특
+          const ws2Data = [
+            ['학번', '성명', '과목명', '단원/주제', '특기사항 초안', '나이스Byte(참고)', '점검결과'],
+            ['10101', '강하늘', '통합과학', '신재생에너지 탐구', '태양광 발전 효율 향상을 위한 광전효과 원리를 탐구하고 수치 데이터를 정밀 분석함.', 112, '적합'],
+            ['10102', '김민서', '국어', '현대문학 비평', '사회적 약자를 대변하는 소설 속 인물의 심리를 비판적 시각에서 분석하고 논리적으로 발표함.', 124, '적합']
+          ];
+          const ws2 = XLSX.utils.aoa_to_sheet(ws2Data);
+          XLSX.utils.book_append_sheet(wb, ws2, '2_교과세특');
+
+          // 3. 창의적체험활동
+          const ws3Data = [
+            ['학번', '성명', '영역', '활동명/부서', '특기사항 내용', '나이스Byte(참고)'],
+            ['10101', '강하늘', '자율활동', '학급 자치활동', '학급 1인 1역할 활동에서 환경미화 부장으로서 솔선수범하여 쾌적한 학습 환경을 조성함.', 135],
+            ['10102', '김민서', '동아리활동', '시사토론반', '다양한 사회 현안에 대해 찬반 논거를 명확히 제시하며 합리적인 토론 문화를 선도함.', 142]
+          ];
+          const ws3 = XLSX.utils.aoa_to_sheet(ws3Data);
+          XLSX.utils.book_append_sheet(wb, ws3, '3_창의적체험활동');
+
+          // 4. 대입진학상담
+          const ws4Data = [
+            ['학번', '성명', '내신등급', '희망대학1', '희망학과1', '전형유형', '수시/정시', '상담메모'],
+            ['10101', '강하늘', '1.85', '고려대학교', '전기전자공학부', '학생부종합(학업우수형)', '수시', '수학/물리 세특 우수, 탐구보고서 보완 권장'],
+            ['10102', '김민서', '2.10', '성균관대학교', '국어국문학과', '학생부종합(학과모집)', '수시', '인문학적 통찰력 돋보임, 수능 최저기준 대비 상담']
+          ];
+          const ws4 = XLSX.utils.aoa_to_sheet(ws4Data);
+          XLSX.utils.book_append_sheet(wb, ws4, '4_대입진학상담');
+
+          XLSX.writeFile(wb, '2026_생기부_관계형_표준서식.xlsx');
+        } catch (err) {
+          alert('엑셀 서식 생성 중 오류가 발생했습니다: ' + err.message);
+        }
+      });
+    }
+
+    // [버튼 수정] 표준 프롬프트 1초 복사 버튼
+    const btnCopyMasterPrompt = $('#btnCopyOcrMasterPrompt');
+    if (btnCopyMasterPrompt) {
+      btnCopyMasterPrompt.addEventListener('click', () => {
+        const pre = btnCopyMasterPrompt.closest('div')?.parentElement?.querySelector('pre') || $('pre');
+        if (pre) {
+          navigator.clipboard.writeText(pre.textContent.trim()).then(() => {
+            const orig = btnCopyMasterPrompt.textContent;
+            btnCopyMasterPrompt.textContent = '✓ 복사 완료!';
+            btnCopyMasterPrompt.style.background = '#047857';
+            setTimeout(() => {
+              btnCopyMasterPrompt.textContent = orig;
+              btnCopyMasterPrompt.style.background = '#059669';
+            }, 2000);
+          });
+        }
+      });
+    }
+
+    // [버튼 수정] 규칙 설정 모달 열기/닫기 보완
+    const btnSettings = $('#btn-settings');
+    const settingsModal = $('#settings-modal');
+    const btnCloseSettings = $('#btn-close-settings');
+    if (btnSettings && settingsModal) {
+      btnSettings.addEventListener('click', () => {
+        settingsModal.classList.remove('hidden');
+      });
+    }
+    if (btnCloseSettings && settingsModal) {
+      btnCloseSettings.addEventListener('click', () => {
+        settingsModal.classList.add('hidden');
+      });
+    }
+    if (settingsModal) {
+      settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) settingsModal.classList.add('hidden');
       });
     }
   }

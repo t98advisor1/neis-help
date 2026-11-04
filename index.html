@@ -3018,39 +3018,53 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   </div>
 </div>
 
-<!-- ── Google 계정 로그인 팝업 모달 (학교 계정 @sch.hs.kr / @goedu.kr & 개인 Google 계정 연동) ── -->
+<!-- ── Google 계정 로그인 공식 인증 모달 (학교 계정 @sch.hs.kr / @goedu.kr 3개월 자동승인) ── -->
 <div id="gkGoogleLoginModal" class="gk-google-modal-backdrop gk-hidden">
   <div class="gk-google-modal-card">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <div style="display:flex; align-items:center; gap:8px;">
         <svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-        <strong style="font-size:16px; color:#0f172a;">Google 학교·교사 계정 로그인</strong>
+        <strong style="font-size:16px; color:#0f172a;">Google 학교·교사 계정 로그인 (필수 인증)</strong>
       </div>
       <button type="button" id="gkGoogleModalClose" style="border:none; background:#f1f5f9; color:#475569; width:28px; height:28px; border-radius:50%; cursor:pointer; font-weight:800;">✕</button>
     </div>
     
-    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:10px 12px; margin-bottom:12px; font-size:12px; color:#1e40af; line-height:1.5;">
-      💡 <strong>자동승인 조건:</strong> 학교 Google Workspace 계정(<strong>@sch.hs.kr</strong> 또는 <strong>@goedu.kr</strong>)으로 로그인 시 <strong>3개월 즉시 자동승인</strong>됩니다.<br>
-      일반 개인 계정(@gmail.com)은 관리자 승인 대기로 접수됩니다.
+    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 14px; margin-bottom:14px; font-size:12.5px; color:#1e40af; line-height:1.6;">
+      🔒 <strong>Google 계정 인증 필수 안내:</strong><br>
+      본 프로그램은 교원 전용 서비스로, 단순 텍스트 입력이 아닌 <strong>Google 계정 로그인 본인인증</strong>이 필수입니다.<br>
+      • <strong>신천고등학교(@sch.hs.kr)</strong> 또는 <strong>경기도교육청(@goedu.kr)</strong> 공식 학교 계정: <strong>즉시 3개월 자동 승인</strong><br>
+      • 개인 계정(@gmail.com): 관리자 승인 대기로 접수
     </div>
 
-    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
-      <button type="button" class="gk-google-domain-pill" data-google-quick-domain="sch.hs.kr" data-google-school="신천고등학교">🏫 @sch.hs.kr (신천고 자동승인)</button>
-      <button type="button" class="gk-google-domain-pill" data-google-quick-domain="goedu.kr" data-google-school="경기도교육청 소속고교">🏛️ @goedu.kr (경기교육청 자동승인)</button>
+    <!-- Google 공식 로그인 버튼 컨테이너 -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:10px; margin:16px 0;">
+      <button type="button" id="gkModalBtnGoogleTrigger" class="gk-btn-google-primary" style="width:100%; justify-content:center; padding:12px 16px; font-size:14px;">
+        <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        <span>Google 공식 로그인 팝업 열기</span>
+      </button>
+      <div id="gkModalGoogleButton"></div>
     </div>
 
-    <form id="gkGoogleLoginForm">
-      <div style="margin-bottom:10px;">
-        <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Google 계정 이메일</label>
-        <input type="email" id="gkGoogleEmailInput" class="gk-google-input" placeholder="선생님아이디@sch.hs.kr 또는 @goedu.kr" required autocomplete="email">
+    <!-- Vercel 환경변수 미설정 시 대체/연동 안내 블록 -->
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-top:8px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <span style="font-size:12px; font-weight:700; color:#475569;">⚡ Google OAuth 클라이언트 ID 직접 입력 (옵션):</span>
       </div>
-      <div style="margin-bottom:14px;">
-        <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">소속 학교명</label>
-        <input type="text" id="gkGoogleSchoolInput" class="gk-google-input" placeholder="신천고등학교" value="신천고등학교">
+      <div style="display:flex; gap:6px;">
+        <input type="text" id="gkInputClientId" class="gk-google-input" placeholder="Google Client ID (.apps.googleusercontent.com)" style="font-size:12px; padding:6px 10px;">
+        <button type="button" id="btnSaveClientId" style="background:#3b82f6; color:#fff; border:none; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;">저장</button>
       </div>
-      <button type="submit" id="gkBtnGoogleModalSubmit" class="gk-google-submit-btn">Google 계정으로 확인 및 승인 진행</button>
-      <div id="gkGoogleModalMsg" class="gk-msg-box" style="margin-top:10px;"></div>
-    </form>
+      <p style="font-size:11px; color:#94a3b8; margin:4px 0 0; line-height:1.4;">
+        ※ Vercel 환경변수에 <code>GOOGLE_CLIENT_ID</code>를 추가하시면 모든 브라우저에서 영구 자동 적용됩니다.
+      </p>
+    </div>
+
+    <div style="margin-top:14px; text-align:center;">
+      <button type="button" id="btnGoMasterFromGoogle" style="background:none; border:none; color:#6366f1; font-size:12.5px; font-weight:700; cursor:pointer; text-decoration:underline;">
+        ⚡ 관리자이신가요? 환경변수 마스터키 입력 화면으로 전환하기 →
+      </button>
+    </div>
+    <div id="gkGoogleModalMsg" class="gk-msg-box" style="margin-top:10px;"></div>
   </div>
 </div>
 

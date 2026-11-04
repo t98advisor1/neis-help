@@ -639,30 +639,107 @@
 
     // Google Identity Services (GIS) 공식 라이브러리 초기화
     async initGoogleAuth() {
-      try {
-        const res = await fetch('/api/auth-config');
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.clientId && window.google?.accounts?.id) {
-            window.google.accounts.id.initialize({
-              client_id: data.clientId,
-              callback: (response) => this.handleGoogleCredential(response)
-            });
-            const container = document.getElementById('g_id_onload_container');
-            if (container) {
-              window.google.accounts.id.renderButton(container, {
-                theme: 'filled_blue',
-                size: 'large',
-                text: 'continue_with',
-                shape: 'rectangular',
-                logo_alignment: 'left'
-              });
+      let clientId = localStorage.getItem('SM_GOOGLE_CLIENT_ID') || '';
+      if (!clientId) {
+        try {
+          const res = await fetch('/api/auth-config');
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.clientId) {
+              clientId = data.clientId.trim();
             }
           }
+        } catch (err) {
+          console.warn('[Gatekeeper] initGoogleAuth:', err);
         }
-      } catch (err) {
-        console.warn('[Gatekeeper] initGoogleAuth:', err);
       }
+      this.googleClientId = clientId;
+
+      if (clientId && window.google?.accounts?.id) {
+        try {
+          window.google.accounts.id.initialize({
+            client_id: clientId,
+            callback: (response) => this.handleGoogleCredential(response),
+            auto_select: false
+          });
+          const container = document.getElementById('g_id_onload_container');
+          if (container) {
+            container.innerHTML = '';
+            window.google.accounts.id.renderButton(container, {
+              theme: 'filled_blue',
+              size: 'large',
+              text: 'continue_with',
+              shape: 'rectangular',
+              logo_alignment: 'left',
+              width: 280
+            });
+          }
+          const modalBtn = document.getElementById('gkModalGoogleButton');
+          if (modalBtn) {
+            modalBtn.innerHTML = '';
+            window.google.accounts.id.renderButton(modalBtn, {
+              theme: 'filled_blue',
+              size: 'large',
+              text: 'continue_with',
+              shape: 'rectangular',
+              logo_alignment: 'left',
+              width: 320
+            });
+          }
+        } catch (err) {
+          console.warn('[Gatekeeper] GIS render error:', err);
+        }
+      }
+    },
+
+    // 구글 계정 로그인 직접 트리거 (Google OAuth 공식 팝업 또는 GIS 프롬프트)
+    async triggerGoogleLogin() {
+      const curSchool = document.getElementById('gkInputSchool')?.value?.trim() || '신천고등학교';
+      const clientId = this.googleClientId || localStorage.getItem('SM_GOOGLE_CLIENT_ID');
+
+      if (clientId && window.google?.accounts?.oauth2) {
+        try {
+          const tokenClient = window.google.accounts.oauth2.initTokenClient({
+            client_id: clientId,
+            scope: 'email profile openid',
+            callback: async (tokenResponse) => {
+              if (tokenResponse.error) {
+                console.warn('[Gatekeeper] OAuth response error:', tokenResponse);
+                return;
+              }
+              if (tokenResponse.access_token) {
+                try {
+                  const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                  });
+                  const profile = await res.json();
+                  this.processGoogleLogin({
+                    email: profile.email,
+                    name: profile.name,
+                    school: curSchool,
+                    picture: profile.picture,
+                    hd: profile.hd
+                  });
+                } catch (err) {
+                  alert('Google 사용자 정보 조회 중 오류가 발생했습니다: ' + err.message);
+                }
+              }
+            }
+          });
+          tokenClient.requestAccessToken();
+          return;
+        } catch (err) {
+          console.warn('[Gatekeeper] OAuth token client error, falling back to prompt:', err);
+        }
+      }
+
+      if (clientId && window.google?.accounts?.id) {
+        window.google.accounts.id.prompt();
+        return;
+      }
+
+      // Google Client ID가 미설정된 경우 안내 모달 열기
+      this.openGoogleLoginModal();
     },
 
     // GIS 구글 토큰 디코딩 및 처리
@@ -730,7 +807,7 @@
       const guardScroll = (e) => {
         if (this.isAuthorized()) return;
         // 학교 검색 드롭다운 내부 스크롤은 허용
-        if (e.target && e.target.closest && e.target.closest('#gkSchoolDropdown, .gk-dialog, #gkGoogleLoginModal')) {
+        if (e.target && e.target.closest && e.target.closest('#appGatekeeperOverlay, #gkSchoolDropdown, .gk-dialog, #gkGoogleLoginModal, .modal-backdrop, .modal, dialog')) {
           return;
         }
         e.preventDefault();
@@ -883,22 +960,15 @@
         }
       });
 
-      // 빠른 학교 선택 칩 (신천고 등)
+      // 빠른 학교 선택 칩 (신천고, 경기교육청 등)
       document.querySelectorAll('[data-quick-school]').forEach(chip => {
-        chip.addEventListener('click', () => {
+        chip.addEventListener('click', (e) => {
+          e.preventDefault();
           const sName = chip.getAttribute('data-quick-school');
-          const sDomain = chip.getAttribute('data-quick-domain');
           if (schoolInput) schoolInput.value = sName;
           if (schoolDropdown) schoolDropdown.classList.add('gk-hidden');
-          const emailInput = document.getElementById('gkInputEmail');
-          if (emailInput) {
-            if (sDomain && emailInput.value && !emailInput.value.includes('@')) {
-              emailInput.value = `${emailInput.value.trim()}@${sDomain}`;
-            } else if (sDomain && !emailInput.value) {
-              emailInput.placeholder = `아이디 입력 후 @${sDomain} 자동완성`;
-            }
-            emailInput.focus();
-          }
+          const gSchoolInput = document.getElementById('gkGoogleSchoolInput');
+          if (gSchoolInput) gSchoolInput.value = sName;
         });
       });
 
@@ -1015,7 +1085,11 @@
       // 2. 구글 계정 로그인 버튼 & 모달 이벤트
       const btnOpenGoogle = document.getElementById('gkBtnGoogleLogin');
       if (btnOpenGoogle) {
-        btnOpenGoogle.addEventListener('click', () => this.openGoogleLoginModal());
+        btnOpenGoogle.addEventListener('click', () => this.triggerGoogleLogin());
+      }
+      const btnModalGoogle = document.getElementById('gkModalBtnGoogleTrigger');
+      if (btnModalGoogle) {
+        btnModalGoogle.addEventListener('click', () => this.triggerGoogleLogin());
       }
       const btnCloseGoogle = document.getElementById('gkGoogleModalClose');
       if (btnCloseGoogle) {
@@ -1028,54 +1102,36 @@
         });
       }
 
-      // 구글 로그인 모달 내 빠른 도메인/계정 선택
-      document.querySelectorAll('[data-google-quick-domain]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const domain = btn.getAttribute('data-google-quick-domain');
-          const defaultSchool = btn.getAttribute('data-google-school');
-          const gEmail = document.getElementById('gkGoogleEmailInput');
-          const gSchool = document.getElementById('gkGoogleSchoolInput');
-          if (gEmail) {
-            const idPart = gEmail.value.includes('@') ? gEmail.value.split('@')[0] : gEmail.value.trim();
-            gEmail.value = (idPart || 'teacher') + '@' + domain;
-            gEmail.focus();
-            if (!idPart) gEmail.setSelectionRange(0, 7);
-          }
-          if (gSchool && defaultSchool && !gSchool.value.trim()) {
-            gSchool.value = defaultSchool;
+      // Google Client ID 저장 버튼 및 마스터키 전환 이벤트
+      const btnSaveCId = document.getElementById('btnSaveClientId');
+      const inCId = document.getElementById('gkInputClientId');
+      if (inCId) {
+        inCId.value = localStorage.getItem('SM_GOOGLE_CLIENT_ID') || '';
+      }
+      if (btnSaveCId && inCId) {
+        btnSaveCId.addEventListener('click', () => {
+          const val = inCId.value.trim();
+          if (!val) {
+            localStorage.removeItem('SM_GOOGLE_CLIENT_ID');
+            alert('Google Client ID가 초기화되었습니다.');
+          } else {
+            localStorage.setItem('SM_GOOGLE_CLIENT_ID', val);
+            this.googleClientId = val;
+            alert('Google Client ID가 저장되었습니다. 다시 Google 로그인을 시도합니다.');
+            this.initGoogleAuth();
+            this.triggerGoogleLogin();
           }
         });
-      });
+      }
 
-      const googleForm = document.getElementById('gkGoogleLoginForm');
-      if (googleForm) {
-        googleForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          const gEmail = document.getElementById('gkGoogleEmailInput')?.value?.trim() || '';
-          let gSchool = document.getElementById('gkGoogleSchoolInput')?.value?.trim() || '';
-          const modalMsg = document.getElementById('gkGoogleModalMsg');
-
-          if (!gEmail || !gEmail.includes('@')) {
-            alert('올바른 Google 계정 이메일을 입력해 주세요.');
-            return;
-          }
-
-          if (!gSchool) {
-            gSchool = document.getElementById('gkInputSchool')?.value?.trim() || '신천고등학교';
-          }
-
-          const result = this.processGoogleLogin({
-            email: gEmail,
-            name: gEmail.split('@')[0] + ' 선생님',
-            school: gSchool
-          });
-
-          if (result.success) {
-            this.closeGoogleLoginModal();
-          } else if (modalMsg) {
-            modalMsg.className = 'gk-msg-box is-warn';
-            modalMsg.innerHTML = `<strong>⚠️ 학교 공식 계정이 아닙니다 (${escapeHtml(gEmail)})</strong><br>개인 계정은 자동승인되지 않습니다.<br>💡 <strong>@sch.hs.kr(신천고)</strong> 또는 <strong>@goedu.kr(경기교육청)</strong> Google 계정으로 로그인해 주세요.`;
-          }
+      const btnGoMaster = document.getElementById('btnGoMasterFromGoogle');
+      if (btnGoMaster) {
+        btnGoMaster.addEventListener('click', () => {
+          this.closeGoogleLoginModal();
+          const tabBtn = document.querySelector('[data-gk-tab="master"]');
+          if (tabBtn) tabBtn.click();
+          const pinInput = document.getElementById('gkInputMasterPin');
+          if (pinInput) setTimeout(() => pinInput.focus(), 100);
         });
       }
 
