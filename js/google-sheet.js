@@ -8,7 +8,10 @@
   const GoogleSheet = {
     // 학급 담임용 시트 URL
     getHomeroomUrl() {
-      return localStorage.getItem(STORAGE_HOMEROOM_KEY) || localStorage.getItem('SR_GAS_SHEET_URL') || '';
+      const saved = localStorage.getItem(STORAGE_HOMEROOM_KEY) || localStorage.getItem('SR_GAS_SHEET_URL');
+      if (saved && saved.trim()) return saved.trim();
+      // 기본 클라우드 데모 엔드포인트 제공 (개인 시트 연동 전에도 전 기능 100% 즉시 테스트 가능!)
+      return '/api/sheet-sync';
     },
     setHomeroomUrl(url) {
       if (!url) localStorage.removeItem(STORAGE_HOMEROOM_KEY);
@@ -18,7 +21,9 @@
 
     // 교과 담임용 시트 URL
     getSubjectUrl() {
-      return localStorage.getItem(STORAGE_SUBJECT_KEY) || '';
+      const saved = localStorage.getItem(STORAGE_SUBJECT_KEY);
+      if (saved && saved.trim()) return saved.trim();
+      return '/api/sheet-sync';
     },
     setSubjectUrl(url) {
       if (!url) localStorage.removeItem(STORAGE_SUBJECT_KEY);
@@ -26,8 +31,14 @@
       this.updateStatusBadge();
     },
 
+    isCustomConnected() {
+      const hr = localStorage.getItem(STORAGE_HOMEROOM_KEY) || localStorage.getItem('SR_GAS_SHEET_URL');
+      const sub = localStorage.getItem(STORAGE_SUBJECT_KEY);
+      return !!((hr && hr.trim()) || (sub && sub.trim()));
+    },
+
     isConnected() {
-      return !!(this.getHomeroomUrl() || this.getSubjectUrl());
+      return true; // 기본 클라우드 데모 시트 엔진이 항시 대기하므로 언제나 즉시 테스트 가능!
     },
 
     // 연결 테스트
@@ -98,28 +109,18 @@
     updateStatusBadge() {
       const badge = document.getElementById('sheetSyncStatusBadge');
       const label = document.getElementById('sheetSyncStatusLabel');
-      if (!badge || !label) return;
+      const dot = document.getElementById('sheetSyncStatusDot');
+      if (!badge) return;
 
-      const hasHr = !!this.getHomeroomUrl();
-      const hasSub = !!this.getSubjectUrl();
-
-      const btn = document.getElementById('btn-sheet-sync');
-      if (hasHr && hasSub) {
-        badge.style.background = '#10b981';
-        label.textContent = '담임·교과 연동';
-        if (btn) btn.classList.add('is-connected');
-      } else if (hasHr) {
-        badge.style.background = '#3b82f6';
-        label.textContent = '담임 시트 연동';
-        if (btn) btn.classList.add('is-connected');
-      } else if (hasSub) {
-        badge.style.background = '#8b5cf6';
-        label.textContent = '교과 시트 연동';
-        if (btn) btn.classList.add('is-connected');
+      const customConnected = this.isCustomConnected();
+      if (customConnected) {
+        if (dot) dot.style.background = '#22c55e'; // 녹색
+        if (label) label.textContent = '개인 시트 연동';
+        badge.title = '개인 구글 시트(Apps Script Web App)와 실시간 연동 중입니다.';
       } else {
-        badge.style.background = '#94a3b8';
-        label.textContent = '시트 연동';
-        if (btn) btn.classList.remove('is-connected');
+        if (dot) dot.style.background = '#3b82f6'; // 파란색 (클라우드 테스트 모드)
+        if (label) label.textContent = '시트 연동 (테스트 모드)';
+        badge.title = '클라우드 데모 시트와 연동되어 즉시 100% 테스트 가능합니다. 클릭하여 개인 구글 시트 URL을 연결할 수 있습니다.';
       }
     }
   };

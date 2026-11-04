@@ -37,7 +37,8 @@
       if (homeroomUrl && homeroomUrl.trim()) return homeroomUrl.trim();
       const singleUrl = localStorage.getItem('swk_gsheet_web_app_url') || localStorage.getItem('swk_gsheet_url');
       if (singleUrl && singleUrl.trim()) return singleUrl.trim();
-      return '';
+      // 기본 클라우드 데모 시트 동기화 엔드포인트 반환 (개인 시트 연동 전에도 100% 테스트 가능)
+      return '/api/sheet-sync';
     },
 
     setGasUrl(url) {
