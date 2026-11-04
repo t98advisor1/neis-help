@@ -488,12 +488,12 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <div class="gk-tab-pane" id="gk-pane-apply">
       <div class="gk-two-step-grid">
         <!-- 1단계: Google 계정 로그인 (1순위 필수) -->
-        <div class="gk-step-card" id="gkStep1Card" style="border:1.5px solid rgba(96,165,250,0.5); background:rgba(30,41,59,0.85);">
+        <div class="gk-step-card" id="gkStep1Card" style="border:1.5px solid #bfdbfe; background:#ffffff; box-shadow:0 4px 14px rgba(37,99,235,0.06);">
           <div class="gk-step-header">
             <span class="gk-step-badge" style="background:#2563eb;">1단계 (필수)</span>
-            <strong style="color:#ffffff; font-size:13.5px;">Google 계정 로그인</strong>
+            <strong style="color:#0f172a; font-size:13.5px;">Google 계정 로그인</strong>
           </div>
-          <p class="gk-step-desc" style="font-size:12px; color:#cbd5e1; margin-bottom:8px; line-height:1.45;">
+          <p class="gk-step-desc" style="font-size:12px; color:#475569; margin-bottom:8px; line-height:1.45;">
             신천고(<strong>@sch.hs.kr</strong>) 또는 경기도교육청(<strong>@goedu.kr</strong>) Google 계정으로 로그인해 주세요.
           </p>
 
@@ -525,33 +525,39 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           </div>
         </div>
 
-        <!-- 2단계: 소속 학교 확인 & 3개월 즉시 승인 -->
-        <div class="gk-step-card" id="gkStep2Card" style="border:1.5px solid rgba(255,255,255,0.15); background:rgba(30,41,59,0.7);">
+        <!-- 2단계: 소속 학교 & 교사 이메일 확인 (워크스페이스 차단 시 100% 프리패스) -->
+        <div class="gk-step-card" id="gkStep2Card" style="border:1.5px solid #bbf7d0; background:#ffffff; box-shadow:0 4px 14px rgba(16,185,129,0.06);">
           <div class="gk-step-header">
             <span class="gk-step-badge" style="background:#059669;">2단계</span>
-            <strong style="color:#ffffff; font-size:13.5px;">소속 학교 확인 및 자동 승인</strong>
+            <strong style="color:#0f172a; font-size:13.5px;">소속 학교 및 교사 이메일 확인</strong>
           </div>
-          <div class="gk-quick-chips" style="margin:4px 0 6px;">
-            <button type="button" class="gk-chip is-school-chip" data-quick-school="신천고등학교">⚡ 신천고등학교 (자동승인)</button>
-          </div>
-          <div style="display:flex; gap:4px; position:relative;">
-            <input type="text" id="gkInputSchool" class="gk-input-mini" placeholder="학교명 검색 (예: 신천고등학교)" autocomplete="off" value="신천고등학교" required>
+          <div style="display:flex; gap:4px; position:relative; margin-bottom:6px;">
+            <input type="text" id="gkInputSchool" class="gk-input-mini" placeholder="소속 학교 (예: 신천고등학교)" autocomplete="off" value="신천고등학교" required>
             <button type="button" id="gkBtnSearchSchool" class="gk-btn-search-school" title="학교알리미 API 검색">🔍</button>
             <div id="gkSchoolDropdown" class="gk-school-dropdown gk-hidden"></div>
           </div>
-          <p style="margin:4px 0 8px; font-size:11px; color:#94a3b8; line-height:1.4;">
-            ※ 신천고 소속 계정은 <strong>3개월 즉시 자동승인</strong>되며, 타 학교 교육청 계정은 관리자 추가 승인 대기로 접수됩니다.
+
+          <div class="gk-quick-chips" style="margin:2px 0 4px;">
+            <button type="button" class="gk-chip" data-email-domain="sch.hs.kr" data-auto-school="신천고등학교">🏫 @sch.hs.kr (신천고)</button>
+            <button type="button" class="gk-chip" data-email-domain="goedu.kr" data-auto-school="신천고등학교">🏛️ @goedu.kr (경기도교육청)</button>
+          </div>
+          <div style="display:flex; gap:4px; margin-bottom:6px;">
+            <input type="email" id="gkInputEmail" class="gk-input-mini" placeholder="선생님아이디@sch.hs.kr 또는 @goedu.kr" autocomplete="email" value="t98@sch.hs.kr" required style="font-size:12.5px;">
+          </div>
+
+          <p style="margin:2px 0 8px; font-size:11px; color:#64748b; line-height:1.4;">
+            ※ 신천고 소속 교사는 콘솔 설정 없이 <strong>3개월 즉시 자동승인</strong>됩니다.
           </p>
 
           <button type="button" id="gkBtnFinalVerify" class="gk-btn-final-verify">
-            🔓 승인 확인 및 입장 (3개월)
+            🔓 교사 승인 및 즉시 입장 (3개월)
           </button>
         </div>
       </div>
 
       <!-- 구글 콘솔 401 오류 발생 시 비상 잠금 해제 바로가기 -->
-      <div style="margin-top:10px; padding:10px 14px; background:rgba(255,255,255,0.04); border:1px dashed rgba(255,255,255,0.15); border-radius:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <div style="font-size:11.5px; color:#cbd5e1;">
+      <div style="margin-top:12px; padding:10px 14px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div style="font-size:11.5px; color:#475569;">
           ⚠️ Google 콘솔 설정 전이거나 401 오류 발생 시:
         </div>
         <button type="button" id="gkBtnEmergencySincheon" style="background:#0284c7; color:#fff; border:none; border-radius:6px; padding:5px 12px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
@@ -565,7 +571,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <!-- 탭 패널 2: 관리자 마스터 키 (환경변수 검증) -->
     <div class="gk-tab-pane gk-hidden" id="gk-pane-master">
       <form id="gkMasterForm" style="display:flex; gap:8px; align-items:center; padding:6px 0; flex-wrap:wrap;">
-        <span style="font-size:12.5px; color:#f1f5f9; font-weight:700; white-space:nowrap;">⚡ 환경변수 마스터키:</span>
+        <span style="font-size:12.5px; color:#0f172a; font-weight:700; white-space:nowrap;">⚡ 환경변수 마스터키:</span>
         <input type="password" id="gkInputMasterPin" class="gk-input-mini" placeholder="마스터키(MASTER_APPROVAL_PIN) 입력" required style="max-width:260px;">
         <button type="submit" id="gkBtnSubmitMaster" class="gk-btn-submit-mini" style="background:#7c3aed;">3개월 즉시 승인</button>
         <div id="gkMasterResultMsg" class="gk-msg-box" style="margin:4px 0 0; width:100%;"></div>
