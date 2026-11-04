@@ -634,6 +634,95 @@
       this.bindEvents();
       this.interceptLockedActions();
       this.bindScrollLockGuards();
+      this.initGoogleAuth();
+    },
+
+    // Google Identity Services (GIS) 공식 라이브러리 초기화
+    async initGoogleAuth() {
+      try {
+        const res = await fetch('/api/auth-config');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.clientId && window.google?.accounts?.id) {
+            window.google.accounts.id.initialize({
+              client_id: data.clientId,
+              callback: (response) => this.handleGoogleCredential(response)
+            });
+            const container = document.getElementById('g_id_onload_container');
+            if (container) {
+              window.google.accounts.id.renderButton(container, {
+                theme: 'filled_blue',
+                size: 'large',
+                text: 'continue_with',
+                shape: 'rectangular',
+                logo_alignment: 'left'
+              });
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('[Gatekeeper] initGoogleAuth:', err);
+      }
+    },
+
+    // GIS 구글 토큰 디코딩 및 처리
+    handleGoogleCredential(response) {
+      try {
+        const base64Url = response.credential.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+        const payload = JSON.parse(jsonPayload);
+        const curSchool = document.getElementById('gkInputSchool')?.value?.trim() || '신천고등학교';
+        this.processGoogleLogin({
+          email: payload.email,
+          name: payload.name || payload.given_name,
+          school: curSchool,
+          picture: payload.picture
+        });
+      } catch (err) {
+        alert('Google 로그인 처리 중 오류가 발생했습니다: ' + err.message);
+      }
+    },
+
+    // 구글 로그인 인증 및 도메인 기반 자동승인 처리
+    processGoogleLogin({ email, name, school }) {
+      const cleanEmail = String(email || '').trim().toLowerCase();
+      const autoInfo = checkAutoApproveDomain(cleanEmail);
+      const finalSchool = school || autoInfo.defaultSchool || '신천고등학교';
+      const teacherName = name || (cleanEmail.split('@')[0] + ' 선생님');
+
+      if (autoInfo.auto) {
+        // 학교 Google Workspace 계정 (@sch.hs.kr, @goedu.kr) => 3개월 즉시 자동승인!
+        this.submitApplication({
+          name: teacherName,
+          school: finalSchool,
+          email: autoInfo.normalizedEmail,
+          status: '승인(Google학교계정)',
+          authMethod: 'google_workspace_oauth'
+        });
+        this.authorize({
+          email: autoInfo.normalizedEmail,
+          name: teacherName,
+          school: finalSchool,
+          role: 'teacher',
+          authProvider: 'google',
+          badge: autoInfo.badge
+        });
+        alert(`🎉 [Google 학교 계정 인증 성공]\n${finalSchool} (${autoInfo.normalizedEmail}) 교사 계정으로 3개월 이용 권한이 즉시 활성화되었습니다!`);
+        return { success: true, auto: true };
+      } else {
+        // 일반 개인 계정 (@gmail.com 등)
+        this.submitApplication({
+          name: teacherName,
+          school: finalSchool,
+          email: cleanEmail,
+          status: '대기(일반Google계정)',
+          authMethod: 'google_personal'
+        });
+        const msg = `⚠️ 로그인하신 Google 계정(${cleanEmail})은 일반 개인 계정입니다.\n신천고등학교(@sch.hs.kr) 또는 경기도교육청(@goedu.kr) 공식 계정으로 로그인 시 즉시 자동승인됩니다.\n(현재 신청 내역은 관리자 승인 대기로 접수되었습니다)`;
+        alert(msg);
+        return { success: false, auto: false, message: msg };
+      }
     },
 
     // 미승인 시 첫 화면(#hero) 아래로 스크롤/이동 차단
@@ -964,36 +1053,29 @@
           e.preventDefault();
           const gEmail = document.getElementById('gkGoogleEmailInput')?.value?.trim() || '';
           let gSchool = document.getElementById('gkGoogleSchoolInput')?.value?.trim() || '';
+          const modalMsg = document.getElementById('gkGoogleModalMsg');
 
           if (!gEmail || !gEmail.includes('@')) {
-            alert('로그인할 Google 계정 이메일을 입력해 주세요.');
+            alert('올바른 Google 계정 이메일을 입력해 주세요.');
             return;
           }
 
-          const autoInfo = checkAutoApproveDomain(gEmail);
-          const finalEmail = autoInfo.normalizedEmail || gEmail.toLowerCase();
           if (!gSchool) {
-            gSchool = autoInfo.defaultSchool || document.getElementById('gkInputSchool')?.value?.trim() || '신천고등학교';
+            gSchool = document.getElementById('gkInputSchool')?.value?.trim() || '신천고등학교';
           }
 
-          const teacherName = finalEmail.split('@')[0] + ' 선생님';
-          this.submitApplication({
-            name: teacherName,
-            school: gSchool,
-            email: finalEmail,
-            status: '승인(Google로그인)',
-            authMethod: 'google_oauth'
+          const result = this.processGoogleLogin({
+            email: gEmail,
+            name: gEmail.split('@')[0] + ' 선생님',
+            school: gSchool
           });
 
-          this.closeGoogleLoginModal();
-          this.authorize({
-            email: finalEmail,
-            name: teacherName,
-            school: gSchool,
-            role: 'teacher',
-            authProvider: 'google',
-            badge: 'Google 학교/교사 계정 로그인 완료'
-          });
+          if (result.success) {
+            this.closeGoogleLoginModal();
+          } else if (modalMsg) {
+            modalMsg.className = 'gk-msg-box is-warn';
+            modalMsg.innerHTML = `<strong>⚠️ 학교 공식 계정이 아닙니다 (${escapeHtml(gEmail)})</strong><br>개인 계정은 자동승인되지 않습니다.<br>💡 <strong>@sch.hs.kr(신천고)</strong> 또는 <strong>@goedu.kr(경기교육청)</strong> Google 계정으로 로그인해 주세요.`;
+          }
         });
       }
 
