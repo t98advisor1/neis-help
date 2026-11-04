@@ -1,4 +1,4 @@
-// api/sheet-sync.js — 클라우드 내장 시트 동기화 및 테스트 엔진
+﻿// api/sheet-sync.js — 클라우드 내장 시트 동기화 및 테스트 엔진
 // 개인 구글 시트 연동 전에도 1초 만에 전 기능(불러오기/저장/승인)을 실시간으로 테스트할 수 있도록 지원하는 백엔드 API
 // Vercel Serverless Function (Node.js ESM)
 
@@ -195,7 +195,7 @@ export default async function handler(req, res) {
     // 3. 교사 사용 승인 신청
         if (action === 'approve_teacher') {
       const email = String(body.email || req.query.email || '').trim().toLowerCase();
-      const target = mockApplicants.find(a => a.email.toLowerCase() === email);
+      const target = applicants.find(a => a.email.toLowerCase() === email);
       if (target) {
         target.status = '승인';
         target.approvedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -207,14 +207,14 @@ export default async function handler(req, res) {
     if (action === 'approve_all_teachers') {
       const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
       let count = 0;
-      mockApplicants.forEach(a => {
+      applicants.forEach(a => {
         if (a.status !== '승인') {
           a.status = '승인';
           a.approvedAt = now;
           count++;
         }
       });
-      return res.status(200).json({ success: true, message: `총 ${count}명의 교사가 승인되었습니다.`, updatedCount: count, applicants: mockApplicants });
+      return res.status(200).json({ success: true, message: `총 ${count}명의 교사가 승인되었습니다.`, updatedCount: count, applicants: applicants });
     }
 
     if (action === 'apply_access') {
