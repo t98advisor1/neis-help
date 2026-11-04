@@ -192,19 +192,12 @@
 
     notifyScrollBlocked() {
       if (this.isAuthorized()) return;
-      window.scrollTo(0, 0);
-      if (this.isMinimized) {
-        this.toggleMinimize(false);
-      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       const overlay = document.getElementById('appGatekeeperOverlay');
       if (overlay) {
-        overlay.classList.remove('gk-hidden');
-        const dialog = overlay.querySelector('.gk-dialog');
-        if (dialog) {
-          dialog.classList.remove('gk-pulse-alert');
-          void dialog.offsetWidth;
-          dialog.classList.add('gk-pulse-alert');
-        }
+        overlay.classList.remove('gk-pulse-alert');
+        void overlay.offsetWidth;
+        overlay.classList.add('gk-pulse-alert');
       }
       let toast = document.getElementById('gkScrollLockNotice');
       if (!toast) {
@@ -213,27 +206,21 @@
         toast.className = 'gk-scroll-toast';
         document.body.appendChild(toast);
       }
-      toast.innerHTML = '🔒 <strong>교사 승인 후 화면 스크롤이 가능합니다.</strong> 하단 미니 인증창에서 소속 학교와 이메일(@sch.hs.kr / @goedu.kr 등) 또는 구글 로그인을 완료해 주세요.';
+      toast.innerHTML = '🔒 <strong>교사 승인 후 화면 스크롤이 가능합니다.</strong> 소개글 아래 인증창에서 소속 학교와 이메일(@sch.hs.kr / @goedu.kr) 또는 구글 로그인을 완료해 주세요.';
       toast.classList.add('is-visible');
       clearTimeout(scrollToastTimer);
       scrollToastTimer = setTimeout(() => {
         toast.classList.remove('is-visible');
-      }, 3200);
-    },
-
-    toggleMinimize(forceState) {
-      this.isMinimized = typeof forceState === 'boolean' ? forceState : !this.isMinimized;
-      const overlay = document.getElementById('appGatekeeperOverlay');
-      if (overlay) {
-        overlay.classList.toggle('is-minimized', this.isMinimized);
-      }
+      }, 3000);
     },
 
     openModal(tab = 'apply') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       const overlay = document.getElementById('appGatekeeperOverlay');
       if (overlay) {
-        overlay.classList.remove('gk-hidden');
-        this.toggleMinimize(false);
+        overlay.classList.remove('gk-pulse-alert');
+        void overlay.offsetWidth;
+        overlay.classList.add('gk-pulse-alert');
       }
       const tabs = document.querySelectorAll('.gk-tab-btn');
       tabs.forEach(btn => {
@@ -246,14 +233,7 @@
     },
 
     closeModal() {
-      const overlay = document.getElementById('appGatekeeperOverlay');
-      if (!overlay) return;
-      if (this.isAuthorized()) {
-        overlay.classList.add('gk-hidden');
-      } else {
-        // 미승인 상태에서는 첫 화면을 가리지 않도록 최소화된 하단 바 형태로 유지
-        this.toggleMinimize(true);
-      }
+      // In-place hero mode does not need modal closing, updateUI handles visibility
     },
 
     // 학교알리미 / NEIS API 학교 검색 호출
@@ -463,13 +443,31 @@
       const isAuth = this.isAuthorized();
       const user = this.getAuthUser();
       const overlay = document.getElementById('appGatekeeperOverlay');
+      const heroCtaButtons = document.getElementById('heroCtaButtons');
+      const heroSuccessBadge = document.getElementById('heroAuthSuccessBadge');
 
       if (isAuth) {
         this.unlockScroll();
-        if (overlay) overlay.classList.add('gk-hidden');
+        if (overlay) overlay.style.display = 'none';
+        if (heroCtaButtons) heroCtaButtons.style.display = 'flex';
+        if (heroSuccessBadge && user) {
+          heroSuccessBadge.innerHTML = `
+            <span>🔓 <strong>${escapeHtml(user.school || '고등학교')}</strong> (${escapeHtml(user.email || '인증교사')})</span>
+            <button type="button" id="btnHeroLogout" title="로그아웃">로그아웃</button>
+          `;
+          const btnHeroLogout = document.getElementById('btnHeroLogout');
+          if (btnHeroLogout) {
+            btnHeroLogout.onclick = () => {
+              if (confirm('로그아웃하시겠습니까? (다시 잠금 모드로 전환됩니다)')) {
+                Gatekeeper.logout();
+              }
+            };
+          }
+        }
       } else {
         this.lockScroll();
-        if (overlay) overlay.classList.remove('gk-hidden');
+        if (overlay) overlay.style.display = 'block';
+        if (heroCtaButtons) heroCtaButtons.style.display = 'none';
       }
 
       // 상단 헤더 사용자 상태 뱃지 갱신

@@ -468,10 +468,93 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <ul class="op-points reveal" style="--d:.24s">
         <li>나이스 분량(Byte) 검사</li><li>금지 표현 사전</li><li>특기사항 초안 작성</li><li>133개 대학 2027 입결DB</li><li>2028 5등급제 환산</li><li>구글 시트 1:1 실시간 연동</li>
       </ul>
-      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+
+      <!-- ── [사용자 요청] 소개 내용 바로 아래, 시작하기 위치를 가리며 뜨는 인플레이스 교사 인증 카드 ── -->
+      <div id="appGatekeeperOverlay" class="gk-hero-card">
+        <div class="gk-header-compact">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span class="gk-badge-mini">🔒 교사 전용 인증 (자동승인)</span>
+            <span class="gk-title-mini">소속 학교와 이메일 또는 Google 로그인 시 잠금이 해제되고 바로 시작할 수 있습니다</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <button type="button" class="gk-tab-btn is-active" data-gk-tab="apply">학교·이메일 / Google 인증</button>
+            <button type="button" class="gk-tab-btn" data-gk-tab="master">마스터키</button>
+          </div>
+        </div>
+
+        <!-- 메인 탭: 좌측(학교알리미 소속 선택 + 이메일 자동승인) + 우측(구글 계정 로그인 화면 함께 표시) -->
+        <div class="gk-tab-pane" id="gk-pane-apply">
+          <div class="gk-dual-auth-grid">
+            <!-- 좌측: 소속(학교알리미 API) + 이메일 주소 자동승인 -->
+            <form id="gkApplyForm" class="gk-compact-form">
+              <div class="gk-compact-row">
+                <!-- 소속 학교 (학교알리미 API 검색) -->
+                <div class="gk-field-compact gk-school-search-wrap">
+                  <div class="gk-label-row">
+                    <label class="gk-label-mini" for="gkInputSchool">🏫 소속 학교 (학교알리미 API)</label>
+                    <div class="gk-quick-chips">
+                      <button type="button" class="gk-chip" data-quick-school="신천고등학교" data-quick-domain="sch.hs.kr">⚡ 신천고</button>
+                      <button type="button" class="gk-chip" data-quick-school="경기도교육청 소속고교" data-quick-domain="goedu.kr">경기교육청</button>
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:4px; position:relative;">
+                    <input type="text" id="gkInputSchool" class="gk-input-mini" placeholder="학교명 검색 (예: 신천고, 수원고...)" autocomplete="off" required>
+                    <button type="button" id="gkBtnSearchSchool" class="gk-btn-search-school" title="학교알리미 API 검색">🔍</button>
+                    <div id="gkSchoolDropdown" class="gk-school-dropdown gk-hidden"></div>
+                  </div>
+                </div>
+
+                <!-- 이메일 주소 (@sch.hs.kr, @goedu.kr 자동승인) -->
+                <div class="gk-field-compact">
+                  <div class="gk-label-row">
+                    <label class="gk-label-mini" for="gkInputEmail">✉️ 교사 이메일 (@sch.hs.kr · @goedu.kr 자동승인)</label>
+                    <div class="gk-quick-chips">
+                      <button type="button" class="gk-chip is-accent" data-email-domain="sch.hs.kr" data-auto-school="신천고등학교">@sch.hs.kr</button>
+                      <button type="button" class="gk-chip is-accent" data-email-domain="goedu.kr">@goedu.kr</button>
+                      <button type="button" class="gk-chip" data-email-domain="korea.kr">@korea.kr</button>
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:6px;">
+                    <input type="text" id="gkInputEmail" class="gk-input-mini" placeholder="아이디@sch.hs.kr 또는 아이디@goedu.kr" autocomplete="email" required>
+                    <button type="submit" id="gkBtnSubmitApply" class="gk-btn-submit-mini">🔓 인증·시작</button>
+                  </div>
+                </div>
+              </div>
+              <div id="gkApplyResultMsg" class="gk-msg-box"></div>
+            </form>
+
+            <!-- 우측: 구글 계정 로그인 화면 동시 표시 -->
+            <div class="gk-google-inline-card">
+              <div class="gk-google-inline-head">
+                <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                <strong>Google 학교·교사 로그인</strong>
+              </div>
+              <p class="gk-google-inline-sub">학교 Google Workspace(<code>@sch.hs.kr</code>, <code>@goedu.kr</code>) 로그인 시 즉시 승인 및 연동됩니다.</p>
+              <button type="button" id="gkBtnGoogleLogin" class="gk-btn-google">
+                <svg width="15" height="15" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                <span>Google 계정으로 즉시 시작</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 탭 패널 2: 관리자 마스터 키 -->
+        <div class="gk-tab-pane gk-hidden" id="gk-pane-master">
+          <form id="gkMasterForm" style="display:flex; gap:8px; align-items:center; padding:4px 0;">
+            <span style="font-size:12px; color:#cbd5e1; font-weight:700; white-space:nowrap;">⚡ 마스터 패스코드:</span>
+            <input type="password" id="gkInputMasterPin" class="gk-input-mini" placeholder="패스코드 입력" required style="max-width:220px;">
+            <button type="submit" class="gk-btn-submit-mini" style="background:#7c3aed;">즉시 입장</button>
+            <div id="gkMasterResultMsg" class="gk-msg-box" style="margin:0;"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ── 인증 완료 시 나타나는 시작 버튼 그룹 ── -->
+      <div id="heroCtaButtons" class="op-hero-cta-group" style="display:none; gap:12px; align-items:center; flex-wrap:wrap; margin-top:14px;">
         <a class="op-cta op-cta-primary reveal" style="--d:.32s; margin-top:0;" href="#menu">시작하기 <span aria-hidden="true">↓</span></a>
         <button type="button" class="op-cta op-cta-sheet reveal" id="heroBtnGoogleSync" style="--d:.36s; margin-top:0;">📊 구글 시트 연동</button>
         <a class="op-cta op-cta-counsel reveal" style="--d:.40s; margin-top:0;" href="#sec-counsel-scroll">🎯 대입 진학상담 바로가기 ↓</a>
+        <div id="heroAuthSuccessBadge" class="gk-hero-success-badge"></div>
       </div>
       <p class="op-caution reveal" style="--d:.4s">[주의] 본 프로그램은 참고용 자료입니다. 최종 판단은 반드시 교사가 직접 확인해 주세요.</p>
     </div>
@@ -2928,101 +3011,6 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           📋 구글 시트용 통합 Apps Script 코드 1초 복사
         </button>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ── 미니멀 교사 승인 & 학교알리미 검색 & 구글 계정 로그인 통합 하단 도크 (첫 화면 공개 + 승인 후 스크롤 해제) ── -->
-<div id="appGatekeeperOverlay" class="gk-compact-dock">
-  <!-- 접혔을 때 보이는 1줄 미니 바 -->
-  <div class="gk-minimized-bar">
-    <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:#f8fafc;">
-      <span>🔒</span>
-      <strong>교사 인증 후 아래 화면 스크롤이 가능합니다</strong>
-      <span style="color:#94a3b8; font-size:12px;">(@sch.hs.kr · @goedu.kr · 학교계정 자동승인)</span>
-    </div>
-    <button type="button" id="gkExpandBarBtn" class="gk-expand-btn">▲ 인증창 펼치기</button>
-  </div>
-
-  <!-- 컴팩트 인증 다이얼로그 (소속+이메일 & 구글 계정 로그인 동시 표시) -->
-  <div class="gk-dialog">
-    <div class="gk-header-compact">
-      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        <span class="gk-badge-mini">🔒 교사 전용 인증 (자동승인)</span>
-        <span class="gk-title-mini">소속 학교와 이메일 또는 Google 로그인 시 화면 스크롤 잠금이 즉시 해제됩니다</span>
-      </div>
-      <div style="display:flex; align-items:center; gap:6px;">
-        <button type="button" class="gk-tab-btn is-active" data-gk-tab="apply">학교·이메일 / Google 인증</button>
-        <button type="button" class="gk-tab-btn" data-gk-tab="master">마스터키</button>
-        <button type="button" id="gkMinimizeBtn" class="gk-min-btn" title="첫 화면 넓게 보기 (최소화)">_ 접기</button>
-      </div>
-    </div>
-
-    <!-- 메인 탭: 좌측(학교알리미 소속 선택 + 이메일 자동승인) + 우측(구글 계정 로그인 화면 함께 표시) -->
-    <div class="gk-tab-pane" id="gk-pane-apply">
-      <div class="gk-dual-auth-grid">
-        <!-- 좌측: 소속(학교알리미 API) + 이메일 주소 자동승인 -->
-        <form id="gkApplyForm" class="gk-compact-form">
-          <div class="gk-compact-row">
-            <!-- 소속 학교 (학교알리미 API 검색) -->
-            <div class="gk-field-compact gk-school-search-wrap">
-              <div class="gk-label-row">
-                <label class="gk-label-mini" for="gkInputSchool">🏫 소속 학교 (학교알리미 API)</label>
-                <div class="gk-quick-chips">
-                  <button type="button" class="gk-chip" data-quick-school="신천고등학교" data-quick-domain="sch.hs.kr">⚡ 신천고</button>
-                  <button type="button" class="gk-chip" data-quick-school="경기도교육청 소속고교" data-quick-domain="goedu.kr">경기교육청</button>
-                </div>
-              </div>
-              <div style="display:flex; gap:4px; position:relative;">
-                <input type="text" id="gkInputSchool" class="gk-input-mini" placeholder="학교명 검색 (예: 신천고, 수원고...)" autocomplete="off" required>
-                <button type="button" id="gkBtnSearchSchool" class="gk-btn-search-school" title="학교알리미 API 검색">🔍</button>
-                <div id="gkSchoolDropdown" class="gk-school-dropdown gk-hidden"></div>
-              </div>
-            </div>
-
-            <!-- 이메일 주소 (@sch.hs.kr, @goedu.kr 자동승인) -->
-            <div class="gk-field-compact">
-              <div class="gk-label-row">
-                <label class="gk-label-mini" for="gkInputEmail">✉️ 교사 이메일 (@sch.hs.kr · @goedu.kr 자동승인)</label>
-                <div class="gk-quick-chips">
-                  <button type="button" class="gk-chip is-accent" data-email-domain="sch.hs.kr" data-auto-school="신천고등학교">@sch.hs.kr</button>
-                  <button type="button" class="gk-chip is-accent" data-email-domain="goedu.kr">@goedu.kr</button>
-                  <button type="button" class="gk-chip" data-email-domain="goe.go.kr">@goe.go.kr</button>
-                  <button type="button" class="gk-chip" data-email-domain="korea.kr">@korea.kr</button>
-                </div>
-              </div>
-              <div style="display:flex; gap:6px;">
-                <input type="text" id="gkInputEmail" class="gk-input-mini" placeholder="아이디@sch.hs.kr 또는 아이디@goedu.kr" autocomplete="email" required>
-                <button type="submit" id="gkBtnSubmitApply" class="gk-btn-submit-mini">🔓 승인·잠금해제</button>
-              </div>
-            </div>
-          </div>
-          <div id="gkApplyResultMsg" class="gk-msg-box"></div>
-        </form>
-
-        <!-- 우측: 구글 계정 로그인 화면 동시 표시 -->
-        <div class="gk-google-inline-card">
-          <div class="gk-google-inline-head">
-            <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-            <strong>Google 학교·교사 계정 로그인</strong>
-          </div>
-          <p class="gk-google-inline-sub">학교 Google Workspace(<code>@sch.hs.kr</code>, <code>@goedu.kr</code>) 로그인 시 즉시 승인 및 구글 시트와 연동됩니다.</p>
-          <button type="button" id="gkBtnGoogleLogin" class="gk-btn-google">
-            <svg width="15" height="15" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-            <span>Google 계정으로 즉시 로그인</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 탭 패널 2: 관리자 마스터 키 -->
-    <div class="gk-tab-pane gk-hidden" id="gk-pane-master">
-      <form id="gkMasterForm" style="display:flex; gap:8px; align-items:center; padding:4px 0;">
-        <span style="font-size:12.5px; color:#cbd5e1; font-weight:700; white-space:nowrap;">⚡ 마스터 패스코드:</span>
-        <input type="password" id="gkInputMasterPin" class="gk-input-mini" placeholder="패스코드 입력 (관리자/초대교사)" required style="max-width:240px;">
-        <button type="submit" class="gk-btn-submit-mini" style="background:#7c3aed;">즉시 입장</button>
-        <div id="gkMasterResultMsg" class="gk-msg-box" style="margin:0;"></div>
-      </form>
     </div>
   </div>
 </div>
