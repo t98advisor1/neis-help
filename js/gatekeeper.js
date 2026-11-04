@@ -117,13 +117,24 @@
 
     openModal(tab = 'google') {
       const overlay = document.getElementById('appGatekeeperOverlay');
-      if (overlay) overlay.classList.remove('gk-hidden');
+      if (overlay) {
+        overlay.classList.remove('gk-hidden');
+        overlay.style.display = 'block';
+        overlay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
       this.switchModalTab(tab);
     },
 
     closeModal() {
       const overlay = document.getElementById('appGatekeeperOverlay');
-      if (overlay) overlay.classList.add('gk-hidden');
+      if (overlay) {
+        overlay.classList.add('gk-hidden');
+        overlay.style.display = 'none';
+      }
+      document.querySelectorAll('.gk-google-modal-backdrop').forEach(el => {
+        el.classList.add('gk-hidden');
+        el.style.display = 'none';
+      });
     },
 
     switchModalTab(tab = 'google') {
@@ -425,6 +436,18 @@
             </span>
           `;
           badge.onclick = () => Gatekeeper.openModal('google');
+        }
+      }
+
+      // 인증 상태 시 오버레이 화면 완전 은닉
+      const overlay = document.getElementById('appGatekeeperOverlay');
+      if (overlay) {
+        if (isAuth) {
+          overlay.classList.add('gk-hidden');
+          overlay.style.display = 'none';
+        } else {
+          overlay.classList.remove('gk-hidden');
+          overlay.style.display = 'block';
         }
       }
 

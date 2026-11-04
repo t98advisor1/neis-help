@@ -1631,6 +1631,16 @@ body.gk-scroll-locked .op-hero-inner {
   animation: gkCardAppear 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+.gk-hero-card.gk-hidden,
+#appGatekeeperOverlay.gk-hidden,
+.gk-hidden {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  z-index: -9999 !important;
+}
+
 @media (max-height: 720px) {
   .gk-hero-card {
     max-height: calc(100vh - 20px) !important;
