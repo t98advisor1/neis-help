@@ -486,62 +486,79 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <!-- 메인 탭: 소속 학교 + 교사 이메일 즉시 자동승인 (클라우드 콘솔 불필요) -->
     <div class="gk-tab-pane" id="gk-pane-apply">
-      <form id="gkDirectTeacherForm">
-        <div class="gk-two-step-grid">
-          <!-- 1단계: 소속 학교 확인 (신천고등학교 기본값) -->
-          <div class="gk-step-card">
-            <div class="gk-step-header">
-              <span class="gk-step-badge">1단계</span>
-              <strong style="color:#ffffff; font-size:13px;">소속 학교 확인</strong>
-            </div>
-            <div class="gk-quick-chips" style="margin:4px 0 6px;">
-              <button type="button" class="gk-chip is-school-chip" data-quick-school="신천고등학교">⚡ 신천고등학교 (자동승인)</button>
-            </div>
-            <div style="display:flex; gap:4px; position:relative;">
-              <input type="text" id="gkInputSchool" class="gk-input-mini" placeholder="학교명 검색 (예: 신천고등학교)" autocomplete="off" value="신천고등학교" required>
-              <button type="button" id="gkBtnSearchSchool" class="gk-btn-search-school" title="학교알리미 API 검색">🔍</button>
-              <div id="gkSchoolDropdown" class="gk-school-dropdown gk-hidden"></div>
-            </div>
-            <p style="margin:4px 0 0; font-size:11px; color:#94a3b8; line-height:1.4;">
-              ※ 신천고 소속 교사는 <strong>3개월 즉시 자동 승인</strong>됩니다. (타 학교 교육청 계정은 관리자 추가 승인 대기)
-            </p>
+      <div class="gk-two-step-grid">
+        <!-- 1단계: Google 계정 로그인 (1순위 필수) -->
+        <div class="gk-step-card" id="gkStep1Card" style="border:1.5px solid rgba(96,165,250,0.5); background:rgba(30,41,59,0.85);">
+          <div class="gk-step-header">
+            <span class="gk-step-badge" style="background:#2563eb;">1단계 (필수)</span>
+            <strong style="color:#ffffff; font-size:13.5px;">Google 계정 로그인</strong>
           </div>
+          <p class="gk-step-desc" style="font-size:12px; color:#cbd5e1; margin-bottom:8px; line-height:1.45;">
+            신천고(<strong>@sch.hs.kr</strong>) 또는 경기도교육청(<strong>@goedu.kr</strong>) Google 계정으로 로그인해 주세요.
+          </p>
 
-          <!-- 2단계: 교사 이메일 확인 (@sch.hs.kr / @goedu.kr) 및 즉시 잠금 해제 -->
-          <div class="gk-step-card">
-            <div class="gk-step-header">
-              <span class="gk-step-badge">2단계</span>
-              <strong style="color:#ffffff; font-size:13px;">교사 이메일 확인 & 3개월 잠금 해제</strong>
-            </div>
-            <div class="gk-quick-chips" style="margin:4px 0 6px;">
-              <button type="button" class="gk-chip" data-email-domain="sch.hs.kr" data-auto-school="신천고등학교">🏫 @sch.hs.kr (신천고)</button>
-              <button type="button" class="gk-chip" data-email-domain="goedu.kr" data-auto-school="신천고등학교">🏛️ @goedu.kr (경기도교육청)</button>
-            </div>
-            <div style="display:flex; gap:4px;">
-              <input type="email" id="gkInputEmail" class="gk-input-mini" placeholder="선생님아이디@sch.hs.kr 또는 @goedu.kr" autocomplete="email" value="t98@sch.hs.kr" required style="font-size:12.5px;">
-            </div>
-            <div style="margin-top:8px;">
-              <button type="submit" id="gkBtnSubmitDirect" class="gk-btn-final-verify">
-                🔓 3개월 즉시 승인 및 잠금 해제
+          <!-- 로그인 전 구글 버튼 영역 -->
+          <div id="gkGoogleLoginActionWrap">
+            <button type="button" id="gkBtnGoogleLogin" class="gk-btn-google-primary" style="width:100%; justify-content:center; padding:10px 14px; font-size:13.5px; font-weight:800; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.35);">
+              <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+              <span>Google 계정으로 로그인</span>
+            </button>
+            <div id="g_id_onload_container" style="margin-top:6px;"></div>
+
+            <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
+              <button type="button" id="btnShowOriginHelp" style="font-size:11px; color:#93c5fd; text-decoration:underline; background:none; border:none; cursor:pointer; padding:0;">
+                💡 401 오류(no registered origin) 발생 시 해결 안내
               </button>
             </div>
           </div>
+
+          <!-- 로그인 후 계정 정보 표시 박스 -->
+          <div id="gkGoogleAuthSuccessWrap" class="gk-auth-success-box gk-hidden">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:20px;">✅</span>
+              <div>
+                <strong id="gkLoggedUserName" style="color:#10b981; font-size:13px;">Google 인증 완료</strong>
+                <div id="gkLoggedUserEmail" style="color:#cbd5e1; font-size:12px; font-family:monospace;"></div>
+              </div>
+            </div>
+            <button type="button" id="btnChangeGoogleAccount" class="gk-btn-change-acc">계정 변경</button>
+          </div>
         </div>
 
-        <!-- 하단 보조: Google 로그인 선택 옵션 (클라우드 콘솔 설정 무관 안전한 우회) -->
-        <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.08);">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <button type="button" id="gkBtnGoogleLogin" class="gk-btn-google-primary" style="padding:6px 12px; font-size:12px;">
-              <svg width="15" height="15" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-              <span>Google 계정 연동 로그인</span>
-            </button>
-            <div id="g_id_onload_container"></div>
+        <!-- 2단계: 소속 학교 확인 & 3개월 즉시 승인 -->
+        <div class="gk-step-card" id="gkStep2Card" style="border:1.5px solid rgba(255,255,255,0.15); background:rgba(30,41,59,0.7);">
+          <div class="gk-step-header">
+            <span class="gk-step-badge" style="background:#059669;">2단계</span>
+            <strong style="color:#ffffff; font-size:13.5px;">소속 학교 확인 및 자동 승인</strong>
           </div>
-          <span style="font-size:11.5px; color:#94a3b8;">
-            💡 클라우드 콘솔에 접속할 필요 없이, 위 학교와 이메일만 입력하시면 <strong>즉시 3개월 이용 권한</strong>이 부여됩니다.
-          </span>
+          <div class="gk-quick-chips" style="margin:4px 0 6px;">
+            <button type="button" class="gk-chip is-school-chip" data-quick-school="신천고등학교">⚡ 신천고등학교 (자동승인)</button>
+          </div>
+          <div style="display:flex; gap:4px; position:relative;">
+            <input type="text" id="gkInputSchool" class="gk-input-mini" placeholder="학교명 검색 (예: 신천고등학교)" autocomplete="off" value="신천고등학교" required>
+            <button type="button" id="gkBtnSearchSchool" class="gk-btn-search-school" title="학교알리미 API 검색">🔍</button>
+            <div id="gkSchoolDropdown" class="gk-school-dropdown gk-hidden"></div>
+          </div>
+          <p style="margin:4px 0 8px; font-size:11px; color:#94a3b8; line-height:1.4;">
+            ※ 신천고 소속 계정은 <strong>3개월 즉시 자동승인</strong>되며, 타 학교 교육청 계정은 관리자 추가 승인 대기로 접수됩니다.
+          </p>
+
+          <button type="button" id="gkBtnFinalVerify" class="gk-btn-final-verify">
+            🔓 승인 확인 및 입장 (3개월)
+          </button>
         </div>
-      </form>
+      </div>
+
+      <!-- 구글 콘솔 401 오류 발생 시 비상 잠금 해제 바로가기 -->
+      <div style="margin-top:10px; padding:10px 14px; background:rgba(255,255,255,0.04); border:1px dashed rgba(255,255,255,0.15); border-radius:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div style="font-size:11.5px; color:#cbd5e1;">
+          ⚠️ Google 콘솔 설정 전이거나 401 오류 발생 시:
+        </div>
+        <button type="button" id="gkBtnEmergencySincheon" style="background:#0284c7; color:#fff; border:none; border-radius:6px; padding:5px 12px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+          ⚡ 신천고 교사 계정(t98@sch.hs.kr)으로 즉시 3개월 잠금 해제 ➔
+        </button>
+      </div>
+
       <div id="gkApplyResultMsg" class="gk-msg-box" style="margin-top:10px;"></div>
     </div>
 
@@ -3088,32 +3105,56 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 <!-- ── Google 계정 로그인 401 오류 (no registered origin) 해결 안내 모달 ── -->
 <div id="gkOriginHelpModal" class="gk-google-modal-backdrop gk-hidden">
-  <div class="gk-google-modal-card" style="max-width:540px;">
+  <div class="gk-google-modal-card" style="max-width:560px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <div style="display:flex; align-items:center; gap:8px;">
-        <span style="font-size:20px;">⚙️</span>
-        <strong style="font-size:16px; color:#0f172a;">Google 로그인 401 오류 해결 안내</strong>
+        <span style="font-size:22px;">⚙️</span>
+        <strong style="font-size:16px; color:#0f172a;">Google 로그인 401 오류 (no registered origin) 안내</strong>
       </div>
       <button type="button" id="gkOriginModalClose" style="border:none; background:#f1f5f9; color:#475569; width:28px; height:28px; border-radius:50%; cursor:pointer; font-weight:800;">✕</button>
     </div>
     
-    <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:12px; margin-bottom:14px; font-size:12.5px; color:#991b1b; line-height:1.6;">
+    <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:12px; margin-bottom:12px; font-size:12.5px; color:#991b1b; line-height:1.6;">
       <strong>⚠️ 401 오류 (invalid_client / no registered origin) 원인:</strong><br>
-      Google Cloud Console에 현재 배포 도메인(<code>https://neis-help-one.vercel.app</code>)이 <strong>승인된 자바스크립트 원본</strong>으로 등록되지 않아 Google에서 접근을 차단한 상태입니다.
+      현재 배포 도메인(<code>https://neis-help-one.vercel.app</code>)이 개발자(관리자)의 Google Cloud Console에 <strong>[승인된 자바스크립트 원본]</strong>으로 아직 등록되지 않아 구글 본사 서버에서 접근을 차단한 상태입니다.
+      <div style="margin-top:6px; font-size:12px; color:#b91c1c; font-weight:700;">
+        💡 중요: 접속하는 모든 선생님이 콘솔에 들어가는 것이 아닙니다! 관리자가 단 1회만 등록해 두면 모든 선생님이 오류 없이 1클릭 로그인됩니다.
+      </div>
+    </div>
+
+    <!-- 비상 즉시 잠금 해제 버튼 -->
+    <div style="background:#ecfdf5; border:1.5px solid #a7f3d0; border-radius:8px; padding:12px 14px; margin-bottom:14px; text-align:center;">
+      <div style="font-size:12.5px; color:#065f46; font-weight:700; margin-bottom:6px;">
+        🚀 지금 바로 앱을 사용하셔야 하나요? (콘솔 설정 전 즉시 입장)
+      </div>
+      <button type="button" id="btnBypassGoogleToSincheon" style="width:100%; padding:10px 16px; background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; border-radius:8px; font-size:13.5px; font-weight:800; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.35);">
+        🔓 401 오류 건너뛰기: 신천고 교사 계정(t98@sch.hs.kr)으로 3개월 즉시 잠금 해제
+      </button>
     </div>
 
     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px 14px; margin-bottom:14px;">
-      <strong style="font-size:13px; color:#0f172a; display:block; margin-bottom:6px;">🛠️ 해결 방법 (1분 완료):</strong>
+      <strong style="font-size:13px; color:#0f172a; display:block; margin-bottom:6px;">🛠️ 관리자용 영구 해결 방법 (단 1회만 등록하면 모든 교사 정상 작동):</strong>
       <ol style="margin:0; padding-left:18px; font-size:12px; color:#334155; line-height:1.6;">
-        <li><a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noreferrer" style="color:#2563eb; font-weight:700;">Google Cloud Console (사용자 인증 정보) ↗</a> 로 이동합니다.</li>
+        <li><a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noreferrer" style="color:#2563eb; font-weight:700;">Google Cloud Console (사용자 인증 정보) ↗</a> 에 접속합니다.</li>
         <li>사용 중인 <strong>OAuth 2.0 클라이언트 ID (웹 애플리케이션)</strong>를 클릭합니다.</li>
-        <li><strong>[승인된 자바스크립트 원본]</strong>에 아래 주소를 복사하여 추가하고 <strong>[저장]</strong>합니다.</li>
+        <li><strong>[승인된 자바스크립트 원본]</strong> 항목에 아래 주소를 복사하여 추가하고 <strong>[저장]</strong>합니다.</li>
       </ol>
       <div style="display:flex; gap:6px; margin-top:8px;">
         <input type="text" id="gkOriginCopyInput" readonly value="https://neis-help-one.vercel.app" class="gk-google-input" style="font-size:12px; font-family:monospace; background:#fff;">
         <button type="button" id="btnCopyOriginUrl" style="background:#2563eb; color:#fff; border:none; border-radius:6px; padding:6px 14px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;">📋 주소 복사</button>
       </div>
+      <p style="margin:6px 0 0; font-size:11px; color:#64748b;">
+        * 끝에 슬래시(/)를 붙이지 마세요. 저장 후 구글 서버 반영에 약 1~3분이 소요됩니다.
+      </p>
     </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <button type="button" id="btnGoMasterFromOriginHelp" style="background:#7c3aed; color:#fff; border:none; border-radius:6px; padding:8px 16px; font-size:12px; font-weight:700; cursor:pointer;">
+        ⚡ 관리자 마스터키(tong2026!)로 로그인하기
+      </button>
+    </div>
+  </div>
+</div>
 
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
       <span style="font-size:11.5px; color:#64748b;">* Google Console 반영에 약 1~5분이 소요될 수 있습니다.</span>
