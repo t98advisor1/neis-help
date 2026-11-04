@@ -653,23 +653,131 @@
         });
       }
 
-      // 학교 검색 버튼 (Google 폼)
-      const btnSearchGk = document.getElementById('gkBtnSearchSchoolGoogle');
-      if (btnSearchGk) {
-        btnSearchGk.addEventListener('click', () => {
-          const input = document.getElementById('gkGoogleSchool');
-          const dropdown = document.getElementById('gkSchoolDropdownGoogle');
-          if (!input || !dropdown) return;
-          const q = input.value.trim();
-          const list = BUILTIN_SCHOOLS.filter(s => s.name.includes(q) || s.region.includes(q));
-          dropdown.classList.remove('gk-hidden');
-          dropdown.innerHTML = list.map(s => `
-            <div style="padding:6px 10px; cursor:pointer; font-size:12px; border-bottom:1px solid #f1f5f9;" onclick="document.getElementById('gkGoogleSchool').value='${s.name}'; document.getElementById('gkSchoolDropdownGoogle').classList.add('gk-hidden');">
-              <strong>${s.name}</strong> <span style="color:#64748b; font-size:11px;">(${s.region})</span>
+      // 나이스(NEIS) 학교 검색 API 연동 (Google 폼 & 직접 입력 폼)
+      Gatekeeper.bindSchoolSearch('gkGoogleSchool', 'gkBtnSearchSchoolGoogle', 'gkSchoolDropdownGoogle');
+      Gatekeeper.bindSchoolSearch('gkManualSchool', 'gkBtnSearchSchoolManual', 'gkSchoolDropdownManual', 'gkManualEmail');
+    },
+
+    // 나이스(NEIS) 전국 학교 검색 API 연동
+    async searchSchoolsApi(query) {
+      const q = (query || '').trim();
+      if (!q) {
+        return BUILTIN_SCHOOLS.slice(0, 10);
+      }
+      try {
+        const res = await fetch(`/api/school-search?q=${encodeURIComponent(q)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.schools) && data.schools.length > 0) {
+            return data.schools;
+          }
+        }
+      } catch (err) {
+        console.warn('학교 검색 API 통신 오류, 내장 DB로 폴백:', err);
+      }
+      // 네트워크 지연/오류 시 내장 DB 폴백
+      return BUILTIN_SCHOOLS.filter(s =>
+        s.name.includes(q) || (s.region && s.region.includes(q)) || (s.office && s.office.includes(q))
+      );
+    },
+
+    bindSchoolSearch(inputId, btnId, dropdownId, emailTargetId = null) {
+      const input = document.getElementById(inputId);
+      const btn = document.getElementById(btnId);
+      const dropdown = document.getElementById(dropdownId);
+      if (!input || !dropdown) return;
+
+      let debounceTimer = null;
+      let activeRequestSeq = 0;
+
+      const performSearch = async (forceShow = false) => {
+        const q = input.value.trim();
+        if (!q && !forceShow) {
+          dropdown.classList.add('gk-hidden');
+          return;
+        }
+
+        dropdown.classList.remove('gk-hidden');
+        dropdown.innerHTML = '<div class="gk-school-loading">🔍 나이스 학교정보 실시간 검색 중...</div>';
+
+        const currentSeq = ++activeRequestSeq;
+        const schools = await Gatekeeper.searchSchoolsApi(q);
+        if (currentSeq !== activeRequestSeq) return;
+
+        if (!schools || schools.length === 0) {
+          dropdown.innerHTML = `
+            <div class="gk-school-empty">
+              검색된 학교가 없습니다.<br>
+              <button type="button" style="margin-top:6px; background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; padding:4px 10px; border-radius:4px; font-size:11.5px; font-weight:700; cursor:pointer;" onclick="document.getElementById('${inputId}').value='${escapeHtml(q)}'; document.getElementById('${dropdownId}').classList.add('gk-hidden');">
+                '${escapeHtml(q)}' 직접 입력 사용
+              </button>
             </div>
-          `).join('');
+          `;
+          return;
+        }
+
+        dropdown.innerHTML = schools.map(s => {
+          const nameSafe = escapeHtml(s.name);
+          const regionSafe = escapeHtml(s.region || s.address || '');
+          const officeSafe = escapeHtml(s.office || '');
+          const kindSafe = escapeHtml(s.kind || '고등학교');
+          const domainSafe = escapeHtml(s.domain || '');
+          return `
+            <button type="button" class="gk-school-item" data-school-name="${nameSafe}" data-school-domain="${domainSafe}">
+              <div class="gk-school-item-main">
+                <strong>${nameSafe}</strong>
+                <span class="gk-school-badge">${kindSafe}</span>
+              </div>
+              <div class="gk-school-item-sub">
+                ${officeSafe ? `<span>${officeSafe}</span> · ` : ''}<span>${regionSafe}</span>
+              </div>
+            </button>
+          `;
+        }).join('');
+
+        dropdown.querySelectorAll('.gk-school-item').forEach(el => {
+          el.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const schoolName = el.getAttribute('data-school-name');
+            const domain = el.getAttribute('data-school-domain');
+            input.value = schoolName;
+            dropdown.classList.add('gk-hidden');
+
+            if (emailTargetId) {
+              const emailInput = document.getElementById(emailTargetId);
+              if (emailInput && domain && !emailInput.value) {
+                emailInput.placeholder = `예: 선생님아이디@${domain}`;
+              }
+            }
+          });
+        });
+      };
+
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          performSearch(true);
         });
       }
+
+      input.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          if (input.value.trim().length >= 1) {
+            performSearch();
+          } else {
+            dropdown.classList.add('gk-hidden');
+          }
+        }, 300);
+      });
+
+      // 바깥 클릭 시 드롭다운 닫기
+      document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !dropdown.contains(e.target) && (!btn || !btn.contains(e.target))) {
+          dropdown.classList.add('gk-hidden');
+        }
+      });
     }
   };
 

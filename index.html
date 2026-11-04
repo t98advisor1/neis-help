@@ -538,10 +538,10 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <form id="gkGoogleApplyForm" style="display:flex; flex-direction:column; gap:10px;">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
               <div style="position:relative;">
-                <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">소속 고등학교 *</label>
+                <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">소속 고등학교 * <span style="font-size:11px; font-weight:normal; color:#64748b;">(나이스 전국 고교 검색)</span></label>
                 <div style="display:flex; gap:4px;">
-                  <input type="text" id="gkGoogleSchool" class="gk-input-mini" placeholder="예: 신천고등학교" required value="신천고등학교">
-                  <button type="button" id="gkBtnSearchSchoolGoogle" class="gk-btn-search-school" title="학교 검색">🔍</button>
+                  <input type="text" id="gkGoogleSchool" class="gk-input-mini" placeholder="예: 신천고등학교 (입력 시 실시간 검색)" required value="신천고등학교" autocomplete="off">
+                  <button type="button" id="gkBtnSearchSchoolGoogle" class="gk-btn-search-school" title="나이스 학교 정보 실시간 검색">🔍</button>
                 </div>
                 <div id="gkSchoolDropdownGoogle" class="gk-school-dropdown gk-hidden"></div>
               </div>
@@ -578,9 +578,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
             <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">선생님 성함 *</label>
             <input type="text" id="gkManualName" class="gk-input-mini" placeholder="예: 홍길동" required autocomplete="name">
           </div>
-          <div>
-            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">소속 고등학교 *</label>
-            <input type="text" id="gkManualSchool" class="gk-input-mini" placeholder="예: 신천고등학교" required value="신천고등학교">
+          <div style="position:relative;">
+            <label style="font-size:12px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">소속 고등학교 * <span style="font-size:11px; font-weight:normal; color:#64748b;">(나이스 전국 고교 검색)</span></label>
+            <div style="display:flex; gap:4px;">
+              <input type="text" id="gkManualSchool" class="gk-input-mini" placeholder="예: 신천고등학교 (입력 시 실시간 검색)" required value="신천고등학교" autocomplete="off">
+              <button type="button" id="gkBtnSearchSchoolManual" class="gk-btn-search-school" title="나이스 학교 정보 실시간 검색">🔍</button>
+            </div>
+            <div id="gkSchoolDropdownManual" class="gk-school-dropdown gk-hidden"></div>
           </div>
         </div>
 

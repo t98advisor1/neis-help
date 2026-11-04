@@ -1,7 +1,6 @@
-// api/school-search.js — 학교알리미(schoolinfo.go.kr) 및 나이스 교육정보 개방 포털(open.neis.go.kr) 연동 학교 검색 API
+// api/school-search.js — 나이스 교육정보 개방 포털(open.neis.go.kr) 공식 Open API 실시간 학교 검색
 // Vercel Serverless Function (Node.js ESM)
 
-// 주요 고등학교 내장 DB (신천고등학교 및 경기도·전국 주요 고교 — API 지연/무키 상태에서도 0.01초 즉시 응답 보장)
 const BUILTIN_SCHOOLS = [
   { name: "신천고등학교", region: "경기 시흥시", office: "경기도교육청", kind: "일반고(공립)", code: "7530562", address: "경기도 시흥시 신천로79번길 14 (신천동)", domain: "sch.hs.kr" },
   { name: "서울신천고등학교", region: "서울 송파구", office: "서울특별시교육청", kind: "일반고(공립)", code: "7010198", address: "서울특별시 송파구 잠실로 88", domain: "sen.go.kr" },
@@ -64,6 +63,46 @@ const BUILTIN_SCHOOLS = [
   { name: "인천포스코고등학교", region: "인천 연수구", office: "인천광역시교육청", kind: "자사고(사립)", code: "7310394", address: "인천광역시 연수구 컨벤시아대로42번길 50", domain: "ice.go.kr" }
 ];
 
+// 주요 고등학교 약칭/별칭 매핑 사전
+const ALIASES = {
+  "단대부고": "단국대학교사범대학부속고등학교",
+  "단대부중": "단국대학교사범대학부속중학교",
+  "외대부고": "용인한국외국어대학교부설고등학교",
+  "중대부고": "중앙대학교사범대학부속고등학교",
+  "중대부여고": "중앙대학교사범대학부속여자고등학교",
+  "동대부고": "동국대학교사범대학부속고등학교",
+  "동대부여고": "동국대학교사범대학부속여자고등학교",
+  "한대부고": "한양대학교사범대학부속고등학교",
+  "홍대부고": "홍익대학교사범대학부속고등학교",
+  "홍대부여고": "홍익대학교사범대학부속여자고등학교",
+  "이대부고": "이화여자대학교사범대학부속이화금란고등학교",
+  "건대부고": "건국대학교사범대학부속고등학교",
+  "서울과고": "서울과학고등학교",
+  "경기과고": "경기과학고등학교",
+  "한성과고": "한성과학고등학교",
+  "세종과고": "세종과학고등학교",
+  "인천과고": "인천과학고등학교",
+  "대전과고": "대전과학고등학교",
+  "대구과고": "대구과학고등학교",
+  "광주과고": "광주과학고등학교",
+  "울산과고": "울산과학고등학교",
+  "경남과고": "경남과학고등학교",
+  "전북과고": "전북과학고등학교",
+  "전남과고": "전남과학고등학교",
+  "경북과고": "경북과학고등학교",
+  "충남과고": "충남과학고등학교",
+  "충북과고": "충북과학고등학교",
+  "강원과고": "강원과학고등학교",
+  "제주과고": "제주과학고등학교",
+  "민사고": "민족사관고등학교",
+  "상산고": "상산고등학교",
+  "포철고": "포항제철고등학교",
+  "광양제철고": "광양제철고등학교",
+  "북일고": "북일고등학교",
+  "김천고": "김천고등학교",
+  "현대청운고": "현대청운고등학교"
+};
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -79,9 +118,9 @@ export default async function handler(req, res) {
   const results = [];
   const seen = new Set();
 
-  // 1. 내장 DB 우선 매칭 (신천고 등 초고속 매칭)
+  // 1. 내장 DB 우선 매칭 (신천고 및 시흥/경기 관내 고교 0.01초 즉시 매칭)
   for (const s of BUILTIN_SCHOOLS) {
-    if (s.name.includes(q) || s.region.includes(q) || s.office.includes(q)) {
+    if (s.name.includes(q) || (s.region && s.region.includes(q)) || (s.office && s.office.includes(q))) {
       const key = `${s.name}_${s.region}`;
       if (!seen.has(key)) {
         seen.add(key);
@@ -90,61 +129,113 @@ export default async function handler(req, res) {
     }
   }
 
-  // 2. 나이스 교육정보 개방 포털 / 학교알리미 연계 공개 API (open.neis.go.kr/hub/schoolInfo) 실시간 조회
+  // 2. 검색어 변형 구성 (약칭 매핑 + "여고" -> "여자고" 변환)
+  const queries = [q];
+  if (ALIASES[q]) {
+    queries.unshift(ALIASES[q]);
+  }
+  if (q.includes('여고')) {
+    queries.push(q.replace(/여고/g, '여자고'));
+  }
+
+  // 3. 나이스 교육정보 개방 포털(open.neis.go.kr) 공식 Open API 실시간 검색
   try {
     const apiKey = process.env.NEIS_API_KEY || '';
-    const neisUrl = `https://open.neis.go.kr/hub/schoolInfo?Type=json&pIndex=1&pSize=30&SCHUL_NM=${encodeURIComponent(q)}${apiKey ? `&KEY=${apiKey}` : ''}`;
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 3500);
+    for (const queryStr of queries) {
+      if (results.length >= 30) break;
+      const neisUrl = `https://open.neis.go.kr/hub/schoolInfo?Type=json&pIndex=1&pSize=25&SCHUL_NM=${encodeURIComponent(queryStr)}${apiKey ? `&KEY=${apiKey}` : ''}`;
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 3500);
 
-    const response = await fetch(neisUrl, {
-      signal: controller.signal,
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; SangibuHelper/1.0)' }
-    });
-    clearTimeout(timer);
+      try {
+        const response = await fetch(neisUrl, {
+          signal: controller.signal,
+          headers: { 'User-Agent': 'Mozilla/5.0 (compatible; SangibuHelper/1.0)' }
+        });
+        clearTimeout(timer);
 
-    if (response.ok) {
-      const data = await response.json();
-      const rows = data?.schoolInfo?.[1]?.row || [];
-      for (const r of rows) {
-        const name = r.SCHUL_NM || '';
-        const address = r.ORG_RDNMA || '';
-        const region = address ? address.split(' ').slice(0, 2).join(' ') : (r.LCTN_SC_NM || '');
-        const office = r.ATPT_OFCDC_SC_NM || '';
-        const kind = `${r.HS_SC_NM || r.SCHUL_KND_SC_NM || '학교'}(${r.FOND_SC_NM || '공립'})`;
-        const code = r.SD_SCHUL_CODE || '';
-        const homepage = r.HMPG_ADRES || '';
-        const key = `${name}_${region}`;
-        if (!seen.has(key)) {
-          seen.add(key);
-          results.push({
-            name,
-            region,
-            office,
-            kind,
-            code,
-            address,
-            homepage
-          });
+        if (response.ok) {
+          const data = await response.json();
+          const rows = data?.schoolInfo?.[1]?.row || [];
+          for (const r of rows) {
+            const name = r.SCHUL_NM || '';
+            const address = r.ORG_RDNMA || '';
+            const region = address ? address.split(' ').slice(0, 2).join(' ') : (r.LCTN_SC_NM || '');
+            const office = r.ATPT_OFCDC_SC_NM || '';
+            const schoolType = r.SCHUL_KND_SC_NM || '';
+            const hsType = r.HS_SC_NM || '';
+            const fondType = r.FOND_SC_NM || '공립';
+            const kind = hsType ? `${hsType}(${fondType})` : (schoolType ? `${schoolType}(${fondType})` : `고등학교(${fondType})`);
+            const code = r.SD_SCHUL_CODE || '';
+            const homepage = r.HMPG_ADRES || '';
+
+            // 도메인 힌트 도출
+            let domain = 'goedu.kr';
+            if (office.includes('서울')) domain = 'sen.go.kr';
+            else if (office.includes('인천')) domain = 'ice.go.kr';
+            else if (office.includes('부산')) domain = 'pen.go.kr';
+            else if (office.includes('대구')) domain = 'dge.go.kr';
+            else if (office.includes('광주')) domain = 'gen.go.kr';
+            else if (office.includes('대전')) domain = 'dje.go.kr';
+            else if (name.includes('신천고')) domain = 'sch.hs.kr';
+
+            const key = `${name}_${region}`;
+            if (!seen.has(key)) {
+              seen.add(key);
+              results.push({
+                name,
+                region,
+                office,
+                kind,
+                code,
+                address,
+                homepage,
+                domain
+              });
+            }
+          }
         }
+      } catch (innerErr) {
+        // 단일 쿼리 실패 시 다음 쿼리 진행
       }
     }
   } catch (err) {
-    // 네트워크 지연 또는 타임아웃 시 내장 DB 및 동적 생성 결과로 폴백
+    // 네트워크 실패 시 내장 DB 결과 유지
   }
 
-  // 3. 만약 검색어가 특정 학교명인데 위 목록에 없다면 입력한 학교명으로 즉시 선택 가능하도록 항목 생성
+  // 4. 만약 검색어가 2글자 이상인데 아무 결과도 없다면 입력값으로 직접 선택 가능 항목 생성
   if (results.length === 0 && q.length >= 2) {
     const normalizedName = q.endsWith('고') ? q + '등학교' : (q.includes('학교') ? q : q + '고등학교');
     results.push({
       name: normalizedName,
-      region: "전국 / 학교알리미 직접등록",
+      region: "전국 / 직접 입력",
       office: "교육청 소속",
       kind: "고등학교",
       code: "CUSTOM",
-      address: `${normalizedName} (직접 선택)`
+      address: `${normalizedName} (직접 입력)`,
+      domain: "goedu.kr"
     });
   }
+
+  // 5. 정렬: 완전 일치 > 고등학교 우선 > 중학교 > 초등학교 순
+  results.sort((a, b) => {
+    const aExact = a.name === q || a.name === q + '등학교' || a.name === q + '고등학교';
+    const bExact = b.name === q || b.name === q + '등학교' || b.name === q + '고등학교';
+    if (aExact && !bExact) return -1;
+    if (!aExact && bExact) return 1;
+
+    const aHigh = a.name.includes('고등학교') || a.kind.includes('고');
+    const bHigh = b.name.includes('고등학교') || b.kind.includes('고');
+    if (aHigh && !bHigh) return -1;
+    if (!aHigh && bHigh) return 1;
+
+    const aMid = a.name.includes('중학교');
+    const bMid = b.name.includes('중학교');
+    if (aMid && !bMid) return -1;
+    if (!aMid && bMid) return 1;
+
+    return a.name.localeCompare(b.name, 'ko');
+  });
 
   return res.status(200).json({
     source: 'neis_schoolinfo_api',
