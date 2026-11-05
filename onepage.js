@@ -294,6 +294,41 @@ document.addEventListener('click', (e) => {
   }
 });
 
+
+/* 🌟 생기부 제약 점검 샘플 데이터 즉시 불러오기 핸들러 */
+const SAMPLE_NEIS_CHECK_TSV = `학번\t성명\t과목\t세부능력및특기사항
+10101\t김태형\t수학I\t교내외 수학 탐구 활동에 적극적으로 참여함. 특히 KMO 한국수학올림피아드 2차 시험에 응시하여 우수한 성적으로 장려상을 수상하였으며, 미적분과 실생활 모델링 관련 심화 보고서를 작성함.
+10102\t박서준\t영어\t원서 독해 능력이 뛰어나며 토익(TOEIC) 920점 수준의 어휘력을 구사함. TED 강연을 시청하고 영문 비평 에세이를 논리적으로 작성함.
+10103\t이지은\t생명과학I\t생명과학 분야의 진로 의지가 매우 뚜렷한 학생으로, 생체막의 물질 출입 기전과 삼투현상에 관한 심화 실험을 설계하여 주도적으로 수행함. 막단백질 채널과 수송체의 농도 구배에 따른 물질 이동 속도를 수학적 미분방정식으로 모델링하고, 세포 내외의 등장액·고장액·저장액 상태에 따른 적혈구의 용혈 현상과 식물세포의 원형질 분리 과정을 정밀 광학현미경으로 촬영하여 이미지 제이(ImageJ) 소프트웨어로 세포 면적 변화율을 정량화하여 통계적으로 유의미한 상관관계를 도출해냄. 실험 중 발생한 삼투압 오차 원인을 분석하기 위해 반트호프 식(Van 't Hoff equation)을 적용하여 용질의 반트호프 인자와 해리도를 역산하는 치밀한 탐구력을 드러냄. 또한 관련 학술 논문을 탐독하여 인공 신장의 혈액 투석막 원리와 비교 분석하고, 나노 여과막 기술을 활용한 차세대 정수 필터 개발 아이디어를 제안하여 급우들과 모둠 토의를 진행함. 평소 수업에 매우 성실히 참여하며 호기심이 생기면 끝까지 파고드는 학구적 열정이 돋보임.
+10104\t정해인\t화학I\t친환경 이차전지 전해질 실험에서 화학반응 속도론을 주도적으로 탐구하였다. 아레니우스 식을 적용하여 활성화 에너지를 정밀하게 도출하였으며, 발표 태도가 매우 훌륭하였다.
+10105\t최수영\t물리학I\t대학병원 원장인 아버지의 자문을 받아 의료 영상 진단 장비의 물리적 원리를 조사함. MRI의 핵자기공명 현상과 CT의 뢴트겐선 감쇠 계수를 분석하여 학술지에 소논문으로 게재함.
+10106\t강민우\t통합사회\t기후변화와 탄소중립 정책에 대한 각국의 대응 전략을 비교 분석함. 배출권 거래제의 시장 메커니즘을 경제학적 한계효용 원리로 해석하고, 지역사회 탄소포인트제 개선 조례안을 모의 입법안으로 제안하는 등 사회 문제 해결에 적극적인 태도를 보임.
+10107\t윤아인\t통합사회\t기후변화와 탄소중립 정책에 대한 각국의 대응 전략을 비교 분석함. 배출권 거래제의 시장 메커니즘을 경제학적 한계효용 원리로 해석하고, 지역사회 탄소포인트제 개선 조례안을 모의 입법안으로 제안하는 등 사회 문제 해결에 적극적인 태도를 보임.`;
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('#btnLoadCheckSampleDirect');
+  if (btn) {
+    e.preventDefault();
+    const pasteInput = document.getElementById('paste-input');
+    const pasteRun = document.getElementById('btn-paste-run');
+    if (pasteInput && pasteRun) {
+      pasteInput.value = SAMPLE_NEIS_CHECK_TSV;
+      pasteRun.disabled = false;
+      pasteRun.click();
+      setTimeout(() => {
+        const runBtn = document.getElementById('btn-run');
+        if (runBtn && !runBtn.disabled) {
+          runBtn.click();
+          const stepResult = document.getElementById('step-result');
+          if (stepResult) {
+            stepResult.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      }, 600);
+    }
+  }
+});
+
 const top = $('#op-top');
 if (top) top.classList.add('on-dark');
 

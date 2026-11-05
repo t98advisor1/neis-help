@@ -1381,6 +1381,36 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <!-- ── 패널 3: 생기부 점검하기 (기존 Vercel 원본 DOM 100% 그대로) ── -->
     <div class="op-panel hidden" id="panel-check" role="tabpanel">
+      <!-- 🌟 [쇼케이스] 나이스 4대 제약 점검 실시간 시연 GIF 및 샘플 문서 다운로드 바 -->
+      <div class="check-demo-showcase-box" style="background:linear-gradient(135deg, #1e293b, #0f172a); border:2px solid #3b82f6; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.35);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:16px;">
+          <div>
+            <span style="display:inline-block; font-size:12px; font-weight:800; background:#2563eb; color:#ffffff; padding:3px 10px; border-radius:999px; margin-bottom:6px;">
+              ⚡ 2026 나이스 기재요령 4대 제약 정밀 점검 시연
+            </span>
+            <h3 style="font-size:20px; font-weight:800; color:#ffffff; margin:0 0 6px;">
+              생기부 제약 점검: 금지어·바이트·어미·중복 실시간 검출
+            </h3>
+            <p style="font-size:13.5px; color:#cbd5e1; margin:0; line-height:1.5;">
+              교외 수상·공인어학·소논문 금지어, 나이스 바이트 초과(1,500B), 종결어미 오류, 학생 간 복사 문장을 1초 만에 찾아냅니다.
+            </p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <a href="assets/2026_생기부_제약점검_샘플문서(위반표현_포함).xlsx" download="2026_생기부_제약점검_샘플문서(위반표현_포함).xlsx" class="btn" style="background:#16a34a; color:#ffffff; font-weight:800; font-size:13px; padding:9px 16px; border-radius:10px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(22,163,74,0.3);">
+              <span>📥 점검용 샘플 엑셀(.xlsx) 다운로드</span>
+            </a>
+            <button type="button" id="btnLoadCheckSampleDirect" class="btn" style="background:linear-gradient(135deg, #4f46e5, #0ea5e9); color:#ffffff; font-weight:800; font-size:13px; padding:9px 18px; border:none; border-radius:10px; cursor:pointer; box-shadow:0 4px 14px rgba(79,70,229,0.35);">
+              <span>✨ 샘플 데이터 1초 즉시 불러와서 검사하기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 애니메이션 GIF 시연 카드 -->
+        <div style="border-radius:12px; overflow:hidden; border:1px solid #334155; background:#0f172a; box-shadow:0 6px 20px rgba(0,0,0,0.4); text-align:center;">
+          <img src="assets/neis_check_demo.gif" alt="생기부 제약 점검 실시간 시연 GIF" style="width:100%; max-width:960px; height:auto; display:block; margin:0 auto;" loading="lazy">
+        </div>
+      </div>
+
       <p class="caution" id="caution">
         <strong>[주의]</strong> 본 프로그램은 참고용 자료입니다. 내용의 오류나 누락이 있을 수 있으므로
         최종 판단은 반드시 교사가 직접 확인해 주시기 바랍니다.
