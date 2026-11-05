@@ -53,7 +53,7 @@ function openPanel(id, scroll) {
   });
 
   const highlightId = (id === 'usage') ? 'guide' : id;
-  $$('#op-tabs button, #op-top-step-tabs button').forEach((b) => {
+  $$('#op-tabs button, #op-top-step-tabs button, .sidebar-nav-item').forEach((b) => {
     const on = b.dataset.open === id || b.dataset.open === highlightId;
     b.classList.toggle('is-active', on);
     b.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -68,6 +68,7 @@ function openPanel(id, scroll) {
   }
 
   updateStepNavUI(id);
+  if (typeof closeAppSidebar === "function") closeAppSidebar();
 
   try { history.replaceState(null, '', '#' + id); } catch (e) {}
   if (scroll && workspace) {
@@ -236,6 +237,62 @@ if ('IntersectionObserver' in window) {
 } else {
   reveals.forEach((el) => el.classList.add('in'));
 }
+
+
+/* 🌟 사이드바 네비게이션 & 접기형식 이용안내 제어 (이벤트 위임 방식) */
+function toggleAppSidebar() {
+  const sidebar = document.getElementById('app-sidebar');
+  const backdrop = document.getElementById('app-sidebar-backdrop');
+  if (!sidebar) return;
+  const willOpen = !sidebar.classList.contains('is-open');
+  sidebar.classList.toggle('is-open', willOpen);
+  if (backdrop) backdrop.classList.toggle('is-active', willOpen);
+}
+
+function closeAppSidebar() {
+  const sidebar = document.getElementById('app-sidebar');
+  const backdrop = document.getElementById('app-sidebar-backdrop');
+  if (sidebar) sidebar.classList.remove('is-open');
+  if (backdrop) backdrop.classList.remove('is-active');
+}
+
+window.toggleAppSidebar = toggleAppSidebar;
+window.closeAppSidebar = closeAppSidebar;
+
+// Global event delegation for sidebar
+document.addEventListener('click', (e) => {
+  const toggleBtn = e.target.closest('#btnToggleSidebar');
+  if (toggleBtn) {
+    e.preventDefault();
+    toggleAppSidebar();
+    return;
+  }
+
+  const closeBtn = e.target.closest('#btnCloseSidebar');
+  const backdrop = e.target.closest('#app-sidebar-backdrop');
+  if (closeBtn || backdrop) {
+    e.preventDefault();
+    closeAppSidebar();
+    return;
+  }
+
+  const navItem = e.target.closest('.sidebar-nav-item[data-open]');
+  if (navItem) {
+    e.preventDefault();
+    const target = navItem.dataset.open;
+    closeAppSidebar();
+    if (typeof openPanel === 'function') openPanel(target, true);
+    return;
+  }
+
+  const syncBtn = e.target.closest('#sidebarBtnSheetSync');
+  if (syncBtn) {
+    closeAppSidebar();
+    const mainSync = document.getElementById('btn-sheet-sync');
+    if (mainSync) mainSync.click();
+    return;
+  }
+});
 
 const top = $('#op-top');
 if (top) top.classList.add('on-dark');

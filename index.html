@@ -436,6 +436,10 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <!-- ── 고정 상단 바 (균형 잡힌 대칭 레이아웃 & 시트 연동 개선) ── -->
 <header class="op-top" id="op-top">
   <div class="op-top-left">
+    <button type="button" id="btnToggleSidebar" class="op-sidebar-btn" aria-label="메뉴 목록 사이드바 열기" title="전체 메뉴 목록 및 이용안내">
+      <span class="op-sidebar-icon">☰</span>
+      <span class="op-sidebar-text">메뉴 목록</span>
+    </button>
     <a class="op-brand" href="#hero" aria-label="처음 화면으로">
       <span class="op-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 10h14M9 16h14M9 22h9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></span>
       <span class="op-brand-name">학교생활기록부 올인원</span>
@@ -3463,6 +3467,136 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     </div>
   </div>
 </dialog>
+
+
+<!-- 🌟 사이드바 네비게이션 & 접기형식 이용 안내 (사용자 요청: 상부 공간 극대화 & 목록 구조화) -->
+<div id="app-sidebar-backdrop" class="app-sidebar-backdrop"></div>
+<aside id="app-sidebar" class="app-sidebar" aria-label="전체 메뉴 및 이용안내 사이드바">
+  <div class="sidebar-inner">
+    <!-- 1. 사이드바 헤더 -->
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <span class="sidebar-logo">📋</span>
+        <div>
+          <h3 class="sidebar-title">전체 메뉴 목록</h3>
+          <span class="sidebar-sub">NEIS 올인원 워크벤치</span>
+        </div>
+      </div>
+      <button type="button" id="btnCloseSidebar" class="sidebar-close-btn" title="사이드바 닫기" aria-label="사이드바 닫기">✕</button>
+    </div>
+
+    <!-- 2. 접기 형식 워크벤치 이용 안내 (사용자 요청: 상부 공간을 비우고 사이드바에서 접기형식 안내) -->
+    <div class="sidebar-guide-section">
+      <details class="sidebar-guide-details" id="sidebarGuideDetails">
+        <summary class="sidebar-guide-summary">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="guide-icon">💡</span>
+            <strong style="font-size:12.5px; color:#f8fafc;">워크벤치 이용 안내 (접기/펼치기)</strong>
+          </div>
+          <span class="guide-arrow">▾</span>
+        </summary>
+        <div class="sidebar-guide-body">
+          <p class="guide-lead-desc">
+            구글 시트 1:1 관계형 동기화부터 나이스 규격(바이트·금지어·어미) 일괄 점검과 대입 진학상담까지 한곳에서 관리합니다.
+          </p>
+          <ul class="guide-bullet-list">
+            <li>🔒 <strong>개인정보 최소 수집 원칙</strong>: 오직 교원 식별을 위해 [구글 계정 주소]와 [성함]만 시트에 기록하며, 학생 정보는 서버에 저장되지 않습니다.</li>
+            <li>⏱ <strong>1개월 세션 유지</strong>: 공식 계정(@sch.kr, @goedu.kr)은 1초 자동 승인되며, 1개월간 로그인 없이 자유롭게 이용하실 수 있습니다.</li>
+            <li>⚡ <strong>단일 시트 자동 연동</strong>: 학번(ID)을 키로 하여 메인 앱과 교무수첩이 하나의 구글 시트([📓_교무수첩])에 모두 통합 동기화됩니다.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+
+    <!-- 3. 가고 싶은 목록 구조화 -->
+    <nav class="sidebar-nav">
+      <div class="sidebar-group-label">📊 학생 기록 &amp; 점검 워크벤치</div>
+      <ul class="sidebar-nav-list">
+        <li>
+          <button type="button" class="sidebar-nav-item is-active" data-open="sheet">
+            <span class="sidebar-nav-badge">1</span>
+            <div class="sidebar-nav-content">
+              <strong class="sidebar-nav-title">기록·시트 동기화 Hub</strong>
+              <span class="sidebar-nav-desc">30명 관계형 명부 및 구글 시트 1:1 동기화</span>
+            </div>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-nav-item" data-open="check">
+            <span class="sidebar-nav-badge">2</span>
+            <div class="sidebar-nav-content">
+              <strong class="sidebar-nav-title">생기부 제약 점검</strong>
+              <span class="sidebar-nav-desc">나이스 바이트·금지어·어미 일괄 정밀 점검</span>
+            </div>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-nav-item" data-open="counsel">
+            <span class="sidebar-nav-badge" style="background:#2563eb;">3</span>
+            <div class="sidebar-nav-content">
+              <strong class="sidebar-nav-title">2027 대입 진학상담</strong>
+              <span class="sidebar-nav-desc">대학 전형 DB 검색 및 수시 6지망 시뮬레이션</span>
+            </div>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-nav-item" data-open="make">
+            <span class="sidebar-nav-badge">4</span>
+            <div class="sidebar-nav-content">
+              <strong class="sidebar-nav-title">생기부 초안 (AI 보조)</strong>
+              <span class="sidebar-nav-desc">2026 기재요령 준수 1500B 맞춤 세특 초안</span>
+            </div>
+          </button>
+        </li>
+        <li>
+          <a href="/tong/index.html" target="_blank" rel="noreferrer" class="sidebar-nav-item sidebar-nav-link" id="sidebarLinkNotebook">
+            <span class="sidebar-nav-badge" style="background:#7c3aed;">5</span>
+            <div class="sidebar-nav-content">
+              <strong class="sidebar-nav-title">모바일 교무수첩 ↗</strong>
+              <span class="sidebar-nav-desc">독립 새 창 실행 (자리배치·출결·즉석 메모)</span>
+            </div>
+            <span class="sidebar-link-pill">새 창</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-group-label" style="margin-top:18px;">📚 참고 자료 및 도구</div>
+      <ul class="sidebar-nav-list">
+        <li>
+          <button type="button" class="sidebar-nav-item" data-open="prompts">
+            <span class="sidebar-nav-badge" style="background:#059669;">6</span>
+            <div class="sidebar-nav-content">
+              <strong class="sidebar-nav-title">AI 프롬프트·스킬</strong>
+              <span class="sidebar-nav-desc">Gemini Gem / Claude Skill 복사 및 안내</span>
+            </div>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-nav-item" data-open="guide">
+            <span class="sidebar-nav-badge" style="background:#d97706;">7</span>
+            <div class="sidebar-nav-content">
+              <strong class="sidebar-nav-title">기재요령·사용법</strong>
+              <span class="sidebar-nav-desc">2026 나이스 기재요령 전문 검색 및 매뉴얼</span>
+            </div>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- 4. 사이드바 하단 빠른 제어 -->
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:11.5px; font-weight:700; color:#94a3b8;">구글 시트 연동 상태</span>
+          <span id="sidebarSheetStatusDot" class="sheet-status-dot"></span>
+        </div>
+        <button type="button" id="sidebarBtnSheetSync" class="btn primary small" style="width:100%; font-size:12px; font-weight:700; padding:6px 10px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+          📤 시트 동기화 설정 열기
+        </button>
+      </div>
+    </div>
+  </div>
+</aside>
 
 </body>
 </html>
