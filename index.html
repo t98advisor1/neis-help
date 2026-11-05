@@ -555,17 +555,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         • <strong>개인용 계정(@gmail.com):</strong> 외부 Gemini API 키(=AI 함수) 활용 및 교원 확인을 위해 간단한 승인 신청서를 접수해 주시면 관리자 확인 후 즉시 승인됩니다.
       </div>
 
-      <!-- 🎯 [체험 데모 모드] 로그인 없이 모든 기능 즉시 둘러보기 -->
-      <div style="margin-top:14px; background:#eff6ff; border:1.5px solid #93c5fd; border-radius:12px; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-        <div style="text-align:left;">
-          <span style="font-size:11px; font-weight:800; background:#dbeafe; color:#1e40af; padding:2px 8px; border-radius:999px;">로그인 프리 체험 모드</span>
-          <div style="font-size:13.5px; font-weight:800; color:#0f172a; margin-top:2px;">사이트를 먼저 둘러보고 싶으신가요?</div>
-          <div style="font-size:11.5px; color:#475569;">가상 샘플 학생 데이터로 기록·동기화·점검·대입상담 기능을 즉시 확인하실 수 있습니다.</div>
-        </div>
-        <button type="button" id="gkBtnStartDemo" style="background:linear-gradient(135deg, #4f46e5, #0ea5e9); color:#ffffff; font-size:13.5px; font-weight:800; padding:10px 22px; border:none; border-radius:999px; cursor:pointer; box-shadow:0 4px 14px rgba(79,70,229,0.3); transition:all 0.2s ease;">
-          🎯 로그인 없이 체험하기 (데모 모드)
-        </button>
-      </div>
+      
     </div>
 
     <div class="gk-header-compact">
@@ -632,6 +622,16 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
               </button>
               <button type="button" id="gkBtnCheckGoogleStatus" class="gk-btn-final-verify" style="flex:1; background:#059669;">
                 ✅ 승인 상태 확인 &amp; 입장
+              </button>
+            </div>
+            <!-- 🌟 [사용자 선택] 구글 로그인 후 시트 기록이 남은 상태에서만 1회 둘러보기 허용 -->
+            <div style="margin-top:10px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div style="font-size:12px; color:#334155;">
+                <strong style="color:#0f172a;">👀 샘플 둘러보기를 원하시나요?</strong><br>
+                관리자 정식 승인 전에도 가상 샘플 데이터로 1회 둘러보실 수 있습니다.
+              </div>
+              <button type="button" id="gkBtnGoogleDemoOnce" style="background:#475569; color:#fff; font-size:12px; font-weight:800; padding:7px 14px; border:none; border-radius:6px; cursor:pointer;">
+                👀 1회 둘러보기 (체험 모드)
               </button>
             </div>
             <div id="gkGoogleStatusMsg" class="gk-msg-box"></div>
@@ -1645,9 +1645,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <iframe id="guide-frame" title="기재요령 검색" data-src="https://neis-help-one.vercel.app/guide.html?embed=1"></iframe>
     </div>
 
-  </div>
-  </div><!-- .op-workspace-inner -->
-  <!-- ── 패널 6: 2027 대입 진학상담 & 대학별 입결 & 5등급제 환산 & 나이스 세특 ── -->
+    <!-- ── 패널 6: 2027 대입 진학상담 & 대학별 입결 & 5등급제 환산 & 나이스 세특 ── -->
     <div class="op-panel hidden" id="panel-counsel" role="tabpanel">
       <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
       <div class="op-panel-compact-header">
@@ -2491,7 +2489,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         <span>→</span>
       </button>
     </div>
-  </div>
+  </div><!-- #panel-counsel ends -->
+  </div><!-- .op-panels.workspace-white-box ends -->
+  </div><!-- .op-workspace-inner ends -->
 </section>
 
   <footer class="app-footer" style="display:none !important;">

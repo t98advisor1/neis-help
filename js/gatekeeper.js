@@ -59,10 +59,24 @@
 
     isAuthorized() {
       try {
+        // 1. 구글 로그인 후 1회 둘러보기 세션 확인 (sessionStorage - 새로고침/탭 닫기 시 즉시 만료)
+        const sessionRaw = sessionStorage.getItem('gk_demo_session');
+        if (sessionRaw) {
+          const sdata = JSON.parse(sessionRaw);
+          if (sdata && sdata.approved === true) return true;
+        }
+
+        // 2. 정식 승인 계정 (localStorage - 1개월 유지)
         const raw = localStorage.getItem(AUTH_KEY);
         if (!raw) return false;
         const data = JSON.parse(raw);
         if (!data || data.approved !== true) return false;
+
+        // 과거 24시간 데모 잔재 제거
+        if (data.isDemo) {
+          localStorage.removeItem(AUTH_KEY);
+          return false;
+        }
 
         if (data.expiresAt) {
           const expTime = new Date(data.expiresAt).getTime();
@@ -76,8 +90,15 @@
 
     getAuthUser() {
       try {
+        const sessionRaw = sessionStorage.getItem('gk_demo_session');
+        if (sessionRaw) {
+          const sdata = JSON.parse(sessionRaw);
+          if (sdata && sdata.approved === true) return sdata;
+        }
+
         const raw = localStorage.getItem(AUTH_KEY);
-        return raw ? JSON.parse(raw) : null;
+        if (!raw) return null;
+        return JSON.parse(raw);
       } catch (e) {
         return null;
       }
@@ -117,36 +138,39 @@
     },
 
     startDemo() {
-      const now = new Date();
-      const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
+      this.startRestrictedDemo();
+    },
+
+    startRestrictedDemo() {
+      const u = this.currentGoogleUser || { email: 'teacher@guest.kr', name: '선생님' };
       const demoData = {
         approved: true,
         role: 'demo',
         isDemo: true,
-        name: '선생님 (체험 모드)',
-        school: '신천고등학교(데모)',
-        email: 'demo@sch.hs.kr',
-        subject: '1학년 공통수학',
-        authDate: now.toISOString(),
-        expiresAt: expiresAt,
-        validDays: 1
+        name: u.name || '선생님',
+        school: '1회 둘러보기(체험)',
+        email: u.email,
+        authDate: new Date().toISOString()
       };
-      localStorage.setItem(AUTH_KEY, JSON.stringify(demoData));
+      sessionStorage.setItem('gk_demo_session', JSON.stringify(demoData));
+      try { localStorage.removeItem(AUTH_KEY); } catch(e) {}
+
       this.closeModal(true);
       this.updateUI();
 
       try {
         const toast = document.createElement('div');
         toast.className = 'gk-demo-toast';
-        toast.style.cssText = 'position:fixed; bottom:28px; left:50%; transform:translateX(-50%); background:#0f172a; color:#ffffff; padding:12px 24px; border-radius:999px; font-size:13.5px; font-weight:700; z-index:999999; box-shadow:0 8px 30px rgba(0,0,0,0.35); border:1.5px solid #38bdf8; display:flex; align-items:center; gap:10px; animation:fadein 0.3s;';
-        toast.innerHTML = '<span>🎯 <strong>체험 데모 모드로 입장했습니다!</strong> 샘플 학생 데이터로 기록·동기화·점검·진학상담 기능을 자유롭게 둘러보실 수 있습니다.</span>';
+        toast.style.cssText = 'position:fixed; bottom:28px; left:50%; transform:translateX(-50%); background:#0f172a; color:#ffffff; padding:12px 24px; border-radius:999px; font-size:13px; font-weight:700; z-index:99999; box-shadow:0 8px 30px rgba(0,0,0,0.5); border:1px solid #38bdf8; display:flex; align-items:center; gap:8px;';
+        toast.innerHTML = '<span>👀</span> <span><strong>1회 둘러보기 모드</strong>로 입장했습니다. (계정: ' + (u.email || '') + ' 시트 기록 완료 · 브라우저 닫거나 새로고침 시 종료)</span>';
         document.body.appendChild(toast);
-        setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4500);
-      } catch(e) {}
+        setTimeout(() => toast.remove(), 7000);
+      } catch (e) {}
     },
 
     logout() {
       localStorage.removeItem(AUTH_KEY);
+      sessionStorage.removeItem('gk_demo_session');
       this.currentGoogleUser = null;
       this.updateUI();
       alert('로그아웃되었습니다. 검사 및 AI 세특 작성 기능에 보안 잠금이 적용되었습니다.');
@@ -316,13 +340,21 @@
             alert(`🎉 개인 계정 승인 확인 완료! 환영합니다, ${name} 선생님! (1개월 이용 활성화)`);
           }, 350);
         } else {
-          // 아직 미승인된 개인 계정: 신청서 폼 안내
+          // 아직 미승인된 개인 계정: 관리자 구글 시트에 계정 접속 기록 자동 등록
+          this.submitApplication({
+            name: name,
+            school: '신규 구글 로그인 (승인 대기)',
+            email: email,
+            subject: 'Google 계정 로그인 접속',
+            reason: '구글 로그인 완료 후 관리자 시트 접속 기록 등록'
+          });
+
           if (statusMsg) {
             statusMsg.className = 'gk-msg-box is-warn';
             statusMsg.innerHTML = `
-              <strong>💡 개인 구글 계정(@${email.split('@')[1]}) 안내:</strong><br>
-              학교/교육청 공식 계정(@sch.kr, @goedu.kr)은 즉시 자동 승인되나, 개인 계정은 Gemini API 연동 및 교원 확인을 위해 아래 <strong>[교사 사용 승인 신청하기]</strong>를 접수해 주시면 관리자 확인 후 즉시 승인해 드립니다.<br>
-              <span style="font-size:11px; color:#64748b;">(계정 주소와 성함 외의 다른 개인정보는 일절 수집하지 않습니다)</span>
+              <strong>💡 구글 계정(@${email.split('@')[1]}) 접속 확인 완료:</strong><br>
+              선생님의 구글 계정(<strong>${email}</strong>)이 관리자 시트에 안전하게 등록되었습니다.<br>
+              학교 공식 도메인 외 계정은 교원 확인 후 정식 승인(1개월)되며, 승인 전이라도 아래 <strong>[1회 둘러보기]</strong>로 기능을 먼저 체험하실 수 있습니다.
             `;
           }
         }
@@ -571,6 +603,15 @@
         btnDemo.addEventListener('click', (e) => {
           e.preventDefault();
           Gatekeeper.startDemo();
+        });
+      }
+
+      // 0. 구글 로그인 후 1회 둘러보기 버튼
+      const btnDemoOnce = document.getElementById('gkBtnGoogleDemoOnce');
+      if (btnDemoOnce) {
+        btnDemoOnce.addEventListener('click', (e) => {
+          e.preventDefault();
+          Gatekeeper.startRestrictedDemo();
         });
       }
 
