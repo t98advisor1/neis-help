@@ -2412,7 +2412,7 @@ function NEIS_BYTE(text) {
         errMsg.textContent = "";
 
         const expiry = store.getGlobalExpiry();
-        alert(`✓ 대입자료 이미지 보안 인증(0909) 완료!\n\n• 로컬 브라우저에서 1개월(30일)간 열람 권한이 유지됩니다.\n• 전체 서비스 이용 기한: ${expiry}까지 사용 가능합니다.`);
+        alert(`✓ 대입자료 이미지 보안 인증 완료!\n\n• 로컬 브라우저에서 1개월(30일)간 열람 권한이 유지됩니다.\n• 전체 서비스 이용 기한: ${expiry}까지 사용 가능합니다.`);
 
         if (appState.pendingOpenViewer) {
           const { title, start, end, chips, uni } = appState.pendingOpenViewer;
@@ -2420,7 +2420,7 @@ function NEIS_BYTE(text) {
           openViewer(title, start, end, chips, uni);
         }
       } else {
-        errMsg.textContent = "대입자료 열람 비밀번호(0909)가 올바르지 않습니다.";
+        errMsg.textContent = "대입자료 열람 비밀번호가 올바르지 않습니다.";
         input.focus();
       }
     }

@@ -496,6 +496,24 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
             📋 교사 승인 관리 구글시트 열기 ↗
           </a>
         </div>
+        <!-- 🌟 [이동] 방명록(방문자 수) 및 시스템 정보: 하단 공간 확보를 위해 설정 내부로 수납 -->
+        <div class="header-config-row" style="border-top:1px solid #e2e8f0; padding-top:12px; margin-top:8px;">
+          <span class="header-config-label">📊 시스템 상태 &amp; 방명록 (방문자)</span>
+          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:10px 12px; font-size:12px; color:#334155;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-weight:600; color:#475569;">방명록 방문자:</span>
+              <strong id="visit-counter" style="color:#2563eb; font-size:12.5px;">집계 중...</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#64748b;">
+              <span>코드 빌드 시각:</span>
+              <span id="build" style="font-family:monospace;"></span>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#64748b; margin-top:6px;">
+            <span>Copyright © 2026 math-tong</span>
+            <a href="https://blog.naver.com/math-tong" target="_blank" rel="noreferrer" style="color:#ff385c; font-weight:700; text-decoration:none;">네이버 블로그 ↗</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -793,6 +811,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <!-- ── 패널 ①: 관계형 구글 시트 표준안 (학급담임용 / 교과담임용 / 교사승인용) & 실시간 데이터 점검 & 캐러셀 설명서 ── -->
     <div class="op-panel" id="panel-sheet" role="tabpanel">
+      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <div class="op-panel-compact-header">
+        <h2>📋 ① 학생 종합 기록 &amp; 구글 시트 1:1 동기화 Hub</h2>
+        <span class="op-panel-compact-sub">30명 관계형 명부 및 단일 시트([📓_교무수첩]) 실시간 연동</span>
+      </div>
       <!-- ✨ [시연] 구글 시트 셀 안에서 =AI() 수식 하나로 세특 자동 생성하기 -->
       <div style="background:#ffffff; border:1.5px solid #bfdbfe; border-radius:16px; padding:20px 24px; box-shadow:0 8px 24px rgba(37,99,235,0.08); margin-bottom:24px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
@@ -960,6 +983,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <!-- ── 패널 2: 생기부 초안 작성 (기존 Vercel styles.css 카드 + 2단 데스크톱 워크벤치 디자인) ── -->
     <div class="op-panel hidden" id="panel-make" role="tabpanel">
+      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <div class="op-panel-compact-header">
+        <h2>✍️ ④ 생기부 초안 작성 (AI 보조 도구)</h2>
+        <span class="op-panel-compact-sub">2026 기재요령 준수 1500B 맞춤 세특 초안 생성</span>
+      </div>
       <div class="wrap">
 
         <div class="us-top-bar">
@@ -1381,6 +1409,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <!-- ── 패널 3: 생기부 점검하기 (기존 Vercel 원본 DOM 100% 그대로) ── -->
     <div class="op-panel hidden" id="panel-check" role="tabpanel">
+      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <div class="op-panel-compact-header">
+        <h2>🔍 ② 나이스 규격·금지어·바이트 정밀 점검</h2>
+        <span class="op-panel-compact-sub">1,500B 바이트 한도, 공인어학·경시대회 금지어, 종결어미, 중복문장 일괄 점검</span>
+      </div>
       <!-- 🌟 [쇼케이스] 나이스 4대 제약 점검 실시간 시연 GIF 및 샘플 문서 다운로드 바 -->
       <div class="check-demo-showcase-box" style="background:linear-gradient(135deg, #1e293b, #0f172a); border:2px solid #3b82f6; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.35);">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:16px;">
@@ -1516,6 +1549,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <!-- ── 패널 4: AI 프롬프트 · 스킬 (기존 Vercel .card 디자인 통일) ── -->
     <div class="op-panel hidden" id="panel-prompts" role="tabpanel">
+      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <div class="op-panel-compact-header">
+        <h2>💡 ⑥ AI 프롬프트 &amp; 교사용 스킬 가이드</h2>
+        <span class="op-panel-compact-sub">Gemini Gem / Claude Skill 복사 및 활용 안내</span>
+      </div>
       <h2 class="op-panel-title">✍️ AI 프롬프트 · 스킬 지침</h2>
       <p class="op-panel-sub">ChatGPT 프로젝트 지침, Claude 스킬(.zip), Gemini 스킬(SKILL.md)로 등록해 두고 쓸 수 있는 2026 기재요령 영역별 표준 지침입니다.</p>
 
@@ -1599,6 +1637,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <!-- ── 패널 5: 기재요령 검색 ── -->
     <div class="op-panel op-panel-wide hidden" id="panel-guide" role="tabpanel" style="background:#ffffff; color:#0f172a; border-radius:18px; padding:20px; box-shadow:0 20px 50px rgba(0,0,0,0.3);">
+      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <div class="op-panel-compact-header" style="color: #0f172a; border-color: rgba(0,0,0,0.1); background: #f8fafc; margin-bottom: 16px;">
+        <h2 style="color: #0f172a !important;">📖 ⑦ 2026 나이스 기재요령 원문 검색 &amp; 사용법</h2>
+        <span class="op-panel-compact-sub" style="color: #64748b;">교육부 기재요령 원문 검색 및 상세 매뉴얼</span>
+      </div>
       <iframe id="guide-frame" title="기재요령 검색" data-src="https://neis-help-one.vercel.app/guide.html?embed=1"></iframe>
     </div>
 
@@ -1606,6 +1649,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   </div><!-- .op-workspace-inner -->
   <!-- ── 패널 6: 2027 대입 진학상담 & 대학별 입결 & 5등급제 환산 & 나이스 세특 ── -->
     <div class="op-panel hidden" id="panel-counsel" role="tabpanel">
+      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <div class="op-panel-compact-header">
+        <h2>🎓 ③ 2027 대입 진학상담 &amp; 대학 전형 DB</h2>
+        <span class="op-panel-compact-sub">133개 대학 전형 DB, 2028 5등급제 환산 및 수시 6지망 시뮬레이션</span>
+      </div>
       <!-- 2027 상담 상단 서브바 -->
       <div class="counsel-header-bar">
         <nav class="counsel-sub-nav" role="tablist" aria-label="진학상담 메뉴">
@@ -2196,6 +2244,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
     <!-- ── 4화면: 2027학년도 대입 진학상담 & 대학 진학성적 분석 스크롤 전용 섹션 ── -->
         <!-- ── 패널 ④: 📱 통합 모바일 교무수첩 (t-ong 전체 기능 탑재 + 교과 세특 실시간 관계형 동기화) ── -->
     <div class="op-panel hidden" id="panel-notebook" role="tabpanel">
+      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <div class="op-panel-compact-header">
+        <h2>📱 ⑤ 모바일 교무수첩 (독립 새 창 실행) ↗</h2>
+        <span class="op-panel-compact-sub">자리배치·출결·즉석 메모 독립 뷰 및 동일 시트([📓_교무수첩]) 연동</span>
+      </div>
       <div class="wb-card" style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:16px; padding:20px 24px; box-shadow:0 10px 30px rgba(0,0,0,0.05); margin-bottom:24px;">
         <!-- 교무수첩 모드 전환 바 (t-ong 통합 교무수첩 ↔ 과목별 세특 빠른 관찰카드) -->
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; padding-bottom:14px; border-bottom:2px solid #e2e8f0;">
@@ -2441,7 +2494,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
   </div>
 </section>
 
-  <footer class="app-footer">
+  <footer class="app-footer" style="display:none !important;">
     <span id="visit-counter" class="visit-counter"></span>
     <span class="build" id="build" title="화면 코드가 마지막으로 바뀐 때입니다. 고친 내용이 안 보이면 새로고침(⌘⇧R) 해 주세요."></span>
     <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
@@ -2571,14 +2624,14 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 <div class="viewer-modal-backdrop" id="authModal" hidden>
   <div class="auth-modal-dialog">
     <div class="auth-modal-icon">🔐</div>
-    <h3 class="auth-modal-title">저장된 대입자료 이미지 보안 인증 (0909)</h3>
+    <h3 class="auth-modal-title">저장된 대입자료 이미지 보안 인증</h3>
     <p class="auth-modal-desc">
       대입 참고자료 원본을 열람하려면<br>
       설정하신 교사용 비밀번호를 입력해 주세요.<br>
       <small style="color:var(--muted);">(1회 로그인 시 로컬 브라우저에서 1개월간 유지됩니다)</small>
     </p>
     <form id="authForm" onsubmit="return false;">
-      <input class="auth-input" id="authInputPin" type="password" placeholder="열람 비밀번호 입력 (0909)" autocomplete="current-password">
+      <input class="auth-input" id="authInputPin" type="password" placeholder="교사용 열람 비밀번호 입력" autocomplete="current-password">
       <div class="auth-err-msg" id="authErrMsg"></div>
       <div style="display:flex; gap:8px;">
         <button type="button" class="btn secondary" id="authCancelBtn" style="flex:1;">취소</button>

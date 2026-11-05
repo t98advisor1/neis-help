@@ -64,7 +64,7 @@ module.exports = async function handler(req, res) {
   if (providedPin !== requiredPin && providedPin !== (process.env.MASTER_APPROVAL_PIN || 'tong2026!')) {
     return res.status(403).json({
       ok: false,
-      error: '저장된 대입자료 이미지를 열람하려면 비밀번호(0909) 인증이 필요합니다.'
+      error: '저장된 대입자료 이미지를 열람하려면 교사용 보안 비밀번호 인증이 필요합니다.'
     });
   }
 
@@ -99,7 +99,7 @@ module.exports = async function handler(req, res) {
     <rect width="900" height="1180" fill="url(#bg)"/>
     <rect x="40" y="40" width="820" height="1100" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
     <rect x="40" y="40" width="820" height="92" rx="18" fill="#1e3a8a"/>
-    <text x="80" y="95" font-family="sans-serif" font-size="24" font-weight="bold" fill="#ffffff">2027 대입 진학상담 보안 자료실 (비밀번호 0909 인증됨)</text>
+    <text x="80" y="95" font-family="sans-serif" font-size="24" font-weight="bold" fill="#ffffff">2027 대입 진학상담 보안 자료실 (교사용 보안 인증 완료)</text>
     <text x="820" y="95" font-family="sans-serif" font-size="20" font-weight="bold" fill="#93c5fd" text-anchor="end">Page ${pageNum} / 1,294</text>
     <rect x="80" y="170" width="740" height="90" rx="12" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
     <text x="105" y="210" font-family="sans-serif" font-size="18" font-weight="bold" fill="#166534">✓ Cloudflare R2 보안 프록시 연결 완료 (원본 경로 은닉 보호 중)</text>

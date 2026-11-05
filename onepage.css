@@ -2902,3 +2902,51 @@ body.gk-locked #appGatekeeperOverlay {
   border-radius: 8px;
   padding: 10px 12px;
 }
+
+
+/* ==========================================================================
+   상단 & 하단 공간 극대화: 중복 탭바, 번호형 스텝바, 푸터 완전 정리
+   ========================================================================== */
+#workspace .op-head-block,
+#op-tabs,
+.op-tabs,
+.step-page-nav-bar,
+#stepPageNavBarTop,
+#stepPageNavBarBottom,
+.app-footer {
+  display: none !important;
+}
+
+/* 워크벤치 상하단 여백 최소화 */
+.op-workspace {
+  padding-top: calc(var(--op-h) + 8px) !important;
+  padding-bottom: 24px !important;
+}
+
+/* 각 단계별 상세 페이지 슬림 제목 바 */
+.op-panel-compact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+.op-panel-compact-header h2 {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.op-panel-compact-sub {
+  font-size: 12.5px;
+  color: #64748b;
+  font-weight: 600;
+}
