@@ -104,8 +104,37 @@
         localStorage.setItem(APPROVED_USERS_KEY, JSON.stringify(approvedMap));
       }
 
-      this.closeModal();
+      this.closeModal(true);
       this.updateUI();
+    },
+
+    startDemo() {
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
+      const demoData = {
+        approved: true,
+        role: 'demo',
+        isDemo: true,
+        name: '선생님 (체험 모드)',
+        school: '신천고등학교(데모)',
+        email: 'demo@sch.hs.kr',
+        subject: '1학년 공통수학',
+        authDate: now.toISOString(),
+        expiresAt: expiresAt,
+        validDays: 1
+      };
+      localStorage.setItem(AUTH_KEY, JSON.stringify(demoData));
+      this.closeModal(true);
+      this.updateUI();
+
+      try {
+        const toast = document.createElement('div');
+        toast.className = 'gk-demo-toast';
+        toast.style.cssText = 'position:fixed; bottom:28px; left:50%; transform:translateX(-50%); background:#0f172a; color:#ffffff; padding:12px 24px; border-radius:999px; font-size:13.5px; font-weight:700; z-index:999999; box-shadow:0 8px 30px rgba(0,0,0,0.35); border:1.5px solid #38bdf8; display:flex; align-items:center; gap:10px; animation:fadein 0.3s;';
+        toast.innerHTML = '<span>🎯 <strong>체험 데모 모드로 입장했습니다!</strong> 샘플 학생 데이터로 기록·동기화·점검·진학상담 기능을 자유롭게 둘러보실 수 있습니다.</span>';
+        document.body.appendChild(toast);
+        setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4500);
+      } catch(e) {}
     },
 
     logout() {
@@ -429,8 +458,8 @@
           badge.innerHTML = `
             <span class="gk-dot" style="background:#10b981; width:8px; height:8px; border-radius:50%; box-shadow:0 0 6px #10b981;"></span>
             <span class="gk-name" style="font-size:12px; color:#0f172a; font-weight:700;">🔓 ${escapeHtml(user.name || '선생님')} (${escapeHtml(user.school || '인증')})</span>
-            ${daysLabel}
-            <button type="button" class="gk-logout-btn" onclick="window.Gatekeeper.logout()" style="margin-left:4px; font-size:11px; padding:2px 6px; border-radius:4px; cursor:pointer;">로그아웃</button>
+            ${user.isDemo ? '<span style="background:#e0e7ff; color:#3730a3; padding:2px 7px; border-radius:999px; font-weight:800; font-size:11px;">체험 데모</span><button type="button" class="gk-demo-upgrade-btn" onclick="window.Gatekeeper.openModal(\'google\')" style="margin-left:6px; font-size:11px; padding:2px 8px; border-radius:4px; background:#2563eb; color:#fff; border:none; cursor:pointer; font-weight:700;">정식 승인</button>' : daysLabel}
+            <button type="button" class="gk-logout-btn" onclick="window.Gatekeeper.logout()" style="margin-left:4px; font-size:11px; padding:2px 6px; border-radius:4px; cursor:pointer;">${user.isDemo ? '종료' : '로그아웃'}</button>
           `;
         } else {
           badge.className = 'gk-user-badge is-locked';
@@ -488,6 +517,15 @@
     },
 
     bindEvents() {
+      // 0. 체험 데모 모드 버튼
+      const btnDemo = document.getElementById('gkBtnStartDemo');
+      if (btnDemo) {
+        btnDemo.addEventListener('click', (e) => {
+          e.preventDefault();
+          Gatekeeper.startDemo();
+        });
+      }
+
       // 1. 모달 탭 전환 버튼
       document.querySelectorAll('.gk-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {

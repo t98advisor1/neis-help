@@ -788,6 +788,29 @@ function doPost(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
+    // === [모바일 교무수첩(T-ong) 통합 시트 동기화 API (출결/자리/관찰/상담)] ===
+    if (action === "save_notebook" || action === "sync_tong_notebook" || action === "save_attendance") {
+      var nbSheet = ss.getSheetByName("교무수첩_기록") || ss.getSheetByName("📓_교무수첩");
+      if (!nbSheet) {
+        nbSheet = ss.insertSheet("📓_교무수첩");
+        nbSheet.appendRow(["기록일시", "학번", "성명", "구분(출결/좌석/상담/관찰)", "세부내용", "메모"]);
+        nbSheet.getRange("A1:F1").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
+      }
+      var now = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
+      var sId = String(body.studentId || "").trim();
+      var sName = String(body.studentName || "").trim();
+      var category = body.category || body.type || (action === "save_attendance" ? "출결" : "일반관찰");
+      var detail = body.detail || body.content || "";
+      var memo = body.memo || "";
+
+      nbSheet.appendRow([now, sId, sName, category, detail, memo]);
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        message: "모바일 교무수첩 데이터가 단일 통합 시트에 성공적으로 동기화되었습니다.",
+        timestamp: now
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     // === [교과담임 모바일 교무수첩 관찰메모 동기화 저장 API] ===
     if (action === "save_subject_memo") {
       var subSheet = ss.getSheetByName("교과담임_세특") || ss.getSheetByName("1_교과명렬_관찰기록");

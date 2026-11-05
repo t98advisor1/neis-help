@@ -5,19 +5,19 @@
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 
-const PANELS = ['sheet', 'make', 'check', 'notebook', 'prompts', 'guide', 'usage', 'counsel'];
+const PANELS = ['sheet', 'check', 'counsel', 'make', 'notebook', 'prompts', 'guide', 'usage'];
 const STEP_ORDER = [
-  { id: 'sheet', num: '①', title: '관계형 시트·표준안' },
-  { id: 'make', num: '②', title: '생기부 초안 작성' },
-  { id: 'check', num: '③', title: '생기부 파일 점검' },
-  { id: 'notebook', num: '④', title: '모바일 교무수첩' },
-  { id: 'prompts', num: '⑤', title: 'AI 프롬프트·스킬' },
-  { id: 'guide', num: '⑥', title: '기재요령·사용법' },
-  { id: 'counsel', num: '⑦', title: '2027 대입 진학상담' }
+  { id: 'sheet', num: '①', title: '기록·시트 동기화' },
+  { id: 'check', num: '②', title: '생기부 제약 점검' },
+  { id: 'counsel', num: '③', title: '2027 대입 진학상담' },
+  { id: 'make', num: '④', title: '생기부 초안 (AI 보조)' },
+  { id: 'notebook', num: '⑤', title: '모바일 교무수첩 ↗' },
+  { id: 'prompts', num: '⑥', title: 'AI 프롬프트·스킬' },
+  { id: 'guide', num: '⑦', title: '기재요령·사용법' }
 ];
 
 const workspace = $('#workspace');
-let currentPanelId = 'make';
+let currentPanelId = 'sheet';
 
 function updateStepNavUI(id) {
   const mappedId = (id === 'usage') ? 'guide' : id;
