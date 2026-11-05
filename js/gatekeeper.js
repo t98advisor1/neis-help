@@ -1,5 +1,5 @@
 // js/gatekeeper.js — Google 계정 로그인 기반 교사 승인 및 관리 시스템
-// - 1순위: Google 계정 로그인 & 승인 확인 (3개월 로그인 유지)
+// - 1순위: Google 계정 로그인 & 승인 확인 (1개월 로그인 유지)
 // - 구글 시트 앱스스크립트(GAS) 기반: @sch.hs.kr, @goedu.kr 시트 자동승인 / 타 계정 수동승인
 (function() {
   'use strict';
@@ -8,7 +8,7 @@
   const ADMIN_GAS_KEY = 'swk_admin_gas_approval_url';
   const MASTER_PIN_KEY = 'swk_admin_master_pin';
   const APPROVED_USERS_KEY = 'swk_approved_users';
-  const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
+  const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000; // 1개월(30일) 단위 재로그인
 
   // 기본 시흥시/신천고 및 수도권 고교 DB
   const BUILTIN_SCHOOLS = [
@@ -25,6 +25,14 @@
     { name: "정왕고등학교", region: "경기 시흥시", office: "경기도교육청", domain: "goedu.kr" },
     { name: "시흥고등학교", region: "경기 시흥시", office: "경기도교육청", domain: "goedu.kr" }
   ];
+
+  // sch.kr 및 goedu.kr 도메인 자동 승인 판별기
+  function isAutoApproveDomain(email) {
+    if (!email) return false;
+    const em = email.trim().toLowerCase();
+    const domain = em.split('@')[1] || '';
+    return domain === 'sch.kr' || domain.endsWith('.sch.kr') || domain === 'goedu.kr' || domain.endsWith('.goedu.kr') || em.endsWith('sch.hs.kr');
+  }
 
   const Gatekeeper = {
     googleClientId: null,
@@ -88,13 +96,13 @@
 
     authorize(userObj = {}) {
       const now = new Date();
-      const expiresAt = new Date(now.getTime() + THREE_MONTHS_MS).toISOString();
+      const expiresAt = new Date(now.getTime() + ONE_MONTH_MS).toISOString();
       const authData = Object.assign({
         approved: true,
         role: 'teacher',
         authDate: now.toISOString(),
         expiresAt: expiresAt,
-        validDays: 90
+        validDays: 30
       }, userObj);
       localStorage.setItem(AUTH_KEY, JSON.stringify(authData));
 
@@ -255,12 +263,47 @@
         if (nameEl) nameEl.textContent = name;
         if (emailEl) emailEl.textContent = email;
 
-        // 구글 시트 승인 여부 즉시 자동 확인
         const statusMsg = document.getElementById('gkGoogleStatusMsg');
+
+        // [도메인 자동승인 판정] @sch.kr 또는 @goedu.kr 계정은 1초 즉시 자동승인 & 관리자 시트에 실시간 기록
+        if (isAutoApproveDomain(email)) {
+          const schoolName = email.includes('sch') ? '신천고등학교(공식도메인)' : '경기도교육청(goedu.kr)';
+          
+          if (statusMsg) {
+            statusMsg.style.display = 'block';
+            statusMsg.className = 'gk-msg-box is-success';
+            statusMsg.innerHTML = `⏳ <strong>학교/교육청 공식 계정 확인 완료!</strong><br>관리자 시트에 자동 승인 기록을 전송하고 있습니다...`;
+          }
+
+          // 관리자 구글 시트에 실시간 기록 전송
+          this.submitApplication({
+            name: name,
+            school: schoolName,
+            email: email,
+            subject: '공식 도메인 로그인',
+            reason: '학교/교육청 공식 도메인 실시간 자동승인 접속'
+          });
+
+          // 1개월 권한 부여 및 워크벤치 오픈
+          this.authorize({
+            email: email,
+            name: name,
+            school: schoolName,
+            role: 'teacher',
+            validDays: 30
+          });
+
+          setTimeout(() => {
+            alert(`🎉 학교/교육청 공식 계정(@${email.split('@')[1]}) 확인 완료!\n\n관리자 시트에 접속 기록이 안전하게 등록되었으며, 1개월간 자유롭게 이용하실 수 있습니다.`);
+          }, 350);
+          return;
+        }
+
+        // [그 외 개인 계정 @gmail.com 등] 사전에 승인되었는지 먼저 확인
         if (statusMsg) {
           statusMsg.style.display = 'block';
           statusMsg.className = 'gk-msg-box';
-          statusMsg.textContent = '⏳ 구글 시트 승인 상태 확인 중...';
+          statusMsg.textContent = '⏳ 개인 구글 계정 사전 승인 여부 확인 중...';
         }
 
         const checkRes = await this.checkApproval(email);
@@ -270,12 +313,17 @@
             statusMsg.textContent = checkRes.message;
           }
           setTimeout(() => {
-            alert(`🎉 사용 승인 확인 완료! 환영합니다, ${name} 선생님! (3개월 이용 활성화)`);
-          }, 400);
+            alert(`🎉 개인 계정 승인 확인 완료! 환영합니다, ${name} 선생님! (1개월 이용 활성화)`);
+          }, 350);
         } else {
+          // 아직 미승인된 개인 계정: 신청서 폼 안내
           if (statusMsg) {
             statusMsg.className = 'gk-msg-box is-warn';
-            statusMsg.innerHTML = checkRes.message.replace(/\n/g, '<br>');
+            statusMsg.innerHTML = `
+              <strong>💡 개인 구글 계정(@${email.split('@')[1]}) 안내:</strong><br>
+              학교/교육청 공식 계정(@sch.kr, @goedu.kr)은 즉시 자동 승인되나, 개인 계정은 Gemini API 연동 및 교원 확인을 위해 아래 <strong>[교사 사용 승인 신청하기]</strong>를 접수해 주시면 관리자 확인 후 즉시 승인해 드립니다.<br>
+              <span style="font-size:11px; color:#64748b;">(계정 주소와 성함 외의 다른 개인정보는 일절 수집하지 않습니다)</span>
+            `;
           }
         }
       } catch (e) {
@@ -298,7 +346,7 @@
         return {
           success: true,
           approved: false,
-          message: '승인 신청이 접수되었습니다. 관리자 확인 후 3개월간 이용하실 수 있습니다.'
+          message: '승인 신청이 접수되었습니다. 관리자 확인 후 1개월간 이용하실 수 있습니다.'
         };
       }
 
@@ -331,13 +379,13 @@
             return {
               success: true,
               approved: true,
-              message: `🎉 학교 공식 계정 확인 완료! 3개월 이용 권한이 자동으로 승인되었습니다.`
+              message: `🎉 학교 공식 계정 확인 완료! 1개월 이용 권한이 자동으로 승인되었습니다.`
             };
           }
           return {
             success: true,
             approved: false,
-            message: data.message || '승인 신청이 완료되었습니다. 관리자 승인 후 3개월간 이용하실 수 있습니다.'
+            message: data.message || '승인 신청이 완료되었습니다. 관리자 승인 후 1개월간 이용하실 수 있습니다.'
           };
         }
       } catch (err) {
@@ -347,7 +395,7 @@
       return {
         success: true,
         approved: false,
-        message: '승인 신청이 접수되었습니다. 관리자 확인 후 3개월간 이용하실 수 있습니다.'
+        message: '승인 신청이 접수되었습니다. 관리자 확인 후 1개월간 이용하실 수 있습니다.'
       };
     },
 
@@ -369,7 +417,7 @@
             approved: true,
             name: u.name,
             school: u.school,
-            message: `🎉 [승인 확인 완료] 환영합니다, ${u.name} 선생님! (3개월 이용 활성화)`
+            message: `🎉 [승인 확인 완료] 환영합니다, ${u.name} 선생님! (1개월 이용 활성화)`
           };
         }
       }
@@ -395,7 +443,7 @@
                 approved: true,
                 name: teacherName,
                 school: school,
-                message: `🎉 [승인 확인 완료] 환영합니다, ${teacherName}! (3개월 이용 활성화)`
+                message: `🎉 [승인 확인 완료] 환영합니다, ${teacherName}! (1개월 이용 활성화)`
               };
             } else if (data.found) {
               return {
@@ -597,7 +645,7 @@
 
           if (res.approved) {
             setTimeout(() => {
-              alert('🎉 3개월 사용 권한이 승인되었습니다! 워크벤치를 시작합니다.');
+              alert('🎉 1개월 사용 권한이 승인되었습니다! 워크벤치를 시작합니다.');
             }, 500);
           }
         });
@@ -666,7 +714,7 @@
 
           if (res.approved) {
             setTimeout(() => {
-              alert('🎉 3개월 사용 권한이 승인되었습니다! 워크벤치를 시작합니다.');
+              alert('🎉 1개월 사용 권한이 승인되었습니다! 워크벤치를 시작합니다.');
             }, 400);
           }
         });

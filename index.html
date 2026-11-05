@@ -467,7 +467,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       </button>
       <div id="headerConfigPopover" class="header-config-popover" hidden>
         <div class="header-config-row">
-          <span class="header-config-label">👤 교사 로그인 &amp; 3개월 승인 상태</span>
+          <span class="header-config-label">👤 교사 로그인 &amp; 1개월 승인 상태</span>
           <div id="gatekeeperUserBadge" class="gk-user-badge" style="justify-content:flex-start;"></div>
         </div>
         <div class="header-config-row">
@@ -519,8 +519,19 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       </div>
       <p class="gk-banner-sub">
         본 시스템은 현직 선생님의 생기부 기재 및 대입 진학상담 연구를 위한 교사 전용 서비스입니다.<br>
-        <strong>Google 계정으로 로그인</strong> 후 승인 상태를 확인하시면 <strong>3개월간 로그인 없이 자유롭게 이용</strong>하실 수 있습니다.
+        <strong>Google 계정으로 로그인</strong> 후 승인 상태를 확인하시면 <strong>1개월간 로그인 없이 자유롭게 이용</strong>하실 수 있습니다.
       </p>
+
+      <!-- 🔒 개인정보 최소 수집 및 도메인 자동 승인 고지 박스 -->
+      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:12px 16px; margin:12px 0 0; font-size:12px; color:#334155; line-height:1.6; text-align:left;">
+        <div style="font-weight:800; color:#0f172a; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+          <span>🔒 교원 승인 고지 및 개인정보 최소 수집 원칙</span>
+          <span style="background:#e0f2fe; color:#0369a1; padding:1px 6px; border-radius:4px; font-size:10.5px; font-weight:800;">1개월 단위 갱신</span>
+        </div>
+        • <strong>수집 항목 최소화:</strong> 본 시스템은 오직 교원 식별 및 사용 승인 관리를 위해 <strong>[Google 계정 주소]</strong>와 <strong>[선생님 성함]</strong>만을 관리자 시트에 안전하게 기록하며, 학생 데이터 등 일체의 다른 개인정보는 수집·저장하지 않습니다.<br>
+        • <strong>공식 도메인 즉시 자동승인:</strong> <code>@sch.kr</code> 및 <code>@goedu.kr</code> 계정은 로그인 시 <strong>실시간 1초 자동 승인</strong>되어 대기 없이 바로 입장합니다.<br>
+        • <strong>개인용 계정(@gmail.com):</strong> 외부 Gemini API 키(=AI 함수) 활용 및 교원 확인을 위해 간단한 승인 신청서를 접수해 주시면 관리자 확인 후 즉시 승인됩니다.
+      </div>
 
       <!-- 🎯 [체험 데모 모드] 로그인 없이 모든 기능 즉시 둘러보기 -->
       <div style="margin-top:14px; background:#eff6ff; border:1.5px solid #93c5fd; border-radius:12px; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
@@ -541,7 +552,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         <button type="button" class="gk-tab-btn" data-gk-tab="manual">학교 계정 직접 입력</button>
         <button type="button" class="gk-tab-btn" data-gk-tab="master">⚡ 관리자 마스터키</button>
       </div>
-      <span class="gk-duration-badge">⏱️ 승인 시 3개월 유지</span>
+      <span class="gk-duration-badge">⏱️ 승인 시 1개월 유지 (정기 갱신)</span>
     </div>
 
     <!-- 탭 1: Google 계정 로그인 & 승인 (1순위 메인) -->
@@ -657,7 +668,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         <div id="gkMasterResultMsg" class="gk-msg-box" style="margin:4px 0 0; width:100%;"></div>
       </form>
       <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:10px 14px; font-size:12px; color:#166534; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <span>👑 <strong>교사 승인 관리 구글시트:</strong> [2_교사승인명단] 탭의 <strong>A열 체크박스(☑️)</strong>를 체크하면 해당 교사에게 3개월(90일) 이용권이 즉시 부여됩니다.</span>
+        <span>👑 <strong>교사 승인 관리 구글시트:</strong> [2_교사승인명단] 탭의 <strong>A열 체크박스(☑️)</strong>를 체크하면 해당 교사에게 1개월(30일) 이용권이 즉시 부여됩니다.</span>
         <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" rel="noreferrer" style="background:#16a34a; color:#fff; padding:5px 12px; border-radius:6px; font-weight:800; text-decoration:none; white-space:nowrap;">승인 구글시트 열기 ↗</a>
       </div>
     </div>
@@ -851,7 +862,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
             <span style="font-size:12px; font-weight:800; background:#15803d; color:#fff; padding:3px 10px; border-radius:999px;">관리자 전용 · 3개월 승인제</span>
             <span style="font-size:11.5px; color:#166534; font-weight:700;">체크박스 원클릭 승인</span>
           </div>
-          <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0f172a;">👑 [관리자용] 교사 승인 · 3개월 이용권 관리 시트</h3>
+          <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0f172a;">👑 [관리자용] 교사 승인 · 1개월 이용권 관리 시트</h3>
           <p style="margin:0; font-size:12.5px; color:#334155; line-height:1.55;">
             <strong>포함 탭:</strong> <code>0_관리자안내</code> · <code>1_승인대시보드(승인대기·만료예정 집계)</code> · <code>2_교사승인명단(A열 ☑️체크 시 90일 부여, B열 연장횟수로 3개월 단위 연장)</code>
           </p>
@@ -2857,7 +2868,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         </div>
       </div>
       <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:12px;">
-        <span style="color:#166534; font-weight:700;">👑 관리자용 교사 승인 &amp; 3개월 이용권 관리 구글시트 (A열 체크박스 승인)</span>
+        <span style="color:#166534; font-weight:700;">👑 관리자용 교사 승인 &amp; 1개월 이용권 관리 구글시트 (A열 체크박스 승인)</span>
         <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" rel="noreferrer" style="color:#15803d; font-weight:800; text-decoration:underline;">승인 시트 열기 ↗</a>
       </div>
     </div>

@@ -103,7 +103,7 @@ function setupExecutiveDashboard() {
   dash.getRange("B7:C8").merge().setFormula('=IFERROR(COUNTA(\'사용자승인\'!D2:D), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#0f172a").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#ffffff");
   dash.getRange("B6:C8").setBorder(true, true, true, true, false, false, "#cbd5e1", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
 
-  // Card 2: 승인 완료 교사 (3개월 권한)
+  // Card 2: 승인 완료 교사 (1개월 권한)
   dash.getRange("D6:E6").merge().setValue("✅ 승인 완료 (이용 가능)").setFontSize(10).setFontWeight("bold").setFontColor("#15803d").setHorizontalAlignment("center").setBackground("#f0fdf4");
   dash.getRange("D7:E8").merge().setFormula('=IFERROR(COUNTIF(\'사용자승인\'!G2:G, "승인"), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#15803d").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#f0fdf4");
   dash.getRange("D6:E8").setBorder(true, true, true, true, false, false, "#86efac", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
@@ -266,7 +266,7 @@ function approveAllPendingUsers() {
       count++;
     }
   }
-  SpreadsheetApp.getUi().alert("🎉 총 " + count + "명의 대기 신청자가 '승인' 처리되었습니다! (3개월간 이용 가능)");
+  SpreadsheetApp.getUi().alert("🎉 총 " + count + "명의 대기 신청자가 '승인' 처리되었습니다! (1개월간 이용 가능)");
 }
 
 /**
@@ -674,7 +674,7 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  // === [사용자 승인 상태 조회 API — '2_교사승인명단' 체크박스(A열) & 3개월(90일) 만료 자동 확인] ===
+  // === [사용자 승인 상태 조회 API — '2_교사승인명단' 체크박스(A열) & 1개월(90일) 만료 자동 확인] ===
   if (action === "check_access") {
     var email = (e.parameter.email || "").trim().toLowerCase();
     var chkSheet = ss.getSheetByName("2_교사승인명단");
@@ -861,9 +861,12 @@ function doPost(e) {
       var targetEmail = (body.email || "").trim().toLowerCase();
       var initialStatus = "대기";
       var note = "";
-      if (targetEmail.endsWith("@sch.hs.kr") || targetEmail.endsWith("@goedu.kr")) {
+      var domain = targetEmail.split('@')[1] || "";
+      if (domain === "sch.kr" || domain.endsWith(".sch.kr") || domain === "goedu.kr" || domain.endsWith(".goedu.kr") || targetEmail.endsWith("@sch.hs.kr")) {
         initialStatus = "승인";
-        note = "학교 공식 계정 자동승인";
+        note = "학교/교육청 공식 도메인 자동승인 (1개월)";
+      } else {
+        note = "개인 구글 계정 신청 (" + (body.reason || "AI 함수 활용 및 대입상담") + ")";
       }
 
       appSheet.appendRow([
@@ -882,8 +885,8 @@ function doPost(e) {
         approved: initialStatus === "승인",
         status: initialStatus,
         message: initialStatus === "승인"
-          ? "학교 공식 계정 확인 완료! 3개월 이용 권한이 자동으로 승인되었습니다."
-          : "사용 승인 신청이 완료되었습니다. 관리자 승인 후 3개월간 이용하실 수 있습니다."
+          ? "학교 공식 계정 확인 완료! 1개월 이용 권한이 자동으로 승인되었습니다."
+          : "사용 승인 신청이 완료되었습니다. 관리자 승인 후 1개월간 이용하실 수 있습니다."
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
