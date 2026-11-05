@@ -1027,9 +1027,8 @@ label.live-radio-pop input:checked + span {
 
 /* 빨간색 버튼 선택 시 글씨가 완벽하게 보이도록 강제 (선생님 요청) */
 button.primary,
-button.is-active,
 .btn.primary,
-[aria-selected="true"] {
+.btn-primary {
   color: #ffffff !important;
   font-weight: 800 !important;
 }

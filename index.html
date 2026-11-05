@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="usage-section.css">
-<link rel="stylesheet" href="onepage.css">
+<link rel="stylesheet" href="onepage.css?v=20261105c">
 <script>document.documentElement.classList.add('js')</script>
 <style>
 @font-face {
@@ -425,8 +425,21 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 .ai-dock-seg button.on { background: var(--ink); color: #fff; }
 .ai-dock-btn { width: 100%; height: auto; padding: 10px 12px; font-size: 13px; }
 .ai-dock-note { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+
+  /* 🌟 [핵심] 2027 진학상담 서브탭 선택 시 하얗게 가려지는 현상 영구 방지 */
+  .counsel-sub-btn.is-active,
+  .counsel-sub-btn.is-active *,
+  .counsel-sub-btn[aria-selected="true"],
+  .counsel-sub-btn[aria-selected="true"] * {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35) !important;
+    border: none !important;
+  }
+
 </style>
-  <link rel="stylesheet" href="css/counsel.css">
+  <link rel="stylesheet" href="css/counsel.css?v=20261105c">
   <!-- Google Identity Services (GIS) for Google Sign-In -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>

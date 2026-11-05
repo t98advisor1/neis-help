@@ -831,19 +831,22 @@
 }
 
 /* 선택할 때 빨간색 부분 글씨 완벽한 흰색 대비 보장 (선생님 피드백 반영) */
+/* 2027 대입 진학상담 서브탭 활성화 스타일 (선택 시 하얗게 가려지는 버그 완벽 차단) */
 .counsel-sub-btn.is-active,
-.counsel-sub-btn.is-active * {
-  background: #ffffff !important;
-  color: #0f172a !important;
+.counsel-sub-btn.is-active *,
+.counsel-sub-btn[aria-selected="true"],
+.counsel-sub-btn[aria-selected="true"] * {
+  background: #2563eb !important;
+  color: #ffffff !important;
   font-weight: 800 !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35) !important;
+  border: none !important;
 }
 
 .btn.primary,
 .btn.primary *,
 .fav-btn.on,
-.btn-primary,
-button[aria-selected="true"] {
+.btn-primary {
   color: #ffffff !important;
   font-weight: 800 !important;
 }
