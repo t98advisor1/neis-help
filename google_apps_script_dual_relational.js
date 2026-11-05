@@ -411,8 +411,25 @@ function getSystemPromptInstructions() {
  */
 function AI(prompt, context1, context2, customGuideline) {
   if (!prompt && !context1) return "";
-  
-  var fullText = String(prompt || "") + " " + String(context1 || "") + " " + String(context2 || "");
+
+  // 🌟 [배열/범위 자동 파싱 지원] F2:I2 또는 단일 셀 등 구글 시트 범위 매끄럽게 처리
+  var parseArg = function(v) {
+    if (v === null || v === undefined) return "";
+    if (Array.isArray(v)) {
+      return v.map(function(row) {
+        if (Array.isArray(row)) {
+          return row.map(function(c) { return String(c || "").trim(); }).filter(Boolean).join(" | ");
+        }
+        return String(row || "").trim();
+      }).filter(Boolean).join("\n");
+    }
+    return String(v).trim();
+  };
+
+  var pStr = parseArg(prompt);
+  var c1Str = parseArg(context1);
+  var c2Str = parseArg(context2);
+  var fullText = [pStr, c1Str, c2Str].filter(Boolean).join("\n\n");
   
   // 1순위: 파라미터로 직접 전달된 스킬 지침 셀 텍스트
   var sysPrompt = "";
