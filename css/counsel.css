@@ -832,7 +832,13 @@
 
 /* 선택할 때 빨간색 부분 글씨 완벽한 흰색 대비 보장 (선생님 피드백 반영) */
 .counsel-sub-btn.is-active,
-.counsel-sub-btn.is-active span,
+.counsel-sub-btn.is-active * {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12) !important;
+}
+
 .btn.primary,
 .btn.primary *,
 .fav-btn.on,

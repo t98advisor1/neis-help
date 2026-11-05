@@ -785,28 +785,64 @@
         });
       }
 
-      // 6. 관리자 마스터키 폼
-      const formMaster = document.getElementById('gkMasterForm');
-      if (formMaster) {
-        formMaster.addEventListener('submit', async (e) => {
+      // 6. ❓ 관리자 마스터 비밀번호 (물음표 팝업) 제어
+      const btnQ = document.getElementById('btnMasterPinQuestion');
+      const miniModal = document.getElementById('gkMasterPinMiniModal');
+      const btnCloseMini = document.getElementById('btnCloseMasterPinMini');
+      const formMini = document.getElementById('gkMasterMiniForm');
+
+      if (btnQ && miniModal) {
+        btnQ.addEventListener('click', (e) => {
           e.preventDefault();
-          const pin = document.getElementById('gkInputMasterPin')?.value;
-          const msgBox = document.getElementById('gkMasterResultMsg');
+          e.stopPropagation();
+          miniModal.style.display = 'flex';
+          const inp = document.getElementById('gkInputMasterPinMini');
+          if (inp) inp.focus();
+        });
+      }
+
+      if (btnCloseMini && miniModal) {
+        btnCloseMini.addEventListener('click', () => {
+          miniModal.style.display = 'none';
+        });
+      }
+
+      if (formMini) {
+        formMini.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const pinInput = document.getElementById('gkInputMasterPinMini');
+          const msgBox = document.getElementById('gkMasterResultMsgMini');
+          const pin = (pinInput ? pinInput.value : '').trim();
+
+          if (msgBox) {
+            msgBox.style.display = 'block';
+            msgBox.className = 'gk-msg-box';
+            msgBox.textContent = '⏳ 관리자 비밀번호 검증 중...';
+          }
 
           const res = await Gatekeeper.verifyMasterPin(pin);
           if (res.ok) {
+            if (msgBox) {
+              msgBox.className = 'gk-msg-box is-success';
+              msgBox.textContent = '🎉 관리자 인증 성공! 입장합니다.';
+            }
             Gatekeeper.authorize({
               role: 'admin',
-              name: '관리자 선생님',
-              school: '신천고 · 관리자'
+              name: res.data && res.data.name ? res.data.name : '관리자 선생님',
+              school: res.data && res.data.school ? res.data.school : '관리자',
+              validDays: 90
             });
-            alert('🎉 관리자 인증 성공! 모든 기능이 활성화되었습니다.');
+            setTimeout(() => {
+              if (miniModal) miniModal.style.display = 'none';
+              Gatekeeper.closeModal(true);
+              Gatekeeper.updateUI();
+            }, 350);
           } else {
             if (msgBox) {
-              msgBox.style.display = 'block';
               msgBox.className = 'gk-msg-box is-error';
               msgBox.textContent = res.error || '비밀번호가 올바르지 않습니다.';
             }
+            if (pinInput) pinInput.focus();
           }
         });
       }
