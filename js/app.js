@@ -514,7 +514,7 @@ function find2022GroupForSubject(subject) {
     d.emph = { ...(d.emph || {}), [d.area]: sel };
     const chip = (i) => `<button type="button" class="chip" aria-pressed="${sel.includes(i.id)}" data-emph="${esc(i.id)}" title="${esc(i.desc)}">${esc(i.name)}</button>`;
     $('#emphChips').innerHTML = e.items.map(chip).join('') +
-      (lenses.length ? `<span class="chips-sub">렌즈별 역량</span>` + lenses.map(chip).join('') : '') +
+      (lenses.length ? `<div style="flex-basis:100%; width:100%; height:6px;"></div><span class="chips-sub" style="flex-basis:100%; width:100%; display:block; font-size:13px; font-weight:800; color:#0f172a; margin:10px 0 6px 0; padding-top:6px; border-top:1px dashed #cbd5e1;">렌즈별 역량</span>` + lenses.map(chip).join('') : '') +
       customChipsHtml('emph', 'data-emph', n => 'c:' + n, sel);
     const pages = [...new Set((e.sources || []).map(x => x.page))].sort((x, y) => x - y).join('·');
     $('#emphHint').textContent = (sel.length ? `총 ${sel.length}개 강조 항목 선택됨.` : '원하는 강조 항목을 선택하여 세특 문구에 반영하세요.') + (pages ? ` 출처: 나이스 ${pages}쪽` : '');
@@ -1443,7 +1443,7 @@ function find2022GroupForSubject(subject) {
   /* ── 탭 이동 ─────────────────────── */
   function route(tabOverride) {
     const known = ['make', 'saved', 'library', 'guide'];
-    const t = known.includes(tabOverride) ? tabOverride : (S.activeSubTab || 'make');
+    const t = known.includes(tabOverride) ? tabOverride : (S.activeSubTab || 'library');
     S.activeSubTab = t;
     $$('section.tab').forEach(s => { s.hidden = s.dataset.tab !== t; });
     $$('[data-tab-link]').forEach(a => {

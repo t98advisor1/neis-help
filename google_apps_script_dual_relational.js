@@ -33,149 +33,157 @@ function getGeminiApiKey() {
 // 시트 상단 메뉴 생성
 function onOpen() {
   SpreadsheetApp.getUi()
-    .createMenu("🏆 생기부 올인원 관리 (math-tong)")
-    .addItem("📊 대시보드 및 승인 시트 예쁘게 자동 생성", "setupExecutiveDashboard")
+    .createMenu("[생기부 올인원 관리 (math-tong)]")
+    .addItem("[대시보드] 관리자 안내 및 승인 대시보드 자동 구성", "setupExecutiveDashboard")
     .addSeparator()
-    .addItem("✅ '대기' 상태 신청자 전체 일괄 승인", "approveAllPendingUsers")
-    .addItem("✨ 선택한 행의 교사 즉시 승인", "approveSelectedUser")
-    .addItem("🚫 선택한 행의 교사 '반려' 처리", "rejectSelectedUser")
+    .addItem("[일괄 승인] 대기 상태 신청자 전체 일괄 승인", "approveAllPendingUsers")
+    .addItem("[개별 승인] 선택 행 교사 즉시 승인", "approveSelectedUser")
+    .addItem("[반려 처리] 선택 행 교사 반려", "rejectSelectedUser")
     .addSeparator()
-    .addItem("📋 학번 기준 명렬표 자동 동기화", "syncAllTabsByNameList")
-    .addItem("📑 다부서 동아리/진로활동 자동 합산", "aggregateClubActivities")
-    .addItem("📁 선택 학생 Google Docs 상담일지 생성", "createDocsForSelectedRow")
+    .addItem("[동기화] 학번 기준 명렬표 자동 동기화", "syncAllTabsByNameList")
+    .addItem("[활동 취합] 다부서 동아리/진로활동 자동 합산", "aggregateClubActivities")
+    .addItem("[상담일지] 선택 학생 Google Docs 상담일지 생성", "createDocsForSelectedRow")
     .addSeparator()
-    .addItem("🔑 Gemini API 키 설정", "promptSetApiKey")
-    .addItem("🔗 NEIS 올인원 웹앱 바로가기", "openWebApp")
+    .addItem("[API 설정] Gemini API 키 설정", "promptSetApiKey")
+    .addItem("[웹앱 바로가기] NEIS 올인원 웹앱 열기", "openWebApp")
     .addToUi();
 }
 
 /**
- * [📊_대시보드] 및 [사용자승인] 탭을 최고급 대시보드 서식으로 자동 생성 및 정리
+ * [0_관리자안내_및_대시보드] 및 [사용자승인] 탭을 최고급 대시보드 서식으로 자동 생성 및 정리
  */
 function setupExecutiveDashboard() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // 1. [📊_대시보드] 탭 생성 또는 기존 시트 서식 리셋
-  var dash = ss.getSheetByName("📊_대시보드") || ss.getSheetByName("대시보드");
+  // 1. [0_관리자안내_및_대시보드] 탭 생성 또는 기존 시트 서식 리셋
+  var dash = ss.getSheetByName("0_관리자안내_및_대시보드") || ss.getSheetByName("0_관리자안내_및_대시보드") || ss.getSheetByName("대시보드");
   if (!dash) {
-    dash = ss.insertSheet("📊_대시보드", 0);
+    dash = ss.insertSheet("0_관리자안내_및_대시보드", 0);
   } else {
     dash.clear();
+    dash.setName("0_관리자안내_및_대시보드");
   }
   ss.setActiveSheet(dash);
-  dash.setTabColor("#2563eb");
+  dash.setTabColor("#166534");
 
-  // 2. [사용자승인] 탭 확인 및 서식 정리
-  var appSheet = ss.getSheetByName("사용자승인");
+  // 2. [2_교사승인명단] 탭 확인 및 서식 정리
+  var appSheet = ss.getSheetByName("2_교사승인명단") || ss.getSheetByName("사용자승인");
   if (!appSheet) {
-    appSheet = ss.insertSheet("사용자승인", 1);
+    appSheet = ss.insertSheet("2_교사승인명단", 1);
   }
   formatApprovalSheet(appSheet);
 
   // 3. 대시보드 전체 폰트 Pretendard 및 배경 설정
-  dash.getRange("A1:Z60").setFontFamily("Pretendard").setBackground("#f8fafc");
+  dash.getRange("A1:Z80").setFontFamily("Pretendard").setBackground("#f8fafc");
 
   // [헤더 배너]
   dash.getRange("A1:I2").merge()
-    .setValue("🏫 2026-2027 학교생활기록부 & 대입진학상담 올인원 통합 대시보드")
+    .setValue("[관리자 전용] 2026-2027 학교생활기록부 교사 승인 및 연동 관리 종합 대시보드")
     .setBackground("#0f172a")
     .setFontColor("#ffffff")
-    .setFontSize(15)
+    .setFontSize(14)
     .setFontWeight("bold")
     .setHorizontalAlignment("center")
     .setVerticalAlignment("middle");
 
   dash.getRange("A3:I3").merge()
-    .setValue("실시간 교사 사용 승인 관제 · 1학년 30명 진학상담 관제 · 교과세특 1500B 바이트 분석 | 저작권: math-tong")
+    .setValue("실시간 교사 승인(1개월 이용권) 관제 · 학급 및 교과 데이터 연동 · 나이스 1500B 바이트 점검 | math-tong")
     .setBackground("#1e293b")
     .setFontColor("#94a3b8")
-    .setFontSize(10.5)
+    .setFontSize(11)
     .setHorizontalAlignment("center")
     .setVerticalAlignment("middle");
 
-  // [섹션 타이틀 1: 사용자 승인 현황 KPI]
-  dash.getRange("A5").setValue("📌 교사 사용 승인 신청 및 인증 현황")
+  // [개조식 관리자 핵심 운영 안내 배너 — 사용자 요청: 내용 한눈에 보기 & 글씨 12포인트]
+  dash.getRange("A5:I5").merge()
+    .setValue("[관리자 핵심 운영 안내 (개조식)]")
+    .setFontSize(12).setFontWeight("bold").setFontColor("#15803d").setBackground("#dcfce7");
+
+  var guideTexts = [
+    "• [교사 접속 자동 기록]: 교사가 사이트에서 Google 로그인 시 '2_교사승인명단'에 접속 시각, 성명, 학교, 이메일이 실시간 자동 1행 추가됩니다.",
+    "• [체크박스 원클릭 승인]: 관리자 선생님은 '2_교사승인명단' A열 체크박스([V])를 클릭하기만 하면 즉시 1개월(30일) 정식 이용권이 부여됩니다.",
+    "• [공식 도메인 즉시 통과]: @sch.kr 및 @goedu.kr 계정은 관리자 개입 없이 로그인 즉시 실시간 1초 자동 승인 처리됩니다.",
+    "• [만료일 및 연장 관리]: 승인일로부터 30일 후 만료예정일이 자동 계산되며, 추가 연장 시 H열 연장 횟수를 1씩 올립니다.",
+    "• [Web App 연동 필수]: [확장 프로그램 > Apps Script > 배포 > 새 배포 > 웹 앱 (모든 사용자)] URL을 사이트에 등록해야 실시간 연동됩니다."
+  ];
+
+  for (var gi = 0; gi < guideTexts.length; gi++) {
+    var rowIdx = 6 + gi;
+    dash.getRange("A" + rowIdx + ":I" + rowIdx).merge()
+      .setValue(guideTexts[gi])
+      .setFontSize(12)
+      .setFontColor("#1e293b")
+      .setBackground("#f0fdf4")
+      .setVerticalAlignment("middle");
+  }
+  dash.getRange("A5:I10").setBorder(true, true, true, true, false, false, "#86efac", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+
+  // [섹션 타이틀: 교사 승인 현황 KPI]
+  dash.getRange("A12").setValue("[교사 사용 승인 및 라이선스 관제 현황]")
     .setFontSize(12).setFontWeight("bold").setFontColor("#0f172a");
 
-  // KPI 카드 4개 구성
+  // KPI 카드 4개 구성 (12pt)
   // Card 1: 총 신청 교사
-  dash.getRange("B6:C6").merge().setValue("👥 총 신청 교사").setFontSize(10).setFontWeight("bold").setFontColor("#475569").setHorizontalAlignment("center").setBackground("#ffffff");
-  dash.getRange("B7:C8").merge().setFormula('=IFERROR(COUNTA(\'사용자승인\'!D2:D), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#0f172a").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#ffffff");
-  dash.getRange("B6:C8").setBorder(true, true, true, true, false, false, "#cbd5e1", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+  dash.getRange("B13:C13").merge().setValue("총 신청 교사").setFontSize(12).setFontWeight("bold").setFontColor("#475569").setHorizontalAlignment("center").setBackground("#ffffff");
+  dash.getRange("B14:C15").merge().setFormula('=IFERROR(COUNTA(\'2_교사승인명단\'!E2:E), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#0f172a").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#ffffff");
+  dash.getRange("B13:C15").setBorder(true, true, true, true, false, false, "#cbd5e1", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
 
   // Card 2: 승인 완료 교사 (1개월 권한)
-  dash.getRange("D6:E6").merge().setValue("✅ 승인 완료 (이용 가능)").setFontSize(10).setFontWeight("bold").setFontColor("#15803d").setHorizontalAlignment("center").setBackground("#f0fdf4");
-  dash.getRange("D7:E8").merge().setFormula('=IFERROR(COUNTIF(\'사용자승인\'!G2:G, "승인"), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#15803d").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#f0fdf4");
-  dash.getRange("D6:E8").setBorder(true, true, true, true, false, false, "#86efac", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+  dash.getRange("D13:E13").merge().setValue("승인 완료 (1개월 이용)").setFontSize(12).setFontWeight("bold").setFontColor("#15803d").setHorizontalAlignment("center").setBackground("#f0fdf4");
+  dash.getRange("D14:E15").merge().setFormula('=IFERROR(COUNTIF(\'2_교사승인명단\'!A2:A, true), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#15803d").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#f0fdf4");
+  dash.getRange("D13:E15").setBorder(true, true, true, true, false, false, "#86efac", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
 
-  // Card 3: 승인 대기 중 (관리자 확인 필요)
-  dash.getRange("F6:G6").merge().setValue("⏳ 승인 대기 (확인 필요)").setFontSize(10).setFontWeight("bold").setFontColor("#b45309").setHorizontalAlignment("center").setBackground("#fffbeb");
-  dash.getRange("F7:G8").merge().setFormula('=IFERROR(COUNTIF(\'사용자승인\'!G2:G, "대기"), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#b45309").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#fffbeb");
-  dash.getRange("F6:G8").setBorder(true, true, true, true, false, false, "#fde68a", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+  // Card 3: 승인 대기 중 (확인 필요)
+  dash.getRange("F13:G13").merge().setValue("승인 대기 (확인 필요)").setFontSize(12).setFontWeight("bold").setFontColor("#b45309").setHorizontalAlignment("center").setBackground("#fffbeb");
+  dash.getRange("F14:G15").merge().setFormula('=IFERROR(COUNTIF(\'2_교사승인명단\'!A2:A, false), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#b45309").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#fffbeb");
+  dash.getRange("F13:G15").setBorder(true, true, true, true, false, false, "#fde68a", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
 
   // Card 4: 신천고/교육청 자동승인
-  dash.getRange("H6:I6").merge().setValue("⚡ 학교계정 자동승인").setFontSize(10).setFontWeight("bold").setFontColor("#2563eb").setHorizontalAlignment("center").setBackground("#eff6ff");
-  dash.getRange("H7:I8").merge().setFormula('=IFERROR(COUNTIF(\'사용자승인\'!H2:H, "*자동승인*"), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#2563eb").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#eff6ff");
-  dash.getRange("H6:I8").setBorder(true, true, true, true, false, false, "#93c5fd", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+  dash.getRange("H13:I13").merge().setValue("학교계정 자동승인").setFontSize(12).setFontWeight("bold").setFontColor("#2563eb").setHorizontalAlignment("center").setBackground("#eff6ff");
+  dash.getRange("H14:I15").merge().setFormula('=IFERROR(COUNTIF(\'2_교사승인명단\'!F2:F, "*자동승인*"), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#2563eb").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#eff6ff");
+  dash.getRange("H13:I15").setBorder(true, true, true, true, false, false, "#93c5fd", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
 
-  // [섹션 타이틀 2: 학급 진학상담 및 세특 관제]
-  dash.getRange("A10").setValue("📊 1학년 1반 30명 모의 학급 진학 & 세특 기록 관제")
+  // [섹션 타이틀: 실시간 최근 승인 신청 테이블]
+  dash.getRange("A17").setValue("[최근 교사 승인 신청 내역 (실시간 쿼리)]")
     .setFontSize(12).setFontWeight("bold").setFontColor("#0f172a");
 
-  // Card 5: 관리 학생 수
-  dash.getRange("B11:C11").merge().setValue("🎓 등록 학생 수").setFontSize(10).setFontWeight("bold").setFontColor("#be185d").setHorizontalAlignment("center").setBackground("#fdf2f8");
-  dash.getRange("B12:C13").merge().setFormula('=IFERROR(IF(ISBLANK(\'1_학급담임_마스터\'!A2), "30명", COUNTA(\'1_학급담임_마스터\'!A2:A) & "명"), "30명")').setFontSize(18).setFontWeight("bold").setFontColor("#be185d").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#fdf2f8");
-  dash.getRange("B11:C13").setBorder(true, true, true, true, false, false, "#fbcfe8", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
-
-  // Card 6: 평균 내신 등급
-  dash.getRange("D11:E11").merge().setValue("📈 2028 개편 평균 내신").setFontSize(10).setFontWeight("bold").setFontColor("#7e22ce").setHorizontalAlignment("center").setBackground("#faf5ff");
-  dash.getRange("D12:E13").merge().setFormula('=IFERROR(TEXT(AVERAGE(\'1_학급담임_마스터\'!D2:D), "0.00") & " 등급", "2.35 등급")').setFontSize(18).setFontWeight("bold").setFontColor("#7e22ce").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#faf5ff");
-  dash.getRange("D11:E13").setBorder(true, true, true, true, false, false, "#e9d5ff", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
-
-  // Card 7: 1500B 세특 작성 완성률
-  dash.getRange("F11:G11").merge().setValue("✍️ 1500B 세특 작성률").setFontSize(10).setFontWeight("bold").setFontColor("#0f766e").setHorizontalAlignment("center").setBackground("#f0fdfa");
-  dash.getRange("F12:G13").merge().setFormula('=IFERROR(TEXT(COUNTIF(\'교과담임_세특\'!F2:F, "<>") / COUNTA(\'교과담임_세특\'!A2:A), "0.0%"), "100.0%")').setFontSize(18).setFontWeight("bold").setFontColor("#0f766e").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#f0fdfa");
-  dash.getRange("F11:G13").setBorder(true, true, true, true, false, false, "#99f6e4", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
-
-  // Card 8: NEIS 웹앱 바로가기 버튼 카드
-  dash.getRange("H11:I11").merge().setValue("🔗 NEIS 올인원 웹앱").setFontSize(10).setFontWeight("bold").setFontColor("#ffffff").setHorizontalAlignment("center").setBackground("#1e293b");
-  dash.getRange("H12:I13").merge().setValue("https://neis-help-one.vercel.app").setFontSize(11).setFontWeight("bold").setFontColor("#38bdf8").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#1e293b");
-  dash.getRange("H11:I13").setBorder(true, true, true, true, false, false, "#0f172a", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
-
-  // [섹션 타이틀 3: 실시간 신청자 현황 쿼리 뷰]
-  dash.getRange("A15").setValue("📋 최근 교사 사용 승인 신청 내역 (실시간 동기화)")
-    .setFontSize(12).setFontWeight("bold").setFontColor("#0f172a");
-
-  dash.getRange("B16:I16").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold").setFontSize(10.5).setHorizontalAlignment("center");
-  dash.getRange("B16").setValue("신청일시");
-  dash.getRange("C16").setValue("교사성명");
-  dash.getRange("D16").setValue("소속학교");
-  dash.getRange("E16").setValue("이메일");
-  dash.getRange("F16").setValue("담당과목/학년");
-  dash.getRange("G16").setValue("신청사유");
-  dash.getRange("H16").setValue("승인상태");
-  dash.getRange("I16").setValue("메모/구분");
+  dash.getRange("B18:I18").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold").setFontSize(12).setHorizontalAlignment("center");
+  dash.getRange("B18").setValue("승인여부");
+  dash.getRange("C18").setValue("신청일시");
+  dash.getRange("D18").setValue("교사성명");
+  dash.getRange("E18").setValue("소속학교");
+  dash.getRange("F18").setValue("이메일");
+  dash.getRange("G18").setValue("구분");
+  dash.getRange("H18").setValue("만료예정일");
+  dash.getRange("I18").setValue("연장횟수");
 
   // 실시간 쿼리 수식
-  dash.getRange("B17").setFormula('=IFERROR(QUERY(\'사용자승인\'!A2:H, "SELECT A, B, C, D, E, F, G, H WHERE A IS NOT NULL ORDER BY A DESC LIMIT 20", 0), "아직 접수된 신청 내역이 없습니다.")');
+  dash.getRange("B19").setFormula('=IFERROR(QUERY(\'2_교사승인명단\'!A2:H, "SELECT A, B, C, D, E, F, G, H WHERE E IS NOT NULL ORDER BY B DESC LIMIT 15", 0), "아직 접수된 신청 내역이 없습니다.")');
+  dash.getRange("B19:I33").setFontSize(12);
+
+  // [인포그래픽 이미지 삽입 영역 — 사용자 요청: 시스템 전체 흐름 인포그래픽]
+  dash.getRange("A35:I35").merge()
+    .setValue("[시스템 전체 흐름도 인포그래픽 가이드]")
+    .setFontSize(12).setFontWeight("bold").setFontColor("#1e3a8a").setBackground("#dbeafe");
+
+  dash.getRange("A36:I55").merge()
+    .setFormula('=IMAGE("https://neis-help-one.vercel.app/assets/ai_sheet_guide_infographic.png", 1)');
+  dash.getRange("A35:I55").setBorder(true, true, true, true, false, false, "#93c5fd", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
 
   // 열 너비 설정
-  dash.setColumnWidth(1, 24);
-  dash.setColumnWidth(2, 140);
-  dash.setColumnWidth(3, 90);
-  dash.setColumnWidth(4, 150);
-  dash.setColumnWidth(5, 190);
-  dash.setColumnWidth(6, 120);
-  dash.setColumnWidth(7, 200);
-  dash.setColumnWidth(8, 100);
-  dash.setColumnWidth(9, 160);
+  dash.setColumnWidth(1, 28);
+  dash.setColumnWidth(2, 90);
+  dash.setColumnWidth(3, 150);
+  dash.setColumnWidth(4, 100);
+  dash.setColumnWidth(5, 150);
+  dash.setColumnWidth(6, 200);
+  dash.setColumnWidth(7, 100);
+  dash.setColumnWidth(8, 120);
+  dash.setColumnWidth(9, 90);
 
-  SpreadsheetApp.getUi().alert("🎉 [📊_대시보드] 및 [사용자승인] 탭이 최고급 대시보드 서식으로 자동 생성되었습니다!");
+  SpreadsheetApp.getUi().alert("[설정 완료] [0_관리자안내_및_대시보드] 및 [2_교사승인명단] 탭이 개조식 12포인트 및 인포그래픽 서식으로 완벽하게 구성되었습니다.");
 }
 
-/**
- * [사용자승인] 탭 서식 정리 및 드롭다운/조건부 서식 자동 적용
- */
 function formatApprovalSheet(appSheet) {
   if (!appSheet) return;
   appSheet.setTabColor("#10b981");
@@ -247,26 +255,39 @@ function formatApprovalSheet(appSheet) {
 }
 
 /**
- * 대기 중인 모든 신청자 일괄 '승인' 처리
+ * 대기 중인 모든 신청자 일괄 '승인' 처리 (2_교사승인명단 및 사용자승인 양쪽 완벽 지원)
  */
 function approveAllPendingUsers() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("사용자승인");
+  var sheet = ss.getSheetByName("2_교사승인명단") || ss.getSheetByName("사용자승인");
   if (!sheet) {
-    SpreadsheetApp.getUi().alert("사용자승인 시트를 찾을 수 없습니다.");
+    SpreadsheetApp.getUi().alert("[알림] 2_교사승인명단 또는 사용자승인 시트를 찾을 수 없습니다.");
     return;
   }
+  var isCheckboxSheet = (sheet.getName() === "2_교사승인명단");
   var data = sheet.getDataRange().getValues();
   var count = 0;
+  var expDate = new Date();
+  expDate.setDate(expDate.getDate() + 30);
+  var expStr = Utilities.formatDate(expDate, "Asia/Seoul", "yyyy-MM-dd");
+
   for (var r = 1; r < data.length; r++) {
-    var status = String(data[r][6]).trim();
-    if (status === "대기" || status === "") {
-      sheet.getRange(r + 1, 7).setValue("승인");
-      sheet.getRange(r + 1, 8).setValue("관리자 일괄 승인");
-      count++;
+    if (isCheckboxSheet) {
+      if (data[r][0] !== true && String(data[r][0]).toUpperCase() !== "TRUE") {
+        sheet.getRange(r + 1, 1).setValue(true);
+        if (!data[r][6]) sheet.getRange(r + 1, 7).setValue(expStr);
+        count++;
+      }
+    } else {
+      var status = String(data[r][6]).trim();
+      if (status === "대기" || status === "") {
+        sheet.getRange(r + 1, 7).setValue("승인");
+        sheet.getRange(r + 1, 8).setValue("관리자 일괄 승인");
+        count++;
+      }
     }
   }
-  SpreadsheetApp.getUi().alert("🎉 총 " + count + "명의 대기 신청자가 '승인' 처리되었습니다! (1개월간 이용 가능)");
+  SpreadsheetApp.getUi().alert("[승인 완료] 총 " + count + "명의 대기 신청자가 '승인' 처리되었습니다. (1개월간 이용 가능)");
 }
 
 /**
@@ -274,15 +295,28 @@ function approveAllPendingUsers() {
  */
 function approveSelectedUser() {
   var sheet = SpreadsheetApp.getActiveSheet();
-  if (sheet.getName() !== "사용자승인") {
-    SpreadsheetApp.getUi().alert("'사용자승인' 시트에서 승인할 행의 셀을 선택하고 실행해주세요.");
+  var sName = sheet.getName();
+  if (sName !== "2_교사승인명단" && sName !== "사용자승인") {
+    SpreadsheetApp.getUi().alert("[알림] '2_교사승인명단' 또는 '사용자승인' 탭에서 승인할 교사의 행을 선택한 뒤 실행하세요.");
     return;
   }
   var row = sheet.getActiveCell().getRow();
-  if (row <= 1) return;
-  sheet.getRange(row, 7).setValue("승인");
-  sheet.getRange(row, 8).setValue("관리자 즉시 승인");
-  SpreadsheetApp.getUi().alert("✅ " + row + "행의 교사가 '승인' 완료되었습니다.");
+  if (row <= 1) {
+    SpreadsheetApp.getUi().alert("[알림] 제목 행이 아닌 교사 데이터 행을 선택하세요.");
+    return;
+  }
+  var expDate = new Date();
+  expDate.setDate(expDate.getDate() + 30);
+  var expStr = Utilities.formatDate(expDate, "Asia/Seoul", "yyyy-MM-dd");
+
+  if (sName === "2_교사승인명단") {
+    sheet.getRange(row, 1).setValue(true);
+    sheet.getRange(row, 7).setValue(expStr);
+  } else {
+    sheet.getRange(row, 7).setValue("승인");
+    sheet.getRange(row, 8).setValue("관리자 개별 승인");
+  }
+  SpreadsheetApp.getUi().alert("[승인 완료] " + row + "행의 교사가 '승인' 처리되었습니다. (1개월간 이용 가능)");
 }
 
 /**
@@ -290,15 +324,23 @@ function approveSelectedUser() {
  */
 function rejectSelectedUser() {
   var sheet = SpreadsheetApp.getActiveSheet();
-  if (sheet.getName() !== "사용자승인") {
-    SpreadsheetApp.getUi().alert("'사용자승인' 시트에서 반려할 행의 셀을 선택하고 실행해주세요.");
+  var sName = sheet.getName();
+  if (sName !== "2_교사승인명단" && sName !== "사용자승인") {
+    SpreadsheetApp.getUi().alert("[알림] '2_교사승인명단' 또는 '사용자승인' 탭에서 반려할 교사의 행을 선택한 뒤 실행하세요.");
     return;
   }
   var row = sheet.getActiveCell().getRow();
-  if (row <= 1) return;
-  sheet.getRange(row, 7).setValue("반려");
-  sheet.getRange(row, 8).setValue("관리자 반려");
-  SpreadsheetApp.getUi().alert("🚫 " + row + "행의 교사가 '반려' 처리되었습니다.");
+  if (row <= 1) {
+    SpreadsheetApp.getUi().alert("[알림] 제목 행이 아닌 교사 데이터 행을 선택하세요.");
+    return;
+  }
+  if (sName === "2_교사승인명단") {
+    sheet.getRange(row, 1).setValue(false);
+  } else {
+    sheet.getRange(row, 7).setValue("반려");
+    sheet.getRange(row, 8).setValue("관리자 반려");
+  }
+  SpreadsheetApp.getUi().alert("[반려 완료] " + row + "행의 교사가 '반려' 처리되었습니다.");
 }
 
 /**
@@ -307,7 +349,7 @@ function rejectSelectedUser() {
 function openWebApp() {
   var html = HtmlService.createHtmlOutput(
     '<div style="font-family:sans-serif; text-align:center; padding:20px;">' +
-    '<h3>🏫 학교생활기록부 올인원</h3>' +
+    '<h3>학교생활기록부 올인원</h3>' +
     '<p>아래 버튼을 누르면 웹앱으로 즉시 이동합니다.</p>' +
     '<a href="https://neis-help-one.vercel.app" target="_blank" style="display:inline-block; padding:10px 20px; background:#2563eb; color:#fff; text-decoration:none; border-radius:6px; font-weight:bold;">웹앱 열기</a>' +
     '</div>'
@@ -412,7 +454,7 @@ function getSystemPromptInstructions() {
 function AI(prompt, context1, context2, customGuideline) {
   if (!prompt && !context1) return "";
 
-  // 🌟 [배열/범위 자동 파싱 지원] F2:I2 또는 단일 셀 등 구글 시트 범위 매끄럽게 처리
+  // [배열/범위 자동 파싱 지원] F2:I2 또는 단일 셀 등 구글 시트 범위 매끄럽게 처리
   var parseArg = function(v) {
     if (v === null || v === undefined) return "";
     if (Array.isArray(v)) {
@@ -448,7 +490,7 @@ function AI(prompt, context1, context2, customGuideline) {
 
   var apiKey = getGeminiApiKey();
   if (!apiKey || apiKey.includes("YOUR_API_KEY")) {
-    return "[안내] 상단 메뉴 [🎓 NEIS 생기부 마스터] > [🔑 Gemini API Key 등록]에서 API 키를 먼저 등록해 주세요.";
+    return "[안내] 상단 메뉴 [NEIS 생기부 마스터] > [Gemini API Key 등록]에서 API 키를 먼저 등록해 주세요.";
   }
 
   try {
@@ -495,7 +537,7 @@ function AI_SETUK(subject, activity, careerHope, skillCell) {
   var prompt = subject + " 과목 세부능력 및 특기사항 작성. " +
                (careerHope ? "희망 진로: " + careerHope + ". " : "") +
                "수업 관찰 및 탐구 내용: " + activity + ". " +
-               "지침: '탐구 동기 및 계기 ➔ 자기주도적 탐구 수행 과정 ➔ 배움과 학업적/역량적 성장'의 3단계 흐름으로 완성할 것.";
+               "지침: '탐구 동기 및 계기 -> 자기주도적 탐구 수행 과정 -> 배움과 학업적/역량적 성장'의 3단계 흐름으로 완성할 것.";
   return AI(prompt, "", "", skillCell);
 }
 
@@ -804,9 +846,9 @@ function doPost(e) {
 
     // === [모바일 교무수첩(T-ong) 통합 시트 동기화 API (출결/자리/관찰/상담)] ===
     if (action === "save_notebook" || action === "sync_tong_notebook" || action === "save_attendance") {
-      var nbSheet = ss.getSheetByName("교무수첩_기록") || ss.getSheetByName("📓_교무수첩");
+      var nbSheet = ss.getSheetByName("교무수첩_기록") || ss.getSheetByName("교무수첩_통합기록");
       if (!nbSheet) {
-        nbSheet = ss.insertSheet("📓_교무수첩");
+        nbSheet = ss.insertSheet("교무수첩_통합기록");
         nbSheet.appendRow(["기록일시", "학번", "성명", "구분(출결/좌석/상담/관찰)", "세부내용", "메모"]);
         nbSheet.getRange("A1:F1").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
       }

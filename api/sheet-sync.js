@@ -101,7 +101,7 @@ export default async function handler(req, res) {
       const adminGasUrl = getAdminGasUrl();
       if (adminGasUrl) {
         try {
-          const remoteUrl = ${adminGasUrl}?action=check_access&email=;
+          const remoteUrl = `${adminGasUrl}?action=check_access&email=${encodeURIComponent(email)}`;
           const r = await fetch(remoteUrl, { method: 'GET', headers: { 'Accept': 'application/json' } });
           if (r.ok) {
             const data = await r.json();
