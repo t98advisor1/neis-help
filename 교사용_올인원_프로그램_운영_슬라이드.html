@@ -3,22 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎓 2026-2027 교사용 올인원 생기부 & 진학상담 프로그램 운영 슬라이드</title>
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.variable.min.css">
+  <title>학교생활기록부 및 대입진학상담 시스템 교사용 운영 매뉴얼</title>
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: #111827;
-      --card-border: #1f2937;
+      --bg: #0b0f19;
+      --card-bg: #141d2f;
+      --border: #24324c;
       --primary: #2563eb;
       --primary-hover: #1d4ed8;
       --accent: #38bdf8;
+      --text-main: #f8fafc;
+      --text-sub: #cbd5e1;
+      --text-muted: #94a3b8;
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --hairline: #334155;
     }
     * { box-sizing: border-box; }
     html, body {
@@ -27,198 +26,193 @@
       width: 100%;
       height: 100%;
       background: var(--bg);
-      color: var(--text);
-      font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
       overflow: hidden;
       user-select: none;
     }
+
     .slide-deck {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
       display: flex;
       flex-direction: column;
+      height: 100vh;
+      width: 100vw;
     }
+
     .slide-viewport {
       flex: 1;
       position: relative;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 30px 40px;
     }
+
     .slide {
       position: absolute;
-      width: min(1440px, 94vw);
-      height: min(810px, 86vh);
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 44px 56px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-      display: flex;
+      top: 0; left: 0; width: 100%; height: 100%;
+      padding: 24px 32px;
+      display: none;
       flex-direction: column;
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.96) translateY(15px);
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      overflow-y: auto;
+      background: var(--bg);
     }
     .slide.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: scale(1) translateY(0);
-      z-index: 10;
+      display: flex;
     }
+
     .slide-header {
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 24px;
-      border-bottom: 1px solid var(--hairline);
-      padding-bottom: 16px;
+      align-items: flex-end;
     }
     .badge {
       display: inline-block;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 800;
-      background: #1e3a8a;
-      color: #93c5fd;
-      padding: 4px 12px;
-      border-radius: 999px;
-      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: #1e293b;
+      color: var(--accent);
+      border: 1px solid var(--border);
+      margin-bottom: 6px;
+      text-transform: uppercase;
     }
     .slide-title {
-      font-size: 28px;
+      font-size: 22px;
       font-weight: 800;
       color: #ffffff;
       margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      line-height: 1.3;
     }
     .slide-subtitle {
-      font-size: 14.5px;
+      font-size: 13.5px;
       color: var(--text-muted);
-      margin: 6px 0 0 0;
-      line-height: 1.5;
+      margin: 4px 0 0 0;
+      line-height: 1.4;
     }
+
     .slide-body {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .grid-2 {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 56% 44%;
       gap: 24px;
-    }
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-    .card-box {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 14px;
-      padding: 20px 24px;
-    }
-    .card-box.highlight {
-      border-color: #3b82f6;
-      background: linear-gradient(145deg, #1e293b 0%, #172554 100%);
-    }
-    .card-box.success {
-      border-color: #10b981;
-      background: linear-gradient(145deg, #1e293b 0%, #064e3b 100%);
-    }
-    .card-box h3 {
-      font-size: 16px;
-      font-weight: 800;
-      color: #ffffff;
-      margin: 0 0 10px 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .card-box p, .card-box li {
-      font-size: 13.5px;
-      color: #cbd5e1;
-      line-height: 1.6;
-      margin: 0;
-    }
-    .code-box {
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 13px;
-      color: #38bdf8;
-      overflow-x: auto;
-    }
-    /* Controls Footer */
-    .controls {
-      height: 64px;
-      background: #0f172a;
-      border-top: 1px solid #1e293b;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 32px;
-      z-index: 50;
-    }
-    .nav-btn {
-      background: #1e293b;
-      color: #ffffff;
-      border: 1px solid #334155;
-      padding: 8px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-    .nav-btn:hover:not(:disabled) {
-      background: var(--primary);
-      border-color: var(--primary);
-    }
-    .nav-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-    .progress-bar-bg {
-      flex: 1;
-      max-width: 480px;
-      height: 6px;
-      background: #1e293b;
-      border-radius: 999px;
-      margin: 0 24px;
       overflow: hidden;
     }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #38bdf8);
-      width: 10%;
-      transition: width 0.3s;
+
+    .screen-container {
+      background: #000000;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
-    .slide-counter {
-      font-size: 13px;
+    .screen-header-bar {
+      height: 28px;
+      background: #1a2436;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 6px;
+    }
+    .screen-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #334155;
+    }
+    .screen-label {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-left: 6px;
+      letter-spacing: 0.3px;
+    }
+    .screen-img-box {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      background: #0f172a;
+    }
+    .screen-img-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .guide-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .guide-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .guide-box.highlight {
+      border-color: #3b82f6;
+      background: linear-gradient(145deg, #141d2f 0%, #172554 100%);
+    }
+    .guide-box.success {
+      border-color: #059669;
+      background: linear-gradient(145deg, #141d2f 0%, #064e3b 100%);
+    }
+    .guide-box.warning {
+      border-color: #d97706;
+      background: linear-gradient(145deg, #141d2f 0%, #451a03 100%);
+    }
+
+    .guide-box h3 {
+      font-size: 14px;
       font-weight: 800;
-      color: #94a3b8;
+      color: #ffffff;
+      margin: 0 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    /* Cover Slide Specifics */
-    .cover-container {
+    .guide-box p {
+      font-size: 12.5px;
+      color: var(--text-sub);
+      line-height: 1.55;
+      margin: 0 0 6px 0;
+    }
+    .guide-box ul, .guide-box ol {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+    .guide-box li strong {
+      color: #ffffff;
+    }
+
+    .code-box {
+      background: #0a0f1d;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      color: #38bdf8;
+      overflow-x: auto;
+      margin-top: 6px;
+    }
+
+    /* Cover Slide */
+    .cover-slide-body {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -228,498 +222,654 @@
       gap: 18px;
     }
     .cover-title {
-      font-size: 42px;
+      font-size: 38px;
       font-weight: 900;
-      line-height: 1.25;
-      background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      line-height: 1.3;
+      color: #ffffff;
       margin: 0;
     }
     .cover-sub {
-      font-size: 18px;
-      color: #94a3b8;
-      max-width: 760px;
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 800px;
       line-height: 1.6;
       margin: 0;
     }
-    .tag-pill {
+    .cover-tags {
+      display: flex;
+      gap: 10px;
+    }
+    .tag-badge {
       font-size: 12px;
       font-weight: 700;
       background: #1e293b;
-      border: 1px solid #334155;
-      color: #38bdf8;
-      padding: 6px 14px;
-      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 5px 14px;
+      border-radius: 4px;
     }
-    /* Screenshot Gallery */
-    .screenshot-viewer {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      gap: 12px;
-    }
-    .screenshot-tabs {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-    }
-    .screenshot-tab-btn {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #cbd5e1;
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .screenshot-tab-btn.active {
-      background: #2563eb;
-      color: #ffffff;
-      border-color: #3b82f6;
-    }
-    .screenshot-display {
-      flex: 1;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1.5px solid #334155;
-      background: #000;
+
+    /* Controls Bar */
+    .controls {
+      height: 56px;
+      background: #0e1524;
+      border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 50;
     }
-    .screenshot-display img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
+    .nav-btn {
+      background: #1e293b;
+      color: #ffffff;
+      border: 1px solid var(--border);
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      max-width: 420px;
+      height: 5px;
+      background: #1e293b;
+      border-radius: 999px;
+      margin: 0 20px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 8.3%;
+      transition: width 0.25s;
+    }
+    .slide-counter {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+    select.slide-select {
+      background: #1e293b;
+      color: #ffffff;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="slide-deck">
     <div class="slide-viewport">
-      <!-- ── SLIDE 1: 표지 ── -->
+
+      <!-- SLIDE 1: 표지 -->
       <div class="slide active" id="slide-1">
-        <div class="cover-container">
-          <div style="display:flex; gap:8px;">
-            <span class="tag-pill">2026-2027 학년도 고교 현장 실무</span>
-            <span class="tag-pill">관계형 구글 시트 & 웹앱</span>
-            <span class="tag-pill">Gemini AI 탑재</span>
+        <div class="cover-slide-body">
+          <div class="cover-tags">
+            <span class="tag-badge">2026-2027 학년도 고교 현장 실무</span>
+            <span class="tag-badge">관계형 구글 시트 연동 웹앱</span>
+            <span class="tag-badge">Google Workspace for Education</span>
           </div>
           <h1 class="cover-title">
-            🏫 2026-2027 학교생활기록부 &amp; 대입진학상담<br>올인원 시스템 교사용 운영 매뉴얼
+            학교생활기록부 및 대입진학상담 올인원 시스템<br>
+            교사용 상세 운영 매뉴얼
           </h1>
           <p class="cover-sub">
-            사본 생성부터 =AI() 단일 수식 세특 자동완성, 나이스 4대 제약 실시간 검증,<br>
-            2028 개편 5등급제 대입 상담 및 모바일 교무수첩 연동까지 완벽 안내
+            실제 화면 인터페이스 스크린샷 기반 교과·학급 담임 실무 가이드<br>
+            사본 생성부터 =AI() 단일 수식 작성, OCR 판독, 4대 제약 검증, 2027 대입 상담까지 완벽 안내
           </p>
-          <div style="margin-top:20px; display:flex; gap:16px;">
-            <button type="button" class="nav-btn" onclick="nextSlide()" style="background:#2563eb; border-color:#3b82f6; padding:12px 28px; font-size:15px;">
-              슬라이드 시작하기 (Space / ▶)
+          <div style="margin-top:16px;">
+            <button type="button" class="nav-btn" onclick="nextSlide()" style="background:var(--primary); padding:10px 24px; font-size:14px;">
+              안내 시작하기 [Space / 다음]
             </button>
           </div>
-          <div style="font-size:12.5px; color:#64748b; margin-top:20px;">
-            키보드 방향키(◀, ▶) 또는 하단 버튼으로 슬라이드를 넘기실 수 있습니다. [F] 키 = 전체화면
+          <div style="font-size:12px; color:var(--text-muted); margin-top:16px;">
+            키보드 방향키(좌/우) 또는 하단 버튼으로 슬라이드를 전환할 수 있습니다. [F] 키 = 전체화면
           </div>
         </div>
       </div>
 
-      <!-- ── SLIDE 2: 전체 시스템 구조 & 관계형 데이터 흐름 ── -->
+      <!-- SLIDE 2: 화면 1 종합 대시보드 -->
       <div class="slide" id="slide-2">
         <div class="slide-header">
           <div>
-            <span class="badge">시스템 아키텍처</span>
-            <h2 class="slide-title">🔗 학번(ID) 하나로 연결되는 5대 관계형 파이프라인</h2>
-            <p class="slide-subtitle">학번과 성명을 1회만 입력하면 모든 탭과 모바일이 유기적으로 연결되어 데이터 중복 입력을 완전히 제거합니다.</p>
+            <span class="badge">[화면 01] 종합 대시보드</span>
+            <h2 class="slide-title">종합 대시보드 및 시스템 메인 관제 허브</h2>
+            <p class="slide-subtitle">학번(ID)을 기준으로 8개 탭의 진행 현황과 항목별 결손(미완성) 상태를 실시간 진단합니다.</p>
           </div>
         </div>
         <div class="slide-body">
-          <div class="grid-3">
-            <div class="card-box highlight">
-              <h3>👥 1. 기준 명렬표 (마스터 ID)</h3>
-              <p>• <code>2_학생명렬표</code>에 학번, 성명, 희망진로 1회 등록<br>• 행특, 세특, 대입, 상담기록 모든 탭으로 학번이 실시간 자동 브로드캐스트</p>
+          <div class="screen-container">
+            <div class="screen-header-bar">
+              <span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span>
+              <span class="screen-label">실제 구동 화면: 메인 대시보드 (capture_1_dashboard.png)</span>
             </div>
-            <div class="card-box">
-              <h3>📝 2. 교과담임 관찰 ➔ 세특 연동</h3>
-              <p>• 교과교사의 수행평가/발표 관찰 메모 기록<br>• <code>=AI('_스킬지침'!$B$2, F2:I2)</code>로 1,500B 맞춤 초안 완성<br>• 학급담임 시트 6번 탭으로 1초 내보내기</p>
-            </div>
-            <div class="card-box success">
-              <h3>🎓 3. 2027 대입상담 & 5등급제</h3>
-              <p>• 내신 평균(5등급/9등급) 자동 산출<br>• 133개 대학 수시 합격선 및 지원 가능권 분석<br>• 수시 6지망 포트폴리오 자동 구성</p>
+            <div class="screen-img-box">
+              <img src="assets/capture_1_dashboard.png" alt="종합 대시보드 실제 화면">
             </div>
           </div>
-          <div class="grid-2" style="margin-top:6px;">
-            <div class="card-box">
-              <h3>📱 4. 모바일 교무수첩 (t-ong) 실시간 연동</h3>
-              <p>• 스마트폰/태블릿으로 수업 중 관찰 메모·출결 즉시 기록<br>• 단일 통합 시트로 클라우드 동기화되어 교무실 PC에 즉시 반영</p>
+          <div class="guide-container">
+            <div class="guide-box highlight">
+              <h3>1. 화면 구성 요소</h3>
+              <ul>
+                <li><strong>상단 원페이지 단계 탭</strong>: [관계형시트], [점검기], [2027대입], [초안생성], [교무수첩], [AI프롬프트], [설명서]로 즉시 전환</li>
+                <li><strong>핵심 지표 통계 카드</strong>: 등록 학생 수, 명렬표 완성률, 세특 완료율, 상담 미실시 현황을 4개 카드로 자동 집계</li>
+                <li><strong>학생별 점검표 테이블</strong>: 학번, 성명, 희망진로 및 각 항목별 상태 배지([완비], [보완 필요], [미작성]) 표시</li>
+              </ul>
             </div>
-            <div class="card-box highlight">
-              <h3>📊 5. 1번 탭 종합 대시보드 (결손 제로)</h3>
-              <p>• 전교생 30명의 행특, 세특, 상담 누락(⚠️·🚨) 실시간 진단<br>• ✏️ 바로가기 하이퍼링크 클릭 시 해당 학생의 입력 칸으로 1초 즉시 이동</p>
+            <div class="guide-box">
+              <h3>2. 교사 조작 절차</h3>
+              <ol>
+                <li>학기 초 또는 마감 기간 중 화면 상단의 <strong>[학생별 점검표]</strong>를 확인합니다.</li>
+                <li>상태가 [미작성] 또는 [보완 필요]로 표기된 학생의 우측 <strong>[바로가기]</strong> 버튼을 클릭합니다.</li>
+                <li>해당 학생의 세특 초안 생성 또는 상담 화면으로 1초 만에 이동하여 즉시 보완합니다.</li>
+              </ol>
+            </div>
+            <div class="guide-box success">
+              <h3>3. 시스템 핵심 기능</h3>
+              <p>학번(5자리) 하나로 모든 기록이 상호 연결되어 있어 중복 입력 없이 데이터 누락을 원천 차단합니다.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ── SLIDE 3: 교과교사가 가장 먼저 해야 할 일 4단계 Checklist ── -->
+      <!-- SLIDE 3: 화면 2 관계형 시트 사본 및 색상 구분 -->
       <div class="slide" id="slide-3">
         <div class="slide-header">
           <div>
-            <span class="badge">시작 가이드</span>
-            <h2 class="slide-title">🚀 교과교사가 사본 복사 후 가장 먼저 해야 할 일 4단계</h2>
-            <p class="slide-subtitle">학기 초 3분이면 우리 교과 전용 AI 자동 작성 환경이 완벽하게 준비됩니다.</p>
+            <span class="badge">[화면 02] 시트 사본 &amp; 색상 규칙</span>
+            <h2 class="slide-title">관계형 구글 시트 사본 생성 및 셀 입력 색상 규칙</h2>
+            <p class="slide-subtitle">학급담임용과 교과담임용 2분할 사본을 제공하며, 흰색 셀에만 데이터를 입력합니다.</p>
           </div>
         </div>
         <div class="slide-body">
-          <div class="grid-4">
-            <div class="card-box highlight">
-              <h3>1️⃣ 시트 사본 만들기</h3>
-              <p>웹앱의 [관계형 시트]에서 <strong>[교과담임용 시트 사본 만들기]</strong>를 클릭하여 선생님 개인 구글 드라이브로 복사합니다.</p>
+          <div class="screen-container">
+            <div class="screen-header-bar">
+              <span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span>
+              <span class="screen-label">실제 구동 화면: 관계형 시트 탭 (capture_2_sheet_cards.png)</span>
             </div>
-            <div class="card-box">
-              <h3>2️⃣ 무료 Gemini API 키 등록</h3>
-              <p>Google AI Studio에서 무료 API 키를 10초 만에 발급받은 뒤, 시트 상단 메뉴 <code>🏆 생기부 올인원</code> > <code>🔑 Gemini API 키 설정</code>에 등록합니다.</p>
-            </div>
-            <div class="card-box">
-              <h3>3️⃣ '_스킬지침' 탭 확인</h3>
-              <p><code>_스킬지침</code> 탭의 B2 셀에 있는 교과세특 작성 지침(첫 문장 형식, 팩트 기반, 종결어미 등)을 확인하고 우리 과목에 맞게 수정합니다.</p>
-            </div>
-            <div class="card-box success">
-              <h3>4️⃣ 학생 관찰데이터 입력</h3>
-              <p>순백색(#FFFFFF) 셀에 학번, 성명 및 구글 폼 설문 결과(F2:I2)를 붙여넣고 <code>=AI('_스킬지침'!$B$2, F2:I2)</code>를 실행합니다!</p>
+            <div class="screen-img-box">
+              <img src="assets/capture_2_sheet_cards.png" alt="관계형 시트 실제 화면">
             </div>
           </div>
-          <div class="card-box" style="margin-top:10px;">
-            <h3>💡 최초 1회 Apps Script 권한 허용 안내</h3>
-            <p>시트 메뉴에서 API 키를 등록하거나 커스텀 함수를 처음 실행할 때 구글의 <strong>[권한 검토] > [고급] > [이동(안전하지 않음)] > [허용]</strong>을 1회만 클릭하시면 영구적으로 자유롭게 동작합니다.</p>
+          <div class="guide-container">
+            <div class="guide-box highlight">
+              <h3>1. 화면 구성 요소</h3>
+              <ul>
+                <li><strong>카드 1 (학급담임용 시트)</strong>: 명렬표, 창체·행특, 대입상담, 개인별 종합누적, 교과세특 연동 탭 포함</li>
+                <li><strong>카드 2 (교과담임용 시트)</strong>: 수강생명렬표, 수업관찰, AI세특작성, 담임시트 내보내기 탭 포함</li>
+                <li><strong>색상 구분 안내 배너</strong>: 순백색(직접 입력) vs 유색(수식/자동 계산) 표준 안내 상단 고정</li>
+              </ul>
+            </div>
+            <div class="guide-box">
+              <h3>2. 교사 조작 절차</h3>
+              <ol>
+                <li>교과담당 교사는 카드 2의 <strong>[교과담임용 시트 사본 만들기]</strong> 초록색 버튼을 클릭합니다.</li>
+                <li>구글 드라이브 화면에서 [사본 만들기]를 승인하여 본인 구글 계정에 저장합니다.</li>
+                <li>시트가 열리면 오직 <strong>순백색(#FFFFFF) 셀</strong>에만 학생 명렬 및 설문 응답을 입력합니다.</li>
+              </ol>
+            </div>
+            <div class="guide-box warning">
+              <h3>3. 수정 금지 셀 주의사항</h3>
+              <p>연회색(#F8FAFC) 또는 연하늘색(#EFF6FF) 배경 셀은 자동 계산 수식 및 연동 셀이므로 내용을 지우거나 임의 수정하지 마십시오.</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ── SLIDE 4: 구글 시트 입력 색상 규칙 & 1번 탭 통일 ── -->
+      <!-- SLIDE 4: 화면 3 세특 초안 워크벤치 & =AI() 함수 -->
       <div class="slide" id="slide-4">
         <div class="slide-header">
           <div>
-            <span class="badge">시트 서식 표준</span>
-            <h2 class="slide-title">🎨 시트 입력 색상 구분 규칙 &amp; 1번 탭 대시보드</h2>
-            <p class="slide-subtitle">사본으로 저장한 구글 시트에서 어떤 칸을 입력해야 하는지 색상으로 1초 만에 구분합니다.</p>
+            <span class="badge">[화면 03] AI 세특 워크벤치</span>
+            <h2 class="slide-title">교과세특 =AI() 단일 함수 작성 및 지침 셀 참조</h2>
+            <p class="slide-subtitle">프롬프트를 지침 탭 B2 셀에 보관하고 본문에서는 셀 주소만 참조하여 초안을 생성합니다.</p>
           </div>
         </div>
         <div class="slide-body">
-          <div class="grid-2">
-            <div class="card-box" style="background:#0f291e; border-color:#22c55e;">
-              <h3 style="color:#4ade80;">✏️ 순백색(#FFFFFF) 셀 = 선생님 직접 입력 칸</h3>
-              <ul style="padding-left:18px; margin:8px 0; line-height:1.7;">
-                <li><strong>2_수강생명렬표</strong>: 학번, 성명, 희망진로/학과</li>
-                <li><strong>3_수업관찰_기록</strong>: 수업 중 관찰 메모, 수행평가 발표 주제, 질문 내용</li>
-                <li><strong>4_AI세특_작성</strong>: 구글폼 설문 복사 열 (F열 주제, G열 선정이유, H열 대화핵심, I열 참고링크)</li>
-                <li><strong>_스킬지침</strong>: 우리 학교/과목 맞춤 프롬프트 지침 텍스트</li>
-              </ul>
-              <div style="font-size:12px; color:#86efac; margin-top:8px;">👉 이 칸들만 채우시면 모든 계산과 작성이 자동으로 이루어집니다!</div>
+          <div class="screen-container">
+            <div class="screen-header-bar">
+              <span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span>
+              <span class="screen-label">실제 구동 화면: AI 세특 작성기 (capture_3_ai_workbench.png)</span>
             </div>
-
-            <div class="card-box" style="background:#1e293b; border-color:#64748b;">
-              <h3 style="color:#94a3b8;">🔒 유색(회색·하늘색·연두색) 셀 = 자동 계산 칸 (수정 금지)</h3>
-              <ul style="padding-left:18px; margin:8px 0; line-height:1.7;">
-                <li><strong>자동 채번 및 학번 연동</strong>: <code>=IF('2_학생명렬표'!A5="","",...)</code></li>
-                <li><strong>AI 생성 세특 초안</strong>: <code>=AI('_스킬지침'!$B$2, F2:I2)</code></li>
-                <li><strong>나이스 바이트 계산</strong>: <code>=NEIS_BYTES(E2)</code></li>
-                <li><strong>1_종합대시보드</strong>: 누락 항목 통계, 진행률, 상태 배지(🟢, 🟡, 🚨)</li>
-              </ul>
-              <div style="font-size:12px; color:#cbd5e1; margin-top:8px;">👉 회색 칸의 수식을 실수로 지우면 연결이 끊기므로 건드리지 마세요.</div>
+            <div class="screen-img-box">
+              <img src="assets/capture_3_ai_workbench.png" alt="AI 세특 작성기 실제 화면">
             </div>
           </div>
-
-          <div class="card-box highlight">
-            <h3>📑 모든 시트의 첫 번째 탭: <code>1_종합대시보드_및_사용설명서</code></h3>
-            <p>시트를 열자마자 첫 번째 탭에서 <strong>① 시스템 전체 탭 지도</strong>, <strong>② 30명 전교생 기록 완성도 요약</strong>, <strong>③ ⚠️ 누락 학생 ✏️ 바로가기 버튼</strong>을 한눈에 확인할 수 있습니다.</p>
+          <div class="guide-container">
+            <div class="guide-box highlight">
+              <h3>1. 표준 권장 함수 공식</h3>
+              <div class="code-box">=AI('_스킬지침'!$B$2, F2:I2)</div>
+              <ul>
+                <li><strong>'_스킬지침'!$B$2</strong>: 교과세특 9대 규칙 프롬프트가 보관된 셀 (절대참조)</li>
+                <li><strong>F2:I2</strong>: 학생이 작성한 [주제], [동기], [AI 대화핵심], [참고링크] 범위 일괄 전달</li>
+              </ul>
+            </div>
+            <div class="guide-box">
+              <h3>2. 교사 조작 절차</h3>
+              <ol>
+                <li>시트의 <code>4_AI세특_작성</code> 탭 F~I열에 학생 구글 폼 설문 응답 데이터를 붙여넣습니다.</li>
+                <li>첫 번째 학생인 <strong>E2 셀</strong>에 위 =AI() 수식을 입력하고 Enter를 누릅니다.</li>
+                <li>초안이 생성되면 E2 셀 우측 하단 <strong>채우기 핸들 점을 마우스 더블클릭</strong>합니다.</li>
+                <li>전체 학생(30명)의 행으로 수식이 자동 복사되어 전원 초안이 일괄 완성됩니다.</li>
+              </ol>
+            </div>
+            <div class="guide-box success">
+              <h3>3. 단일 관찰 메모 셀 참조 공식</h3>
+              <div class="code-box">=AI('_스킬지침'!$B$2, D2)</div>
+              <p>수업 중 D2 셀에 남긴 한 줄 관찰 메모만으로도 나이스 1,500 Byte 3단 구조 초안 생성이 가능합니다.</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ── SLIDE 5: 교과세특 초안 작성 & =AI() 수식 완전 정복 ── -->
+      <!-- SLIDE 5: 화면 4 AI 프롬프트 6대 영역 -->
       <div class="slide" id="slide-5">
         <div class="slide-header">
           <div>
-            <span class="badge">AI 함수 가이드</span>
-            <h2 class="slide-title">🤖 =AI() 단일 함수로 교과세특 1초 완성하기</h2>
-            <p class="slide-subtitle">복잡한 프롬프트는 <code>_스킬지침</code> 탭의 특정 셀에 보관하고, 본문에서는 셀 주소만 참조하여 깔끔하게 작성합니다.</p>
+            <span class="badge">[화면 04] AI 프롬프트 패널</span>
+            <h2 class="slide-title">영역별 AI 프롬프트 및 스킬 지침 6대 영역</h2>
+            <p class="slide-subtitle">교과세특, 행특, 자율, 동아리, 진로 및 6번 학생 보고서 OCR 판독 카드를 제공합니다.</p>
           </div>
         </div>
         <div class="slide-body">
-          <div class="card-box highlight">
-            <h3>⭐️ 표준 권장 수식: 프롬프트 셀 참조 + 설문 범위 지정</h3>
-            <div class="code-box">
-              =AI('_스킬지침'!$B$2, F2:I2)
+          <div class="screen-container">
+            <div class="screen-header-bar">
+              <span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span>
+              <span class="screen-label">실제 구동 화면: 프롬프트 패널 (capture_4_prompts.png)</span>
             </div>
-            <p style="margin-top:8px;">
-              • <strong>첫 번째 인수 <code>'_스킬지침'!$B$2</code></strong>: 고등학교 교사 역할, 3단 논법, 1500B 이내, 개조식 종결 등 기재요령 프롬프트<br>
-              • <strong>두 번째 인수 <code>F2:I2</code></strong>: 학생이 제출한 주제(F), 선정이유(G), 제미나이 대화핵심(H), 참고링크(I) 범위 자동 병합
-            </p>
+            <div class="screen-img-box">
+              <img src="assets/capture_4_prompts.png" alt="프롬프트 패널 실제 화면">
+            </div>
           </div>
-
-          <div class="grid-2">
-            <div class="card-box">
-              <h3>단일 관찰 메모 셀 참조 방식</h3>
-              <div class="code-box">=AI('_스킬지침'!$B$2, D2)</div>
-              <p style="margin-top:6px; font-size:13px;">D2 셀에 적힌 선생님의 수업 관찰 메모 1줄을 바탕으로 교육부 기재요령을 완벽 준수한 3단 구조 세특 초안을 생성합니다.</p>
+          <div class="guide-container">
+            <div class="guide-box highlight">
+              <h3>1. 화면 구성 요소</h3>
+              <ul>
+                <li><strong>1~5번 카드</strong>: 교과세특(1,500B), 행동특성(1,500B), 자율활동(1,500B), 동아리활동(1,500B), 진로활동(2,100B) 표준 기재 지침</li>
+                <li><strong>6번 카드 (초록색 강조)</strong>: [학생 보고서·설문지 OCR 판독] 전용 카드</li>
+                <li><strong>원클릭 실행 버튼</strong>: [지침 복사], [SKILL.md 다운로드], [판독기 열기]</li>
+              </ul>
             </div>
-            <div class="card-box success">
-              <h3>전교생 원클릭 전체 완성 꿀팁</h3>
-              <p>첫 번째 학생(E2)에 수식을 입력한 후, <strong>셀 우측 하단 모서리(채우기 핸들)를 더블클릭</strong>하면 30명 전체 행으로 자동 복사되어 1초 만에 완비됩니다!</p>
+            <div class="guide-box">
+              <h3>2. 교사 조작 절차</h3>
+              <ol>
+                <li>상단 네비게이션에서 <strong>[AI 프롬프트·스킬]</strong> 탭을 클릭합니다.</li>
+                <li>원하는 작성 영역 카드의 <strong>[지침 복사]</strong> 버튼을 누르면 클립보드에 복사됩니다.</li>
+                <li>구글 시트의 <code>_스킬지침</code> 탭 해당 셀에 붙여넣어 우리 학교/과목 맞춤형으로 편집합니다.</li>
+              </ol>
+            </div>
+            <div class="guide-box success">
+              <h3>3. 파일 다운로드 지원</h3>
+              <p>[SKILL.md] 버튼을 클릭하면 표준 마크다운 형식 파일로 즉시 다운로드되어 오프라인 보관이 가능합니다.</p>
             </div>
           </div>
         </div>
       </div>
 
-            <!-- ── SLIDE 6: 학생 보고서·설문지 AI OCR 판독 지침 & 구글 교육용 계정 보안 ── -->
+      <!-- SLIDE 6: 화면 5 OCR 판독기 & 교육용 계정 보안 -->
       <div class="slide" id="slide-6">
         <div class="slide-header">
           <div>
-            <span class="badge" style="background:#15803d; color:#ffffff;">AI 이미지 OCR & 젬스(Gems)</span>
-            <h2 class="slide-title">📸 학생 보고서·설문지 OCR 판독 지침 &amp; 교육용 계정 보안</h2>
-            <p class="slide-subtitle">종이 보고서/설문지 사진을 일괄 업로드하여 나이스 9대 규칙을 준수한 세특 초안 표로 자동 변환합니다.</p>
+            <span class="badge">[화면 05] OCR 판독 &amp; 보안</span>
+            <h2 class="slide-title">학생 보고서·설문지 OCR 판독기 및 교육용 계정 보안</h2>
+            <p class="slide-subtitle">종이 보고서 사진을 일괄 판독하여 구글 시트 복사용 마크다운 표로 추출합니다.</p>
           </div>
         </div>
         <div class="slide-body">
-          <div class="card-box" style="background:linear-gradient(135deg, #052e16 0%, #14532d 100%); border:1.5px solid #22c55e;">
-            <h3 style="color:#86efac; margin-bottom:8px;">🔒 학생 데이터 보호 필수 권장: 구글 교육용 계정(No Model Training) 사용</h3>
-            <p style="color:#f0fdf4; font-size:13.5px; line-height:1.6;">
-              학생들의 탐구보고서나 설문지 사진에는 학생의 소중한 개인정보와 학습 이력이 담겨 있습니다.<br>
-              따라서 본 OCR 판독 작업 시에는 <strong>'입력된 데이터를 AI 모델 학습에 사용하지 않는다(No Model Training)'</strong>고 명시된 <strong>구글 교육용 계정(Google Workspace for Education, @sch.hs.kr, @goedu.kr 등 학교/교육청 공식 계정)</strong> 사용을 적극 권장합니다.
-            </p>
-          </div>
-
-          <div class="grid-2">
-            <div class="card-box">
-              <h3 style="color:#38bdf8;">👁️ 1. 이미지 OCR 정밀 판독 지침</h3>
-              <ul style="padding-left:18px; margin:8px 0; line-height:1.65;">
-                <li><strong>손글씨·비문 자동 교정</strong>: 학생의 연필 필기, 흘림체, 오탈자를 문맥에 맞게 올바른 학술 어휘로 복원</li>
-                <li><strong>수식·기호 원형 보존</strong>: 수학 수식, 과학 기호, 영문 학술용어를 왜곡 없이 디지털 텍스트로 전환</li>
-                <li><strong>4대 핵심 항목 분별</strong>: ①선정 주제, ②선정 이유, ③제미나이 대화 핵심, ④참고문헌/링크 정확히 추출</li>
-              </ul>
+          <div class="screen-container">
+            <div class="screen-header-bar">
+              <span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span>
+              <span class="screen-label">실제 구동 화면: OCR 판독 모달 팝업 (capture_5_ocr_modal.png)</span>
             </div>
-
-            <div class="card-box success">
-              <h3 style="color:#4ade80;">📜 2. 세특 문장 작성 9대 규칙 (엄격 준수)</h3>
-              <ul style="padding-left:18px; margin:8px 0; line-height:1.65; font-size:13px;">
-                <li><strong>시작 문구 고정</strong>: <em>'과제연구 시 '[주제]'를 주제로 선택하였으며 AI를 활용해 학술자료를 조사하고 분석함.'</em></li>
-                <li><strong>팩트 기반</strong>: 사실만 기술, 유추·과장 금지, 학종 지원 시 진로 연계성 부각</li>
-                <li><strong>문장 종결</strong>: '~임', '~함', '~음' 명사형 동사로 통일</li>
-                <li><strong>주어/감정 금지</strong>: 학생 이름·'본인은' 금지, '이해함·느낌' 등 내면 감정 금지</li>
-                <li><strong>글자 수 제한</strong>: 공백 포함 100자~250자 (300~750 Byte) 이내 준수</li>
-              </ul>
+            <div class="screen-img-box">
+              <img src="assets/capture_5_ocr_modal.png" alt="OCR 판독기 모달 실제 화면">
             </div>
           </div>
-
-          <div class="card-box highlight" style="margin-top:4px;">
-            <h3 style="display:flex; justify-content:space-between; align-items:center;">
-              <span>📋 3. 구글 시트 / 엑셀 1초 복사용 마크다운 표 출력</span>
-              <span style="font-size:12px; font-weight:600; color:#93c5fd;">Gemini 젬스(Gems) 지침에 복사하여 즉시 활용</span>
-            </h3>
-            <div class="code-box" style="font-size:12px; padding:8px 12px;">
-              | 학번 | 성명 | 과목명 | 탐구주제 | 선정이유 | AI 대화핵심 | 참고링크 | 1,500B 교과세특 초안 |
+          <div class="guide-container">
+            <div class="guide-box warning">
+              <h3>1. 학생 데이터 보호 필수 보안 권장</h3>
+              <p>학생들의 설문지 및 탐구보고서 사진에는 개인정보와 학습 기록이 담겨 있습니다. 본 작업 시 <strong>AI 모델 학습을 하지 않는다(No Model Training)</strong>고 계약된 <strong>구글 교육용 계정(@sch.hs.kr, @goedu.kr 등)</strong> 사용을 적극 권장합니다.</p>
+            </div>
+            <div class="guide-box highlight">
+              <h3>2. OCR 판독 및 9대 규칙 핵심</h3>
+              <ul>
+                <li><strong>이미지 판독</strong>: 학생 손글씨·비문 자동 교정, 과학·수학 기호 원형 복원, 4대 항목 분별</li>
+                <li><strong>첫 문장 고정</strong>: "과제연구 시 '[주제]'를 주제로 선택하였으며 AI를 활용해 학술자료를 조사하고 분석함."</li>
+                <li><strong>9대 규칙</strong>: 팩트 기반, 주어 생략, 작은따옴표 감싸기, 내면 감정 배제, 100~250자 준수</li>
+              </ul>
+            </div>
+            <div class="guide-box">
+              <h3>3. 교사 조작 절차</h3>
+              <ol>
+                <li>[판독기 열기]를 눌러 <strong>[표준 프롬프트 복사]</strong> 버튼을 클릭합니다.</li>
+                <li>Gemini(gemini.google.com)의 [Gems 매니저] > [+ 새 Gem]의 지침란에 붙여넣습니다.</li>
+                <li>학생 보고서 사진을 드래그하여 올리면 마크다운 표가 출력되며, 시트에 바로 붙여넣습니다.</li>
+              </ol>
             </div>
           </div>
         </div>
       </div>
 
-<!-- ── SLIDE 7: 나이스 4대 기재요령 제약 점검 & 바이트 관리 ── -->
+      <!-- SLIDE 7: 화면 6 나이스 4대 제약 사전 점검 -->
       <div class="slide" id="slide-7">
         <div class="slide-header">
           <div>
-            <span class="badge">기재요령 검증</span>
-            <h2 class="slide-title">🛡️ 교육부 나이스 4대 제약 실시간 사전 점검</h2>
-            <p class="slide-subtitle">나이스 전송 전 감사 지적이나 기재 오류를 100% 원천 차단합니다.</p>
+            <span class="badge">[화면 06] 나이스 제약 점검</span>
+            <h2 class="slide-title">교육부 나이스 4대 기재요령 제약 실시간 사전 점검기</h2>
+            <p class="slide-subtitle">나이스 전송 전 전산 바이트 초과, 금지어, 불필요한 주어, 종결어미를 실시간 검증합니다.</p>
           </div>
         </div>
         <div class="slide-body">
-          <div class="grid-4">
-            <div class="card-box">
-              <h3 style="color:#38bdf8;">📏 1,500 Byte 계산</h3>
-              <p>한글 3B, 영문/숫자 1B, 줄바꿈 2B의 나이스 전산 공식을 정확히 반영하여 1,500B 초과 여부를 실시간 적발합니다.</p>
+          <div class="screen-container">
+            <div class="screen-header-bar">
+              <span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span>
+              <span class="screen-label">실제 구동 화면: 기재요령 점검기 (capture_6_constraint.png)</span>
             </div>
-            <div class="card-box">
-              <h3 style="color:#ef4444;">🚫 금지어 100% 적발</h3>
-              <p>공인어학시험, 외부 경시대회, 사교육 기관, 부모 직업, 도서 출판사 등 교육부 훈령 금지 표현을 즉시 하이라이트합니다.</p>
-            </div>
-            <div class="card-box">
-              <h3 style="color:#f59e0b;">👤 주어 생략 규칙</h3>
-              <p>'이 학생은', '본인은', '학생' 등의 불필요한 주어를 제거하고 주도적 행동 서술어로 다듬습니다.</p>
-            </div>
-            <div class="card-box">
-              <h3 style="color:#10b981;">🏁 개조식 종결어미</h3>
-              <p>문장의 끝을 '~함', '~임', '~음'의 명사형 종결어미로 정밀 통일하고 오탈자와 비문을 자동 교정합니다.</p>
+            <div class="screen-img-box">
+              <img src="assets/capture_6_constraint.png" alt="기재요령 점검기 실제 화면">
             </div>
           </div>
-          <div class="card-box highlight" style="margin-top:10px;">
-            <h3>⚡ 시트 내장 나이스 바이트 계산 공식</h3>
-            <div class="code-box">=NEIS_BYTES(A1)</div>
-            <p style="margin-top:6px; font-size:12.5px; color:#cbd5e1;">(Apps Script 설치 없이도 동작하는 엑셀 내장 수식: <code>=2*LENB(A1)-LEN(A1)+LEN(A1)-LEN(SUBSTITUTE(A1,CHAR(10),""))</code>)</p>
+          <div class="guide-container">
+            <div class="guide-box highlight">
+              <h3>1. 4대 실시간 점검 영역</h3>
+              <ul>
+                <li><strong>1,500 Byte 계산</strong>: 한글 3B, 영문/숫자/공백 1B, 줄바꿈 2B의 교육부 공식 완벽 반영</li>
+                <li><strong>금지어 적발</strong>: 공인어학시험, 교외 수상실적, 사교육 기관명, 부모 직업 실시간 하이라이트</li>
+                <li><strong>주어 생략 검증</strong>: '이 학생은', '본인은' 등 불필요한 주어 즉시 적발</li>
+                <li><strong>개조식 종결어미</strong>: 문장 끝이 '-함', '-임', '-음'으로 끝나는지 검증</li>
+              </ul>
+            </div>
+            <div class="guide-box">
+              <h3>2. 교사 조작 절차</h3>
+              <ol>
+                <li>상단 네비게이션에서 <strong>[점검기]</strong> 탭을 클릭합니다.</li>
+                <li>작성된 문구를 본문 입력란에 붙여넣습니다.</li>
+                <li>우측 패널에 즉시 나타나는 위반 항목 확인 후 <strong>[원클릭 교정]</strong> 버튼을 누릅니다.</li>
+                <li>초과 바이트가 해소되고 금지어가 제거된 완성 문구를 나이스로 복사합니다.</li>
+              </ol>
+            </div>
+            <div class="guide-box success">
+              <h3>3. 시트 내장 바이트 수식</h3>
+              <div class="code-box">=NEIS_BYTES(A1)</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ── SLIDE 8: 2027 대입 진학상담 & 5등급제 대학 전형 탐색 ── -->
+      <!-- SLIDE 8: 화면 7 2027 대입 진학상담 -->
       <div class="slide" id="slide-8">
         <div class="slide-header">
           <div>
-            <span class="badge">대입 진학상담</span>
-            <h2 class="slide-title">🎓 2027 대입 진학상담 &amp; 2028 개편 5등급제 탐색</h2>
-            <p class="slide-subtitle">133개 전국 주요 대학 전형 DB와 어디가 70% Cut 기준 실시간 지원 가능권 분석</p>
+            <span class="badge">[화면 07] 대입 진학상담</span>
+            <h2 class="slide-title">2027 대입 진학상담 및 2028 개편 5등급제 대학 탐색</h2>
+            <p class="slide-subtitle">133개 전국 주요 대학 전형 DB와 어디가 70% Cut 기준 실시간 지원 가능권을 분석합니다.</p>
           </div>
         </div>
         <div class="slide-body">
-          <div class="grid-3">
-            <div class="card-box highlight">
-              <h3>📊 5등급제 환산 시뮬레이터</h3>
-              <p>고1 2028 개편 5등급제 내신(1.00~5.00)을 입력하면 9등급제(1.00~9.00) 환산 수치와 오차 범위(±0.30)를 실시간 반영합니다.</p>
+          <div class="screen-container">
+            <div class="screen-header-bar">
+              <span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span>
+              <span class="screen-label">실제 구동 화면: 2027 대입 상담 (capture_7_counsel.png)</span>
             </div>
-            <div class="card-box">
-              <h3>🏛️ 133개 대학 전형 필터</h3>
-              <p>계열별(인문, 자연, 초등, 의약학) 및 전형별(교과, 종합, 논술), 권역별(수도권, 비수도권) 원클릭 즉시 필터링을 지원합니다.</p>
-            </div>
-            <div class="card-box success">
-              <h3>📋 수시 6장 담기 & Docs 일지</h3>
-              <p>학생별로 1~6지망 목표 대학을 담아 <code>4_대입상담</code> 탭에 자동 저장하고, 원클릭으로 Google Docs 상담 포트폴리오를 생성합니다.</p>
+            <div class="screen-img-box">
+              <img src="assets/capture_7_counsel.png" alt="2027 대입 상담 실제 화면">
             </div>
           </div>
-          <div class="card-box" style="margin-top:10px;">
-            <h3>📌 담임선생님 진학상담 활용 팁</h3>
-            <p>시트의 <code>4_대입상담</code> 탭과 웹앱의 <code>⑦ 2027 대입 진학상담</code> 탭이 실시간으로 동기화되어 학부모 상담 시 1초 만에 학생의 성적에 맞는 안정·적정·소신 대학 리스트를 화면에 띄울 수 있습니다.</p>
+          <div class="guide-container">
+            <div class="guide-box highlight">
+              <h3>1. 화면 구성 요소</h3>
+              <ul>
+                <li><strong>5등급제 환산 시뮬레이터</strong>: 고1 내신(1.00~5.00)을 9등급제로 환산 및 오차 범위(+-0.30) 자동 계산</li>
+                <li><strong>전형별 필터</strong>: 계열(인문/자연/의약학), 전형(교과/종합/논술), 지역(수도권/비수도권) 원클릭 필터</li>
+                <li><strong>대학 전형 카드</strong>: 대학명, 학과, 2025 입결 70% Cut, 지원 성향 판정([안정], [적정], [소신]) 표시</li>
+              </ul>
+            </div>
+            <div class="guide-box">
+              <h3>2. 교사 조작 절차</h3>
+              <ol>
+                <li>상단에서 <strong>[2027 대입 진학상담]</strong> 탭을 클릭합니다.</li>
+                <li>학생의 내신 평균 등급과 희망 전공 계열을 선택합니다.</li>
+                <li>지원 가능 대학 카드에서 <strong>[수시 6장 담기]</strong> 버튼을 클릭하여 포트폴리오를 구성합니다.</li>
+                <li><strong>[Google Docs 상담일지 생성]</strong>을 클릭하여 학부모 상담용 리포트를 출력합니다.</li>
+              </ol>
+            </div>
+            <div class="guide-box success">
+              <h3>3. 시트 연동</h3>
+              <p>선택된 6개 지망 대학은 구글 시트 <code>4_대입상담</code> 탭으로 실시간 저장됩니다.</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ── SLIDE 9: 모바일 교무수첩(t-ong) 연동 & 현장 기록 ── -->
+      <!-- SLIDE 9: 화면 8 모바일 교무수첩 -->
       <div class="slide" id="slide-9">
         <div class="slide-header">
           <div>
-            <span class="badge">모바일 동기화</span>
-            <h2 class="slide-title">📱 모바일 교무수첩 (t-ong) 실시간 현장 기록</h2>
-            <p class="slide-subtitle">수업 중 스마트폰으로 관찰 즉시 기록하고 교무실 구글 시트로 실시간 동기화합니다.</p>
+            <span class="badge">[화면 08] 모바일 교무수첩</span>
+            <h2 class="slide-title">모바일 교무수첩(t-ong) 실시간 현장 관찰 기록</h2>
+            <p class="slide-subtitle">수업 중 스마트폰으로 학생별 관찰 메모를 작성하고 구글 시트로 즉시 클라우드 동기화합니다.</p>
           </div>
         </div>
         <div class="slide-body">
-          <div class="grid-3">
-            <div class="card-box">
-              <h3>1️⃣ 스마트폰 간편 접속</h3>
-              <p>앱 상단 <code>④ 모바일 교무수첩</code> 또는 <code>https://t-ong.vercel.app/</code>에서 모바일 맞춤 화면으로 즉시 열립니다.</p>
+          <div class="screen-container">
+            <div class="screen-header-bar">
+              <span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span>
+              <span class="screen-label">실제 구동 화면: 모바일 교무수첩 (capture_8_mobile.png)</span>
             </div>
-            <div class="card-box highlight">
-              <h3>2️⃣ 수업 관찰·출결 즉시 탭</h3>
-              <p>학생 이름이나 좌석표를 터치하여 발표 태도, 질문 내용, 수행평가 특이사항을 음성이나 키보드로 메모합니다.</p>
-            </div>
-            <div class="card-box success">
-              <h3>3️⃣ 단일 시트로 자동 저장</h3>
-              <p>교무실 PC를 켜면 구글 시트 <code>3_수업관찰_기록</code> 및 웹앱에 모든 메모가 날짜별로 깔끔하게 모여 있습니다.</p>
+            <div class="screen-img-box">
+              <img src="assets/capture_8_mobile.png" alt="모바일 교무수첩 실제 화면">
             </div>
           </div>
-          <div class="card-box" style="margin-top:12px;">
-            <h3>💡 교과담임 관찰메모 누적의 힘</h3>
-            <p>학기말에 한꺼번에 세특을 쓰려면 기억이 나지 않지만, 수업 시간에 한두 줄씩 남긴 모바일 관찰 메모가 누적되어 있으면 <code>=AI()</code> 함수가 이를 종합하여 학생만의 독보적인 3단 논법 세특을 완성해냅니다.</p>
+          <div class="guide-container">
+            <div class="guide-box highlight">
+              <h3>1. 화면 구성 요소</h3>
+              <ul>
+                <li><strong>상단 모바일 프레임 뷰어</strong>: 실제 스마트폰 화면 비율로 교무수첩 인터페이스 직접 확인</li>
+                <li><strong>모바일 바로가기 버튼</strong>: <code>https://t-ong.vercel.app/</code> 스마트폰 브라우저 직접 접속 지원</li>
+                <li><strong>좌석표 및 명렬 모드</strong>: 발표, 질문, 모둠 활동 참여도를 원터치로 체크</li>
+              </ul>
+            </div>
+            <div class="guide-box">
+              <h3>2. 교사 조작 절차</h3>
+              <ol>
+                <li>수업 전 스마트폰으로 t-ong 웹앱에 접속합니다.</li>
+                <li>수업 중 발표나 관찰 내용이 있는 학생을 터치하고 음성 또는 텍스트로 메모를 남깁니다.</li>
+                <li>저장 즉시 교무실 PC의 구글 시트 <code>3_수업관찰_기록</code> 탭으로 자동 누적됩니다.</li>
+              </ol>
+            </div>
+            <div class="guide-box success">
+              <h3>3. 학기말 연계 활용</h3>
+              <p>누적된 관찰 메모는 =AI() 함수의 두 번째 인수로 자동 연결되어 학생 개별 맞춤 세특 초안을 완성합니다.</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ── SLIDE 10: 실제 시뮬레이션 스크린샷 쇼케이스 ── -->
+      <!-- SLIDE 10: 화면 9 관리자 승인 운영 체계 -->
       <div class="slide" id="slide-10">
         <div class="slide-header">
           <div>
-            <span class="badge">실제 구동 화면</span>
-            <h2 class="slide-title">📸 단계별 실제 시뮬레이션 작동 화면 갤러리</h2>
-            <p class="slide-subtitle">아래 탭을 클릭하여 각 화면의 실제 작동 시뮬레이션 스크린샷을 확인하세요.</p>
-          </div>
-        </div>
-        <div class="slide-body" style="height: calc(100% - 90px);">
-          <div class="screenshot-viewer">
-            <div class="screenshot-tabs">
-              <button type="button" class="screenshot-tab-btn active" onclick="switchSim(1)">① 종합 대시보드 & 관계형 시트</button>
-              <button type="button" class="screenshot-tab-btn" onclick="switchSim(2)">② AI 세특 초안 생성기</button>
-              <button type="button" class="screenshot-tab-btn" onclick="switchSim(3)">③ 나이스 4대 제약 점검기</button>
-              <button type="button" class="screenshot-tab-btn" onclick="switchSim(4)">④ 2027 대입 진학상담 DB</button>
-              <button type="button" class="screenshot-tab-btn" onclick="switchSim(5)">⑤ 모바일 교무수첩 연동</button>
-            </div>
-            <div class="screenshot-display">
-              <img id="simDisplayImg" src="assets/sim_1_dashboard_sync.png" alt="시뮬레이션 스크린샷">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── SLIDE 11: 교사 필수 FAQ & 운영 꿀팁 ── -->
-      <div class="slide" id="slide-11">
-        <div class="slide-header">
-          <div>
-            <span class="badge">FAQ & 운영 팁</span>
-            <h2 class="slide-title">💡 자주 묻는 질문(FAQ) 및 선생님 꿀팁</h2>
-            <p class="slide-subtitle">안전하고 편리한 생기부 작성을 위한 핵심 체크포인트</p>
+            <span class="badge">[화면 09] 관리자 승인 체계</span>
+            <h2 class="slide-title">교사 이용 승인 및 관리자 시트 운영 체계</h2>
+            <p class="slide-subtitle">관리자는 체크박스 원클릭으로 교사 계정에 이용권을 부여하고 만료일을 자동 관리합니다.</p>
           </div>
         </div>
         <div class="slide-body">
-          <div class="grid-2">
-            <div class="card-box">
-              <h3>Q1. 학생 개인정보가 구글 서버로 유출되나요?</h3>
-              <p>A. 아닙니다. 이 시트는 선생님의 개인 구글 드라이브에 저장되며, <code>=AI()</code> 호출 시에도 학생 이름은 전달하지 않고 활동 내용(F2:I2)만 전송하므로 개인정보가 완벽히 보호됩니다.</p>
+          <div class="screen-container">
+            <div class="screen-header-bar">
+              <span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span>
+              <span class="screen-label">실제 구동 화면: 관리자 승인 매뉴얼 (capture_9_admin.png)</span>
             </div>
-            <div class="card-box">
-              <h3>Q2. Gemini API 키는 무료인가요?</h3>
-              <p>A. 네, 구글 계정당 분당 15회 호출까지 100% 무료(Free Tier)로 제공되며, 고교 학급 30명 세특 작성에는 충분한 용량입니다.</p>
-            </div>
-            <div class="card-box">
-              <h3>Q3. 다른 과목으로 프롬프트를 바꾸려면?</h3>
-              <p>A. <code>_스킬지침</code> 탭의 B2 셀 문구를 복사하여 B3, B4 등에 과목별(수학, 영어, 과학 등)로 지침을 적어두고 <code>=AI('_스킬지침'!$B$3, F2:I2)</code>처럼 셀 주소만 바꾸시면 됩니다.</p>
-            </div>
-            <div class="card-box">
-              <h3>Q4. 나이스에 입력할 때 주의할 점은?</h3>
-              <p>A. AI가 생성한 초안은 선생님이 학생의 실제 활동 여부를 최종 확인하고 검토한 후, 완성된 문구를 나이스 [교과세특] 란에 복사하여 붙여넣으시면 됩니다.</p>
+            <div class="screen-img-box">
+              <img src="assets/capture_9_admin.png" alt="관리자 승인 매뉴얼 실제 화면">
             </div>
           </div>
-          <div class="card-box success" style="margin-top:6px; text-align:center;">
-            <h3 style="justify-content:center;">🎉 올인원 생기부 & 진학상담 솔루션과 함께 즐거운 학기말을 맞이하세요!</h3>
-            <p>개발 및 문의: math-tong (고교 교사의 업무 경감을 응원합니다)</p>
+          <div class="guide-container">
+            <div class="guide-box highlight">
+              <h3>1. 3단계 승인 파이프라인</h3>
+              <ul>
+                <li><strong>1단계 교사 신청</strong>: 교사가 구글 계정으로 로그인 또는 승인 신청 시 시트 행 자동 생성</li>
+                <li><strong>2단계 관리자 체크</strong>: 관리자 시트 <code>2_교사승인명단</code> A열 체크박스 클릭 즉시 승인</li>
+                <li><strong>3단계 자동 계산</strong>: 승인일 기준 만료예정일 자동 계산 및 관리자 대시보드 실시간 집계</li>
+              </ul>
+            </div>
+            <div class="guide-box">
+              <h3>2. 교사승인명단 열(Column) 구성</h3>
+              <ul>
+                <li><strong>A열 [승인여부]</strong>: TRUE/FALSE 체크박스</li>
+                <li><strong>B~E열 [신청정보]</strong>: 신청일시, 성함, 소속학교, 이메일 자동 기록</li>
+                <li><strong>F열 [자동승인 플래그]</strong>: 교육청/학교 공식 도메인 자동 승인 판별</li>
+                <li><strong>H열 [이용권 연장]</strong>: 추가 연장 시 연장 횟수(1, 2...) 입력으로 만료일 갱신</li>
+              </ul>
+            </div>
+            <div class="guide-box success">
+              <h3>3. 분리 운영의 원칙</h3>
+              <p>일반 교사용 화면에는 관리자 시트가 노출되지 않으며, 전용 페이지(admin.html)에서 독립적으로 운영됩니다.</p>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- SLIDE 11: 시작 4단계 Checklist -->
+      <div class="slide" id="slide-11">
+        <div class="slide-header">
+          <div>
+            <span class="badge">[가이드] 시작 Checklist</span>
+            <h2 class="slide-title">교과교사 사본 복사 후 필수 초기 설정 4단계</h2>
+            <p class="slide-subtitle">학기 초 3분이면 우리 교과 전용 AI 자동 작성 환경이 완벽하게 준비됩니다.</p>
+          </div>
+        </div>
+        <div class="slide-body" style="grid-template-columns: 1fr 1fr;">
+          <div class="guide-container">
+            <div class="guide-box highlight">
+              <h3>STEP 01: 교과담임용 시트 사본 만들기</h3>
+              <p>웹앱의 [관계형 시트] 패널에서 <strong>[교과담임용 시트 사본 만들기]</strong>를 클릭하여 본인의 구글 드라이브로 복사합니다.</p>
+            </div>
+            <div class="guide-box">
+              <h3>STEP 02: 무료 Gemini API 키 등록</h3>
+              <p>Google AI Studio(aistudio.google.com)에서 무료 API 키를 발급받은 뒤, 시트 상단 메뉴 <strong>[생기부 올인원] > [Gemini API 키 설정]</strong>에 등록합니다.</p>
+            </div>
+            <div class="guide-box">
+              <h3>STEP 03: '_스킬지침' 탭 프롬프트 확인</h3>
+              <p><code>_스킬지침</code> 탭 B2 셀의 기재요령 프롬프트 문구를 확인하고 우리 과목(수학, 국어, 영어 등)에 맞게 조정합니다.</p>
+            </div>
+            <div class="guide-box success">
+              <h3>STEP 04: 설문 응답 입력 및 =AI() 실행</h3>
+              <p>순백색 셀(F~I열)에 학생 설문 결과를 붙여넣고 E2 셀에 <code>=AI('_스킬지침'!$B$2, F2:I2)</code>를 실행합니다.</p>
+            </div>
+          </div>
+          <div class="guide-container">
+            <div class="guide-box warning">
+              <h3>최초 1회 Apps Script 보안 권한 허용 절차</h3>
+              <p>시트 메뉴에서 API 키를 처음 등록하거나 커스텀 함수를 실행할 때 구글의 보안 확인 창이 표시됩니다. 이는 매크로 정상 구동을 위한 표준 절차입니다:</p>
+              <ol style="margin-top:6px;">
+                <li>[권한 검토] 버튼 클릭</li>
+                <li>본인의 구글 계정 선택</li>
+                <li>좌측 하단 <strong>[고급 (Advanced)]</strong> 링크 클릭</li>
+                <li><strong>[안전하지 않은 페이지로 이동]</strong> 클릭</li>
+                <li>우측 하단 <strong>[허용 (Allow)]</strong> 클릭</li>
+              </ol>
+              <p style="margin-top:8px; font-size:11.5px; color:#cbd5e1;">※ 최초 1회만 허용하면 이후에는 추가 권한 요청 없이 영구적으로 동작합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 12: 자주 묻는 질문 FAQ -->
+      <div class="slide" id="slide-12">
+        <div class="slide-header">
+          <div>
+            <span class="badge">[안내] 자주 묻는 질문 FAQ</span>
+            <h2 class="slide-title">선생님 필수 질문 답변 및 시스템 오류 대처 요령</h2>
+            <p class="slide-subtitle">안전하고 원활한 생기부 작성을 위한 핵심 체크포인트</p>
+          </div>
+        </div>
+        <div class="slide-body" style="grid-template-columns: 1fr 1fr;">
+          <div class="guide-container">
+            <div class="guide-box">
+              <h3>Q1. 학생 개인정보가 구글 서버로 유출되지 않나요?</h3>
+              <p><strong>답변:</strong> 유출되지 않습니다. 본 시트는 선생님의 개인 구글 드라이브 계정 안에서만 동작하며, =AI() 함수 호출 시에도 학생 이름은 전달하지 않고 순수 학술 활동 내용(F2:I2)만 전송하므로 개인정보 보호 법령을 준수합니다.</p>
+            </div>
+            <div class="guide-box">
+              <h3>Q2. Gemini API 키는 비용이 청구되나요?</h3>
+              <p><strong>답변:</strong> 분당 15회 호출까지 완전 무료(Free Tier)로 제공됩니다. 고등학교 1개 학급 30명 세특을 작성하기에 충분한 용량입니다.</p>
+            </div>
+            <div class="guide-box">
+              <h3>Q3. 다른 교과목 프롬프트로 변경하려면 어떻게 하나요?</h3>
+              <p><strong>답변:</strong> <code>_스킬지침</code> 탭의 B2 셀을 B3, B4 등에 복사하여 과목별 지침을 적어두고, <code>=AI('_스킬지침'!$B$3, F2:I2)</code>처럼 셀 주소만 변경하시면 됩니다.</p>
+            </div>
+          </div>
+          <div class="guide-container">
+            <div class="guide-box warning">
+              <h3>Q4. 수식을 실수로 지웠을 때는 어떻게 하나요?</h3>
+              <p><strong>답변:</strong> 즉시 <strong>Ctrl + Z (실행 취소)</strong>를 누르거나, 윗 행의 수식 셀을 아래로 끌어내려 복사하시면 복구됩니다.</p>
+            </div>
+            <div class="guide-box highlight">
+              <h3>Q5. 생성된 세특 문구를 나이스에 바로 등록해도 되나요?</h3>
+              <p><strong>답변:</strong> 생기부는 교사의 직접 관찰 기록이 법적 근거입니다. AI가 작성한 초안을 선생님께서 반드시 최종 검토(Review)하신 후 나이스에 등록하셔야 합니다.</p>
+            </div>
+            <div class="guide-box success">
+              <h3>시스템 운영 및 기술 지원</h3>
+              <p>시스템 문의: math-tong (고교 교사의 업무 경감을 응원합니다)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- ── 하단 컨트롤 바 ── -->
+    <!-- Controls Footer -->
     <div class="controls">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <button type="button" class="nav-btn" id="btnPrev" onclick="prevSlide()">◀ 이전 (◀)</button>
-        <button type="button" class="nav-btn" id="btnNext" onclick="nextSlide()">다음 (▶) ▶</button>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <button type="button" class="nav-btn" id="btnPrev" onclick="prevSlide()">[이전] (좌측 화살표)</button>
+        <button type="button" class="nav-btn" id="btnNext" onclick="nextSlide()">[다음] (우측 화살표)</button>
       </div>
 
       <div class="progress-bar-bg">
         <div class="progress-fill" id="progressFill"></div>
       </div>
 
-      <div style="display:flex; align-items:center; gap:16px;">
-        <span class="slide-counter" id="slideCounter">1 / 11</span>
-        <select id="slideSelect" onchange="goToSlide(Number(this.value))" style="background:#1e293b; color:#fff; border:1px solid #334155; padding:6px 10px; border-radius:6px; font-size:12.5px; font-weight:700;">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <span class="slide-counter" id="slideCounter">1 / 12</span>
+        <select id="slideSelect" class="slide-select" onchange="goToSlide(Number(this.value))">
           <option value="1">1. 표지 (시스템 개요)</option>
-          <option value="2">2. 전체 시스템 관계형 데이터 구조</option>
-          <option value="3">3. 교과교사 시작 4단계 Checklist</option>
-          <option value="4">4. 시트 입력 색상 규칙 & 1번 탭 통일</option>
-          <option value="5">5. =AI() 단일 함수 세특 완전 정복</option>
-          <option value="6">6. 학생 보고서·설문지 OCR 판독 & 교육용 계정</option>
-          <option value="7">7. 나이스 4대 제약 점검 & 바이트</option>
-          <option value="8">8. 2027 대입 진학상담 & 5등급제</option>
-          <option value="9">9. 모바일 교무수첩(t-ong) 연동</option>
-          <option value="10">10. 실제 시뮬레이션 스크린샷 갤러리</option>
-          <option value="11">11. 교사 필수 FAQ & 운영 꿀팁</option>
+          <option value="2">2. [화면 01] 종합 대시보드</option>
+          <option value="3">3. [화면 02] 시트 사본 & 색상 규칙</option>
+          <option value="4">4. [화면 03] AI 세특 작성 & =AI()</option>
+          <option value="5">5. [화면 04] AI 프롬프트 6대 영역</option>
+          <option value="6">6. [화면 05] OCR 판독 & 교육용 계정</option>
+          <option value="7">7. [화면 06] 나이스 4대 제약 점검</option>
+          <option value="8">8. [화면 07] 2027 대입 진학상담</option>
+          <option value="9">9. [화면 08] 모바일 교무수첩</option>
+          <option value="10">10. [화면 09] 교사 승인 체계</option>
+          <option value="11">11. [가이드] 시작 Checklist</option>
+          <option value="12">12. [안내] 자주 묻는 질문 FAQ</option>
         </select>
-        <button type="button" class="nav-btn" onclick="toggleFullscreen()" style="padding:6px 12px;">⛶ 전체화면 (F)</button>
+        <button type="button" class="nav-btn" onclick="toggleFullscreen()" style="padding:6px 12px;">전체화면 [F]</button>
       </div>
     </div>
   </div>
 
   <script>
     let currentSlide = 1;
-    const totalSlides = 11;
+    const totalSlides = 12;
 
     function updateSlide() {
       for (let i = 1; i <= totalSlides; i++) {
@@ -762,7 +912,6 @@
       }
     }
 
-    // Keyboard navigation
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
         e.preventDefault();
@@ -778,26 +927,6 @@
         goToSlide(totalSlides);
       }
     });
-
-    // Sim Gallery Switcher
-    const simImgs = {
-      1: "assets/sim_1_dashboard_sync.png",
-      2: "assets/sim_2_ai_formula_exec.png",
-      3: "assets/sim_3_constraint_check.png",
-      4: "assets/sim_4_counsel_2027.png",
-      5: "assets/sim_5_mobile_notebook.png"
-    };
-
-    function switchSim(num) {
-      const img = document.getElementById('simDisplayImg');
-      if (img && simImgs[num]) {
-        img.src = simImgs[num];
-      }
-      const btns = document.querySelectorAll('.screenshot-tab-btn');
-      btns.forEach((btn, idx) => {
-        btn.classList.toggle('active', idx + 1 === num);
-      });
-    }
 
     updateSlide();
   </script>
