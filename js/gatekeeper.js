@@ -41,6 +41,7 @@
     getGasUrl() {
       const customUrl = localStorage.getItem(ADMIN_GAS_KEY);
       if (customUrl && customUrl.trim()) return customUrl.trim();
+      if (this.serverAdminGasUrl && this.serverAdminGasUrl.trim()) return this.serverAdminGasUrl.trim();
       const homeroomUrl = localStorage.getItem('swk_gsheet_homeroom_url') || localStorage.getItem('SR_GAS_HOMEROOM_URL');
       if (homeroomUrl && homeroomUrl.trim()) return homeroomUrl.trim();
       const singleUrl = localStorage.getItem('swk_gsheet_web_app_url') || localStorage.getItem('swk_gsheet_url');
@@ -222,6 +223,9 @@
         if (res.ok) {
           const cfg = await res.json();
           this.googleClientId = cfg.clientId || '700015728284-ltijch3i38nttuvhejqj0hhnag8vonj0.apps.googleusercontent.com';
+          if (cfg.adminGasUrl) {
+            this.serverAdminGasUrl = cfg.adminGasUrl.trim();
+          }
         }
       } catch (e) {
         this.googleClientId = '700015728284-ltijch3i38nttuvhejqj0hhnag8vonj0.apps.googleusercontent.com';

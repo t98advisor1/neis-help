@@ -691,55 +691,52 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  // === [사용자 승인 상태 조회 API — '2_교사승인명단' 체크박스(A열) & 1개월(90일) 만료 자동 확인] ===
+  // === [사용자 승인 상태 조회 API — '2_교사승인명단' 및 '사용자승인' 완벽 지원] ===
   if (action === "check_access") {
     var email = (e.parameter.email || "").trim().toLowerCase();
-    var chkSheet = ss.getSheetByName("2_교사승인명단");
-    if (chkSheet) {
-      var rows = chkSheet.getDataRange().getValues();
-      for (var i = 4; i < rows.length; i++) {
-        var rowEmail = String(rows[i][3] || "").trim().toLowerCase();
-        if (rowEmail === email) {
-          var isChecked = (rows[i][0] === true || String(rows[i][0]).toUpperCase() === "TRUE" || String(rows[i][0]).trim() === "승인");
-          var extCount = Math.max(1, Number(rows[i][1]) || 1);
-          var baseDate = rows[i][8] ? new Date(rows[i][8]) : new Date();
-          if (isNaN(baseDate.getTime())) baseDate = new Date();
-          var expDate = new Date(baseDate.getTime() + extCount * 90 * 24 * 60 * 60 * 1000);
-          var remDays = Math.ceil((expDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000));
-          var valid = isChecked && remDays >= 0;
-          return ContentService.createTextOutput(JSON.stringify({
-            found: true,
-            approved: valid,
-            expired: isChecked && remDays < 0,
-            remainingDays: remDays,
-            expiresAt: expDate.toISOString(),
-            extensionCount: extCount,
-            status: valid ? "승인" : (isChecked ? "기간만료" : "대기"),
-            name: rows[i][4] || "",
-            school: rows[i][5] || "",
-            subject: rows[i][6] || ""
-          })).setMimeType(ContentService.MimeType.JSON);
-        }
-      }
-    }
-    var appSheet = ss.getSheetByName("사용자승인") || ss.getSheetByName("승인관리") || ss.getSheetByName("_교사인증_승인관리");
-    if (!appSheet) {
+    var chkSheet = ss.getSheetByName("2_교사승인명단") || ss.getSheetByName("사용자승인") || ss.getSheetByName("승인관리");
+    if (!chkSheet) {
       return ContentService.createTextOutput(JSON.stringify({ found: false, approved: false, status: "no_sheet" }))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    var rows2 = appSheet.getDataRange().getValues();
-    for (var j = 1; j < rows2.length; j++) {
-      var rEmail = String(rows2[j][3] || rows2[j][1] || "").trim().toLowerCase();
-      if (rEmail === email) {
-        var st = String(rows2[j][6] || rows2[j][5] || "").trim();
-        var ok = (st === "승인" || st === "승인완료" || st.toLowerCase() === "true" || st.toLowerCase() === "approved");
-        return ContentService.createTextOutput(JSON.stringify({
-          found: true,
-          approved: ok,
-          status: st,
-          name: rows2[j][1] || rows2[j][2] || "",
-          school: rows2[j][2] || rows2[j][3] || ""
-        })).setMimeType(ContentService.MimeType.JSON);
+
+    var rows = chkSheet.getDataRange().getValues();
+    var isChkTab = (chkSheet.getName() === "2_교사승인명단");
+
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      var match = false;
+      for (var col = 0; col < r.length; col++) {
+        if (String(r[col] || "").trim().toLowerCase() === email) {
+          match = true;
+          break;
+        }
+      }
+      if (match) {
+        if (isChkTab) {
+          // A열: 승인여부 (체크박스 TRUE/FALSE 또는 '승인')
+          var isApproved = (r[0] === true || String(r[0]).toUpperCase() === "TRUE" || String(r[0]).trim() === "승인");
+          return ContentService.createTextOutput(JSON.stringify({
+            found: true,
+            approved: isApproved,
+            status: isApproved ? "승인" : "대기",
+            name: r[2] || "선생님",
+            school: r[3] || "학교",
+            email: email
+          })).setMimeType(ContentService.MimeType.JSON);
+        } else {
+          // 사용자승인 탭
+          var st = String(r[6] || "").trim();
+          var ok = (st === "승인" || st === "승인완료" || st.toLowerCase() === "true");
+          return ContentService.createTextOutput(JSON.stringify({
+            found: true,
+            approved: ok,
+            status: ok ? "승인" : "대기",
+            name: r[1] || "선생님",
+            school: r[2] || "학교",
+            email: email
+          })).setMimeType(ContentService.MimeType.JSON);
+        }
       }
     }
     return ContentService.createTextOutput(JSON.stringify({ found: false, approved: false, status: "not_found" }))
@@ -867,43 +864,83 @@ function doPost(e) {
     }
 
     // === [사용자 승인 신청 제출 API (신천고/교육청 자동승인 + 타 계정 수동승인)] ===
+        // === [사용자 승인 신청 제출 API — '2_교사승인명단' 및 '사용자승인' 완벽 지원] ===
     if (action === "apply_access") {
-      var appSheet = ss.getSheetByName("사용자승인");
+      var appSheet = ss.getSheetByName("2_교사승인명단") || ss.getSheetByName("사용자승인") || ss.getSheetByName("승인관리");
+      var isCheckboxSheet = true;
       if (!appSheet) {
-        appSheet = ss.insertSheet("사용자승인");
-        appSheet.appendRow(["신청일시", "교사성명", "소속학교", "이메일", "연락처/과목", "신청사유", "승인상태", "메모"]);
+        appSheet = ss.insertSheet("2_교사승인명단");
+        appSheet.appendRow(["승인여부", "신청일시", "교사성명", "소속학교", "이메일", "자동승인플래그", "만료예정일", "이용권연장"]);
         appSheet.getRange("A1:H1").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
       }
+      isCheckboxSheet = (appSheet.getName() === "2_교사승인명단");
+
       var now = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
       var targetEmail = (body.email || "").trim().toLowerCase();
-      var initialStatus = "대기";
-      var note = "";
+      var targetName = (body.name || "").trim();
+      var targetSchool = (body.school || "").trim();
       var domain = targetEmail.split('@')[1] || "";
-      if (domain === "sch.kr" || domain.endsWith(".sch.kr") || domain === "goedu.kr" || domain.endsWith(".goedu.kr") || targetEmail.endsWith("@sch.hs.kr")) {
-        initialStatus = "승인";
-        note = "학교/교육청 공식 도메인 자동승인 (1개월)";
-      } else {
-        note = "개인 구글 계정 신청 (" + (body.reason || "AI 함수 활용 및 대입상담") + ")";
+      var isAuto = (domain === "sch.kr" || domain.endsWith(".sch.kr") || domain === "goedu.kr" || domain.endsWith(".goedu.kr") || targetEmail.endsWith("@sch.hs.kr"));
+
+      var expDate = new Date();
+      expDate.setDate(expDate.getDate() + 30);
+      var expStr = Utilities.formatDate(expDate, "Asia/Seoul", "yyyy-MM-dd");
+
+      var data = appSheet.getDataRange().getValues();
+      var foundRow = -1;
+
+      for (var r = 0; r < data.length; r++) {
+        for (var cIdx = 0; cIdx < data[r].length; cIdx++) {
+          if (String(data[r][cIdx]).trim().toLowerCase() === targetEmail) {
+            foundRow = r + 1;
+            break;
+          }
+        }
+        if (foundRow !== -1) break;
       }
 
-      appSheet.appendRow([
-        now,
-        body.name || "",
-        body.school || "",
-        targetEmail,
-        body.phone || body.subject || "",
-        body.reason || "",
-        initialStatus,
-        note
-      ]);
+      if (isCheckboxSheet) {
+        if (foundRow === -1) {
+          appSheet.appendRow([
+            isAuto,
+            now,
+            targetName,
+            targetSchool,
+            targetEmail,
+            isAuto ? "자동승인" : "일반신청",
+            isAuto ? expStr : "",
+            0
+          ]);
+          var lastR = appSheet.getLastRow();
+          try { appSheet.getRange(lastR, 1).insertCheckboxes(); } catch(e) {}
+        } else {
+          if (isAuto) {
+            appSheet.getRange(foundRow, 1).setValue(true);
+            appSheet.getRange(foundRow, 7).setValue(expStr);
+          }
+        }
+      } else {
+        if (foundRow === -1) {
+          appSheet.appendRow([
+            now,
+            targetName,
+            targetSchool,
+            targetEmail,
+            body.phone || body.subject || "",
+            body.reason || "",
+            isAuto ? "승인" : "대기",
+            isAuto ? "학교 공식 도메인 자동승인" : "개인 계정 신청"
+          ]);
+        }
+      }
 
       return ContentService.createTextOutput(JSON.stringify({
         success: true,
-        approved: initialStatus === "승인",
-        status: initialStatus,
-        message: initialStatus === "승인"
+        approved: isAuto,
+        status: isAuto ? "승인" : "대기",
+        message: isAuto
           ? "학교 공식 계정 확인 완료! 1개월 이용 권한이 자동으로 승인되었습니다."
-          : "사용 승인 신청이 완료되었습니다. 관리자 승인 후 1개월간 이용하실 수 있습니다."
+          : "사용 승인 신청이 완료되었습니다. 관리자 시트에 안전하게 등록되었습니다."
       })).setMimeType(ContentService.MimeType.JSON);
     }
 

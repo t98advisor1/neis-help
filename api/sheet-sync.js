@@ -1,3 +1,12 @@
+const getAdminGasUrl = () => {
+  return (
+    process.env.ADMIN_GAS_URL ||
+    process.env.GAS_ADMIN_URL ||
+    process.env.ADMIN_GAS_APPROVAL_URL ||
+    ''
+  ).trim();
+};
+
 ﻿// api/sheet-sync.js — 클라우드 내장 시트 동기화 및 테스트 엔진
 // 개인 구글 시트 연동 전에도 1초 만에 전 기능(불러오기/저장/승인)을 실시간으로 테스트할 수 있도록 지원하는 백엔드 API
 // Vercel Serverless Function (Node.js ESM)
@@ -89,6 +98,19 @@ export default async function handler(req, res) {
     // 4. 사용자 승인 여부 실시간 확인
     if (action === 'check_access') {
       const email = String(req.query.email || '').trim().toLowerCase();
+      const adminGasUrl = getAdminGasUrl();
+      if (adminGasUrl) {
+        try {
+          const remoteUrl = ${adminGasUrl}?action=check_access&email=;
+          const r = await fetch(remoteUrl, { method: 'GET', headers: { 'Accept': 'application/json' } });
+          if (r.ok) {
+            const data = await r.json();
+            if (data && data.found) return res.status(200).json(data);
+          }
+        } catch (e) {
+          console.warn('[sheet-sync] Remote GAS check_access error:', e.message);
+        }
+      }
       // 신천고 또는 경기도교육청 계정은 무조건 즉시 승인!
       if (email.endsWith('@sch.hs.kr') || email.endsWith('@goedu.kr')) {
         return res.status(200).json({
@@ -219,6 +241,22 @@ export default async function handler(req, res) {
 
     if (action === 'apply_access') {
       const email = String(body.email || '').trim().toLowerCase();
+      const adminGasUrl = getAdminGasUrl();
+      if (adminGasUrl) {
+        try {
+          const fwdRes = await fetch(adminGasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(body)
+          });
+          if (fwdRes.ok) {
+            const fwdData = await fwdRes.json();
+            return res.status(200).json(fwdData);
+          }
+        } catch (fwdErr) {
+          console.warn('[sheet-sync] Remote GAS forward apply_access error:', fwdErr.message);
+        }
+      }
       const name = body.name || '';
       const school = body.school || '';
       const isAuto = email.endsWith('@sch.hs.kr') || email.endsWith('@goedu.kr');

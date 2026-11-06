@@ -900,8 +900,8 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
         <div>
           <span style="font-size:12px; font-weight:800; color:#1d4ed8; background:#dbeafe; padding:3px 10px; border-radius:999px;">① 관계형 데이터 표준 서식 &amp; 실시간 동기화 허브</span>
-          <h2 class="op-panel-title" style="margin:6px 0 4px;">관계형 구글 시트 표준안 (학급담임용 · 교과담임용 · 교사승인용)</h2>
-          <p class="op-panel-sub" style="margin:0;">학생 명렬표(학번·성명) 1회 입력으로 창체·행특·교과세특·대입상담·상담기록·모바일교무수첩이 유기적으로 연결되며, 대시보드에서 누락 항목 점검 및 입력 탭 바로가기(🏠 홈버튼 포함)를 지원합니다.</p>
+          <h2 class="op-panel-title" style="margin:6px 0 4px;">관계형 구글 시트 2대 표준안 (학급담임용 · 교과담임용)</h2>
+          <p class="op-panel-sub" style="margin:0;">학생 명렬표(학번·성명) 1회 입력으로 창체·행특·교과세특·대입상담·상담기록·모바일교무수첩이 유기적으로 연결되며, 1번 탭 대시보드에서 누락 항목 점검 및 입력 탭 바로가기를 지원합니다.</p>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button type="button" id="btnSheetPanelCopyGas" class="btn primary" style="background:#7c3aed; color:#fff; border:none; padding:9px 16px; border-radius:8px; font-weight:800; cursor:pointer;">📋 통합 Apps Script 코드 1초 복사</button>
@@ -909,17 +909,35 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
         </div>
       </div>
 
-      <!-- 3종 표준 구글 시트 카드 그리드 -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; margin-bottom:24px;">
+      <!-- 💡 [시트 작성 표준 규칙 및 색상 구분 안내 배너] -->
+      <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:14px 18px; margin-bottom:18px; display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span style="font-size:13px; font-weight:800; color:#0f172a;">💡 사본으로 저장한 구글 시트 입력 항목 및 색상 구분 규칙:</span>
+          <span style="font-size:11.5px; background:#e2e8f0; color:#334155; padding:2px 8px; border-radius:6px; font-weight:700;">첫 번째 탭 = 1_종합대시보드_및_사용설명서</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:10px; font-size:12.5px;">
+          <div style="background:#ffffff; border:1.5px solid #94a3b8; border-radius:8px; padding:8px 12px; display:flex; align-items:center; gap:8px;">
+            <span style="display:inline-block; width:16px; height:16px; background:#ffffff; border:2px solid #0284c7; border-radius:4px;"></span>
+            <span><strong>순백색(#FFFFFF) 셀</strong>: ✏️ <strong>선생님 직접 입력 칸</strong> (학번, 성명, 관찰메모, 설문결과 F2:I2 등)</span>
+          </div>
+          <div style="background:#f1f5f9; border:1.5px solid #cbd5e1; border-radius:8px; padding:8px 12px; display:flex; align-items:center; gap:8px;">
+            <span style="display:inline-block; width:16px; height:16px; background:#e2e8f0; border:1px solid #94a3b8; border-radius:4px;"></span>
+            <span><strong>유색(회색·하늘색) 셀</strong>: 🔒 <strong>수식 및 AI 자동 계산 칸</strong> (지우지 마시고 그대로 유지)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2종 표준 구글 시트 카드 그리드 (학급담임용 vs 교과담임용) -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:16px; margin-bottom:24px;">
         <!-- 1. 학급 담임용 표준시트 -->
         <div style="background:#eff6ff; border:2px solid #93c5fd; border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:12px; font-weight:800; background:#1d4ed8; color:#fff; padding:3px 10px; border-radius:999px;">학급 담임교사용 (전 영역 통합)</span>
-            <span style="font-size:11.5px; color:#1e40af; font-weight:700;">8개 탭 유기적 연동</span>
+            <span style="font-size:11.5px; color:#1e40af; font-weight:700;">7개 탭 유기적 연동</span>
           </div>
           <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0f172a;">📘 [학급담임용] 생기부·진학상담 관계형 표준시트</h3>
           <p style="margin:0; font-size:12.5px; color:#334155; line-height:1.55;">
-            <strong>포함 탭:</strong> <code>0_사용안내(홈)</code> · <code>1_대시보드(결손진단·✏️입력링크)</code> · <code>2_학생명렬표</code> · <code>3_창체_행특(=AI_HAENGTEUK)</code> · <code>4_대입상담(수시6장)</code> · <code>5_상담기록(누적)</code> · <code>6_교과세특_연동</code> · <code>_스킬지침(5대 지침 내장)</code>
+            <strong>포함 탭:</strong> <code>1_종합대시보드_및_사용설명서</code> · <code>2_학생명렬표(기준)</code> · <code>3_창체_행특(=AI)</code> · <code>4_대입상담(수시6장)</code> · <code>5_상담기록(누적)</code> · <code>6_교과세특_연동</code> · <code>_스킬지침(프롬프트)</code>
           </p>
           <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:auto;">
             <a href="https://docs.google.com/spreadsheets/d/12lGdMCyRGWpTlmG3vaXX18oeTcX2maJ_5Pfo9CJ4kfc/copy" target="_blank" rel="noreferrer" style="flex:1; text-align:center; background:#1d4ed8; color:#fff; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:800; text-decoration:none;">📄 내 드라이브로 사본 만들기 ↗</a>
@@ -936,78 +954,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           </div>
           <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0f172a;">📗 [교과담임용] 교과세특·수업관찰 관계형 표준시트</h3>
           <p style="margin:0; font-size:12.5px; color:#334155; line-height:1.55;">
-            <strong>포함 탭:</strong> <code>0_사용안내(홈)</code> · <code>1_대시보드(미작성·1500B 초과진단)</code> · <code>2_수강생명렬표</code> · <code>3_수업관찰_기록(누적)</code> · <code>4_AI세특_작성(자동취합·=AI_SETUK)</code> · <code>5_담임시트_내보내기(학급담임 6번탭 직결)</code> · <code>_스킬지침</code>
+            <strong>포함 탭:</strong> <code>1_종합대시보드_및_사용설명서</code> · <code>2_수강생명렬표</code> · <code>3_수업관찰_기록(누적)</code> · <code>4_AI세특_작성(=AI)</code> · <code>5_담임시트_내보내기</code> · <code>_스킬지침(프롬프트)</code>
           </p>
           <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:auto;">
             <a href="https://docs.google.com/spreadsheets/d/1937g7YLFMUl918tYeOVasaC6o6c01HM2hw_-2F2Y-bg/copy" target="_blank" rel="noreferrer" style="flex:1; text-align:center; background:#7e22ce; color:#fff; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:800; text-decoration:none;">📄 내 드라이브로 사본 만들기 ↗</a>
             <a href="https://docs.google.com/spreadsheets/d/1937g7YLFMUl918tYeOVasaC6o6c01HM2hw_-2F2Y-bg/edit" target="_blank" rel="noreferrer" style="background:#fff; color:#7e22ce; border:1px solid #d8b4fe; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:700; text-decoration:none;">👁️ 표준시트 열람 ↗</a>
           </div>
           <button type="button" onclick="window.GoogleSheet && window.GoogleSheet.downloadSubjectExcel()" style="width:100%; background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; padding:8px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">📥 교과담임용 관계형 엑셀(.xlsx) 다운로드</button>
-        </div>
-
-        <!-- 3. 관리자용 교사 승인 대시보드 시트 -->
-        <div style="background:#f0fdf4; border:2px solid #86efac; border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:12px; font-weight:800; background:#15803d; color:#fff; padding:3px 10px; border-radius:999px;">관리자 전용 · 3개월 승인제</span>
-            <span style="font-size:11.5px; color:#166534; font-weight:700;">체크박스 원클릭 승인</span>
-          </div>
-          <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0f172a;">👑 [관리자용] 교사 승인 · 1개월 이용권 관리 시트</h3>
-          <p style="margin:0; font-size:12.5px; color:#334155; line-height:1.55;">
-            <strong>포함 탭:</strong> <code>0_관리자안내</code> · <code>1_승인대시보드(승인대기·만료예정 집계)</code> · <code>2_교사승인명단(A열 ☑️체크 시 90일 부여, B열 연장횟수로 3개월 단위 연장)</code>
-          </p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:auto;">
-            <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" rel="noreferrer" style="flex:1; text-align:center; background:#15803d; color:#fff; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:800; text-decoration:none;">👑 교사 승인 관리 시트 열기 ↗</a>
-            <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/copy" target="_blank" rel="noreferrer" style="background:#fff; color:#15803d; border:1px solid #86efac; padding:9px 12px; border-radius:8px; font-size:12.5px; font-weight:700; text-decoration:none;">사본 ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 👑 [상세 가이드] 관리자용 교사 승인 구글 시트 이용방법 & 3단계 운영 매뉴얼 -->
-      <div style="background:#ffffff; border:1.5px solid #86efac; border-radius:14px; padding:20px 24px; margin-bottom:24px; box-shadow:0 6px 20px rgba(22,101,52,0.06);">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; border-bottom:1.5px solid #dcfce7; padding-bottom:10px;">
-          <div>
-            <span style="font-size:11px; font-weight:800; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:999px;">관리자 전용 운영 매뉴얼</span>
-            <h3 style="font-size:17px; font-weight:800; color:#0f172a; margin:4px 0 0; display:flex; align-items:center; gap:8px;">
-              <span>👑 관리자용 교사 승인 구글 시트 상세 이용방법</span>
-            </h3>
-          </div>
-          <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" rel="noreferrer" style="background:#16a34a; color:#fff; font-size:12.5px; font-weight:800; padding:7px 14px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-            <span>📋 승인 구글 시트 바로 열기 ↗</span>
-          </a>
-        </div>
-
-        <!-- 3단계 초간단 승인 프로세스 -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px; margin-bottom:16px;">
-          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px 14px;">
-            <div style="font-size:12px; font-weight:800; color:#166534; margin-bottom:4px;">1️⃣ 교사 접속 &amp; 자동 행 추가</div>
-            <p style="font-size:12px; color:#334155; line-height:1.5; margin:0;">
-              선생님이 사이트에서 Google 로그인을 완료하거나 승인 신청을 보내면, 관리자 시트 <code>[2_교사승인명단]</code> 탭에 접속 시각, 성함, 소속 학교, 이메일이 실시간으로 1행 자동 생성됩니다.
-            </p>
-          </div>
-          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px 14px;">
-            <div style="font-size:12px; font-weight:800; color:#166534; margin-bottom:4px;">2️⃣ A열 체크박스(☑️) 클릭 = 즉시 승인</div>
-            <p style="font-size:12px; color:#334155; line-height:1.5; margin:0;">
-              관리자 선생님은 시트 <strong>A열의 체크박스(☑️)</strong>를 클릭하기만 하면 됩니다. 클릭 즉시 해당 선생님의 계정에 <strong>1개월(30일) 정식 이용권</strong>이 부여됩니다.
-            </p>
-          </div>
-          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px 14px;">
-            <div style="font-size:12px; font-weight:800; color:#166534; margin-bottom:4px;">3️⃣ 교사 즉시 입장 &amp; 만료일 자동 계산</div>
-            <p style="font-size:12px; color:#334155; line-height:1.5; margin:0;">
-              승인된 교사는 비밀번호 없이 사이트에 1초 만에 입장하며, 시트에서는 30일 후 만료일을 자동 계산하고 <code>[1_승인대시보드]</code>에 활성 교사 수가 자동 집계됩니다.
-            </p>
-          </div>
-        </div>
-
-        <!-- 주요 탭 및 열(Column) 상세 설명 안내 표 -->
-        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 16px; font-size:12.5px; color:#334155;">
-          <strong style="color:#0f172a; display:block; margin-bottom:8px;">📌 [2_교사승인명단] 탭 주요 열(Column) 구성 및 역할</strong>
-          <ul style="margin:0; padding-left:18px; line-height:1.65;">
-            <li><strong>A열 [승인여부]</strong>: <code>TRUE/FALSE</code> 체크박스. 체크하면 즉시 이용 승인, 해제 시 즉시 잠금.</li>
-            <li><strong>B열 [신청일시]</strong> &amp; <strong>C열 [성함]</strong> &amp; <strong>D열 [학교]</strong> &amp; <strong>E열 [이메일]</strong>: Google 로그인 및 신청 시 실시간 안전 기록.</li>
-            <li><strong>F열 [자동승인 플래그]</strong>: <code>@sch.kr</code> 및 <code>@goedu.kr</code> 계정은 관리자 개입 없이 로그인 즉시 실시간 1초 자동 승인 처리.</li>
-            <li><strong>G열 [만료예정일]</strong>: 승인일로부터 30일 후 자동 표기. 만료 7일 전 대시보드에 알림 표시.</li>
-            <li><strong>H열 [이용권 연장]</strong>: 추가 30일 연장이 필요할 때 숫자(1, 2, ...)를 올리면 연장 횟수만큼 만료일이 자동 갱신.</li>
-          </ul>
         </div>
       </div>
 

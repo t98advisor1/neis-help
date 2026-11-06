@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎓 2026-2027 교사용 올인원 생기부 & 진학상담 프로그램 운영 슬라이드</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.variable.min.css">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent: #38bdf8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --hairline: #334155;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+    .slide-deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .slide-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 40px;
+    }
+    .slide {
+      position: absolute;
+      width: min(1440px, 94vw);
+      height: min(810px, 86vh);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 44px 56px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.96) translateY(15px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1) translateY(0);
+      z-index: 10;
+    }
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--hairline);
+      padding-bottom: 16px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 800;
+      background: #1e3a8a;
+      color: #93c5fd;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+    .slide-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slide-subtitle {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      margin: 6px 0 0 0;
+      line-height: 1.5;
+    }
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .card-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 20px 24px;
+    }
+    .card-box.highlight {
+      border-color: #3b82f6;
+      background: linear-gradient(145deg, #1e293b 0%, #172554 100%);
+    }
+    .card-box.success {
+      border-color: #10b981;
+      background: linear-gradient(145deg, #1e293b 0%, #064e3b 100%);
+    }
+    .card-box h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-box p, .card-box li {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .code-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      color: #38bdf8;
+      overflow-x: auto;
+    }
+    /* Controls Footer */
+    .controls {
+      height: 64px;
+      background: #0f172a;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      z-index: 50;
+    }
+    .nav-btn {
+      background: #1e293b;
+      color: #ffffff;
+      border: 1px solid #334155;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      max-width: 480px;
+      height: 6px;
+      background: #1e293b;
+      border-radius: 999px;
+      margin: 0 24px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #38bdf8);
+      width: 10%;
+      transition: width 0.3s;
+    }
+    .slide-counter {
+      font-size: 13px;
+      font-weight: 800;
+      color: #94a3b8;
+    }
+    /* Cover Slide Specifics */
+    .cover-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      text-align: center;
+      gap: 18px;
+    }
+    .cover-title {
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.25;
+      background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+    .cover-sub {
+      font-size: 18px;
+      color: #94a3b8;
+      max-width: 760px;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .tag-pill {
+      font-size: 12px;
+      font-weight: 700;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #38bdf8;
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+    /* Screenshot Gallery */
+    .screenshot-viewer {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 12px;
+    }
+    .screenshot-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .screenshot-tab-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .screenshot-tab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #3b82f6;
+    }
+    .screenshot-display {
+      flex: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1.5px solid #334155;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .screenshot-display img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-deck">
+    <div class="slide-viewport">
+      <!-- ── SLIDE 1: 표지 ── -->
+      <div class="slide active" id="slide-1">
+        <div class="cover-container">
+          <div style="display:flex; gap:8px;">
+            <span class="tag-pill">2026-2027 학년도 고교 현장 실무</span>
+            <span class="tag-pill">관계형 구글 시트 & 웹앱</span>
+            <span class="tag-pill">Gemini AI 탑재</span>
+          </div>
+          <h1 class="cover-title">
+            🏫 2026-2027 학교생활기록부 &amp; 대입진학상담<br>올인원 시스템 교사용 운영 매뉴얼
+          </h1>
+          <p class="cover-sub">
+            사본 생성부터 =AI() 단일 수식 세특 자동완성, 나이스 4대 제약 실시간 검증,<br>
+            2028 개편 5등급제 대입 상담 및 모바일 교무수첩 연동까지 완벽 안내
+          </p>
+          <div style="margin-top:20px; display:flex; gap:16px;">
+            <button type="button" class="nav-btn" onclick="nextSlide()" style="background:#2563eb; border-color:#3b82f6; padding:12px 28px; font-size:15px;">
+              슬라이드 시작하기 (Space / ▶)
+            </button>
+          </div>
+          <div style="font-size:12.5px; color:#64748b; margin-top:20px;">
+            키보드 방향키(◀, ▶) 또는 하단 버튼으로 슬라이드를 넘기실 수 있습니다. [F] 키 = 전체화면
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 2: 전체 시스템 구조 & 관계형 데이터 흐름 ── -->
+      <div class="slide" id="slide-2">
+        <div class="slide-header">
+          <div>
+            <span class="badge">시스템 아키텍처</span>
+            <h2 class="slide-title">🔗 학번(ID) 하나로 연결되는 5대 관계형 파이프라인</h2>
+            <p class="slide-subtitle">학번과 성명을 1회만 입력하면 모든 탭과 모바일이 유기적으로 연결되어 데이터 중복 입력을 완전히 제거합니다.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card-box highlight">
+              <h3>👥 1. 기준 명렬표 (마스터 ID)</h3>
+              <p>• <code>2_학생명렬표</code>에 학번, 성명, 희망진로 1회 등록<br>• 행특, 세특, 대입, 상담기록 모든 탭으로 학번이 실시간 자동 브로드캐스트</p>
+            </div>
+            <div class="card-box">
+              <h3>📝 2. 교과담임 관찰 ➔ 세특 연동</h3>
+              <p>• 교과교사의 수행평가/발표 관찰 메모 기록<br>• <code>=AI('_스킬지침'!$B$2, F2:I2)</code>로 1,500B 맞춤 초안 완성<br>• 학급담임 시트 6번 탭으로 1초 내보내기</p>
+            </div>
+            <div class="card-box success">
+              <h3>🎓 3. 2027 대입상담 & 5등급제</h3>
+              <p>• 내신 평균(5등급/9등급) 자동 산출<br>• 133개 대학 수시 합격선 및 지원 가능권 분석<br>• 수시 6지망 포트폴리오 자동 구성</p>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-top:6px;">
+            <div class="card-box">
+              <h3>📱 4. 모바일 교무수첩 (t-ong) 실시간 연동</h3>
+              <p>• 스마트폰/태블릿으로 수업 중 관찰 메모·출결 즉시 기록<br>• 단일 통합 시트로 클라우드 동기화되어 교무실 PC에 즉시 반영</p>
+            </div>
+            <div class="card-box highlight">
+              <h3>📊 5. 1번 탭 종합 대시보드 (결손 제로)</h3>
+              <p>• 전교생 30명의 행특, 세특, 상담 누락(⚠️·🚨) 실시간 진단<br>• ✏️ 바로가기 하이퍼링크 클릭 시 해당 학생의 입력 칸으로 1초 즉시 이동</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 3: 교과교사가 가장 먼저 해야 할 일 4단계 Checklist ── -->
+      <div class="slide" id="slide-3">
+        <div class="slide-header">
+          <div>
+            <span class="badge">시작 가이드</span>
+            <h2 class="slide-title">🚀 교과교사가 사본 복사 후 가장 먼저 해야 할 일 4단계</h2>
+            <p class="slide-subtitle">학기 초 3분이면 우리 교과 전용 AI 자동 작성 환경이 완벽하게 준비됩니다.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid-4">
+            <div class="card-box highlight">
+              <h3>1️⃣ 시트 사본 만들기</h3>
+              <p>웹앱의 [관계형 시트]에서 <strong>[교과담임용 시트 사본 만들기]</strong>를 클릭하여 선생님 개인 구글 드라이브로 복사합니다.</p>
+            </div>
+            <div class="card-box">
+              <h3>2️⃣ 무료 Gemini API 키 등록</h3>
+              <p>Google AI Studio에서 무료 API 키를 10초 만에 발급받은 뒤, 시트 상단 메뉴 <code>🏆 생기부 올인원</code> > <code>🔑 Gemini API 키 설정</code>에 등록합니다.</p>
+            </div>
+            <div class="card-box">
+              <h3>3️⃣ '_스킬지침' 탭 확인</h3>
+              <p><code>_스킬지침</code> 탭의 B2 셀에 있는 교과세특 작성 지침(첫 문장 형식, 팩트 기반, 종결어미 등)을 확인하고 우리 과목에 맞게 수정합니다.</p>
+            </div>
+            <div class="card-box success">
+              <h3>4️⃣ 학생 관찰데이터 입력</h3>
+              <p>순백색(#FFFFFF) 셀에 학번, 성명 및 구글 폼 설문 결과(F2:I2)를 붙여넣고 <code>=AI('_스킬지침'!$B$2, F2:I2)</code>를 실행합니다!</p>
+            </div>
+          </div>
+          <div class="card-box" style="margin-top:10px;">
+            <h3>💡 최초 1회 Apps Script 권한 허용 안내</h3>
+            <p>시트 메뉴에서 API 키를 등록하거나 커스텀 함수를 처음 실행할 때 구글의 <strong>[권한 검토] > [고급] > [이동(안전하지 않음)] > [허용]</strong>을 1회만 클릭하시면 영구적으로 자유롭게 동작합니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 4: 구글 시트 입력 색상 규칙 & 1번 탭 통일 ── -->
+      <div class="slide" id="slide-4">
+        <div class="slide-header">
+          <div>
+            <span class="badge">시트 서식 표준</span>
+            <h2 class="slide-title">🎨 시트 입력 색상 구분 규칙 &amp; 1번 탭 대시보드</h2>
+            <p class="slide-subtitle">사본으로 저장한 구글 시트에서 어떤 칸을 입력해야 하는지 색상으로 1초 만에 구분합니다.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card-box" style="background:#0f291e; border-color:#22c55e;">
+              <h3 style="color:#4ade80;">✏️ 순백색(#FFFFFF) 셀 = 선생님 직접 입력 칸</h3>
+              <ul style="padding-left:18px; margin:8px 0; line-height:1.7;">
+                <li><strong>2_수강생명렬표</strong>: 학번, 성명, 희망진로/학과</li>
+                <li><strong>3_수업관찰_기록</strong>: 수업 중 관찰 메모, 수행평가 발표 주제, 질문 내용</li>
+                <li><strong>4_AI세특_작성</strong>: 구글폼 설문 복사 열 (F열 주제, G열 선정이유, H열 대화핵심, I열 참고링크)</li>
+                <li><strong>_스킬지침</strong>: 우리 학교/과목 맞춤 프롬프트 지침 텍스트</li>
+              </ul>
+              <div style="font-size:12px; color:#86efac; margin-top:8px;">👉 이 칸들만 채우시면 모든 계산과 작성이 자동으로 이루어집니다!</div>
+            </div>
+
+            <div class="card-box" style="background:#1e293b; border-color:#64748b;">
+              <h3 style="color:#94a3b8;">🔒 유색(회색·하늘색·연두색) 셀 = 자동 계산 칸 (수정 금지)</h3>
+              <ul style="padding-left:18px; margin:8px 0; line-height:1.7;">
+                <li><strong>자동 채번 및 학번 연동</strong>: <code>=IF('2_학생명렬표'!A5="","",...)</code></li>
+                <li><strong>AI 생성 세특 초안</strong>: <code>=AI('_스킬지침'!$B$2, F2:I2)</code></li>
+                <li><strong>나이스 바이트 계산</strong>: <code>=NEIS_BYTES(E2)</code></li>
+                <li><strong>1_종합대시보드</strong>: 누락 항목 통계, 진행률, 상태 배지(🟢, 🟡, 🚨)</li>
+              </ul>
+              <div style="font-size:12px; color:#cbd5e1; margin-top:8px;">👉 회색 칸의 수식을 실수로 지우면 연결이 끊기므로 건드리지 마세요.</div>
+            </div>
+          </div>
+
+          <div class="card-box highlight">
+            <h3>📑 모든 시트의 첫 번째 탭: <code>1_종합대시보드_및_사용설명서</code></h3>
+            <p>시트를 열자마자 첫 번째 탭에서 <strong>① 시스템 전체 탭 지도</strong>, <strong>② 30명 전교생 기록 완성도 요약</strong>, <strong>③ ⚠️ 누락 학생 ✏️ 바로가기 버튼</strong>을 한눈에 확인할 수 있습니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 5: 교과세특 초안 작성 & =AI() 수식 완전 정복 ── -->
+      <div class="slide" id="slide-5">
+        <div class="slide-header">
+          <div>
+            <span class="badge">AI 함수 가이드</span>
+            <h2 class="slide-title">🤖 =AI() 단일 함수로 교과세특 1초 완성하기</h2>
+            <p class="slide-subtitle">복잡한 프롬프트는 <code>_스킬지침</code> 탭의 특정 셀에 보관하고, 본문에서는 셀 주소만 참조하여 깔끔하게 작성합니다.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="card-box highlight">
+            <h3>⭐️ 표준 권장 수식: 프롬프트 셀 참조 + 설문 범위 지정</h3>
+            <div class="code-box">
+              =AI('_스킬지침'!$B$2, F2:I2)
+            </div>
+            <p style="margin-top:8px;">
+              • <strong>첫 번째 인수 <code>'_스킬지침'!$B$2</code></strong>: 고등학교 교사 역할, 3단 논법, 1500B 이내, 개조식 종결 등 기재요령 프롬프트<br>
+              • <strong>두 번째 인수 <code>F2:I2</code></strong>: 학생이 제출한 주제(F), 선정이유(G), 제미나이 대화핵심(H), 참고링크(I) 범위 자동 병합
+            </p>
+          </div>
+
+          <div class="grid-2">
+            <div class="card-box">
+              <h3>단일 관찰 메모 셀 참조 방식</h3>
+              <div class="code-box">=AI('_스킬지침'!$B$2, D2)</div>
+              <p style="margin-top:6px; font-size:13px;">D2 셀에 적힌 선생님의 수업 관찰 메모 1줄을 바탕으로 교육부 기재요령을 완벽 준수한 3단 구조 세특 초안을 생성합니다.</p>
+            </div>
+            <div class="card-box success">
+              <h3>전교생 원클릭 전체 완성 꿀팁</h3>
+              <p>첫 번째 학생(E2)에 수식을 입력한 후, <strong>셀 우측 하단 모서리(채우기 핸들)를 더블클릭</strong>하면 30명 전체 행으로 자동 복사되어 1초 만에 완비됩니다!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 6: 나이스 4대 기재요령 제약 점검 & 바이트 관리 ── -->
+      <div class="slide" id="slide-6">
+        <div class="slide-header">
+          <div>
+            <span class="badge">기재요령 검증</span>
+            <h2 class="slide-title">🛡️ 교육부 나이스 4대 제약 실시간 사전 점검</h2>
+            <p class="slide-subtitle">나이스 전송 전 감사 지적이나 기재 오류를 100% 원천 차단합니다.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid-4">
+            <div class="card-box">
+              <h3 style="color:#38bdf8;">📏 1,500 Byte 계산</h3>
+              <p>한글 3B, 영문/숫자 1B, 줄바꿈 2B의 나이스 전산 공식을 정확히 반영하여 1,500B 초과 여부를 실시간 적발합니다.</p>
+            </div>
+            <div class="card-box">
+              <h3 style="color:#ef4444;">🚫 금지어 100% 적발</h3>
+              <p>공인어학시험, 외부 경시대회, 사교육 기관, 부모 직업, 도서 출판사 등 교육부 훈령 금지 표현을 즉시 하이라이트합니다.</p>
+            </div>
+            <div class="card-box">
+              <h3 style="color:#f59e0b;">👤 주어 생략 규칙</h3>
+              <p>'이 학생은', '본인은', '학생' 등의 불필요한 주어를 제거하고 주도적 행동 서술어로 다듬습니다.</p>
+            </div>
+            <div class="card-box">
+              <h3 style="color:#10b981;">🏁 개조식 종결어미</h3>
+              <p>문장의 끝을 '~함', '~임', '~음'의 명사형 종결어미로 정밀 통일하고 오탈자와 비문을 자동 교정합니다.</p>
+            </div>
+          </div>
+          <div class="card-box highlight" style="margin-top:10px;">
+            <h3>⚡ 시트 내장 나이스 바이트 계산 공식</h3>
+            <div class="code-box">=NEIS_BYTES(A1)</div>
+            <p style="margin-top:6px; font-size:12.5px; color:#cbd5e1;">(Apps Script 설치 없이도 동작하는 엑셀 내장 수식: <code>=2*LENB(A1)-LEN(A1)+LEN(A1)-LEN(SUBSTITUTE(A1,CHAR(10),""))</code>)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 7: 2027 대입 진학상담 & 5등급제 대학 전형 탐색 ── -->
+      <div class="slide" id="slide-7">
+        <div class="slide-header">
+          <div>
+            <span class="badge">대입 진학상담</span>
+            <h2 class="slide-title">🎓 2027 대입 진학상담 &amp; 2028 개편 5등급제 탐색</h2>
+            <p class="slide-subtitle">133개 전국 주요 대학 전형 DB와 어디가 70% Cut 기준 실시간 지원 가능권 분석</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card-box highlight">
+              <h3>📊 5등급제 환산 시뮬레이터</h3>
+              <p>고1 2028 개편 5등급제 내신(1.00~5.00)을 입력하면 9등급제(1.00~9.00) 환산 수치와 오차 범위(±0.30)를 실시간 반영합니다.</p>
+            </div>
+            <div class="card-box">
+              <h3>🏛️ 133개 대학 전형 필터</h3>
+              <p>계열별(인문, 자연, 초등, 의약학) 및 전형별(교과, 종합, 논술), 권역별(수도권, 비수도권) 원클릭 즉시 필터링을 지원합니다.</p>
+            </div>
+            <div class="card-box success">
+              <h3>📋 수시 6장 담기 & Docs 일지</h3>
+              <p>학생별로 1~6지망 목표 대학을 담아 <code>4_대입상담</code> 탭에 자동 저장하고, 원클릭으로 Google Docs 상담 포트폴리오를 생성합니다.</p>
+            </div>
+          </div>
+          <div class="card-box" style="margin-top:10px;">
+            <h3>📌 담임선생님 진학상담 활용 팁</h3>
+            <p>시트의 <code>4_대입상담</code> 탭과 웹앱의 <code>⑦ 2027 대입 진학상담</code> 탭이 실시간으로 동기화되어 학부모 상담 시 1초 만에 학생의 성적에 맞는 안정·적정·소신 대학 리스트를 화면에 띄울 수 있습니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 8: 모바일 교무수첩(t-ong) 연동 & 현장 기록 ── -->
+      <div class="slide" id="slide-8">
+        <div class="slide-header">
+          <div>
+            <span class="badge">모바일 동기화</span>
+            <h2 class="slide-title">📱 모바일 교무수첩 (t-ong) 실시간 현장 기록</h2>
+            <p class="slide-subtitle">수업 중 스마트폰으로 관찰 즉시 기록하고 교무실 구글 시트로 실시간 동기화합니다.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card-box">
+              <h3>1️⃣ 스마트폰 간편 접속</h3>
+              <p>앱 상단 <code>④ 모바일 교무수첩</code> 또는 <code>https://t-ong.vercel.app/</code>에서 모바일 맞춤 화면으로 즉시 열립니다.</p>
+            </div>
+            <div class="card-box highlight">
+              <h3>2️⃣ 수업 관찰·출결 즉시 탭</h3>
+              <p>학생 이름이나 좌석표를 터치하여 발표 태도, 질문 내용, 수행평가 특이사항을 음성이나 키보드로 메모합니다.</p>
+            </div>
+            <div class="card-box success">
+              <h3>3️⃣ 단일 시트로 자동 저장</h3>
+              <p>교무실 PC를 켜면 구글 시트 <code>3_수업관찰_기록</code> 및 웹앱에 모든 메모가 날짜별로 깔끔하게 모여 있습니다.</p>
+            </div>
+          </div>
+          <div class="card-box" style="margin-top:12px;">
+            <h3>💡 교과담임 관찰메모 누적의 힘</h3>
+            <p>학기말에 한꺼번에 세특을 쓰려면 기억이 나지 않지만, 수업 시간에 한두 줄씩 남긴 모바일 관찰 메모가 누적되어 있으면 <code>=AI()</code> 함수가 이를 종합하여 학생만의 독보적인 3단 논법 세특을 완성해냅니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 9: 실제 시뮬레이션 스크린샷 쇼케이스 ── -->
+      <div class="slide" id="slide-9">
+        <div class="slide-header">
+          <div>
+            <span class="badge">실제 구동 화면</span>
+            <h2 class="slide-title">📸 단계별 실제 시뮬레이션 작동 화면 갤러리</h2>
+            <p class="slide-subtitle">아래 탭을 클릭하여 각 화면의 실제 작동 시뮬레이션 스크린샷을 확인하세요.</p>
+          </div>
+        </div>
+        <div class="slide-body" style="height: calc(100% - 90px);">
+          <div class="screenshot-viewer">
+            <div class="screenshot-tabs">
+              <button type="button" class="screenshot-tab-btn active" onclick="switchSim(1)">① 종합 대시보드 & 관계형 시트</button>
+              <button type="button" class="screenshot-tab-btn" onclick="switchSim(2)">② AI 세특 초안 생성기</button>
+              <button type="button" class="screenshot-tab-btn" onclick="switchSim(3)">③ 나이스 4대 제약 점검기</button>
+              <button type="button" class="screenshot-tab-btn" onclick="switchSim(4)">④ 2027 대입 진학상담 DB</button>
+              <button type="button" class="screenshot-tab-btn" onclick="switchSim(5)">⑤ 모바일 교무수첩 연동</button>
+            </div>
+            <div class="screenshot-display">
+              <img id="simDisplayImg" src="assets/sim_1_dashboard_sync.png" alt="시뮬레이션 스크린샷">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 10: 교사 필수 FAQ & 운영 꿀팁 ── -->
+      <div class="slide" id="slide-10">
+        <div class="slide-header">
+          <div>
+            <span class="badge">FAQ & 운영 팁</span>
+            <h2 class="slide-title">💡 자주 묻는 질문(FAQ) 및 선생님 꿀팁</h2>
+            <p class="slide-subtitle">안전하고 편리한 생기부 작성을 위한 핵심 체크포인트</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card-box">
+              <h3>Q1. 학생 개인정보가 구글 서버로 유출되나요?</h3>
+              <p>A. 아닙니다. 이 시트는 선생님의 개인 구글 드라이브에 저장되며, <code>=AI()</code> 호출 시에도 학생 이름은 전달하지 않고 활동 내용(F2:I2)만 전송하므로 개인정보가 완벽히 보호됩니다.</p>
+            </div>
+            <div class="card-box">
+              <h3>Q2. Gemini API 키는 무료인가요?</h3>
+              <p>A. 네, 구글 계정당 분당 15회 호출까지 100% 무료(Free Tier)로 제공되며, 고교 학급 30명 세특 작성에는 충분한 용량입니다.</p>
+            </div>
+            <div class="card-box">
+              <h3>Q3. 다른 과목으로 프롬프트를 바꾸려면?</h3>
+              <p>A. <code>_스킬지침</code> 탭의 B2 셀 문구를 복사하여 B3, B4 등에 과목별(수학, 영어, 과학 등)로 지침을 적어두고 <code>=AI('_스킬지침'!$B$3, F2:I2)</code>처럼 셀 주소만 바꾸시면 됩니다.</p>
+            </div>
+            <div class="card-box">
+              <h3>Q4. 나이스에 입력할 때 주의할 점은?</h3>
+              <p>A. AI가 생성한 초안은 선생님이 학생의 실제 활동 여부를 최종 확인하고 검토한 후, 완성된 문구를 나이스 [교과세특] 란에 복사하여 붙여넣으시면 됩니다.</p>
+            </div>
+          </div>
+          <div class="card-box success" style="margin-top:6px; text-align:center;">
+            <h3 style="justify-content:center;">🎉 올인원 생기부 & 진학상담 솔루션과 함께 즐거운 학기말을 맞이하세요!</h3>
+            <p>개발 및 문의: math-tong (고교 교사의 업무 경감을 응원합니다)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 하단 컨트롤 바 ── -->
+    <div class="controls">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button type="button" class="nav-btn" id="btnPrev" onclick="prevSlide()">◀ 이전 (◀)</button>
+        <button type="button" class="nav-btn" id="btnNext" onclick="nextSlide()">다음 (▶) ▶</button>
+      </div>
+
+      <div class="progress-bar-bg">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span class="slide-counter" id="slideCounter">1 / 10</span>
+        <select id="slideSelect" onchange="goToSlide(Number(this.value))" style="background:#1e293b; color:#fff; border:1px solid #334155; padding:6px 10px; border-radius:6px; font-size:12.5px; font-weight:700;">
+          <option value="1">1. 표지 (시스템 개요)</option>
+          <option value="2">2. 전체 시스템 관계형 데이터 구조</option>
+          <option value="3">3. 교과교사 시작 4단계 Checklist</option>
+          <option value="4">4. 시트 입력 색상 규칙 & 1번 탭 통일</option>
+          <option value="5">5. =AI() 단일 함수 세특 완전 정복</option>
+          <option value="6">6. 나이스 4대 제약 점검 & 바이트</option>
+          <option value="7">7. 2027 대입 진학상담 & 5등급제</option>
+          <option value="8">8. 모바일 교무수첩(t-ong) 연동</option>
+          <option value="9">9. 실제 시뮬레이션 스크린샷 갤러리</option>
+          <option value="10">10. 교사 필수 FAQ & 운영 꿀팁</option>
+        </select>
+        <button type="button" class="nav-btn" onclick="toggleFullscreen()" style="padding:6px 12px;">⛶ 전체화면 (F)</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 10;
+
+    function updateSlide() {
+      for (let i = 1; i <= totalSlides; i++) {
+        const el = document.getElementById(`slide-${i}`);
+        if (el) el.classList.toggle('active', i === currentSlide);
+      }
+      document.getElementById('slideCounter').textContent = `${currentSlide} / ${totalSlides}`;
+      document.getElementById('slideSelect').value = currentSlide;
+      document.getElementById('progressFill').style.width = `${(currentSlide / totalSlides) * 100}%`;
+      document.getElementById('btnPrev').disabled = currentSlide === 1;
+      document.getElementById('btnNext').disabled = currentSlide === totalSlides;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(n) {
+      if (n >= 1 && n <= totalSlides) {
+        currentSlide = n;
+        updateSlide();
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+      } else {
+        document.exitFullscreen().catch(err => console.log(err));
+      }
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      } else if (e.key === 'Home') {
+        goToSlide(1);
+      } else if (e.key === 'End') {
+        goToSlide(totalSlides);
+      }
+    });
+
+    // Sim Gallery Switcher
+    const simImgs = {
+      1: "assets/sim_1_dashboard_sync.png",
+      2: "assets/sim_2_ai_formula_exec.png",
+      3: "assets/sim_3_constraint_check.png",
+      4: "assets/sim_4_counsel_2027.png",
+      5: "assets/sim_5_mobile_notebook.png"
+    };
+
+    function switchSim(num) {
+      const img = document.getElementById('simDisplayImg');
+      if (img && simImgs[num]) {
+        img.src = simImgs[num];
+      }
+      const btns = document.querySelectorAll('.screenshot-tab-btn');
+      btns.forEach((btn, idx) => {
+        btn.classList.toggle('active', idx + 1 === num);
+      });
+    }
+
+    updateSlide();
+  </script>
+</body>
+</html>
