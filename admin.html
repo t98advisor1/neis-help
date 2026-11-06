@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>👑 관리자 전용 교사 승인 및 구글 시트 운영 매뉴얼</title>
+  <title>[관리자 전용] 교사 승인 및 구글 시트 운영 매뉴얼</title>
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.variable.min.css">
   <style>
     :root {
@@ -204,8 +204,8 @@
 <body>
   <div class="container">
     <div class="header">
-      <span class="badge">🔒 사이트 운영자(선생님) 전용 비공개 매뉴얼</span>
-      <h1 class="title">👑 교사 승인 및 1개월 이용권 관리 시트 가이드</h1>
+      <span class="badge">[비공개] 사이트 운영자(관리자) 전용 운영 매뉴얼</span>
+      <h1 class="title">교사 승인 및 1개월 이용권 관리 시트 가이드</h1>
       <p class="subtitle">
         구글 계정 로그인 신청자의 실시간 기록, A열 원클릭 체크박스 승인, 만료일 관리 및 Google Apps Script 웹 앱 연결 가이드입니다.
       </p>
@@ -221,7 +221,7 @@
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" class="btn">
-            📋 관리 시트 열기 ↗
+            관리 시트 열기 ↗
           </a>
           <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/copy" target="_blank" class="btn secondary">
             사본 만들기 ↗
@@ -231,15 +231,15 @@
 
       <!-- 왜 구글 로그인 시 시트로 안 넘어왔는가? -->
       <div class="section">
-        <h2 class="section-title">❓ 1. "구글 로그인했는데 시트로 왜 아이디가 안 넘어왔을까요?"</h2>
+        <h2 class="section-title">[질문 01] 구글 로그인 시 시트로 아이디가 넘어오지 않는 원인과 해결</h2>
         <div class="alert">
-          <strong>💡 원인 및 해결 원리:</strong><br>
-          구글 시트는 외부 사이트에서 마음대로 글을 쓸 수 없도록 구글 보안 정책으로 막혀 있습니다.<br>
-          따라서 구글 시트 내부의 <strong>[Apps Script]</strong>를 <strong>'웹 앱으로 배포(액세스 권한: 누구나)'</strong>하여 고유한 수신 주소(URL)를 만든 뒤, 웹앱 설정 또는 Vercel 환경변수(<code>ADMIN_GAS_URL</code>)에 등록해야 구글 로그인하는 즉시 시트로 행이 자동 추가됩니다.
+          <strong>[원인 및 연동 원리]</strong><br>
+          구글 시트는 외부 사이트에서 임의로 데이터를 쓸 수 없도록 구글 보안 정책으로 차단되어 있습니다.<br>
+          따라서 구글 시트 내부의 <strong>[Apps Script]</strong>를 <strong>'웹 앱으로 배포(액세스 권한: 모든 사용자)'</strong>하여 고유한 수신 주소(URL)를 생성한 뒤, 웹앱 설정 또는 Vercel 환경변수(<code>ADMIN_GAS_URL</code>)에 등록해야 구글 로그인하는 즉시 시트로 행이 자동 추가됩니다.
         </div>
 
         <div style="margin-bottom:18px;">
-          <h3 style="font-size:15px; font-weight:800; margin:0 0 10px 0;">🛠️ 1분 완벽 연동 절차 (한 번만 세팅하면 끝!)</h3>
+          <h3 style="font-size:15px; font-weight:800; margin:0 0 10px 0;">[설정 순서] 웹 앱(Web App) 1분 배포 및 연결 절차</h3>
           <div class="step-box">
             <div class="step-num">STEP 1. Apps Script 열기</div>
             <p style="margin:0; font-size:13px; color:#334155;">
@@ -252,13 +252,13 @@
             <p style="margin:0 0 8px 0; font-size:13px; color:#334155;">
               기존 코드를 모두 지우고 프로젝트의 <code>google_apps_script_dual_relational.js</code> 코드를 전체 붙여넣은 뒤 <code>Ctrl+S</code>(저장)를 누릅니다.
             </p>
-            <button type="button" class="btn secondary" id="btnCopyGasCode" style="font-size:12px; padding:6px 14px;">📋 통합 Apps Script 코드 클립보드 복사</button>
+            <button type="button" class="btn secondary" id="btnCopyGasCode" style="font-size:12px; padding:6px 14px;">통합 Apps Script 코드 클립보드 복사</button>
           </div>
 
           <div class="step-box">
-            <div class="step-num">STEP 3. 웹 앱으로 배포하기 (가장 중요!)</div>
+            <div class="step-num">STEP 3. 웹 앱으로 배포하기 (가장 중요)</div>
             <p style="margin:0; font-size:13px; color:#334155;">
-              우측 상단 파란색 <strong>[배포]</strong> 버튼 > <strong>[새 배포]</strong> 클릭 ➔ 유형: <strong>[웹 앱]</strong> 선택 ➔ 다음 권한으로 앱 실행: <strong>[나]</strong> ➔ 액세스 권한: ⭐️ <strong>[모든 사용자(Anyone)]</strong> 선택 ➔ <strong>[배포]</strong> 클릭 후 발급된 <code>https://script.google.com/macros/s/.../exec</code> 주소를 복사합니다.
+              우측 상단 파란색 <strong>[배포]</strong> 버튼 > <strong>[새 배포]</strong> 클릭 -> 유형: <strong>[웹 앱]</strong> 선택 -> 다음 권한으로 앱 실행: <strong>[나]</strong> -> 액세스 권한: <strong>[모든 사용자(Anyone)]</strong> 선택 -> <strong>[배포]</strong> 클릭 후 발급된 <code>https://script.google.com/macros/s/.../exec</code> 주소를 복사합니다.
             </p>
           </div>
 
@@ -273,22 +273,22 @@
 
       <!-- 3단계 운영 프로세스 -->
       <div class="section">
-        <h2 class="section-title">⚡ 2. 일상 교사 승인 3단계 프로세스</h2>
+        <h2 class="section-title">[운영 절차] 일상 교사 승인 3단계 프로세스</h2>
         <div class="grid-cards">
           <div class="card">
-            <div class="card-title">1️⃣ 교사 접속 & 자동 행 추가</div>
+            <div class="card-title">[STEP 01] 교사 접속 및 자동 행 추가</div>
             <p class="card-desc">
               선생님이 웹앱에서 Google 로그인을 하면, 관리자 시트 <code>[2_교사승인명단]</code>에 접속 시각, 성함, 소속 학교, 이메일이 실시간으로 1행 자동 생성됩니다.
             </p>
           </div>
           <div class="card">
-            <div class="card-title">2️⃣ A열 체크박스(☑️) 클릭 = 즉시 승인</div>
+            <div class="card-title">[STEP 02] A열 체크박스 클릭 = 즉시 승인 (30일 부여)</div>
             <p class="card-desc">
-              관리자 선생님은 시트 <strong>A열의 체크박스(☑️)</strong>를 클릭하기만 하면 됩니다. 클릭 즉시 해당 선생님 계정에 <strong>1개월(30일) 정식 이용권</strong>이 부여됩니다.
+              관리자 선생님은 시트 <strong>A열의 체크박스 [V]</strong>를 클릭하기만 하면 됩니다. 클릭 즉시 해당 선생님 계정에 <strong>1개월(30일) 정식 이용권</strong>이 부여됩니다.
             </p>
           </div>
           <div class="card">
-            <div class="card-title">3️⃣ 1초 입장 & 만료일 자동 계산</div>
+            <div class="card-title">[STEP 03] 교사 즉시 입장 및 만료일 자동 계산</div>
             <p class="card-desc">
               승인된 교사는 비밀번호 없이 사이트에 1초 만에 입장하며, 시트에서는 30일 후 만료일을 자동 계산하고 <code>[1_승인대시보드]</code>에 활성 교사 수가 자동 집계됩니다.
             </p>
@@ -298,7 +298,7 @@
 
       <!-- 열 구성 테이블 -->
       <div class="section">
-        <h2 class="section-title">📋 3. [2_교사승인명단] 탭 주요 열(Column) 구성 및 역할</h2>
+        <h2 class="section-title">[열 구성] 2_교사승인명단 탭 주요 열(Column) 구성 및 역할</h2>
         <div class="table-container">
           <table>
             <thead>
@@ -313,7 +313,7 @@
               <tr>
                 <td><strong>A열</strong></td>
                 <td><strong>승인여부</strong></td>
-                <td>☑️ 체크박스</td>
+                <td>체크박스 [V]</td>
                 <td><strong>[핵심 조작]</strong> 체크하면 즉시 이용 승인(TRUE), 체크 해제 시 즉시 잠금(FALSE).</td>
               </tr>
               <tr>
@@ -365,7 +365,7 @@
 
       <!-- 긴급 마스터 PIN -->
       <div class="section" style="margin-bottom:0;">
-        <h2 class="section-title">🔐 4. 비상 관리자 마스터 PIN</h2>
+        <h2 class="section-title">[비상 관리] 비상 관리자 마스터 PIN (0909)</h2>
         <p style="font-size:13.5px; color:#334155;">
           인터넷 장애나 시트 통신 지연 시에도 로그인 모달의 <strong>[마스터 PIN]</strong> 탭에서 마스터 비밀번호 <code>0909</code>를 입력하시면 모든 잠금을 즉시 우회하여 전 기능을 관리자 권한으로 이용하실 수 있습니다.
         </p>
@@ -380,7 +380,7 @@
         if (res.ok) {
           const txt = await res.text();
           await navigator.clipboard.writeText(txt);
-          alert('📋 통합 Apps Script 코드가 클립보드에 복사되었습니다!\n구글 시트의 [확장 프로그램] > [Apps Script]에 붙여넣으세요.');
+          alert('[복사 완료] 통합 Apps Script 코드가 클립보드에 복사되었습니다.\n구글 시트의 [확장 프로그램] > [Apps Script]에 붙여넣으세요.');
         } else {
           alert('파일을 불러올 수 없습니다. 프로젝트의 google_apps_script_dual_relational.js를 열어 복사해 주세요.');
         }

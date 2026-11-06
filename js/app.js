@@ -1,4 +1,218 @@
 'use strict';
+// === [2022 개정 교육과정 정규 교과군 및 교과목 표준 데이터베이스] ===
+const CURRICULUM_2022_SUBJECTS = {
+  '국어': {
+    label: '국어과',
+    kyogwaKey: '국어',
+    subjects: [
+      { name: '공통국어1', type: '공통' },
+      { name: '공통국어2', type: '공통' },
+      { name: '화법과 언어', type: '일반' },
+      { name: '독서와 작문', type: '일반' },
+      { name: '문학', type: '일반' },
+      { name: '주제 탐구 독서', type: '진로' },
+      { name: '문학과 영상', type: '진로' },
+      { name: '직무 의사소통', type: '진로' },
+      { name: '독서 토론과 글쓰기', type: '융합' },
+      { name: '매체 언어', type: '융합' },
+      { name: '언어생활과 탐구', type: '융합' }
+    ]
+  },
+  '수학': {
+    label: '수학과',
+    kyogwaKey: '수학',
+    subjects: [
+      { name: '공통수학1', type: '공통' },
+      { name: '공통수학2', type: '공통' },
+      { name: '기본수학1', type: '공통' },
+      { name: '기본수학2', type: '공통' },
+      { name: '대수', type: '일반' },
+      { name: '미적분Ⅰ', type: '일반' },
+      { name: '확률과 통계', type: '일반' },
+      { name: '미적분Ⅱ', type: '진로' },
+      { name: '기하', type: '진로' },
+      { name: '경제 수학', type: '진로' },
+      { name: '인공지능 수학', type: '진로' },
+      { name: '직무 수학', type: '진로' },
+      { name: '수학과 문화', type: '융합' },
+      { name: '실용 통계', type: '융합' },
+      { name: '수학과제 탐구', type: '융합' }
+    ]
+  },
+  '영어': {
+    label: '영어과',
+    kyogwaKey: '영어',
+    subjects: [
+      { name: '공통영어1', type: '공통' },
+      { name: '공통영어2', type: '공통' },
+      { name: '기본영어1', type: '공통' },
+      { name: '기본영어2', type: '공통' },
+      { name: '영어Ⅰ', type: '일반' },
+      { name: '영어Ⅱ', type: '일반' },
+      { name: '영어 독해와 작문', type: '일반' },
+      { name: '영어 회화', type: '일반' },
+      { name: '영미 문학 읽기', type: '진로' },
+      { name: '영어 발표와 토론', type: '진로' },
+      { name: '직무 영어', type: '진로' },
+      { name: '실생활 영어 회화', type: '융합' },
+      { name: '미디어 영어', type: '융합' },
+      { name: '세계 문화와 영어', type: '융합' }
+    ]
+  },
+  '사회': {
+    label: '사회(역사/도덕)과',
+    kyogwaKey: '사회',
+    subjects: [
+      { name: '통합사회1', type: '공통' },
+      { name: '통합사회2', type: '공통' },
+      { name: '한국사1', type: '공통' },
+      { name: '한국사2', type: '공통' },
+      { name: '세계시민과 지리', type: '일반' },
+      { name: '세계사', type: '일반' },
+      { name: '사회와 문화', type: '일반' },
+      { name: '현대사회와 윤리', type: '일반' },
+      { name: '한국지리 탐구', type: '진로' },
+      { name: '도시의 미래 탐구', type: '진로' },
+      { name: '동아시아 역사 기행', type: '진로' },
+      { name: '정치와 법', type: '진로' },
+      { name: '경제', type: '진로' },
+      { name: '윤리와 사상', type: '진로' },
+      { name: '인문학과 윤리', type: '진로' },
+      { name: '사회문제 탐구', type: '융합' },
+      { name: '금융과 경제생활', type: '융합' },
+      { name: '기후변화와 지속가능한 세계', type: '융합' },
+      { name: '역사로 탐구하는 현대 세계', type: '융합' },
+      { name: '윤리문제 탐구', type: '융합' },
+      { name: '지역사회 탐구', type: '융합' }
+    ]
+  },
+  '과학': {
+    label: '과학과',
+    kyogwaKey: '과학',
+    subjects: [
+      { name: '통합과학1', type: '공통' },
+      { name: '통합과학2', type: '공통' },
+      { name: '과학탐구실험1', type: '공통' },
+      { name: '과학탐구실험2', type: '공통' },
+      { name: '물리학', type: '일반' },
+      { name: '화학', type: '일반' },
+      { name: '생명과학', type: '일반' },
+      { name: '지구과학', type: '일반' },
+      { name: '역학과 에너지', type: '진로' },
+      { name: '전자기와 양자', type: '진로' },
+      { name: '물질과 에너지', type: '진로' },
+      { name: '화학 반응의 세계', type: '진로' },
+      { name: '세포와 물질대사', type: '진로' },
+      { name: '생물의 유전', type: '진로' },
+      { name: '지구시스템과학', type: '진로' },
+      { name: '행성우주과학', type: '진로' },
+      { name: '과학과제 연구', type: '융합' },
+      { name: '생태와 환경', type: '융합' },
+      { name: '융합과학 탐구', type: '융합' },
+      { name: '과학문화 복합탐구', type: '융합' }
+    ]
+  },
+  '기술가정_정보': {
+    label: '기술·가정/정보과',
+    kyogwaKey: '정보',
+    subjects: [
+      { name: '정보', type: '일반' },
+      { name: '기술·가정', type: '일반' },
+      { name: '인공지능 기초', type: '진로' },
+      { name: '데이터 과학', type: '진로' },
+      { name: '로봇과 공학설계', type: '진로' },
+      { name: '생활과학 탐구', type: '진로' },
+      { name: '창의 공학 탐구', type: '융합' },
+      { name: '스마트 홈과 지속가능 발전', type: '융합' },
+      { name: '소프트웨어와 생활', type: '융합' }
+    ]
+  },
+  '체육': {
+    label: '체육과',
+    kyogwaKey: '체육',
+    subjects: [
+      { name: '체육1', type: '공통' },
+      { name: '체육2', type: '공통' },
+      { name: '운동과 건강', type: '일반' },
+      { name: '스포츠 생활', type: '진로' },
+      { name: '스포츠 과학', type: '진로' },
+      { name: '스포츠 문화', type: '융합' },
+      { name: '스포츠 레저', type: '융합' }
+    ]
+  },
+  '예술': {
+    label: '예술과',
+    kyogwaKey: '미술',
+    subjects: [
+      { name: '음악', type: '공통' },
+      { name: '미술', type: '공통' },
+      { name: '연극', type: '공통' },
+      { name: '음악 연주와 창작', type: '일반' },
+      { name: '미술 창작', type: '일반' },
+      { name: '연극 제작', type: '일반' },
+      { name: '음악 감상과 비평', type: '진로' },
+      { name: '미술 감상과 비평', type: '진로' },
+      { name: '음악과 미디어', type: '융합' },
+      { name: '미술과 미디어', type: '융합' },
+      { name: '영상 예술', type: '융합' }
+    ]
+  },
+  '제2외국어_한문': {
+    label: '제2외국어/한문과',
+    kyogwaKey: '제2외국어',
+    subjects: [
+      { name: '독일어', type: '일반' },
+      { name: '프랑스어', type: '일반' },
+      { name: '스페인어', type: '일반' },
+      { name: '중국어', type: '일반' },
+      { name: '일본어', type: '일반' },
+      { name: '러시아어', type: '일반' },
+      { name: '아랍어', type: '일반' },
+      { name: '베트남어', type: '일반' },
+      { name: '한문', type: '일반' },
+      { name: '심화 독일어', type: '진로' },
+      { name: '심화 중국어', type: '진로' },
+      { name: '심화 일본어', type: '진로' },
+      { name: '한문 고전 읽기', type: '진로' }
+    ]
+  },
+  '교양': {
+    label: '교양과',
+    kyogwaKey: '도덕',
+    subjects: [
+      { name: '철학', type: '일반' },
+      { name: '논리학', type: '일반' },
+      { name: '심리학', type: '일반' },
+      { name: '교육학', type: '일반' },
+      { name: '종교학', type: '일반' },
+      { name: '진로와 직업', type: '일반' },
+      { name: '보건', type: '일반' },
+      { name: '환경', type: '일반' }
+    ]
+  }
+};
+
+function find2022GroupForSubject(subject) {
+  if (!subject || !subject.trim()) return '수학';
+  const s = subject.trim();
+  for (const [groupKey, grp] of Object.entries(CURRICULUM_2022_SUBJECTS)) {
+    if (grp.subjects.some(sub => sub.name === s || s.includes(sub.name) || sub.name.includes(s))) {
+      return groupKey;
+    }
+  }
+  if (/수학|미적|기하|대수|통계|확률/.test(s)) return '수학';
+  if (/국어|문학|작문|독서|화법|언어/.test(s)) return '국어';
+  if (/영어|English/.test(s)) return '영어';
+  if (/사회|지리|역사|한국사|세계사|윤리|도덕|정치|경제|법/.test(s)) return '사회';
+  if (/과학|물리|화학|생명|생물|지구|실험|역학|양자/.test(s)) return '과학';
+  if (/정보|컴퓨터|인공지능|AI|코딩|데이터|프로그래밍|기술|가정|로봇/.test(s)) return '기술가정_정보';
+  if (/체육|운동|스포츠/.test(s)) return '체육';
+  if (/음악|미술|연극|예술|디자인/.test(s)) return '예술';
+  if (/독일|프랑스|스페인|중국|일본|러시아|아랍|베트남|한문|외국어/.test(s)) return '제2외국어_한문';
+  if (/철학|심리|교육|보건|환경|진로/.test(s)) return '교양';
+  return '수학';
+}
+
 /* 화면 동작. 흐름: 항목·학년·메모 입력 → (방식 A) 앱에서 바로 완성 문단 / (방식 B) 프롬프트 복사 → 점검 → 복사·저장.
  * 재료: rules/2026.json, rules/prompt-base.json, patterns/web-cases.json, vendor/sr-rules.js(SRRules), js/extra-checks.js(SMChecks),
  *       js/prompt.js(SMPrompt), js/storage.js(SMStore), js/ai.js(SMAI), js/xlsx.js(SMXlsx) */
@@ -261,23 +475,49 @@
     $('#subjectGroupRow').hidden = !isSetuk;
     const e = SMPrompt.emphasisFor(S.rules, collectInput());
     if (isSetuk) {
-      const auto = SMPrompt.detectSubjectGroup(S.rules, d.subject);
-      const cur = d.subjectGroup || auto;
-      $$('#subjectGroupSeg button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.sg === cur)));
-      $('#sgHint').textContent = d.subjectGroup ? '직접 고른 구분이에요.' :
-        (d.subject.trim() ? `과목 이름으로 '${e.label}'(으)로 추정했어요. 다르면 눌러 바꿔 주세요.` : '과목을 적으면 자동으로 골라요.');
+      const cur2022 = S.draft.subject2022Group || find2022GroupForSubject(d.subject);
+      S.draft.subject2022Group = cur2022;
+      const grpData = CURRICULUM_2022_SUBJECTS[cur2022] || CURRICULUM_2022_SUBJECTS['수학'];
+
+      // Update 2022 교과군 buttons
+      $$('#subjectGroupSeg button').forEach(b => {
+        const isCur = (b.dataset.sg === cur2022);
+        b.setAttribute('aria-checked', String(isCur));
+        b.style.background = isCur ? '#2563eb' : '#f1f5f9';
+        b.style.color = isCur ? '#ffffff' : '#334155';
+        b.style.border = isCur ? '1.5px solid #1d4ed8' : '1px solid #cbd5e1';
+      });
+
+      // Render 2022 개정 교과목 목록 칩
+      const pickBox = $('#subjectPickChips');
+      if (pickBox) {
+        pickBox.innerHTML = grpData.subjects.map(sub => {
+          const isSel = (d.subject.trim() === sub.name);
+          const badgeBg = sub.type === '공통' ? '#dbeafe' : (sub.type === '일반' ? '#dcfce7' : (sub.type === '진로' ? '#f3e8ff' : '#fef3c7'));
+          const badgeText = sub.type === '공통' ? '#1d4ed8' : (sub.type === '일반' ? '#15803d' : (sub.type === '진로' ? '#7e22ce' : '#b45309'));
+          return `<button type="button" class="chip${isSel ? ' active' : ''}" data-sub2022="${esc(sub.name)}" style="display:inline-flex; align-items:center; gap:5px; padding:5px 10px; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer; transition:all 0.15s; ${isSel ? 'background:#1d4ed8; color:#ffffff; border:1.5px solid #1e40af; box-shadow:0 1px 3px rgba(29,78,216,0.3);' : 'background:#ffffff; color:#1e293b; border:1px solid #cbd5e1;'}">
+            <span>${esc(sub.name)}</span>
+            <span style="font-size:10px; font-weight:800; color:${isSel ? '#ffffff' : badgeText}; background:${isSel ? 'rgba(255,255,255,0.25)' : badgeBg}; padding:1px 5px; border-radius:4px;">${esc(sub.type)}</span>
+          </button>`;
+        }).join('');
+      }
+
+      const matchSub = grpData.subjects.find(sub => sub.name === d.subject.trim());
+      $('#sgHint').textContent = matchSub
+        ? `2022 개정 교육과정 [${grpData.label}] - '${matchSub.name}' (${matchSub.type}과목) 기준 불러오기 완료. 역량 및 지침이 자동 연동됩니다.`
+        : `2022 개정 교육과정 [${grpData.label}] 교과군이 선택되었습니다. 아래 교과목 칩을 클릭하거나 직접 입력하세요.`;
     }
     if (!e) { $('#emphChips').innerHTML = ''; $('#emphHint').textContent = ''; return; }
     const customIds = customOf('emph').map(n => 'c:' + n);
-    const lenses = SMPrompt.lensItems(S.ref, d.area); // 교과세특 '자주 쓰는 관점'(교사 요청, 기재요령 근거 아님) — 따로 묶어 보여 줌
+    const lenses = SMPrompt.lensItems(S.ref, d.area);
     const sel = ((d.emph || {})[d.area] || []).filter(id => e.items.some(i => i.id === id) || lenses.some(i => i.id === id) || customIds.includes(id));
     d.emph = { ...(d.emph || {}), [d.area]: sel };
     const chip = (i) => `<button type="button" class="chip" aria-pressed="${sel.includes(i.id)}" data-emph="${esc(i.id)}" title="${esc(i.desc)}">${esc(i.name)}</button>`;
     $('#emphChips').innerHTML = e.items.map(chip).join('') +
-      (lenses.length ? `<span class="chips-sub">자주 쓰는 관점 <span class="muted">(교사 선택 · 기재요령 근거 아님 · 고른 것만 반영)</span></span>` + lenses.map(chip).join('') : '') +
+      (lenses.length ? `<span class="chips-sub">렌즈별 역량</span>` + lenses.map(chip).join('') : '') +
       customChipsHtml('emph', 'data-emph', n => 'c:' + n, sel);
     const pages = [...new Set((e.sources || []).map(x => x.page))].sort((x, y) => x - y).join('·');
-    $('#emphHint').textContent = (sel.length ? `고른 ${sel.length}개를 중심으로 써요.` : '고르지 않으면 메모에 근거가 있는 관점을 AI가 골라 써요.') + ` 근거: 기재요령 ${pages}쪽`;
+    $('#emphHint').textContent = (sel.length ? `총 ${sel.length}개 강조 항목 선택됨.` : '원하는 강조 항목을 선택하여 세특 문구에 반영하세요.') + (pages ? ` 출처: 나이스 ${pages}쪽` : '');
   }
   function renderKyogwa() {
     const d = S.draft;
@@ -1261,11 +1501,38 @@
       S.draft.grade = Number(b.dataset.grade); saveDraft(); renderGrade(); renderAreas(); renderSubjectHint(); renderKyogwa(); renderComps(); renderObs(); renderMemoNotes();
     });
     $('#subject').addEventListener('input', (e) => { S.draft.subject = e.target.value; saveDraft(); renderSubjectHint(); renderExamplesDebounced(); renderEmphasisDebounced(); renderKyogwaDebounced(); renderObsDebounced(); });
+    // 2022 개정 교과군 선택 리스너
     $('#subjectGroupSeg').addEventListener('click', (e) => {
       const b = e.target.closest('[data-sg]'); if (!b) return;
-      S.draft.subjectGroup = b.dataset.sg === SMPrompt.detectSubjectGroup(S.rules, S.draft.subject) ? '' : b.dataset.sg;
-      saveDraft(); renderEmphasis();
+      const sg = b.dataset.sg;
+      S.draft.subject2022Group = sg;
+      const grp = CURRICULUM_2022_SUBJECTS[sg];
+      if (grp) {
+        // If current subject is not in this group, pick first common/primary subject
+        const inGrp = grp.subjects.some(s => s.name === S.draft.subject.trim());
+        if (!inGrp && grp.subjects.length > 0) {
+          S.draft.subject = grp.subjects[0].name;
+          if ($('#subject')) $('#subject').value = grp.subjects[0].name;
+          S.draft.kyogwa = grp.kyogwaKey || sg;
+        }
+      }
+      saveDraft(); renderEmphasis(); renderKyogwa(); renderPreviewDebounced();
     });
+
+    // 2022 개정 교과목 칩 클릭 리스너
+    const pickBox = $('#subjectPickChips');
+    if (pickBox) {
+      pickBox.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-sub2022]'); if (!b) return;
+        const subName = b.dataset.sub2022;
+        S.draft.subject = subName;
+        if ($('#subject')) $('#subject').value = subName;
+        const cur2022 = S.draft.subject2022Group || find2022GroupForSubject(subName);
+        const grp = CURRICULUM_2022_SUBJECTS[cur2022];
+        if (grp) S.draft.kyogwa = grp.kyogwaKey || cur2022;
+        saveDraft(); renderEmphasis(); renderKyogwa(); renderPreviewDebounced();
+      });
+    }
     $('#kyogwaSel').addEventListener('change', (e) => { S.draft.kyogwa = e.target.value; saveDraft(); renderKyogwa(); });
     $('#kgChips').addEventListener('click', (e) => {
       const b = e.target.closest('[data-kg]'); if (!b) return;

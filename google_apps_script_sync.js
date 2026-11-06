@@ -550,7 +550,7 @@ function approveAllPendingUsers() {
       count++;
     }
   }
-  SpreadsheetApp.getUi().alert("🎉 총 " + count + "명의 대기 신청자가 '승인' 처리되었습니다! (3개월간 이용 가능)");
+  SpreadsheetApp.getUi().alert("🎉 총 " + count + "명의 대기 신청자가 '승인' 처리되었습니다! (1개월간 이용 가능)");
 }
 
 function approveSelectedUser() {

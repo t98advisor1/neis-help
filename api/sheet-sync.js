@@ -284,8 +284,8 @@ export default async function handler(req, res) {
         approved: isAuto,
         status,
         message: isAuto
-          ? "학교 공식 계정(@sch.hs.kr / @goedu.kr) 확인 완료! 3개월 이용 권한이 즉시 자동 승인되었습니다."
-          : "사용 승인 신청이 완료되었습니다. 관리자 승인 후 3개월간 이용하실 수 있습니다."
+          ? "학교 공식 계정(@sch.hs.kr / @goedu.kr) 확인 완료! 1개월 이용 권한이 즉시 자동 승인되었습니다."
+          : "사용 승인 신청이 완료되었습니다. 관리자 승인 후 1개월간 이용하실 수 있습니다."
       });
     }
 
