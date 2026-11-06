@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👑 관리자 전용 교사 승인 및 구글 시트 운영 매뉴얼</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.variable.min.css">
+  <style>
+    :root {
+      --primary: #15803d;
+      --primary-dark: #166534;
+      --primary-light: #f0fdf4;
+      --primary-border: #86efac;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --hairline: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      margin: 0;
+      padding: 32px 20px;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: var(--surface);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+      border: 1px solid var(--hairline);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      padding: 36px 32px;
+      position: relative;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 800;
+      background: #22c55e;
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .title {
+      font-size: 26px;
+      font-weight: 800;
+      margin: 0 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      margin: 0;
+      line-height: 1.5;
+    }
+    .content {
+      padding: 32px;
+    }
+    .section {
+      margin-bottom: 36px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ink);
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid var(--hairline);
+      padding-bottom: 8px;
+    }
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: var(--primary-light);
+      border: 1.5px solid var(--primary-border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: #334155;
+      margin: 0;
+      line-height: 1.5;
+    }
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 24px;
+      border-radius: 12px;
+      border: 1px solid var(--hairline);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 800;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1.5px solid var(--hairline);
+    }
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--hairline);
+      color: #334155;
+    }
+    tr:last-child td { border-bottom: none; }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 800;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(21,128,61,0.25);
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+    .btn.secondary {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1.5px solid var(--hairline);
+      box-shadow: none;
+    }
+    .btn.secondary:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+    .alert {
+      background: #eff6ff;
+      border: 1.5px solid #93c5fd;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: #1e40af;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #0f172a;
+    }
+    .step-box {
+      background: #f8fafc;
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+    .step-num {
+      font-size: 12px;
+      font-weight: 800;
+      color: #2563eb;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="badge">🔒 사이트 운영자(선생님) 전용 비공개 매뉴얼</span>
+      <h1 class="title">👑 교사 승인 및 1개월 이용권 관리 시트 가이드</h1>
+      <p class="subtitle">
+        구글 계정 로그인 신청자의 실시간 기록, A열 원클릭 체크박스 승인, 만료일 관리 및 Google Apps Script 웹 앱 연결 가이드입니다.
+      </p>
+    </div>
+
+    <div class="content">
+      <!-- 시트 바로가기 버튼 -->
+      <div style="background:#f0fdf4; border:2px solid #86efac; border-radius:14px; padding:20px; margin-bottom:30px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+        <div>
+          <span style="font-size:12px; font-weight:800; color:#15803d; background:#dcfce7; padding:3px 10px; border-radius:999px;">공식 관리자 구글 시트</span>
+          <h2 style="font-size:17px; font-weight:800; color:#0f172a; margin:6px 0 2px;">1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4</h2>
+          <p style="font-size:12.5px; color:#475569; margin:0;">[2_교사승인명단] 탭에서 A열 체크박스로 30일 이용권을 즉시 승인합니다.</p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" class="btn">
+            📋 관리 시트 열기 ↗
+          </a>
+          <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/copy" target="_blank" class="btn secondary">
+            사본 만들기 ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- 왜 구글 로그인 시 시트로 안 넘어왔는가? -->
+      <div class="section">
+        <h2 class="section-title">❓ 1. "구글 로그인했는데 시트로 왜 아이디가 안 넘어왔을까요?"</h2>
+        <div class="alert">
+          <strong>💡 원인 및 해결 원리:</strong><br>
+          구글 시트는 외부 사이트에서 마음대로 글을 쓸 수 없도록 구글 보안 정책으로 막혀 있습니다.<br>
+          따라서 구글 시트 내부의 <strong>[Apps Script]</strong>를 <strong>'웹 앱으로 배포(액세스 권한: 누구나)'</strong>하여 고유한 수신 주소(URL)를 만든 뒤, 웹앱 설정 또는 Vercel 환경변수(<code>ADMIN_GAS_URL</code>)에 등록해야 구글 로그인하는 즉시 시트로 행이 자동 추가됩니다.
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <h3 style="font-size:15px; font-weight:800; margin:0 0 10px 0;">🛠️ 1분 완벽 연동 절차 (한 번만 세팅하면 끝!)</h3>
+          <div class="step-box">
+            <div class="step-num">STEP 1. Apps Script 열기</div>
+            <p style="margin:0; font-size:13px; color:#334155;">
+              <a href="https://docs.google.com/spreadsheets/d/1Tzo4r78gaFLMyGJOOBM7hTrmIZtEBopFOFlWWs1VQp4/edit" target="_blank" style="font-weight:700; color:#15803d;">관리자 승인 시트</a> 상단 메뉴에서 <code>확장 프로그램</code> > <code>Apps Script</code>를 클릭합니다.
+            </p>
+          </div>
+
+          <div class="step-box">
+            <div class="step-num">STEP 2. 통합 스크립트 코드 붙여넣기</div>
+            <p style="margin:0 0 8px 0; font-size:13px; color:#334155;">
+              기존 코드를 모두 지우고 프로젝트의 <code>google_apps_script_dual_relational.js</code> 코드를 전체 붙여넣은 뒤 <code>Ctrl+S</code>(저장)를 누릅니다.
+            </p>
+            <button type="button" class="btn secondary" id="btnCopyGasCode" style="font-size:12px; padding:6px 14px;">📋 통합 Apps Script 코드 클립보드 복사</button>
+          </div>
+
+          <div class="step-box">
+            <div class="step-num">STEP 3. 웹 앱으로 배포하기 (가장 중요!)</div>
+            <p style="margin:0; font-size:13px; color:#334155;">
+              우측 상단 파란색 <strong>[배포]</strong> 버튼 > <strong>[새 배포]</strong> 클릭 ➔ 유형: <strong>[웹 앱]</strong> 선택 ➔ 다음 권한으로 앱 실행: <strong>[나]</strong> ➔ 액세스 권한: ⭐️ <strong>[모든 사용자(Anyone)]</strong> 선택 ➔ <strong>[배포]</strong> 클릭 후 발급된 <code>https://script.google.com/macros/s/.../exec</code> 주소를 복사합니다.
+            </p>
+          </div>
+
+          <div class="step-box">
+            <div class="step-num">STEP 4. Vercel 또는 웹앱에 등록</div>
+            <p style="margin:0; font-size:13px; color:#334155;">
+              Vercel 대시보드의 Environment Variables에 <code>ADMIN_GAS_URL</code>을 추가하거나, 웹앱의 <code>마스터 설정(비번 0909)</code>에 붙여넣으시면 모든 기기에서 구글 로그인 시 실시간으로 기록됩니다.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3단계 운영 프로세스 -->
+      <div class="section">
+        <h2 class="section-title">⚡ 2. 일상 교사 승인 3단계 프로세스</h2>
+        <div class="grid-cards">
+          <div class="card">
+            <div class="card-title">1️⃣ 교사 접속 & 자동 행 추가</div>
+            <p class="card-desc">
+              선생님이 웹앱에서 Google 로그인을 하면, 관리자 시트 <code>[2_교사승인명단]</code>에 접속 시각, 성함, 소속 학교, 이메일이 실시간으로 1행 자동 생성됩니다.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title">2️⃣ A열 체크박스(☑️) 클릭 = 즉시 승인</div>
+            <p class="card-desc">
+              관리자 선생님은 시트 <strong>A열의 체크박스(☑️)</strong>를 클릭하기만 하면 됩니다. 클릭 즉시 해당 선생님 계정에 <strong>1개월(30일) 정식 이용권</strong>이 부여됩니다.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title">3️⃣ 1초 입장 & 만료일 자동 계산</div>
+            <p class="card-desc">
+              승인된 교사는 비밀번호 없이 사이트에 1초 만에 입장하며, 시트에서는 30일 후 만료일을 자동 계산하고 <code>[1_승인대시보드]</code>에 활성 교사 수가 자동 집계됩니다.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 열 구성 테이블 -->
+      <div class="section">
+        <h2 class="section-title">📋 3. [2_교사승인명단] 탭 주요 열(Column) 구성 및 역할</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:12%;">열(Col)</th>
+                <th style="width:20%;">항목명</th>
+                <th style="width:20%;">형식</th>
+                <th>설명 및 관리자 조작 가이드</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>A열</strong></td>
+                <td><strong>승인여부</strong></td>
+                <td>☑️ 체크박스</td>
+                <td><strong>[핵심 조작]</strong> 체크하면 즉시 이용 승인(TRUE), 체크 해제 시 즉시 잠금(FALSE).</td>
+              </tr>
+              <tr>
+                <td><strong>B열</strong></td>
+                <td><strong>신청일시</strong></td>
+                <td>날짜 및 시간</td>
+                <td>구글 계정 로그인 및 승인 신청 시 실시간 안전 기록.</td>
+              </tr>
+              <tr>
+                <td><strong>C열</strong></td>
+                <td><strong>교사성명</strong></td>
+                <td>텍스트</td>
+                <td>구글 프로필에 등록된 교사 성함.</td>
+              </tr>
+              <tr>
+                <td><strong>D열</strong></td>
+                <td><strong>소속학교</strong></td>
+                <td>텍스트</td>
+                <td>공식 도메인은 학교명 자동 분류, 일반 계정은 신청 학교명.</td>
+              </tr>
+              <tr>
+                <td><strong>E열</strong></td>
+                <td><strong>이메일</strong></td>
+                <td>이메일</td>
+                <td>선생님의 Google 계정 이메일 (승인 여부 확인의 고유 식별자).</td>
+              </tr>
+              <tr>
+                <td><strong>F열</strong></td>
+                <td><strong>자동승인 플래그</strong></td>
+                <td>텍스트</td>
+                <td><code>@sch.kr</code> 및 <code>@goedu.kr</code> 계정은 관리자 개입 없이 로그인 즉시 실시간 1초 자동 승인.</td>
+              </tr>
+              <tr>
+                <td><strong>G열</strong></td>
+                <td><strong>만료예정일</strong></td>
+                <td>날짜</td>
+                <td>승인일로부터 30일 후 자동 표기. 만료 7일 전 대시보드에 알림 표시.</td>
+              </tr>
+              <tr>
+                <td><strong>H열</strong></td>
+                <td><strong>이용권 연장</strong></td>
+                <td>숫자</td>
+                <td>추가 30일 연장이 필요할 때 숫자(1, 2, ...)를 올리면 연장 횟수만큼 만료일이 자동 갱신.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 긴급 마스터 PIN -->
+      <div class="section" style="margin-bottom:0;">
+        <h2 class="section-title">🔐 4. 비상 관리자 마스터 PIN</h2>
+        <p style="font-size:13.5px; color:#334155;">
+          인터넷 장애나 시트 통신 지연 시에도 로그인 모달의 <strong>[마스터 PIN]</strong> 탭에서 마스터 비밀번호 <code>0909</code>를 입력하시면 모든 잠금을 즉시 우회하여 전 기능을 관리자 권한으로 이용하실 수 있습니다.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('btnCopyGasCode')?.addEventListener('click', async () => {
+      try {
+        const res = await fetch('google_apps_script_dual_relational.js');
+        if (res.ok) {
+          const txt = await res.text();
+          await navigator.clipboard.writeText(txt);
+          alert('📋 통합 Apps Script 코드가 클립보드에 복사되었습니다!\n구글 시트의 [확장 프로그램] > [Apps Script]에 붙여넣으세요.');
+        } else {
+          alert('파일을 불러올 수 없습니다. 프로젝트의 google_apps_script_dual_relational.js를 열어 복사해 주세요.');
+        }
+      } catch (e) {
+        alert('복사 중 오류가 발생했습니다: ' + e.message);
+      }
+    });
+  </script>
+</body>
+</html>
