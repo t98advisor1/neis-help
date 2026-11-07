@@ -46,6 +46,8 @@ function onOpen() {
     .addSeparator()
     .addItem("[API 설정] Gemini API 키 설정", "promptSetApiKey")
     .addItem("[웹앱 바로가기] NEIS 올인원 웹앱 열기", "openWebApp")
+    .addSeparator()
+    .addItem("[학년도 마감] 차년도 학생 초기화 및 기존 데이터 아카이빙", "archiveAndResetForNewSchoolYear")
     .addToUi();
 }
 
@@ -992,4 +994,69 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+
+/**
+ * =========================================================================================
+ * [차년도 학년도 마감 및 새 학년 초기화]
+ * =========================================================================================
+ * - 기존 2026학년도 학생 데이터(교과 세특, 모바일 교무수첩 관찰, 진학상담)를 [YYYY_아카이브] 탭으로 안전하게 복사 백업
+ * - 현재 활성 시트(1_교과명렬_관찰기록, 교무수첩_통합기록, 3_학급담임_진학상담)의 학생 행을 초기화하여 새 학년도 명렬 입력 준비
+ */
+function archiveAndResetForNewSchoolYear() {
+  var ui = SpreadsheetApp.getUi();
+  var confirm = ui.alert(
+    "[차년도 학년도 마감 및 새 학년 초기화 확인]",
+    "현재 학년도 학생들의 모든 데이터(교과 세특, 모바일 교무수첩 기록, 진학상담)를 [아카이브_백업] 탭으로 영구 보관하고,\n" +
+    "기존 탭을 깨끗하게 비워 새 학년도 학생 명렬 입력 상태로 초기화하시겠습니까?\n\n" +
+    "※ 기존 데이터는 사라지지 않고 아카이브 탭에 안전하게 보존됩니다.",
+    ui.ButtonSet.YES_NO
+  );
+
+  if (confirm !== ui.Button.YES) {
+    ui.alert("초기화가 취소되었습니다.");
+    return;
+  }
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var currentYear = new Date().getFullYear();
+  var prefix = currentYear + "_아카이브_";
+
+  var targetSheets = ["1_교과명렬_관찰기록", "교과담임_세특", "교무수첩_기록", "교무수첩_통합기록", "3_학급담임_진학상담", "취합_통합결과"];
+
+  var archivedCount = 0;
+  for (var i = 0; i < targetSheets.length; i++) {
+    var sName = targetSheets[i];
+    var sheet = ss.getSheetByName(sName);
+    if (!sheet) continue;
+
+    // 1. 아카이브 탭 생성 (수식을 값으로 고정하여 영구 보존)
+    var archiveName = prefix + sName.replace(/[0-9]_/, "");
+    var oldArchive = ss.getSheetByName(archiveName);
+    if (oldArchive) {
+      archiveName = archiveName + "_" + Utilities.formatDate(new Date(), "Asia/Seoul", "MMdd_HHmm");
+    }
+
+    var copySheet = sheet.copyTo(ss);
+    copySheet.setName(archiveName);
+    copySheet.setTabColor("#64748b");
+
+    // 수식을 값으로 치환하여 보관
+    var range = copySheet.getDataRange();
+    range.setValues(range.getValues());
+
+    // 2. 기존 활성 탭 초기화 (헤더 1행은 남기고 2행 이하 학생 데이터 삭제)
+    var lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      sheet.deleteRows(2, lastRow - 1);
+    }
+    archivedCount++;
+  }
+
+  ui.alert(
+    "[학년도 마감 및 초기화 완료]\n\n" +
+    "총 " + archivedCount + "개 시트가 [" + prefix + "*] 아카이브 탭으로 안전하게 복사 백업되었습니다.\n\n" +
+    "이제 나이스(NEIS)에서 새 학년도 학생 명렬표(학번, 성명, 희망진로)를 복사하여 활성 시트의 A2 셀에 붙여넣으시면 즉시 새 학년도 관리가 시작됩니다."
+  );
 }
