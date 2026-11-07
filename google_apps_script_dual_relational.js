@@ -848,13 +848,38 @@ function doPost(e) {
 
     // === [모바일 교무수첩(T-ong) 통합 시트 동기화 API (출결/자리/관찰/상담)] ===
     if (action === "save_notebook" || action === "sync_tong_notebook" || action === "save_attendance") {
-      var nbSheet = ss.getSheetByName("교무수첩_기록") || ss.getSheetByName("교무수첩_통합기록");
+      var nbSheet = ss.getSheetByName("교무수첩_기록") || ss.getSheetByName("교무수첩_통합기록") || ss.getSheetByName("4_교무수첩_통합기록");
       if (!nbSheet) {
-        nbSheet = ss.insertSheet("교무수첩_통합기록");
+        nbSheet = ss.insertSheet("4_교무수첩_통합기록");
         nbSheet.appendRow(["기록일시", "학번", "성명", "구분(출결/좌석/상담/관찰)", "세부내용", "메모"]);
         nbSheet.getRange("A1:F1").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
       }
       var now = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
+
+      if (body.items && Array.isArray(body.items) && body.items.length > 0) {
+        var rowsToAdd = [];
+        for (var i = 0; i < body.items.length; i++) {
+          var itm = body.items[i];
+          rowsToAdd.push([
+            itm.timestamp || itm.date || now,
+            String(itm.studentId || "").trim(),
+            String(itm.studentName || "").trim(),
+            itm.category || itm.type || "관찰",
+            itm.detail || itm.content || "",
+            itm.memo || ""
+          ]);
+        }
+        if (rowsToAdd.length > 0) {
+          nbSheet.getRange(nbSheet.getLastRow() + 1, 1, rowsToAdd.length, 6).setValues(rowsToAdd);
+        }
+        return ContentService.createTextOutput(JSON.stringify({
+          success: true,
+          count: rowsToAdd.length,
+          message: rowsToAdd.length + "건의 모바일 교무수첩 기록이 동기화되었습니다.",
+          timestamp: now
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
       var sId = String(body.studentId || "").trim();
       var sName = String(body.studentName || "").trim();
       var category = body.category || body.type || (action === "save_attendance" ? "출결" : "일반관찰");
