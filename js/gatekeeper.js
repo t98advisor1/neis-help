@@ -39,14 +39,7 @@
     currentGoogleUser: null,
 
     getGasUrl() {
-      const customUrl = localStorage.getItem(ADMIN_GAS_KEY);
-      if (customUrl && customUrl.trim()) return customUrl.trim();
-      if (this.serverAdminGasUrl && this.serverAdminGasUrl.trim()) return this.serverAdminGasUrl.trim();
-      const homeroomUrl = localStorage.getItem('swk_gsheet_homeroom_url') || localStorage.getItem('SR_GAS_HOMEROOM_URL');
-      if (homeroomUrl && homeroomUrl.trim()) return homeroomUrl.trim();
-      const singleUrl = localStorage.getItem('swk_gsheet_web_app_url') || localStorage.getItem('swk_gsheet_url');
-      if (singleUrl && singleUrl.trim()) return singleUrl.trim();
-      // 기본 클라우드 데모 시트 동기화 엔드포인트 반환 (개인 시트 연동 전에도 100% 테스트 가능)
+      // 표준 관리자 승인 및 보안 관제 엔드포인트는 항상 Vercel 서버리스 API(/api/sheet-sync)로 고정
       return '/api/sheet-sync';
     },
 
@@ -380,20 +373,11 @@
     // 승인 신청서 전송
     async submitApplication({ name, school, email, subject, reason }) {
       const cleanEmail = String(email || '').trim().toLowerCase();
-      const cleanName = String(name || '').trim();
-      const cleanSchool = String(school || '').trim();
+      const cleanName = String(name || '').trim() || (cleanEmail.split('@')[0] + ' 교사');
+      const cleanSchool = String(school || '').trim() || '신규 신청 고등학교';
 
-      if (!cleanEmail || !cleanName || !cleanSchool) {
-        return { success: false, message: '선생님 성함, 소속 학교, 이메일은 필수 입력 사항입니다.' };
-      }
-
-      const gasUrl = this.getGasUrl();
-      if (!gasUrl) {
-        return {
-          success: true,
-          approved: false,
-          message: '승인 신청이 접수되었습니다. 관리자 확인 후 1개월간 이용하실 수 있습니다.'
-        };
+      if (!cleanEmail) {
+        return { success: false, message: '선생님 이메일은 필수 입력 사항입니다.' };
       }
 
       try {
@@ -406,16 +390,15 @@
           reason: reason || ''
         };
 
-        const res = await fetch(gasUrl, {
+        const res = await fetch('/api/sheet-sync', {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
         if (res.ok) {
           const data = await res.json();
           if (data.approved) {
-            // 신천고/교육청 계정으로 시트에서 즉시 승인된 경우
             this.authorize({
               email: cleanEmail,
               name: cleanName,
@@ -425,7 +408,7 @@
             return {
               success: true,
               approved: true,
-              message: `학교 공식 계정 확인 완료! 1개월 이용 권한이 자동으로 승인되었습니다.`
+              message: '학교 공식 계정 확인 완료. 1개월 이용 권한이 자동으로 승인되었습니다.'
             };
           }
           return {
@@ -433,16 +416,21 @@
             approved: false,
             message: data.message || '승인 신청이 완료되었습니다. 관리자 승인 후 1개월간 이용하실 수 있습니다.'
           };
+        } else {
+          return {
+            success: false,
+            approved: false,
+            message: '서버 접수 오류 (' + res.status + '). 잠시 후 다시 시도해 주세요.'
+          };
         }
       } catch (err) {
-        console.warn('GAS apply error:', err);
+        console.warn('Apply error:', err);
+        return {
+          success: false,
+          approved: false,
+          message: '네트워크 통신 오류가 발생했습니다: ' + err.message
+        };
       }
-
-      return {
-        success: true,
-        approved: false,
-        message: '승인 신청이 접수되었습니다. 관리자 확인 후 1개월간 이용하실 수 있습니다.'
-      };
     },
 
     // 세션 실시간 서버 검증 (관리자가 취소/대기 전환 시 즉시 강제 로그아웃 및 잠금)

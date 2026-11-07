@@ -717,6 +717,13 @@
 
     // 초기 마스터 PIN 검증 실행
     checkAdminPin();
+
+    // 8초마다 실시간 신청자 자동 갱신
+    setInterval(() => {
+      if (sessionStorage.getItem('neis_admin_pin_verified') === 'true') {
+        fetchApplicants();
+      }
+    }, 8000);
   </script>
 </body>
 </html>
