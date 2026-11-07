@@ -133,53 +133,72 @@ export default async function handler(req, res) {
       });
     }
 
-    // 4. 사용자 승인 여부 실시간 확인
-    if (action === 'check_access') {
-      const email = String(req.query.email || '').trim().toLowerCase();
-      const adminGasUrl = getAdminGasUrl();
-      if (adminGasUrl) {
-        try {
-          const remoteUrl = `${adminGasUrl}?action=check_access&email=${encodeURIComponent(email)}`;
-          const r = await fetch(remoteUrl, { method: 'GET', headers: { 'Accept': 'application/json' } });
-          if (r.ok) {
-            const data = await r.json();
-            if (data && data.found) return res.status(200).json(data);
-          }
-        } catch (e) {
-          console.warn('[sheet-sync] Remote GAS check_access error:', e.message);
-        }
-      }
-      // 신천고 또는 경기도교육청 계정은 무조건 즉시 승인!
-      if (email.endsWith('@sch.hs.kr') || email.endsWith('@goedu.kr')) {
-        return res.status(200).json({
-          found: true,
-          approved: true,
-          status: "승인",
-          school: "신천고 / 경기도교육청",
-          message: "학교 공식 계정 자동승인 확인 완료"
-        });
-      }
-
-      const currentApplicants = await loadApplicantsFromKV();
-      const found = currentApplicants.find(a => a.email.toLowerCase() === email);
-      if (found) {
-        return res.status(200).json({
-          found: true,
-          approved: found.status === '승인',
-          status: found.status,
-          name: found.name,
-          school: found.school
-        });
-      }
-
-      return res.status(200).json({
-        found: false,
-        approved: false,
-        status: "not_found"
-      });
-    }
-
-    // 5. 신청자 전체 목록 조회 (KV 영구 저장소 우선 조회)
+    // 4. 사용자 승인 여부 실시간 확인 (KV 저장소 우선 대조 - 취소/차단 계정 즉시 차단)
+    if (action === 'check_access') {
+      const email = String(req.query.email || '').trim().toLowerCase();
+      if (!email) {
+        return res.status(400).json({ found: false, approved: false, error: '이메일을 입력해 주세요.' });
+      }
+
+      // KV 레지스트리 조회 (관리자의 승인/취소 상태가 최우선 기준)
+      const currentApplicants = await loadApplicantsFromKV();
+      const found = currentApplicants.find(a => a.email.toLowerCase() === email);
+
+      if (found) {
+        const isApproved = (found.status === '승인');
+        return res.status(200).json({
+          found: true,
+          approved: isApproved,
+          status: found.status,
+          name: found.name || email.split('@')[0],
+          school: found.school || '고등학교',
+          expiresAt: found.expiresAt || null,
+          message: isApproved
+            ? '[승인 확인 완료] 1개월 정식 이용이 활성화되었습니다.'
+            : '관리자에 의해 이용 승인이 대기 또는 취소 상태로 변경되었습니다.'
+        });
+      }
+
+      // KV에 미등록된 최초 접속자 중 학교/교육청 공식 도메인은 자동 승인 등록
+      const isOfficialDomain = email.endsWith('@sch.hs.kr') || email.endsWith('@goedu.kr') || email.endsWith('.sch.kr') || email.endsWith('sch.kr');
+      if (isOfficialDomain) {
+        const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        const exp = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+        const schoolName = email.includes('sch') ? '신천고등학교(공식도메인)' : '경기도교육청(공식도메인)';
+        const newTeacher = {
+          date: now,
+          name: email.split('@')[0] + ' 교사',
+          school: schoolName,
+          email: email,
+          subject: '공식 도메인 로그인',
+          reason: '학교/교육청 공식 도메인 실시간 자동승인 접속',
+          status: '승인',
+          expiresAt: exp,
+          note: '학교 공식 계정 자동승인'
+        };
+        currentApplicants.unshift(newTeacher);
+        await saveApplicantsToKV(currentApplicants);
+
+        return res.status(200).json({
+          found: true,
+          approved: true,
+          status: '승인',
+          name: newTeacher.name,
+          school: schoolName,
+          expiresAt: exp,
+          message: '학교 공식 계정 자동승인 확인 완료 (1개월 정식 이용 활성화)'
+        });
+      }
+
+      return res.status(200).json({
+        found: false,
+        approved: false,
+        status: 'not_found',
+        message: '신청 내역이 없습니다. 교사 정보를 입력하고 [교사 사용 승인 신청하기]를 눌러주세요.'
+      });
+    }
+
+    // 5. 신청자 전체 목록 조회 (KV 영구 저장소 우선 조회)
     if (action === 'list_applicants') {
       const currentApplicants = await loadApplicantsFromKV();
       return res.status(200).json({
@@ -256,32 +275,66 @@ export default async function handler(req, res) {
     }
 
     // 3. 교사 사용 승인 / 대기 전환 / 전체 승인 / 신청 접수 (KV 영구 저장)
-    if (action === 'approve_teacher') {
-      const email = String(body.email || req.query.email || '').trim().toLowerCase();
-      const currentApplicants = await loadApplicantsFromKV();
-      const target = currentApplicants.find(a => a.email.toLowerCase() === email);
-      if (target) {
-        target.status = '승인';
-        target.approvedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-        const exp = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-        target.expiresAt = exp;
-        await saveApplicantsToKV(currentApplicants);
-        return res.status(200).json({ success: true, message: `${target.name} 교사 1개월 승인 완료`, teacher: target });
-      }
-      return res.status(404).json({ success: false, error: '해당 교사를 찾을 수 없습니다.' });
+    if (action === 'approve_teacher') {
+      const email = String(body.email || req.query.email || '').trim().toLowerCase();
+      if (!email) return res.status(400).json({ success: false, error: '이메일을 입력해 주세요.' });
+      const currentApplicants = await loadApplicantsFromKV();
+      const target = currentApplicants.find(a => a.email.toLowerCase() === email);
+      const exp = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      if (target) {
+        target.status = '승인';
+        target.approvedAt = now;
+        target.expiresAt = exp;
+        await saveApplicantsToKV(currentApplicants);
+        return res.status(200).json({ success: true, message: target.name + ' 교사 1개월 승인 완료', teacher: target });
+      } else {
+        const newTeacher = {
+          date: now,
+          name: email.split('@')[0],
+          school: '관리자 수동 승인',
+          email: email,
+          subject: '관리자 직권 승인',
+          reason: '관리자에 의한 직권 승인',
+          status: '승인',
+          expiresAt: exp,
+          approvedAt: now,
+          note: '관리자 수동 승인'
+        };
+        currentApplicants.unshift(newTeacher);
+        await saveApplicantsToKV(currentApplicants);
+        return res.status(200).json({ success: true, message: email + ' 교사 1개월 승인 완료', teacher: newTeacher });
+      }
     }
 
-    if (action === 'reject_teacher') {
-      const email = String(body.email || req.query.email || '').trim().toLowerCase();
-      const currentApplicants = await loadApplicantsFromKV();
-      const target = currentApplicants.find(a => a.email.toLowerCase() === email);
-      if (target) {
-        target.status = '대기';
-        target.expiresAt = null;
-        await saveApplicantsToKV(currentApplicants);
-        return res.status(200).json({ success: true, message: `${target.name} 교사 승인 대기로 전환되었습니다.`, teacher: target });
-      }
-      return res.status(404).json({ success: false, error: '해당 교사를 찾을 수 없습니다.' });
+    if (action === 'reject_teacher') {
+      const email = String(body.email || req.query.email || '').trim().toLowerCase();
+      if (!email) return res.status(400).json({ success: false, error: '이메일을 입력해 주세요.' });
+      const currentApplicants = await loadApplicantsFromKV();
+      const target = currentApplicants.find(a => a.email.toLowerCase() === email);
+      if (target) {
+        target.status = '대기';
+        target.expiresAt = null;
+        target.revokedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        target.note = '관리자에 의해 승인 취소/차단됨';
+        await saveApplicantsToKV(currentApplicants);
+        return res.status(200).json({ success: true, message: target.name + ' 교사 승인 취소(대기 전환) 완료', teacher: target });
+      } else {
+        // 명단에 없는 계정 사전 차단 등록
+        currentApplicants.unshift({
+          date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+          name: email.split('@')[0],
+          school: '관리자 사전 차단',
+          email: email,
+          subject: '관리자 사전 차단',
+          reason: '관리자에 의한 계정 접근 차단',
+          status: '대기',
+          expiresAt: null,
+          note: '관리자에 의해 승인 취소/차단됨'
+        });
+        await saveApplicantsToKV(currentApplicants);
+        return res.status(200).json({ success: true, message: email + ' 계정이 차단(대기) 목록에 등록되었습니다.' });
+      }
     }
 
     if (action === 'approve_all_teachers') {
@@ -301,61 +354,105 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, message: `총 ${count}명의 교사가 1개월 승인되었습니다.`, updatedCount: count, applicants: currentApplicants });
     }
 
-    if (action === 'apply_access') {
-      const email = String(body.email || '').trim().toLowerCase();
-      const adminGasUrl = getAdminGasUrl();
-      if (adminGasUrl) {
-        try {
-          const fwdRes = await fetch(adminGasUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(body)
-          });
-          if (fwdRes.ok) {
-            const fwdData = await fwdRes.json();
-          }
-        } catch (fwdErr) {
-          console.warn('[sheet-sync] Remote GAS forward apply_access error:', fwdErr.message);
-        }
-      }
-      const currentApplicants = await loadApplicantsFromKV();
-      const name = body.name || '';
-      const school = body.school || '';
-      const isAuto = email.endsWith('@sch.hs.kr') || email.endsWith('@goedu.kr') || email.endsWith('sch.kr');
-      const status = isAuto ? '승인' : '대기';
-      const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
-      const exp = isAuto ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10) : '';
-
-      const existingIdx = currentApplicants.findIndex(a => a.email.toLowerCase() === email);
-      if (existingIdx !== -1) {
-        currentApplicants[existingIdx].status = status;
-        currentApplicants[existingIdx].date = now;
-        if (name) currentApplicants[existingIdx].name = name;
-        if (school) currentApplicants[existingIdx].school = school;
-        if (exp) currentApplicants[existingIdx].expiresAt = exp;
-      } else {
-        currentApplicants.unshift({
-          date: now,
-          name: name || '선생님',
-          school: school || '고등학교',
-          email: email,
-          subject: body.phone || body.subject || '',
-          reason: body.reason || '웹앱 사용 신청',
-          status: status,
-          expiresAt: exp,
-          note: isAuto ? '학교 공식 계정 자동승인' : '관리자 승인 대기'
-        });
-      }
-      await saveApplicantsToKV(currentApplicants);
-
-      return res.status(200).json({
-        success: true,
-        approved: isAuto,
-        status,
-        message: isAuto
-          ? '학교 공식 계정(@sch.hs.kr / @goedu.kr) 확인 완료! 1개월 이용 권한이 즉시 자동 승인되었습니다.'
-          : '사용 승인 신청이 완료되었습니다. 관리자 승인 후 1개월간 이용하실 수 있습니다.'
-      });
+    if (action === 'apply_access') {
+      const email = String(body.email || '').trim().toLowerCase();
+      const adminGasUrl = getAdminGasUrl();
+      if (adminGasUrl) {
+        try {
+          await fetch(adminGasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(body)
+          });
+        } catch (fwdErr) {
+          console.warn('[sheet-sync] Remote GAS forward apply_access error:', fwdErr.message);
+        }
+      }
+
+      const currentApplicants = await loadApplicantsFromKV();
+      const name = body.name || '';
+      const school = body.school || '';
+      const isAuto = email.endsWith('@sch.hs.kr') || email.endsWith('@goedu.kr') || email.endsWith('.sch.kr') || email.endsWith('sch.kr');
+      const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
+      const exp = isAuto ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10) : '';
+
+      const existingIdx = currentApplicants.findIndex(a => a.email.toLowerCase() === email);
+      if (existingIdx !== -1) {
+        // 이미 명단에 존재하는 경우: 관리자가 취소/대기로 설정한 상태를 함부로 '승인'으로 덮어쓰지 않음!
+        const curStatus = currentApplicants[existingIdx].status || '대기';
+        currentApplicants[existingIdx].date = now;
+        if (name) currentApplicants[existingIdx].name = name;
+        if (school) currentApplicants[existingIdx].school = school;
+        if (body.subject) currentApplicants[existingIdx].subject = body.subject;
+        if (body.reason) currentApplicants[existingIdx].reason = body.reason;
+        await saveApplicantsToKV(currentApplicants);
+
+        const isApproved = (curStatus === '승인');
+        return res.status(200).json({
+          success: true,
+          approved: isApproved,
+          status: curStatus,
+          message: isApproved
+            ? '이미 승인 완료된 계정입니다. (1개월 정식 이용 가능)'
+            : '현재 관리자 승인 대기 또는 취소 상태입니다. 관리자 승인 완료 후 이용하실 수 있습니다.'
+        });
+      } else {
+        const initialStatus = isAuto ? '승인' : '대기';
+        currentApplicants.unshift({
+          date: now,
+          name: name || '선생님',
+          school: school || (isAuto ? '신천고/경기도교육청' : '고등학교'),
+          email: email,
+          subject: body.phone || body.subject || '',
+          reason: body.reason || '웹앱 사용 신청',
+          status: initialStatus,
+          expiresAt: isAuto ? exp : '',
+          note: isAuto ? '학교 공식 계정 자동승인' : '관리자 승인 대기'
+        });
+        await saveApplicantsToKV(currentApplicants);
+
+        return res.status(200).json({
+          success: true,
+          approved: isAuto,
+          status: initialStatus,
+          message: isAuto
+            ? '학교 공식 계정 확인 완료! 1개월 이용 권한이 즉시 자동 승인되었습니다.'
+            : '사용 승인 신청이 완료되었습니다. 관리자 승인 후 1개월간 이용하실 수 있습니다.'
+        });
+      }
+    }
+
+    // 4. 관리자 수동 교사 추가 / 차단
+    if (action === 'add_teacher') {
+      const email = String(body.email || '').trim().toLowerCase();
+      if (!email) return res.status(400).json({ success: false, error: '이메일을 입력해 주세요.' });
+      const currentApplicants = await loadApplicantsFromKV();
+      const status = (body.status === '대기' ? '대기' : '승인');
+      const exp = status === '승인' ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10) : '';
+      const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+      const existing = currentApplicants.find(a => a.email.toLowerCase() === email);
+      if (existing) {
+        existing.status = status;
+        existing.expiresAt = exp;
+        if (body.name) existing.name = body.name;
+        if (body.school) existing.school = body.school;
+        existing.note = status === '승인' ? '관리자 수동 승인' : '관리자 승인 취소/차단';
+      } else {
+        currentApplicants.unshift({
+          date: now,
+          name: body.name || email.split('@')[0],
+          school: body.school || '고등학교',
+          email: email,
+          subject: body.subject || '관리자 수동 등록',
+          reason: body.reason || '관리자 직접 등록',
+          status: status,
+          expiresAt: exp,
+          note: status === '승인' ? '관리자 수동 승인' : '관리자 사전 차단'
+        });
+      }
+      await saveApplicantsToKV(currentApplicants);
+      return res.status(200).json({ success: true, message: email + ' 계정이 ' + status + ' 상태로 등록되었습니다.' });
     }
 
     return res.status(200).json({ success: false, error: "알 수 없는 POST action" });

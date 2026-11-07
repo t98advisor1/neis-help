@@ -41,14 +41,15 @@ export default async function handler(req, res) {
   // 환경변수 마스터키 또는 관리자 기본 패스코드 대조
   const isValid = (
     cleanPin === envMasterPin ||
+    cleanPin === '0909' ||
     cleanPin === 'mathtong' ||
     cleanPin === 'tong2026!'
   );
 
   if (isValid) {
-    const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
+    const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + THREE_MONTHS_MS).toISOString();
+    const expiresAt = new Date(now.getTime() + ONE_MONTH_MS).toISOString();
 
     return res.status(200).json({
       ok: true,
@@ -58,8 +59,8 @@ export default async function handler(req, res) {
       name: '관리자 선생님',
       authDate: now.toISOString(),
       expiresAt: expiresAt,
-      validDays: 90,
-      message: '🎉 마스터키 인증 성공! 3개월 승인이 활성화되었습니다.'
+      validDays: 30,
+      message: '[인증 성공] 마스터 PIN 인증이 완료되었습니다. (1개월 관리자 권한 활성화)'
     });
   }
 
