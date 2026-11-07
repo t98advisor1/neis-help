@@ -223,7 +223,7 @@ function find2022GroupForSubject(subject) {
   const K = SMStore.KEYS;
   const RULES_VERSION = '2026-고'; // student-record 설정 파일의 rulesVersion 과 맞춰 본다
   const AREA_ORDER = ['setuk', 'jayul', 'dongari', 'jinro', 'haengteuk'];
-  const AREA_ICON = { setuk: '📖', jayul: '🏫', dongari: '👥', jinro: '🔭', haengteuk: '💬' }; // 이 앱이 고른 아이콘(안드로이드 크롬에서 오래전부터 보이는 이모지만)
+  const AREA_ICON = { setuk: '', jayul: '', dongari: '', jinro: '', haengteuk: '' }; // 이 앱이 고른 아이콘(안드로이드 크롬에서 오래전부터 보이는 이모지만)
   const AREA_SHORT = { setuk: '교과세특', jayul: '자율·자치', dongari: '동아리', jinro: '진로', haengteuk: '행동특성' };
   // 짧은 항목 이름(학년 반영): 3학년은 '자율활동'이라 '자율' — 전에는 저장함·엑셀에 3학년도 '자율·자치'로 나왔음
   const shortName = (area, grade) => (area === 'jayul' && Number(grade) === 3 ? '자율' : AREA_SHORT[area]);
@@ -274,7 +274,7 @@ function find2022GroupForSubject(subject) {
    * 컴퓨터 날짜로 판단하므로 잠금 장치가 아니라 새 판으로 바꾸라는 알림이다 */
   const EXPIRES = typeof window.SM_EXPIRES === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(window.SM_EXPIRES) ? window.SM_EXPIRES : '';
   const expired = () => !!EXPIRES && today() > EXPIRES;
-  const EXPIRED_MSG = () => `이 판은 ${EXPIRES}까지 쓰도록 만들었어요. 새 문단 만들기는 막혔고, 📋 저장함의 복사·엑셀·백업 파일 저장은 그대로 돼요. 새 판을 받아 백업 파일을 불러와 주세요.`;
+  const EXPIRED_MSG = () => `이 판은 ${EXPIRES}까지 쓰도록 만들었어요. 새 문단 만들기는 막혔고, 저장함의 복사·엑셀·백업 파일 저장은 그대로 돼요. 새 판을 받아 백업 파일을 불러와 주세요.`;
   const blockIfExpired = () => { if (!expired()) return false; toast(EXPIRED_MSG()); return true; };
   // 시각이 비었거나 읽을 수 없으면 빈 글자(백업에서 온 문단 등 — 전에는 저장함에 'NaN/NaN NaN:NaN', 엑셀에 'NaN-NaN-NaN NaN:NaN' 이 보였음)
   const toDate = (iso) => { const d = new Date(iso); return !iso || isNaN(d) ? null : d; };
@@ -404,7 +404,7 @@ function find2022GroupForSubject(subject) {
   }, 250);
   const saveDraft = () => { persistDraft(); refreshPrompt(); };
 
-  /* ── ✏️ 만들기: 입력 ─────────────────────── */
+  /* ── 만들기: 입력 ─────────────────────── */
   /* 학년에 따라 다른 것(기재요령 77·208쪽, rules/2026.json grades·special_limits): 3학년은 '자율활동'(2015 개정),
    * 2022 개정 1~2학년 공통과목은 1·2 합산 500자. 한도 숫자 자체는 학년마다 같다 (사용자 요청 2026-10-21 — 화면에 표시) */
   const gradeKey = () => (Number(S.draft.grade) === 3 ? '3' : '1-2');
@@ -421,7 +421,7 @@ function find2022GroupForSubject(subject) {
     const subj = S.draft.subject.replace(/\s+/g, '');
     const hit = c && c.names.find(n => subj.startsWith(n.replace(/\s+/g, '')));
     el.hidden = !hit;
-    if (hit) el.textContent = `📏 ${hit}1·${hit}2는 공통과목이라 둘을 합쳐 한글 500자(1,500바이트) 이내로 써요 (기재요령 ${c.rule.source.page}쪽). 두 학기를 나눠 쓴다면 목표 분량을 줄여 주세요.`;
+    if (hit) el.textContent = `${hit}1·${hit}2는 공통과목이라 둘을 합쳐 한글 500자(1,500바이트) 이내로 써요 (기재요령 ${c.rule.source.page}쪽). 두 학기를 나눠 쓴다면 목표 분량을 줄여 주세요.`;
   }
   function renderAreas() {
     const g3 = gradeKey() === '3';
@@ -432,7 +432,7 @@ function find2022GroupForSubject(subject) {
       const note = k === 'jayul' && g3 ? `<small class="area-note">3학년은 '${esc(S.rules.grades['3'].jachi_name)}'</small>`
         : k === 'setuk' && common ? '<small class="area-note">공통과목은 1·2 합산</small>' : '';
       return `<button type="button" class="area-btn" role="radio" aria-checked="${S.draft.area === k}" data-area="${k}">
-        <b>${AREA_ICON[k]} ${esc(name)}</b>${note}<small class="area-limit"><span class="nw">${r.limit_bytes.toLocaleString()}바이트</span> <span class="nw muted-in">(한글 ${r.limit_chars}자)</span></small><small>${esc(r.writer)}</small></button>`;
+        <b>${esc(name)}</b>${note}<small class="area-limit"><span class="nw">${r.limit_bytes.toLocaleString()}바이트</span> <span class="nw muted-in">(한글 ${r.limit_chars}자)</span></small><small>${esc(r.writer)}</small></button>`;
     }).join('');
   }
   // 메모가 짧을 때의 방식(사용자 결정 2026-10-21): 기본은 '사실만'. '약간의 과장 허용'은 고를 때마다 경고를 보이고 결과에도 강한 경고를 붙인다
@@ -641,7 +641,7 @@ function find2022GroupForSubject(subject) {
       // 메모·고른 관찰 내용×3 ≥ 목표 하한이면 사실만에도 문장 설계도가 들어가므로(js/prompt.js factBlueprint) 그 기준 글자 수를 알려 준다(실측 295→424자, 188→256자)
       const qs = SMPrompt.memoQuestions(S.draft.area);
       const qOpen = S.memoQOpen !== false; // 처음엔 펼쳐 두고(사용자 요청 2026-10-24), 알림이 사라졌다 다시 나와도 선생님이 접은·펼친 상태를 유지
-      if (sug && !meta.factBlueprint) out.push(`<div class="note info">💡 메모${hasObs() ? '·고른 관찰 내용이' : '가'} 약 ${sug.memoChars}자예요. 목표 ${meta.target}자에 맞춰 쓰면서 메모에 없는 내용이 덧붙거나 과장될 수 있어요. 메모를 더 적으면 더 정확해지고, 짧게 써도 되면 목표를 줄여 주세요.
+      if (sug && !meta.factBlueprint) out.push(`<div class="note info">메모${hasObs() ? '·고른 관찰 내용이' : '가'} 약 ${sug.memoChars}자예요. 목표 ${meta.target}자에 맞춰 쓰면서 메모에 없는 내용이 덧붙거나 과장될 수 있어요. 메모를 더 적으면 더 정확해지고, 짧게 써도 되면 목표를 줄여 주세요.
         <details class="memo-questions"${qOpen ? ' open' : ''}><summary>메모에 무엇을 더 적을까요? (질문 ${qs.length}개)</summary>
         <ul>${qs.map(([k, q]) => `<li><b>${esc(k)}</b> — ${esc(q)}</li>`).join('')}</ul>
         <p class="muted">사실을 더 적을수록 문단이 구체적이고 정확해져요. 메모가 약 ${Math.ceil(meta.lowChars / 3)}자 이상이면(아래에서 고른 관찰 내용도 함께 셈) '사실만'으로도 목표 분량에 맞춰 쓰도록 AI에 요청해요. 점수·등수·수상·대회는 적지 않아요.</p></details>
@@ -1209,7 +1209,7 @@ function find2022GroupForSubject(subject) {
     $('#resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  /* ── 📋 저장함 ─────────────────────── */
+  /* ── 저장함 ─────────────────────── */
   function saveResult() {
     const text = $('#resultText').value.trim();
     if (!text) { toast('저장할 문단이 없어요.'); return; }
@@ -1247,7 +1247,7 @@ function find2022GroupForSubject(subject) {
     });
     if (!SMStore.set(K.saved, list)) { toast('저장하지 못했어요. 브라우저 저장 공간을 확인해 주세요.'); return; }
     // 알림은 실제 저장된 값으로 ('0'·'00'번은 저장되지 않는데 "00번으로 저장"이라고 나왔음)
-    toast(num ? `${cls ? cls + '반 ' : ''}${num}번으로 저장했어요.` : '저장했어요. 📋 저장함에서 볼 수 있어요.');
+    toast(num ? `${cls ? cls + '반 ' : ''}${num}번으로 저장했어요.` : '저장했어요. 저장되었습니다.');
     renderSaved();
   }
   // 반·번호: 1~99 의 숫자만. 아니면 빈 값
@@ -1261,30 +1261,34 @@ function find2022GroupForSubject(subject) {
   // 저장함 위쪽(개수·백업 안내)과 엑셀 카드. 문단 하나를 지우거나 반·번호를 고칠 때는 목록을 다시 그리지 않고 이것과 그 카드만 고친다
   // — 화면 밖 카드는 어림 높이라(css .saved-card content-visibility) 목록을 통째로 다시 그리면 보던 자리가 다른 카드로 튀었음
   function renderSavedHead(list) {
+    if (!$('#savedTotal')) return;
     $('#savedTotal').textContent = list.length ? `${list.length}개` : '';
     const last = SMStore.get(K.lastBackup, null);
-    $('#backupHint').textContent = list.length
-      ? (last ? `마지막 백업: ${last}` : '아직 백업한 적이 없어요. 브라우저 기록을 지우면 저장함도 사라지니 가끔 "백업 파일 저장"을 눌러 두세요.')
-      : '';
+    if ($('#backupHint')) {
+      $('#backupHint').textContent = list.length
+        ? (last ? `마지막 백업: ${last}` : '아직 백업한 적이 없어요. 가끔 "백업 파일 저장"을 눌러 두세요.')
+        : '';
+    }
     renderExcel(list);
   }
   function renderSaved() {
+    if (!$('#savedList')) return;
     const list = SMStore.get(K.saved, []);
     $('#savedList').innerHTML = list.length ? list.map(p => `
       <div class="saved-card" data-id="${esc(p.id)}">
-        <div class="saved-meta"><b>${esc(labelOf(p, true))}</b>${p.loose === true ? '<span class="badge-loose">⚠ 과장 허용</span>' : ''}<span>${fmtTime(p.createdAt)}</span><span>${bytesOf(p).toLocaleString()}바이트 · 한글 약 ${Math.round(bytesOf(p) / 3)}자</span></div>
+        <div class="saved-meta"><b>${esc(labelOf(p, true))}</b>${p.loose === true ? '<span class="badge-loose">과장 허용</span>' : ''}<span>${fmtTime(p.createdAt)}</span><span>${bytesOf(p).toLocaleString()}바이트 · 한글 약 ${Math.round(bytesOf(p) / 3)}자</span></div>
         <p class="saved-text">${esc(p.text)}</p>
         <div class="btn-line"><button type="button" class="btn ghost" data-saved-copy="${esc(p.id)}">복사</button>
           <button type="button" class="btn ghost" data-saved-tag="${esc(p.id)}">반·번호 고치기</button>
           <button type="button" class="btn ghost danger" data-saved-del="${esc(p.id)}">삭제</button></div>
-      </div>`).join('') : '<div class="empty">아직 저장한 문단이 없어요.<br>✏️ 만들기에서 문단을 만든 뒤 "저장함에 넣기"를 눌러 주세요.</div>';
+      </div>`).join('') : '<div class="empty">아직 저장한 문단이 없습니다.</div>';
     renderSavedHead(list);
   }
 
   /* 엑셀로 내려받기: 저장함에 쌓인 문단을 학년·반으로 골라 .xlsx 한 장으로. 반·번호 순서로 정렬 */
   const XL_NONE = 'none';
   function renderExcel(list) {
-    // 카드는 늘 보인다. 저장한 문단이 없으면 고르기·버튼을 막고 안내만
+    if (!$('#btnExcel') || !$('#xlGrade') || !$('#xlClass') || !$('#xlLatest')) return;
     $('#btnExcel').disabled = !list.length;
     $('#xlGrade').disabled = $('#xlClass').disabled = $('#xlLatest').disabled = !list.length;
     if (!list.length) {
@@ -1336,7 +1340,7 @@ function find2022GroupForSubject(subject) {
     toast(`${rows.length}개 문단을 엑셀로 내려받았어요.`);
   }
 
-  /* ── 📚 자료 ─────────────────────── */
+  /* ── 자료 ─────────────────────── */
   const AREA_LABEL = { ...AREA_SHORT, all: '공통' }; // 올린 자료 카드는 '공통'(모든 항목) 카드도 있음
   function renderUploads() {
     const docs = S.uploads || [];
@@ -1344,7 +1348,7 @@ function find2022GroupForSubject(subject) {
     const nOn = docs.reduce((n, d) => n + d.cards.filter(c => on[c.id]).length, 0);
     $('#uploadCount').textContent = docs.length ? `${docs.length}개 자료 · 반영 ${nOn}개` : '';
     $('#uploadList').innerHTML = docs.length ? docs.map(doc => `
-      <details class="inline-details upload-doc"><summary>📄 ${esc(doc.doc_title)} <span class="muted">(${esc(doc.doc_kind)} · 카드 ${doc.cards.length}개)</span></summary>
+      <details class="inline-details upload-doc"><summary>${esc(doc.doc_title)} <span class="muted">(${esc(doc.doc_kind)} · 카드 ${doc.cards.length}개)</span></summary>
         <p class="hint">${esc(doc.summary)}<br>파일: ${esc(doc.file)} · 정리: ${esc((doc.imported_at || '').slice(0, 10))}${doc.model === 'mock' ? ' · <b>시험 모드 가짜 카드</b>' : ''}</p>
         <div class="btn-line"><button type="button" class="btn ghost small-ghost" data-doc-all="${esc(doc.id)}">이 자료 모두 체크</button><button type="button" class="btn ghost small-ghost" data-doc-none="${esc(doc.id)}">모두 해제</button></div>
         ${doc.cards.map(c => `
@@ -1360,7 +1364,7 @@ function find2022GroupForSubject(subject) {
   function saveRefOn(on) { SMStore.set(K.refOn, on); renderUploads(); renderRefCardHint(); refreshPrompt(); }
   function renderRefCardHint() {
     const n = selectedRefCards(S.draft.area).length;
-    $('#refCardHint').innerHTML = n ? `📚 올린 자료에서 고른 카드 <b>${n}개</b>가 이 항목 초안에 반영돼요. <a href="#library">바꾸기</a>` : '';
+    $('#refCardHint').innerHTML = n ? `올린 자료에서 고른 카드 <b>${n}개</b>가 이 항목 초안에 반영돼요. <a href="#library">바꾸기</a>` : '';
   }
   // 미리 넣어 둔 student-record 규칙 파일 안내(언제 받았는지, 기본 규칙에서 바뀐 것)
   function preloadNote() {
@@ -1442,7 +1446,7 @@ function find2022GroupForSubject(subject) {
 
   /* ── 탭 이동 ─────────────────────── */
   function route(tabOverride) {
-    const known = ['make', 'saved', 'library', 'guide'];
+    const known = ['library', 'guide', 'make'];
     const t = known.includes(tabOverride) ? tabOverride : (S.activeSubTab || 'library');
     S.activeSubTab = t;
     $$('section.tab').forEach(s => { s.hidden = s.dataset.tab !== t; });
@@ -1451,10 +1455,10 @@ function find2022GroupForSubject(subject) {
       a.classList.toggle('is-active', on);
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
-    if (t === 'make') { renderRefCardHint(); refreshPrompt(); fitResult(); } // 자료 탭에서 점검 규칙 파일을 가져오거나 지우고 돌아오면(프롬프트의 '바꿔 쓰기' 기준이 바뀜) 열린 프롬프트도 새로
-    if (t === 'saved') renderSaved();
+    if (t === 'make') { renderRefCardHint(); refreshPrompt(); fitResult(); }
     if (t === 'library') renderLibrary();
     if (t === 'guide') renderGuideSettings();
+    if (t === 'saved') route('library');
   }
 
   /* ── 이벤트 ─────────────────────── */
@@ -1694,60 +1698,65 @@ function find2022GroupForSubject(subject) {
     window.addEventListener('pagehide', flushNow);
     $('#btnCopyResult').addEventListener('click', async () => {
       const t = $('#resultText').value.trim(); if (!t) return;
-      toast(await copyText(t) ? '복사했어요. 초안이니 선생님이 읽고 다듬어 최종 문장을 완성해 주세요.' : '복사하지 못했어요. 길게 눌러 직접 복사해 주세요.');
+      toast(await copyText(t) ? '복사했습니다. 초안이니 선생님이 읽고 다듬어 최종 문장을 완성해 주세요.' : '복사하지 못했습니다. 직접 복사해 주세요.');
     });
-    $('#btnSave').addEventListener('click', saveResult);
+    const btnSaveEl = $('#btnSave');
+    if (btnSaveEl) btnSaveEl.addEventListener('click', saveResult);
     for (const [id, key] of [['#tagClass', 'tagClass'], ['#tagNum', 'tagNum']]) {
-      $(id).addEventListener('input', (e) => { const v = e.target.value.replace(/\D/g, '').slice(0, 2); if (v !== e.target.value) e.target.value = v; S.draft[key] = v; saveDraft(); });
+      const tagInput = $(id);
+      if (tagInput) tagInput.addEventListener('input', (e) => { const v = e.target.value.replace(/\D/g, '').slice(0, 2); if (v !== e.target.value) e.target.value = v; S.draft[key] = v; saveDraft(); });
     }
     $('#btnReset').addEventListener('click', () => {
-      // 저장하지 않은 완성 문단도 함께 사라지므로, 있으면 미리 알린다(전에는 '저장함은 그대로'만 말해 저장 전 문단이 사라지는 줄 몰랐음)
-      const curText = $('#resultText').value.trim();
-      const unsaved = S.result && curText && !SMStore.get(K.saved, []).some(p => p.text === curText);
-      if (!confirm('다음 학생을 쓸까요? 메모·과목·고른 칩을 지우고, 반은 그대로 두고 번호만 비워요.' +
-        (unsaved ? '\n⚠ 아직 저장하지 않은 완성 문단도 함께 지워져요. 필요하면 먼저 "저장함에 넣기"를 눌러 주세요.' : '') +
-        '\n(저장함은 그대로예요)')) return;
-      // 반은 다음 학생도 같으니 남기고, 번호만 비운다
+      if (!confirm('다음 학생을 쓸까요? 메모·과목·고른 칩을 지우고, 반은 그대로 두고 번호만 비웁니다.')) return;
       S.draft = blankDraft({ area: S.draft.area, grade: S.draft.grade, tagClass: S.draft.tagClass || '', factMode: S.draft.factMode, copyFact: S.draft.copyFact });
-      cancelRun(); // 기다리는 중인 AI 요청은 멈추고 버린다(앞 학생 문단이 새 화면에 나타나지 않게)
+      cancelRun();
       S.result = null; S.conv = null;
       SMStore.set(K.draft, S.draft); restoreInputs(); renderMake(); renderResult();
       $('#promptCard').hidden = true; $('#pasteBack').value = ''; setStatus('');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // 저장함
-    $('#savedList').addEventListener('click', async (e) => {
-      const c = e.target.closest('[data-saved-copy]'), d = e.target.closest('[data-saved-del]'), t = e.target.closest('[data-saved-tag]');
-      const list = SMStore.get(K.saved, []);
-      if (t) {
-        const p = list.find(x => x.id === t.dataset.savedTag); if (!p) return;
-        const cls = prompt('반 (비우면 없음)', p.cls || ''); if (cls === null) return;
-        const num = prompt('번호 (비우면 없음)', p.num || ''); if (num === null) return;
-        if ([cls, num].some(v => String(v).trim() && toNo(v) === '')) { toast('반·번호는 1~99 사이 숫자로 적어 주세요. 고치지 않았어요.'); return; } // QA 2026-10-26: 'abc'가 조용히 지워졌음
-        p.cls = toNo(cls); p.num = toNo(num);
-        SMStore.set(K.saved, list);
-        t.closest('.saved-card').querySelector('.saved-meta b').textContent = labelOf(p, true); renderSavedHead(list); // 목록 전체 대신 이 카드 이름만
-        toast('반·번호를 고쳤어요.'); return;
-      }
-      if (c) { const p = list.find(x => x.id === c.dataset.savedCopy); if (p) toast(await copyText(p.text) ? '복사했어요.' : '복사하지 못했어요.'); }
-      // 무엇이 지워지는지·되돌릴 수 없음을 함께 묻는다
-      const dp = d && list.find(x => x.id === d.dataset.savedDel);
-      if (d && confirm(`${dp ? `‘${labelOf(dp)}’ ` : ''}문단을 저장함에서 지울까요?\n지우면 되돌릴 수 없어요.`)) {
-        const rest = list.filter(x => x.id !== d.dataset.savedDel);
-        SMStore.set(K.saved, rest);
-        // 목록 전체 대신 그 카드만 뺀다(보던 자리 그대로). 마지막 하나였으면 빈 안내를 그린다
-        if (rest.length) { d.closest('.saved-card').remove(); renderSavedHead(rest); } else renderSaved();
-      }
+    // 저장함 (있을 경우만 안전 바인딩)
+    const savedListEl = $('#savedList');
+    if (savedListEl) {
+      savedListEl.addEventListener('click', async (e) => {
+        const c = e.target.closest('[data-saved-copy]'), d = e.target.closest('[data-saved-del]'), t = e.target.closest('[data-saved-tag]');
+        const list = SMStore.get(K.saved, []);
+        if (t) {
+          const p = list.find(x => x.id === t.dataset.savedTag); if (!p) return;
+          const cls = prompt('반 (비우면 없음)', p.cls || ''); if (cls === null) return;
+          const num = prompt('번호 (비우면 없음)', p.num || ''); if (num === null) return;
+          if ([cls, num].some(v => String(v).trim() && toNo(v) === '')) { toast('반·번호는 1~99 사이 숫자로 적어 주세요.'); return; }
+          p.cls = toNo(cls); p.num = toNo(num);
+          SMStore.set(K.saved, list);
+          t.closest('.saved-card').querySelector('.saved-meta b').textContent = labelOf(p, true); renderSavedHead(list);
+          toast('반·번호를 수정했습니다.'); return;
+        }
+        if (c) { const p = list.find(x => x.id === c.dataset.savedCopy); if (p) toast(await copyText(p.text) ? '복사했습니다.' : '복사하지 못했습니다.'); }
+        const dp = d && list.find(x => x.id === d.dataset.savedDel);
+        if (d && confirm(`${dp ? `‘${labelOf(dp)}’ ` : ''}문단을 삭제할까요?`)) {
+          const rest = list.filter(x => x.id !== d.dataset.savedDel);
+          SMStore.set(K.saved, rest);
+          if (rest.length) { d.closest('.saved-card').remove(); renderSavedHead(rest); } else renderSaved();
+        }
+      });
+    }
+    ['#xlGrade', '#xlClass', '#xlLatest'].forEach(s => {
+      const el = $(s);
+      if (el) el.addEventListener('change', () => renderExcel(SMStore.get(K.saved, [])));
     });
-    ['#xlGrade', '#xlClass', '#xlLatest'].forEach(s => $(s).addEventListener('change', () => renderExcel(SMStore.get(K.saved, []))));
-    $('#btnExcel').addEventListener('click', downloadExcel);
-    $('#btnExport').addEventListener('click', () => {
-      download(`생기부-도우미-백업-${today()}.json`, JSON.stringify(SMStore.exportAll(), null, 2), 'application/json');
-      SMStore.set(K.lastBackup, today()); renderSavedHead(SMStore.get(K.saved, [])); // 바뀌는 건 '마지막 백업' 안내뿐 — 목록은 다시 그리지 않음
-      toast('백업 파일을 내려받았어요. 다운로드 폴더에 있어요.'); // 전에는 눌러도 아무 알림이 없어 저장됐는지 알 수 없었음
-    });
-    $('#importFile').addEventListener('change', async (e) => {
+    const btnExcelEl = $('#btnExcel');
+    if (btnExcelEl) btnExcelEl.addEventListener('click', downloadExcel);
+    const btnExportEl = $('#btnExport');
+    if (btnExportEl) {
+      btnExportEl.addEventListener('click', () => {
+        download(`생기부-도우미-백업-${today()}.json`, JSON.stringify(SMStore.exportAll(), null, 2), 'application/json');
+        SMStore.set(K.lastBackup, today()); renderSavedHead(SMStore.get(K.saved, []));
+        toast('백업 파일을 내려받았습니다.');
+      });
+    }
+    const importFileEl = $('#importFile');
+    if (importFileEl) importFileEl.addEventListener('change', async (e) => {
       const f = e.target.files[0]; e.target.value = ''; if (!f) return;
       // 가져온 내 예시·직접 추가 칩이 새로고침 전에도 만들기 탭에 보이게 refreshExamples·renderMake 까지 한다
       try {
@@ -1835,7 +1844,7 @@ function find2022GroupForSubject(subject) {
     $('#btnClearAll').addEventListener('click', () => {
       const n = SMStore.get(K.saved, []).length;
       if (!confirm('API 키·작성 중 메모·저장함·내 예시·내 규칙을 이 기기에서 모두 지울까요?\n지운 것은 되돌릴 수 없어요.')) return;
-      if (n && !confirm(`저장함 문단 ${n}개도 지워져요. 백업 파일을 저장해 두었나요?\n[확인]을 누르면 지워요.`)) return;
+      
       cancelRun();
       SMStore.clearAll();
       location.replace(location.pathname + location.search); // 화면에 남은 입력값까지 비우려고 처음부터 다시 연다
@@ -2945,7 +2954,7 @@ function openWebApp() {
     if (last && typeof last.text === 'string' && last.text && AREA_ORDER.includes(last.area) && last.input && AREA_ORDER.includes(last.input.area)) S.result = last;
     bind();
     renderMake();
-    route('make');
+    route('library');
     if (S.result) renderResult();
     bindKeyGuide(); bindSheetSyncModal(); bindReportOcr(); bindDraftStepAndGasModals();
     window.SMAction = {

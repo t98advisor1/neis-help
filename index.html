@@ -2074,7 +2074,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <button type="button" id="btnOpenDraftStepModal" class="btn primary" style="background:#2563eb; border:none; padding:8px 16px; font-size:13px; font-weight:800; border-radius:999px; box-shadow:0 4px 14px rgba(37,99,235,0.4); cursor:pointer;">
 
-              ⚡ 팝업 스크롤 단계별 작성 모드 ➔
+              팝업 스크롤 단계별 작성 모드 ➔
 
             </button>
 
@@ -2082,11 +2082,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <a href="#library" data-tab-link="library" class="is-active" aria-current="page">예시 안내 (참고 예시 모음)</a>
 
-              <a href="#make" data-tab-link="make">초안 작성 (AI 워크벤치)</a>
-
-              <a href="#saved" data-tab-link="saved">저장함 · 엑셀</a>
-
               <a href="#guide" data-tab-link="guide">AI 연결 · API 설정</a>
+
+              <a href="#make" data-tab-link="make">초안 작성 (AI 워크벤치)</a>
 
             </nav>
 
@@ -2096,7 +2094,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-        <!-- 📊 구글 시트 실시간 연동 스트립 (샘플 5명 데이터 탑재) -->
+        <!-- 구글 시트 실시간 연동 스트립 (샘플 5명 데이터 탑재) -->
 
         <div id="gsyncMakeBar" style="background:linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border:1.5px solid #93c5fd; border-radius:12px; padding:12px 18px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
 
@@ -2120,13 +2118,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <button type="button" id="btnOpenStudentLoaderModal" class="btn secondary" style="padding:5px 12px; font-size:12px; font-weight:700; background:#ffffff; border:1px solid #93c5fd; color:#1d4ed8; border-radius:6px; cursor:pointer;">
 
-              📋 학생 선택 · 불러오기 ↗
+              학생 선택 · 불러오기 ↗
 
             </button>
 
             <button type="button" id="btnOpenGasGuideBtn" class="btn secondary" style="padding:5px 12px; font-size:12px; font-weight:700; background:#ffffff; border:1px solid #86efac; color:#15803d; border-radius:6px; cursor:pointer;">
 
-              📑 Apps Script 사용법 ↗
+              Apps Script 사용법 ↗
 
             </button>
 
@@ -2272,7 +2270,76 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-        <!-- 서브탭 2: 초안 작성 (2단 워크벤치) -->
+                <!-- 서브탭 2: AI 연결 · API 설정 -->
+
+        <section class="tab" id="tab-guide" data-tab="guide" hidden>
+
+          <div class="make-workbench">
+
+            <div class="card">
+
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+
+                <h2 class="card-title" style="margin:0;">Gemini API 키 및 모델 설정</h2>
+
+                <button type="button" class="btn primary" onclick="document.querySelector('[data-tab-link=\'make\']').click()" style="background:#2563eb; color:#fff; font-weight:700; font-size:12.5px; padding:6px 14px; border-radius:6px; border:none; cursor:pointer;">
+
+                  초안 작성으로 이동 ➔
+
+                </button>
+
+              </div>
+
+              <div class="field">
+
+                <label class="label" for="apiKey">Gemini API 키 <button type="button" class="link-btn" data-open-keyguide>발급 안내 보기</button></label>
+
+                <input id="apiKey" type="password" autocomplete="off" placeholder="AIza… 로 시작하는 키 입력">
+
+              </div>
+
+              <div class="field">
+
+                <label class="label" for="modelName">모델 이름 (선택)</label>
+
+                <input id="modelName" type="text" autocomplete="off">
+
+                <p class="hint">비워 두면 기본 모델을 사용합니다.</p>
+
+              </div>
+
+              <div class="btn-line">
+
+                <button type="button" class="btn primary" id="btnSaveKey">저장</button>
+
+                <button type="button" class="btn" id="btnDeleteKey">키 지우기</button>
+
+                <button type="button" class="btn" id="btnClearAll" style="margin-left:auto;">공용 PC 데이터 전체 삭제</button>
+
+              </div>
+
+            </div>
+
+            <div class="card">
+
+              <h2 class="card-title">구독형 AI 스킬 · 프로젝트 등록 방법</h2>
+
+              <details class="card guide"><summary>Gemini 스킬(Skills)로 저장해 쓰기</summary><button type="button" class="btn" data-open-keyguide data-guide-image="gemini">안내 그림 보기</button><div data-guide-src="gemini"></div></details>
+
+              <details class="card guide"><summary>ChatGPT 프로젝트(Projects)에 저장해 쓰기</summary><button type="button" class="btn" data-open-keyguide data-guide-image="gpt">안내 그림 보기</button><div data-guide-src="gpt"></div></details>
+
+              <details class="card guide"><summary>Claude 스킬(Skills)로 저장해 쓰기</summary><button type="button" class="btn" data-open-keyguide data-guide-image="claude">안내 그림 보기</button><div data-guide-src="claude"></div></details>
+
+              <details class="card guide"><summary>Gemini API 키 발급 안내</summary><button type="button" class="btn" data-open-keyguide>안내 그림 보기</button><div data-guide-src="api"></div></details>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- 서브탭 3: 초안 작성 (2단 워크벤치) -->
 
         <section class="tab" id="tab-make" data-tab="make" hidden>
 
@@ -2690,7 +2757,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                     Gemini API 키 (선택 사항)
 
-                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" style="font-size:11px; font-weight:800; color:#2563eb; background:#eff6ff; border:1px solid #bfdbfe; padding:2px 8px; border-radius:6px; text-decoration:none; margin-left:6px;">🎁 무료 API 키 발급받기 (1분 소요) ↗</a>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" style="font-size:11px; font-weight:800; color:#2563eb; background:#eff6ff; border:1px solid #bfdbfe; padding:2px 8px; border-radius:6px; text-decoration:none; margin-left:6px;">무료 API 키 발급받기 (1분 소요) ↗</a>
 
                   </label>
 
@@ -2710,7 +2777,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                 <div class="gk-lock-notice" id="draftLockNotice" style="display:none; background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:10px; padding:12px 16px; margin-bottom:14px; font-size:13px; color:#1e40af; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
 
-                  <span>🔒 <strong>AI 초안 바로 생성 &amp; 프롬프트 복사는 승인된 교사 전용 기능입니다.</strong></span>
+                  <span><strong>AI 초안 바로 생성 &amp; 프롬프트 복사는 승인된 교사 전용 기능입니다.</strong></span>
 
                   <button type="button" class="btn small" style="background:#2563eb; color:#fff; border:none; padding:5px 12px; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="window.Gatekeeper && window.Gatekeeper.openModal('apply')">학교/교육청 계정 승인 신청 ➔</button>
 
@@ -2816,8 +2883,6 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                   <button type="button" class="btn primary" id="btnCopyResult">문단 복사</button>
 
-                  <button type="button" class="btn" id="btnSave">저장함에 넣기</button>
-
                   <button type="button" class="btn" id="btnRegenerate">다시 생성</button>
 
                   <button type="button" class="btn text" id="btnReset" style="margin-left:auto;">다음 학생 쓰기</button>
@@ -2850,127 +2915,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-        <!-- 서브탭 2: 저장함 · 엑셀 -->
-
-        <section class="tab" id="tab-saved" data-tab="saved" hidden>
-
-          <div class="make-workbench">
-
-            <div class="card">
-
-              <h2 class="card-title">저장한 문단 백업 <span class="muted" id="savedTotal"></span></h2>
-
-              <div class="btn-line" style="margin-top:0;">
-
-                <button type="button" class="btn" id="btnExport">백업 파일 저장 (.json)</button>
-
-                <label class="btn file-btn">백업 파일 불러오기<input type="file" id="importFile" accept="application/json,.json" hidden></label>
-
-              </div>
-
-              <p class="hint">저장한 문단·내 예시·내 규칙을 파일 하나로 보관합니다. (API 키 제외)</p>
-
-              <p class="hint" id="backupHint"></p>
-
-            </div>
-
-            <div class="card" id="excelCard">
-
-              <h2 class="card-title">엑셀로 내려받기 (.xlsx)</h2>
-
-              <div style="display:flex; gap:14px; margin-bottom:10px;">
-
-                <label class="xl-field" style="flex:1;"><span class="label">학년</span><select id="xlGrade"></select></label>
-
-                <label class="xl-field" style="flex:1;"><span class="label">반</span><select id="xlClass"></select></label>
-
-              </div>
-
-              <label class="check" style="margin-bottom:12px;"><input type="checkbox" id="xlLatest" checked><span>같은 학생·같은 항목은 가장 최근 문단만 포함</span></label>
-
-              <button type="button" class="btn primary" id="btnExcel">엑셀 파일 받기 (.xlsx)</button>
-
-              <p class="hint" id="xlHint"></p>
-
-            </div>
-
-          </div>
-
-          <div id="savedList"></div>
-
-        </section>
-
-
-
-        <!-- 서브탭 4: AI 연결 · API 설정 -->
-
-        <section class="tab" id="tab-guide" data-tab="guide" hidden>
-
-          <div class="make-workbench">
-
-            <div class="card">
-
-              <h2 class="card-title">Gemini API 키 및 모델 설정</h2>
-
-              <div class="field">
-
-                <label class="label" for="apiKey">Gemini API 키 <button type="button" class="link-btn" data-open-keyguide>발급 안내 보기</button></label>
-
-                <input id="apiKey" type="password" autocomplete="off" placeholder="AIza… 로 시작하는 키 입력">
-
-              </div>
-
-              <div class="field">
-
-                <label class="label" for="modelName">모델 이름 (선택)</label>
-
-                <input id="modelName" type="text" autocomplete="off">
-
-                <p class="hint">비워 두면 기본 모델을 사용합니다.</p>
-
-              </div>
-
-              <div class="btn-line">
-
-                <button type="button" class="btn primary" id="btnSaveKey">저장</button>
-
-                <button type="button" class="btn" id="btnDeleteKey">키 지우기</button>
-
-                <button type="button" class="btn" id="btnClearAll" style="margin-left:auto;">공용 PC 데이터 전체 삭제</button>
-
-              </div>
-
-            </div>
-
-            <div class="card">
-
-              <h2 class="card-title">구독형 AI 스킬 · 프로젝트 등록 방법</h2>
-
-              <details class="card guide"><summary>Gemini 스킬(Skills)로 저장해 쓰기</summary><button type="button" class="btn" data-open-keyguide data-guide-image="gemini">안내 그림 보기</button><div data-guide-src="gemini"></div></details>
-
-              <details class="card guide"><summary>ChatGPT 프로젝트(Projects)에 저장해 쓰기</summary><button type="button" class="btn" data-open-keyguide data-guide-image="gpt">안내 그림 보기</button><div data-guide-src="gpt"></div></details>
-
-              <details class="card guide"><summary>Claude 스킬(Skills)로 저장해 쓰기</summary><button type="button" class="btn" data-open-keyguide data-guide-image="claude">안내 그림 보기</button><div data-guide-src="claude"></div></details>
-
-              <details class="card guide"><summary>Gemini API 키 발급 안내</summary><button type="button" class="btn" data-open-keyguide>안내 그림 보기</button><div data-guide-src="api"></div></details>
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-
         <nav class="tabbar" aria-label="화면 이동" hidden>
 
-          <a href="#make" data-tab-link="make">만들기</a>
+          <a href="#library" data-tab-link="library">예시 안내</a>
 
-          <a href="#saved" data-tab-link="saved">저장함</a>
+          <a href="#guide" data-tab-link="guide">API 설정</a>
 
-          <a href="#library" data-tab-link="library">자료</a>
-
-          <a href="#guide" data-tab-link="guide">안내</a>
+          <a href="#make" data-tab-link="make">초안 작성</a>
 
         </nav>
 

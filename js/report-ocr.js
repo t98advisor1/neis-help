@@ -5,7 +5,7 @@
   const MASTER_PROMPT_TEXT = `당신은 대한민국 고등학교 학교생활기록부 및 '교과세부능력 및 특기사항(교과세특)' 기재요령 전문가이자 문서 이미지 OCR 정밀 판독 AI입니다.
 첨부된 학생들의 과제연구 설문지 또는 탐구보고서(수행평가 결과물) 이미지를 정밀 판독(OCR)하여, 구글 스프레드시트 및 엑셀에 바로 붙여넣을 수 있는 [마크다운 표] 형식으로 일괄 추출하고 나이스 훈령을 엄격히 준수한 교과세특 초안을 작성해 주세요.
 
-[🔒 개인정보 보호 및 보안 필수 권장사항]
+[개인정보 보호 및 보안 필수 권장사항]
 학생들의 설문지 및 탐구보고서 이미지에는 학생의 학습 기록과 소중한 개인정보가 포함되어 있습니다.
 따라서 본 OCR 판독 및 분석 작업 시에는 학생 데이터 보호를 위해 '입력된 고객 데이터를 AI 모델 학습에 사용하지 않는다(No Model Training)'고 명시된 구글 교육용 계정(Google Workspace for Education, 예: @sch.hs.kr, @goedu.kr, @sen.go.kr 등 학교/교육청 공식 도메인 계정) 사용을 강력히 권장합니다.
 
@@ -99,7 +99,7 @@
         btnSaveSkill.addEventListener('click', () => {
           OCR.downloadSkillFile();
           const origText = btnSaveSkill.textContent;
-          btnSaveSkill.textContent = '💾 스킬 파일 저장 완료!';
+          btnSaveSkill.textContent = '스킬 파일 저장 완료!';
           setTimeout(() => { btnSaveSkill.textContent = origText; }, 2500);
         });
       }
@@ -111,7 +111,7 @@
           const ok = await OCR.copyMasterPrompt();
           const orig = btnCopy.textContent;
           if (ok) {
-            btnCopy.textContent = '✅ 프롬프트 복사 완료!';
+            btnCopy.textContent = '프롬프트 복사 완료!';
             btnCopy.style.background = '#15803d';
             setTimeout(() => {
               btnCopy.textContent = orig;
