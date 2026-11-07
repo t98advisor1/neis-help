@@ -490,9 +490,21 @@
     // === [실시간 교사 승인 및 관제 스크립트] ===
     let loadedApplicants = [];
 
-    // 마스터 PIN 인증 검증
+    // 마스터 PIN 인증 검증 (관리자 세션 자동 감지)
     function checkAdminPin() {
-      const isAuth = sessionStorage.getItem('neis_admin_pin_verified') === 'true';
+      let isAuth = sessionStorage.getItem('neis_admin_pin_verified') === 'true';
+      if (!isAuth) {
+        try {
+          const authRaw = localStorage.getItem('swk_gatekeeper_auth');
+          if (authRaw) {
+            const user = JSON.parse(authRaw);
+            if (user && (user.role === 'admin' || user.isMaster || (user.email && ['indosupervisor0126@gmail.com', 'admin@sch.hs.kr'].includes(user.email.toLowerCase())))) {
+              isAuth = true;
+              sessionStorage.setItem('neis_admin_pin_verified', 'true');
+            }
+          }
+        } catch (e) {}
+      }
       const gate = document.getElementById('adminPinGate');
       if (gate) {
         gate.style.display = isAuth ? 'none' : 'flex';

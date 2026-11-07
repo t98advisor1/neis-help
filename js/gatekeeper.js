@@ -34,6 +34,8 @@
     return domain === 'sch.kr' || domain.endsWith('.sch.kr') || domain === 'goedu.kr' || domain.endsWith('.goedu.kr') || em.endsWith('sch.hs.kr');
   }
 
+  const ADMIN_EMAILS = ['indosupervisor0126@gmail.com', 'admin@sch.hs.kr'];
+
   const Gatekeeper = {
     googleClientId: null,
     currentGoogleUser: null,
@@ -273,6 +275,25 @@
 
         this.currentGoogleUser = { email, name, picture: payload.picture };
 
+        // 0. 최고 관리자 계정 판별 (구글 로그인 즉시 전권 관리자 활성화)
+        if (ADMIN_EMAILS.includes(email)) {
+          sessionStorage.setItem('neis_admin_pin_verified', 'true');
+          this.authorize({
+            email: email,
+            name: name || '최고 관리자',
+            school: '신천고 · 시스템 총괄 관리자',
+            role: 'admin',
+            isMaster: true,
+            validDays: 30
+          });
+          this.closeModal(true);
+          this.updateUI();
+          setTimeout(() => {
+            alert('[최고 관리자 로그인 완료]\n환영합니다, 관리자님!\n\n사이트가 관리자 권한으로 열렸습니다. 상단 [관제탑] 교사 승인 관리 버튼에서 신청 교사 명단을 확인하고 즉시 승인/차단하실 수 있습니다.');
+          }, 200);
+          return;
+        }
+
         // UI에 구글 프로필 표시
         const signArea = document.getElementById('gkGoogleSignArea');
         const profArea = document.getElementById('gkGoogleProfileArea');
@@ -437,7 +458,7 @@
     async validateSessionWithServer() {
       const user = this.getAuthUser();
       if (!user || !user.email) return;
-      if (user.role === 'admin' || user.isMaster) return;
+      if (user.role === 'admin' || user.isMaster || ADMIN_EMAILS.includes((user.email || '').toLowerCase())) return;
 
       try {
         const gasUrl = this.getGasUrl();

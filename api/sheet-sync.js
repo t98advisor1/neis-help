@@ -1,3 +1,9 @@
+const ADMIN_EMAILS = [
+  'indosupervisor0126@gmail.com',
+  'admin@sch.hs.kr',
+  ...(process.env.ADMIN_EMAIL || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean)
+];
+
 const getAdminGasUrl = () => {
   return (
     process.env.ADMIN_GAS_URL ||
@@ -138,6 +144,21 @@ export default async function handler(req, res) {
       const email = String(req.query.email || '').trim().toLowerCase();
       if (!email) {
         return res.status(400).json({ found: false, approved: false, error: '이메일을 입력해 주세요.' });
+      }
+
+      // 최고 관리자 계정은 항상 승인 및 관리자 권한 부여
+      if (ADMIN_EMAILS.includes(email)) {
+        return res.status(200).json({
+          found: true,
+          approved: true,
+          role: 'admin',
+          isAdmin: true,
+          status: '승인',
+          name: '최고 관리자',
+          school: '신천고 · 시스템 총괄 관리자',
+          expiresAt: '2099-12-31',
+          message: '[최고 관리자 인증 완료] 관리자 권한이 활성화되었습니다.'
+        });
       }
 
       // KV 레지스트리 조회 (관리자의 승인/취소 상태가 최우선 기준)
