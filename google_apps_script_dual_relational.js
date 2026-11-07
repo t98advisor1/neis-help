@@ -32,6 +32,14 @@ function getGeminiApiKey() {
 // 시트 상단 메뉴 생성
 // 시트 상단 메뉴 생성
 function onOpen() {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var skillSheet = ss.getSheetByName("_스킬지침") || ss.getSheetByName("0_AI함수_사용안내_및_스킬지침");
+    if (skillSheet) {
+      skillSheet.getRange(1, 1, Math.max(1, skillSheet.getLastRow()), Math.max(1, skillSheet.getLastColumn())).setWrap(true);
+      skillSheet.setColumnWidth(2, 750);
+    }
+  } catch(e) {}
   SpreadsheetApp.getUi()
     .createMenu("[생기부 올인원 관리 (math-tong)]")
     .addItem("[대시보드] 관리자 안내 및 승인 대시보드 자동 구성", "setupExecutiveDashboard")
@@ -46,6 +54,7 @@ function onOpen() {
     .addSeparator()
     .addItem("[API 설정] Gemini API 키 설정", "promptSetApiKey")
     .addItem("[웹앱 바로가기] NEIS 올인원 웹앱 열기", "openWebApp")
+    .addItem("[서식 정리] 전체 탭 텍스트 자동 줄바꿈(Wrap) 적용", "formatWrapAllSheets")
     .addSeparator()
     .addItem("[학년도 마감] 차년도 학생 초기화 및 기존 데이터 아카이빙", "archiveAndResetForNewSchoolYear")
     .addToUi();
@@ -1119,4 +1128,20 @@ function archiveAndResetForNewSchoolYear() {
     "총 " + archivedCount + "개 시트가 [" + prefix + "*] 아카이브 탭으로 안전하게 복사 백업되었습니다.\n\n" +
     "이제 나이스(NEIS)에서 새 학년도 학생 명렬표(학번, 성명, 희망진로)를 복사하여 활성 시트의 A2 셀에 붙여넣으시면 즉시 새 학년도 관리가 시작됩니다."
   );
+}
+
+
+/**
+ * 전체 탭에 텍스트 자동 줄바꿈(Wrap)을 일괄 적용하여 숨겨지는 텍스트 없이 전체 내용 표시
+ */
+function formatWrapAllSheets() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  for (var i = 0; i < sheets.length; i++) {
+    var sh = sheets[i];
+    var lastRow = Math.max(1, sh.getLastRow());
+    var lastCol = Math.max(1, sh.getLastColumn());
+    sh.getRange(1, 1, lastRow, lastCol).setWrap(true);
+  }
+  SpreadsheetApp.getUi().alert("[확인] 전체 탭의 모든 셀에 자동 줄바꿈 서식이 적용되어 긴 텍스트도 숨김없이 모두 확인하실 수 있습니다.");
 }
