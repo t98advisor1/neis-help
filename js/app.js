@@ -442,7 +442,7 @@ function find2022GroupForSubject(subject) {
     $('#factModeHint').className = 'hint' + (loose ? ' fact-loose' : '');
     // 고정 문자열이라 innerHTML 로 첫 문장만 굵게(빨간 굵은 글씨 덩어리에 핵심이 묻혔음 — UX 점검 2026-10-22). 늘리기 버튼 설명은 결과 쪽 알림에
     $('#factModeHint').innerHTML = loose
-      ? '<b>⚠ 메모에 없는 활동 세부·해석을 AI가 덧붙여 분량을 채워요</b>(수치·수상·도서명·인물은 빼고). 입력 전에 메모와 한 문장씩 대조해 사실이 아닌 부분을 고쳐 주세요. 사실과 다른 기재는 기재요령 위반이에요.'
+      ? '<b> 메모에 없는 활동 세부·해석을 AI가 덧붙여 분량을 채워요</b>(수치·수상·도서명·인물은 빼고). 입력 전에 메모와 한 문장씩 대조해 사실이 아닌 부분을 고쳐 주세요. 사실과 다른 기재는 기재요령 위반이에요.'
       : '메모 속 사실만 풀어 써서 분량을 채워요. 메모가 짧으면 목표보다 짧게 나올 수 있어요.';
     // 과장 허용은 다음 학생·다음 날에도 켜져 있으므로 5번 만들기 버튼 위에도 알린다(UX 점검 2026-10-24)
     $('#looseNow').hidden = !loose;
@@ -616,7 +616,7 @@ function find2022GroupForSubject(subject) {
         <label class="ex-top"><input type="checkbox" data-ex="${esc(e.id)}" ${d.exampleIds.includes(e.id) ? 'checked' : ''}>
           <span><span class="ex-title">${esc(e.title)}</span>${e.mine ? '<span class="ex-mine">내 예시</span>' : ''}
           ${e.source ? `<br><span class="ex-src">${esc(e.source.name)} · ${esc(e.source.published)}${e.mine ? ' 추가' : ' 발행'}${isOld(e) ? ' <b class="ex-old">2년 지난 자료</b>' : ''}</span>` : ''}
-          ${e.engine_flags.length ? `<br><span class="ex-flag">⚠ 금지 표현 포함(${esc(e.engine_flags.map(f => f.split(': ')[1] || f).join(', '))}) — 프롬프트에 넣지 않아요</span>` : ''}</span></label>
+          ${e.engine_flags.length ? `<br><span class="ex-flag"> 금지 표현 포함(${esc(e.engine_flags.map(f => f.split(': ')[1] || f).join(', '))}) — 프롬프트에 넣지 않아요</span>` : ''}</span></label>
         <button type="button" class="ex-more" data-ex-more="${esc(e.id)}">내용 보기</button>${e.mine ? `<button type="button" class="ex-more ex-del" data-my-del="${esc(e.id)}">삭제</button>` : ''}
         <div class="ex-text" data-ex-text="${esc(e.id)}" hidden><p>${esc(e.text)}</p>${e.source && e.source.url ? `<span class="ex-url">출처(${esc(e.source.type)}): ${esc(e.source.url)}</span>` : ''}</div>
       </div>`).join('') +
@@ -630,7 +630,7 @@ function find2022GroupForSubject(subject) {
     const hits = memo.trim() ? SMChecks.checkMemo(memo) : [];
     const qEl = document.querySelector('#memoNotes .memo-questions'); if (qEl) S.memoQOpen = qEl.open; // 메모 질문을 접었는지(알림이 사라지기 전에 기억)
     if (hits.length) {
-      out.push(`<div class="note warn">⚠ 개인정보로 보이는 표현: <b>${esc(termsOf(hits))}</b> — AI로 보내기 전에 지워 주세요.</div>`);
+      out.push(`<div class="note warn"> 개인정보로 보이는 표현: <b>${esc(termsOf(hits))}</b> — AI로 보내기 전에 지워 주세요.</div>`);
     }
     if (memo.trim()) {
       const meta = currentPrompt().meta;
@@ -859,7 +859,7 @@ function find2022GroupForSubject(subject) {
     // 지침·스킬로 채팅에서 받은 문단은 앱에 메모가 없을 수 있다 — 길이로 판단할 수 없으니 대조하지 못했다고 알린다
     if (!memoChars && !loose) N.length.push('<div class="note warn">이 앱에 메모가 없어 글자 수·금지 표현만 점검했어요. 문장이 실제 관찰과 맞는지는 메모와 직접 대조해 주세요.</div>');
     if (loose) {
-      N.loose.push('<div class="note err">⚠ \'약간의 과장 허용\'으로 만든 문단이에요. 메모에 없는 활동 세부·해석이 들어 있어요. 문장마다 메모와 대조해 사실이 아닌 부분은 지우거나 고친 뒤 입력해 주세요(기재요령: 관찰한 사실만 기재).</div>');
+      N.loose.push('<div class="note err"> \'약간의 과장 허용\'으로 만든 문단이에요. 메모에 없는 활동 세부·해석이 들어 있어요. 문장마다 메모와 대조해 사실이 아닌 부분은 지우거나 고친 뒤 입력해 주세요(기재요령: 관찰한 사실만 기재).</div>');
       // AI가 밝힌 덧붙인 내용(사용자 결정 2026-10-23 'B', ADDED_LIST 가 켜졌을 때만 요청). AI 스스로 밝힌 것이라 빠질 수 있다고 함께 알린다
       if ((r.input.addedList && r.source === 'A') || (r.source === 'B' && Array.isArray(r.addedList))) {
         // 목록은 문단과 비교해 거르지 않고 모두 보여 준다(에이전트 검증 2026-10-23: AI가 목록을 줄여 써서 '앞 8글자가 문단에 있음'으로 거르면 22개 중 6개만 보였음)
@@ -869,7 +869,7 @@ function find2022GroupForSubject(subject) {
         else N.added.push(`<div class="note warn">AI가 메모에 없이 덧붙였다고 밝힌 내용 ${list.length}개예요. 문단을 고쳤다면 이미 지운 것도 있을 수 있고, 여기에 없는 덧붙임도 있을 수 있어요.<ol class="added-list">${list.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>`);
       }
     } else if (padded && !short) {
-      N.length.push(`<div class="note warn">⚠ ${factName}(약 ${memoChars}자)에 비해 문단(한글 약 ${Math.round(bytes / 3)}자)이 길어요. 목표 분량을 맞추면서 메모에 없는 내용이 덧붙거나 과장된 표현이 들어갔을 수 있어요. 문장마다 메모·고른 관찰 내용과 대조해 사실이 아닌 부분은 지우거나 고쳐 주세요.</div>`);
+      N.length.push(`<div class="note warn"> ${factName}(약 ${memoChars}자)에 비해 문단(한글 약 ${Math.round(bytes / 3)}자)이 길어요. 목표 분량을 맞추면서 메모에 없는 내용이 덧붙거나 과장된 표현이 들어갔을 수 있어요. 문장마다 메모·고른 관찰 내용과 대조해 사실이 아닌 부분은 지우거나 고쳐 주세요.</div>`);
     }
     if (short) {
       // 문구는 앱 말투(~요)로 여기서 만든다(prompt.js 의 message 는 '~습니다')
@@ -879,7 +879,7 @@ function find2022GroupForSubject(subject) {
       // 과장 허용이면 늘리기 버튼이 하는 일을 알림에서 설명(전에는 '메모를 더 적으라'는 글과 버튼이 어긋났음 — UX 점검 2026-10-22)
       // 사실만에서 '메모 대비 김'과 '목표보다 짧음'이 함께면 한 알림으로 합친다(UX 점검 2026-10-24: 둘이 함께 떠 헷갈렸음 — 덧붙임 경고는 빼지 않고 합침)
       const shortMsg = padded
-        ? `⚠ 문단(한글 약 ${short.chars}자)은 목표 ${short.target}자보다 짧지만, ${factName}(약 ${memoChars}자)에 비해서는 이미 길어 메모에 없는 내용이 들어갔을 수 있어요. 문장마다 메모와 대조한 뒤, 메모를 보충해 다시 만들거나 목표를 낮춰 주세요.`
+        ? ` 문단(한글 약 ${short.chars}자)은 목표 ${short.target}자보다 짧지만, ${factName}(약 ${memoChars}자)에 비해서는 이미 길어 메모에 없는 내용이 들어갔을 수 있어요. 문장마다 메모와 대조한 뒤, 메모를 보충해 다시 만들거나 목표를 낮춰 주세요.`
         : `문단이 목표보다 짧아요 (한글 약 ${short.chars}자 / 목표 ${short.target}자). ` +
         (!loose ? '메모에 활동 내용(무엇을, 어떻게, 결과는)을 더 적고 다시 만들어 주세요.'
           : growA ? '[목표 분량까지 늘리기]는 메모와 어울리는 내용을 덧붙여 한 번 더 써요(무료 사용량 1회, 한도를 넘으면 줄이느라 1회 더). 사실대로 늘리려면 메모를 보충해 다시 만들어 주세요.'
@@ -914,7 +914,7 @@ function find2022GroupForSubject(subject) {
         <div class="finding ${esc(f.severity)}"><b>${f.severity === 'violation' ? '위반' : '주의'} · ${esc(f.category)}</b> ${esc(f.message || '')}${n > 1 ? ` <span class="muted">(${n}곳)</span>` : ''}
           ${f.alt ? `<span class="f-alt">바꿔 쓰기: ${esc(f.alt)}</span>` : ''}${f.basis ? `<details class="f-basis"><summary>근거 보기</summary>${esc(f.basis)}</details>` : ''}</div>`).join(''); // 근거는 접음(UX 점검 2026-10-24: 폰에서 한 건이 6줄)
     } else if (text.trim()) {
-      html += '<p class="ok-line">✓ 기재 금지 표현·학생 시점 표현이 보이지 않아요.</p>';
+      html += '<p class="ok-line"> 기재 금지 표현·학생 시점 표현이 보이지 않아요.</p>';
     }
     if (infos.length) html += `<details class="inline-details"><summary>표기 점검 ${infos.length}건</summary>${infos.map(f => `<div class="finding">${esc(f.message || f.category)}</div>`).join('')}</details>`;
     // 평가어는 한 번만 써도 알린다(사용자 요청 2026-10-23) — 전에는 반복될 때만 알려 '우수한 학생임'이 그냥 지나갔음. 알림일 뿐 고칠지는 교사가
@@ -1256,7 +1256,7 @@ function find2022GroupForSubject(subject) {
   const bytesOf = (p) => (typeof p.bytes === 'number' && isFinite(p.bytes) ? p.bytes : SMChecks.countNeisBytes(String(p.text || '')));
   const studentOf = (p) => [p.cls ? p.cls + '반' : '', p.num ? p.num + '번' : ''].filter(Boolean).join(' ');
   function labelOf(p, noLoose) {
-    return [studentOf(p), shortName(p.area, p.grade) || p.areaName, p.subject, p.club, p.grade ? p.grade + '학년' : '', p.loose === true && !noLoose ? '⚠ 과장 허용' : ''].filter(Boolean).join(' · ');
+    return [studentOf(p), shortName(p.area, p.grade) || p.areaName, p.subject, p.club, p.grade ? p.grade + '학년' : '', p.loose === true && !noLoose ? ' 과장 허용' : ''].filter(Boolean).join(' · ');
   }
   // 저장함 위쪽(개수·백업 안내)과 엑셀 카드. 문단 하나를 지우거나 반·번호를 고칠 때는 목록을 다시 그리지 않고 이것과 그 카드만 고친다
   // — 화면 밖 카드는 어림 높이라(css .saved-card content-visibility) 목록을 통째로 다시 그리면 보던 자리가 다른 카드로 튀었음
@@ -1334,7 +1334,7 @@ function find2022GroupForSubject(subject) {
       name: scope,
       columns: [{ header: '학년', width: 6 }, { header: '반', width: 6 }, { header: '번호', width: 6 }, { header: '항목', width: 10 },
         { header: '과목·동아리', width: 14 }, { header: '문단', width: 80, wrap: true }, { header: '바이트', width: 8 }, { header: '한글 약(자)', width: 10 }, { header: '저장 시각', width: 17 }, { header: '확인', width: 14 }],
-      rows: rows.map(p => [p.grade || '', p.cls || '', p.num || '', shortName(p.area, p.grade) || p.areaName || '', p.subject || p.club || '', p.text, bytesOf(p), Math.round(bytesOf(p) / 3), fmtStamp(p.createdAt), p.loose === true ? '⚠ 과장 허용' : '']),
+      rows: rows.map(p => [p.grade || '', p.cls || '', p.num || '', shortName(p.area, p.grade) || p.areaName || '', p.subject || p.club || '', p.text, bytesOf(p), Math.round(bytesOf(p) / 3), fmtStamp(p.createdAt), p.loose === true ? ' 과장 허용' : '']),
     });
     download(`생기부-초안-${scope.replace(/\s+/g, '')}-${today()}.xlsx`, data, SMXlsx.MIME);
     toast(`${rows.length}개 문단을 엑셀로 내려받았어요.`);
@@ -1356,7 +1356,7 @@ function find2022GroupForSubject(subject) {
             <span><b>[${esc(AREA_LABEL[c.area] || c.area)} · ${esc(c.kind)}] ${esc(c.title)}</b>${c.page ? ` <span class="page-ref">${esc(c.page)}쪽</span>` : ''}
             <span class="ref-text">${esc(c.text)}</span>
             ${c.example ? `<span class="ref-ex">예시: ${esc(c.example)}</span>` : ''}
-            ${c.engine_flags && c.engine_flags.length ? `<span class="ex-flag">⚠ 예시에 금지 표현: ${esc(c.engine_flags.join(', '))}</span>` : ''}</span></label>`).join('')}
+            ${c.engine_flags && c.engine_flags.length ? `<span class="ex-flag"> 예시에 금지 표현: ${esc(c.engine_flags.join(', '))}</span>` : ''}</span></label>`).join('')}
       </details>`).join('')
       : '<p class="hint">아직 올린 자료가 없어요. 위 "자료 올리는 방법"을 따라 넣어 주세요.</p>';
   }
@@ -1376,7 +1376,7 @@ function find2022GroupForSubject(subject) {
       ? `기본 규칙에서 바뀐 것: 직접 넣은 금지어 ${c.customTerms || 0} · 허용 ${c.allowlist || 0} · 끈 규칙 ${(c.disabledRules || 0) + (c.offCategories || 0)} · 낱말 +${c.addedTerms || 0}/−${c.removedTerms || 0} · 글자수 ${c.limits || 0}`
       : '학교에서 따로 고친 규칙은 없어 기본 규칙과 같아요';
     const inUse = !SMStore.isCheckerSettings(SMStore.get(K.checker, null)); // 형식이 틀려 쓰지 않는 가져온 파일은 '먼저 적용 중'이 아님
-    return `<div class="note ${inUse ? 'ok' : ''} preload-note">✅ <b>student-record 규칙 파일을 미리 넣어 두었어요</b> (${esc(m.madeAt)} 받음${m.savedAt ? ` · student-record 저장 ${esc(m.savedAt)}` : ''})<br>
+    return `<div class="note ${inUse ? 'ok' : ''} preload-note"> <b>student-record 규칙 파일을 미리 넣어 두었어요</b> (${esc(m.madeAt)} 받음${m.savedAt ? ` · student-record 저장 ${esc(m.savedAt)}` : ''})<br>
       <span class="muted">${esc(m.engine)} · ${m.categories}분류 ${m.terms}낱말 · ${esc(detail)}${inUse ? '' : ' · 지금은 직접 가져온 파일이 먼저 적용 중'}</span></div>`;
   }
 
@@ -1398,7 +1398,7 @@ function find2022GroupForSubject(subject) {
     const n = (dict() || []).reduce((x, d) => x + ((d.terms || []).length), 0);
     $('#checkerView').innerHTML = `
       <p class="hint">문단을 만들면 기재 금지 표현 ${n}개와 학생 시점 표현·이름을 자동으로 찾아요.</p>
-      ${SMStore.get(K.checker, null) && !SMStore.isCheckerSettings(SMStore.get(K.checker, null)) ? '<div class="note warn">⚠ 가져온 설정 파일은 형식이 맞지 않아 쓰지 않아요(' + (S.srUser ? '미리 넣어 둔 규칙' : '기본 규칙') + '으로 점검 중). 지우고 다시 가져와 주세요.</div>' : ''}
+      ${SMStore.get(K.checker, null) && !SMStore.isCheckerSettings(SMStore.get(K.checker, null)) ? '<div class="note warn"> 가져온 설정 파일은 형식이 맞지 않아 쓰지 않아요(' + (S.srUser ? '미리 넣어 둔 규칙' : '기본 규칙') + '으로 점검 중). 지우고 다시 가져와 주세요.</div>' : ''}
       <details class="inline-details"><summary>자세히 (점검 규칙의 출처)</summary>
         <p class="hint">점검 엔진: 생기부 금지어 탐색기(student-record) · ${esc(SRRules.SOURCE.label)} · 사전 ${dict().length}분류 ${n}낱말 + 이 앱 추가 검사(학생 시점·이름)</p>
         <p class="hint">적용 중인 규칙: <b>${esc(S.settingsSource)}</b></p>
@@ -1421,13 +1421,13 @@ function find2022GroupForSubject(subject) {
     renderUploads();
     $('#exampleCount').textContent = `${S.ref.examples.length}개 · 공개 사례 · 예시마다 출처·발행일 표시`;
     $('#libraryExamples').innerHTML = (ex.length ? '' : '<p class="hint">고른 묶음이 없어 보여 줄 예시가 없어요. 위에서 묶음을 골라 주세요.</p>') + ex.map(e => `
-      <details class="inline-details"><summary>${esc(e.title)}${e.source ? ` <span class="muted">· ${esc(String(e.source.name || '').split(/\s/)[0])} ${esc(String(e.source.published || '').slice(0, 4))}</span>` : ''}${e.engine_flags.length ? ' ⚠' : ''}${isOld(e) ? ' <span class="ex-old">2년 지난 자료</span>' : ''}</summary>
+      <details class="inline-details"><summary>${esc(e.title)}${e.source ? ` <span class="muted">· ${esc(String(e.source.name || '').split(/\s/)[0])} ${esc(String(e.source.published || '').slice(0, 4))}</span>` : ''}${e.engine_flags.length ? ' ' : ''}${isOld(e) ? ' <span class="ex-old">2년 지난 자료</span>' : ''}</summary>
         ${e.engine_flags.length ? `<span class="ex-flag">금지 표현 포함: ${esc(e.engine_flags.join(', '))}</span>` : ''}
         <p class="ex-text">${esc(e.text)}</p>
         ${e.source ? `<span class="ex-url">${esc(e.source.name)} · ${esc(e.source.published)} · ${esc(e.source.type)}<br>${esc(e.source.url)}</span>` : ''}</details>`).join('');
   }
 
-  /* ── ❓ 안내 ─────────────────────── */
+  /* ──  안내 ─────────────────────── */
   const guideCache = {};
   async function loadGuide(el) {
     const id = el.dataset.guideSrc;
@@ -1774,7 +1774,7 @@ function find2022GroupForSubject(subject) {
         const mine = SMStore.get(K.myEx, []); let who = 0;
         for (const x of mine) if (!had.has(x.id)) { x.engine_flags = exampleFlags(x.text, x.areas[0]); if (SMChecks.checkMemo([x.text, x.title, x.source && x.source.name].join('\n')).length) who++; }
         SMStore.set(K.myEx, mine);
-        toast(`${n}개를 가져왔어요.${!rulesBefore && SMStore.get(K.checker, null) ? ' 백업의 점검 규칙도 함께 적용했어요. 📚 자료 탭에서 확인해 주세요.' : ''}`); loadSettings(); refreshExamples(); renderMake(); renderSaved(); renderLibrary();
+        toast(`${n}개를 가져왔어요.${!rulesBefore && SMStore.get(K.checker, null) ? ' 백업의 점검 규칙도 함께 적용했어요.  자료 탭에서 확인해 주세요.' : ''}`); loadSettings(); refreshExamples(); renderMake(); renderSaved(); renderLibrary();
         if (who) alert(`가져온 내 예시 ${who}개에 학생 이름·반·번호·학교명으로 보이는 표현이 있어요. 내 예시는 프롬프트에 들어가 AI로 가니, 만들기 → 참고 예시에서 내용을 확인하고 필요하면 지워 주세요.`);
       }
       catch (err) { toast(err instanceof SyntaxError ? '백업 파일을 읽지 못했어요. 이 앱에서 저장한 .json 파일인지 확인해 주세요.' : (err.message || '가져오지 못했어요.')); }
@@ -1884,10 +1884,10 @@ function find2022GroupForSubject(subject) {
   function renderMyRules() {
     const my = myRules();
     $('#myBanList').innerHTML = my.ban.length
-      ? my.ban.map((b, i) => `<span class="chip-wrap"><span class="chip chip-custom">🚫 ${esc(b.term)}${b.alt ? ` → ${esc(b.alt)}` : ''}</span><button type="button" class="chip-x" data-my-del="ban" data-i="${i}" aria-label="${esc(b.term)} 금지어 빼기">×</button></span>`).join('')
+      ? my.ban.map((b, i) => `<span class="chip-wrap"><span class="chip chip-custom"> ${esc(b.term)}${b.alt ? ` → ${esc(b.alt)}` : ''}</span><button type="button" class="chip-x" data-my-del="ban" data-i="${i}" aria-label="${esc(b.term)} 금지어 빼기">×</button></span>`).join('')
       : '<p class="hint">더한 금지어가 없어요.</p>';
     $('#myAllowList').innerHTML = my.allow.length
-      ? my.allow.map((t, i) => `<span class="chip-wrap"><span class="chip chip-custom">✅ ${esc(t)}</span><button type="button" class="chip-x" data-my-del="allow" data-i="${i}" aria-label="${esc(t)} 허용 표현 빼기">×</button></span>`).join('')
+      ? my.allow.map((t, i) => `<span class="chip-wrap"><span class="chip chip-custom"> ${esc(t)}</span><button type="button" class="chip-x" data-my-del="allow" data-i="${i}" aria-label="${esc(t)} 허용 표현 빼기">×</button></span>`).join('')
       : '<p class="hint">더한 허용 표현이 없어요.</p>';
   }
   function saveMyRules(my, msg) {
@@ -2044,7 +2044,7 @@ function find2022GroupForSubject(subject) {
       if (gemsImg) gemsImg.src = `assets/gemini-gem-step${currentGemStep}.svg`;
       if (gemsDesc) gemsDesc.textContent = GEMS_DESCS[currentGemStep - 1];
       if (gemsPrev) gemsPrev.disabled = (currentGemStep === 1);
-      if (gemsNext) gemsNext.textContent = (currentGemStep === 5) ? '시작하기 ✓' : '다음 ➔';
+      if (gemsNext) gemsNext.textContent = (currentGemStep === 5) ? '시작하기 ' : '다음 ';
       if (gemsCopyBox) gemsCopyBox.style.display = (currentGemStep === 1 || currentGemStep === 2) ? 'flex' : 'none';
 
       gemsTabs.forEach((btn, i) => {
@@ -2083,7 +2083,7 @@ function find2022GroupForSubject(subject) {
 3. 금지어 배제: 공인어학성적, 교외상, 논문, 부모 지위 기재 절대 배제`;
 
         navigator.clipboard.writeText(promptText).then(() => {
-          btnCopyPrompt.textContent = '✓ 복사 완료!';
+          btnCopyPrompt.textContent = ' 복사 완료!';
           btnCopyPrompt.style.background = '#059669';
           setTimeout(() => {
             btnCopyPrompt.textContent = '프롬프트 복사';
@@ -2115,7 +2115,7 @@ function find2022GroupForSubject(subject) {
       if (apiImg) apiImg.src = `assets/gemini-step${currentApiStep}.svg`;
       if (apiDesc) apiDesc.textContent = API_DESCS[currentApiStep - 1];
       if (apiPrev) apiPrev.disabled = (currentApiStep === 1);
-      if (apiNext) apiNext.textContent = (currentApiStep === 6) ? '완료' : '다음 ➔';
+      if (apiNext) apiNext.textContent = (currentApiStep === 6) ? '완료' : '다음 ';
 
       apiTabs.forEach((btn, i) => {
         const on = (i + 1 === currentApiStep);
@@ -2145,198 +2145,27 @@ function find2022GroupForSubject(subject) {
   }
 
   function bindSheetSyncModal() {
-    const btnSync = $('#btn-sheet-sync');
-    const modal = $('#sheetSyncModal');
-    const inHrUrl = $('#inputGasHomeroomUrl');
-    const inSubUrl = $('#inputGasSubjectUrl');
-    const btnSave = $('#btnSaveSheetUrl');
-    const btnTestHr = $('#btnTestHomeroomSync');
-    const btnTestSub = $('#btnTestSubjectSync');
-    const btnCopyCode = $('#btnCopyGasCode');
-    const copyHint = $('#gasCopyHint');
-
-    if (!btnSync || !modal) return;
-
-    btnSync.addEventListener('click', () => {
-      if (window.GoogleSheet) {
-        if (inHrUrl) inHrUrl.value = window.GoogleSheet.getHomeroomUrl();
-        if (inSubUrl) inSubUrl.value = window.GoogleSheet.getSubjectUrl();
-      }
-      modal.showModal();
-    });
-
-    // 메인 히어로 화면의 [구글 계정 시트 동기화] 버튼 연동
-    const heroBtnSync = $('#heroBtnGoogleSync');
-    if (heroBtnSync) {
-      heroBtnSync.addEventListener('click', () => {
-        if (window.GoogleSheet) {
-          if (inHrUrl) inHrUrl.value = window.GoogleSheet.getHomeroomUrl();
-          if (inSubUrl) inSubUrl.value = window.GoogleSheet.getSubjectUrl();
-        }
-        modal.showModal();
-      });
-    }
-
-    // 4번째 화면 [대입 진학상담 전체 화면으로 열기] 버튼 연동
+    // 시트 동기화 모달 및 엑셀 다운로드 이벤트는 js/google-sheet.js 에서 단일 마스터 시트 기준으로 일괄 처리합니다.
     const btnOpenCounsel = $('#btnOpenFullCounsel');
     if (btnOpenCounsel) {
       btnOpenCounsel.addEventListener('click', () => {
-        const counselTab = $(`#op-tabs [data-open="counsel"]`);
+        const counselTab = $('#op-tabs [data-open="counsel"]');
         if (counselTab) counselTab.click();
       });
     }
 
-    if (btnSave) {
-      btnSave.addEventListener('click', () => {
-        if (window.GoogleSheet) {
-          if (inHrUrl) window.GoogleSheet.setHomeroomUrl(inHrUrl.value.trim());
-          if (inSubUrl) window.GoogleSheet.setSubjectUrl(inSubUrl.value.trim());
-          toast('듀얼 구글 시트 연동 정보가 저장되었습니다.');
-        }
-        modal.close();
-      });
-    }
-
-    async function testSyncUrl(btn, input, label) {
-      const url = input ? input.value.trim() : '';
-      if (!url) return alert(label + ' Web App URL을 먼저 입력하세요.');
-      btn.textContent = '확인 중...';
-      btn.disabled = true;
-
-      try {
-        const res = await fetch(url + (url.includes('?') ? '&' : '?') + 'action=ping');
-        const data = await res.json();
-        if (data && data.success) {
-          alert(`✅ [${label}] 연결 성공!\n시트 이름: ${data.sheetTitle}\n활성 탭: ${data.activeTab || data.activeSheet}\n총 학생 행 수: ${data.rowCount}행`);
-        } else {
-          alert(`❌ [${label}] 응답 오류: ` + (data.error || '알 수 없는 에러'));
-        }
-      } catch (err) {
-        alert(`❌ [${label}] 연결 실패: Apps Script 배포 시 [액세스 권한: 모든 사용자]로 배포되었는지 확인하세요.`);
-      } finally {
-        btn.textContent = '연결 테스트';
-        btn.disabled = false;
-      }
-    }
-
-    if (btnTestHr && inHrUrl) {
-      btnTestHr.addEventListener('click', () => testSyncUrl(btnTestHr, inHrUrl, '학급 담임용 시트'));
-    }
-    if (btnTestSub && inSubUrl) {
-      btnTestSub.addEventListener('click', () => testSyncUrl(btnTestSub, inSubUrl, '교과 담임용 시트'));
-    }
-
-    if (btnCopyCode) {
-      btnCopyCode.addEventListener('click', async () => {
-        try {
-          const res = await fetch('/google_apps_script_dual_relational.js');
-          const text = await res.text();
-          await navigator.clipboard.writeText(text);
-          if (copyHint) copyHint.hidden = false;
-          setTimeout(() => { if (copyHint) copyHint.hidden = true; }, 3000);
-        } catch (err) {
-          alert('코드 복사 실패: google_apps_script_dual_relational.js 파일을 확인하세요.');
-        }
-      });
-    }
-
-    // [버튼 수정] 관계형 엑셀 서식 다운로드 (.xlsx)
-    const btnDownloadTemplate = $('#btnDownloadExcelTemplate');
-    if (btnDownloadTemplate) {
-      btnDownloadTemplate.addEventListener('click', () => {
-        try {
-          if (typeof XLSX === 'undefined') {
-            alert('엑셀 라이브러리(SheetJS)가 아직 준비되지 않았습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.');
-            return;
-          }
-          const wb = XLSX.utils.book_new();
-
-          // 1. 학급명렬표
-          const ws1Data = [
-            ['학번', '성명', '성별', '비고'],
-            ['10101', '강하늘', '남', '반장'],
-            ['10102', '김민서', '여', '부반장'],
-            ['10103', '박도윤', '남', ''],
-            ['10104', '서지우', '여', '']
-          ];
-          const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
-          XLSX.utils.book_append_sheet(wb, ws1, '1_학급명렬표');
-
-          // 2. 교과세특
-          const ws2Data = [
-            ['학번', '성명', '과목명', '단원/주제', '특기사항 초안', '나이스Byte(참고)', '점검결과'],
-            ['10101', '강하늘', '통합과학', '신재생에너지 탐구', '태양광 발전 효율 향상을 위한 광전효과 원리를 탐구하고 수치 데이터를 정밀 분석함.', 112, '적합'],
-            ['10102', '김민서', '국어', '현대문학 비평', '사회적 약자를 대변하는 소설 속 인물의 심리를 비판적 시각에서 분석하고 논리적으로 발표함.', 124, '적합']
-          ];
-          const ws2 = XLSX.utils.aoa_to_sheet(ws2Data);
-          XLSX.utils.book_append_sheet(wb, ws2, '2_교과세특');
-
-          // 3. 창의적체험활동
-          const ws3Data = [
-            ['학번', '성명', '영역', '활동명/부서', '특기사항 내용', '나이스Byte(참고)'],
-            ['10101', '강하늘', '자율활동', '학급 자치활동', '학급 1인 1역할 활동에서 환경미화 부장으로서 솔선수범하여 쾌적한 학습 환경을 조성함.', 135],
-            ['10102', '김민서', '동아리활동', '시사토론반', '다양한 사회 현안에 대해 찬반 논거를 명확히 제시하며 합리적인 토론 문화를 선도함.', 142]
-          ];
-          const ws3 = XLSX.utils.aoa_to_sheet(ws3Data);
-          XLSX.utils.book_append_sheet(wb, ws3, '3_창의적체험활동');
-
-          // 4. 대입진학상담
-          const ws4Data = [
-            ['학번', '성명', '내신등급', '희망대학1', '희망학과1', '전형유형', '수시/정시', '상담메모'],
-            ['10101', '강하늘', '1.85', '고려대학교', '전기전자공학부', '학생부종합(학업우수형)', '수시', '수학/물리 세특 우수, 탐구보고서 보완 권장'],
-            ['10102', '김민서', '2.10', '성균관대학교', '국어국문학과', '학생부종합(학과모집)', '수시', '인문학적 통찰력 돋보임, 수능 최저기준 대비 상담']
-          ];
-          const ws4 = XLSX.utils.aoa_to_sheet(ws4Data);
-          XLSX.utils.book_append_sheet(wb, ws4, '4_대입진학상담');
-
-          XLSX.writeFile(wb, '2026_생기부_관계형_표준서식.xlsx');
-        } catch (err) {
-          alert('엑셀 서식 생성 중 오류가 발생했습니다: ' + err.message);
-        }
-      });
-    }
-
-    // [버튼 수정] 표준 프롬프트 1초 복사 버튼
     const btnCopyMasterPrompt = $('#btnCopyOcrMasterPrompt');
     if (btnCopyMasterPrompt) {
       btnCopyMasterPrompt.addEventListener('click', () => {
         const pre = btnCopyMasterPrompt.closest('div')?.parentElement?.querySelector('pre') || $('pre');
         if (pre) {
           navigator.clipboard.writeText(pre.textContent.trim()).then(() => {
-            const orig = btnCopyMasterPrompt.textContent;
-            btnCopyMasterPrompt.textContent = '✓ 복사 완료!';
-            btnCopyMasterPrompt.style.background = '#047857';
-            setTimeout(() => {
-              btnCopyMasterPrompt.textContent = orig;
-              btnCopyMasterPrompt.style.background = '#059669';
-            }, 2000);
+            toast('표준 프롬프트가 클립보드에 복사되었습니다.');
           });
         }
       });
     }
-
-    // [버튼 수정] 규칙 설정 모달 열기/닫기 보완
-    const btnSettings = $('#btn-settings');
-    const settingsModal = $('#settings-modal');
-    const btnCloseSettings = $('#btn-close-settings');
-    if (btnSettings && settingsModal) {
-      btnSettings.addEventListener('click', () => {
-        settingsModal.classList.remove('hidden');
-      });
-    }
-    if (btnCloseSettings && settingsModal) {
-      btnCloseSettings.addEventListener('click', () => {
-        settingsModal.classList.add('hidden');
-      });
-    }
-    if (settingsModal) {
-      settingsModal.addEventListener('click', (e) => {
-        if (e.target === settingsModal) settingsModal.classList.add('hidden');
-      });
-    }
   }
-
-  /* 3. 학생 보고서 다중 이미지 Gemini Vision OCR 자동 판독기 바인딩 */
   function bindReportOcr() {
     const tabBtn = $('#tabBtnOcr');
     const modal = $('#ocrModal');
@@ -2443,7 +2272,7 @@ function find2022GroupForSubject(subject) {
           content: text
         });
         if (resSave && resSave.success) {
-          alert(`✅ [${res.studentName || fileName}] 학생의 세특이 구글 시트 ${resSave.row}행에 성공적으로 저장되었습니다!`);
+          alert(` [${res.studentName || fileName}] 학생의 세특이 구글 시트 ${resSave.row}행에 성공적으로 저장되었습니다!`);
         } else {
           alert('저장 완료 또는 시트 응답 대기');
         }
@@ -2624,7 +2453,7 @@ function find2022GroupForSubject(subject) {
         }
 
         const modelNames = { gemini: 'Google Gemini', claude: 'Anthropic Claude 3.5', gpt: 'OpenAI GPT-4o' };
-        alert(`✨ [\${modelNames[aiModel] || 'AI'}] 엔진으로 기재요령 규격에 맞춘 1,500 Byte 초안이 합성되었습니다!`);
+        alert(` [\${modelNames[aiModel] || 'AI'}] 엔진으로 기재요령 규격에 맞춘 1,500 Byte 초안이 합성되었습니다!`);
       });
     }
 
@@ -2638,7 +2467,7 @@ function find2022GroupForSubject(subject) {
         try {
           await navigator.clipboard.writeText(mResultText.value.trim());
           const orig = mBtnCopy.textContent;
-          mBtnCopy.textContent = '✅ 복사 완료!';
+          mBtnCopy.textContent = ' 복사 완료!';
           setTimeout(() => { mBtnCopy.textContent = orig; }, 1800);
         } catch(e) {
           alert('클립보드 복사 실패: 브라우저 권한을 확인해주세요.');
@@ -2659,7 +2488,7 @@ function find2022GroupForSubject(subject) {
           mainMemo.dispatchEvent(new Event('input', { bubbles: true }));
         }
         if (draftStepModal) draftStepModal.hidden = true;
-        alert('✅ 완성된 세특 문단이 메인 초안 작성기에 반영되었습니다!');
+        alert(' 완성된 세특 문단이 메인 초안 작성기에 반영되었습니다!');
       });
     }
 
@@ -2689,7 +2518,7 @@ function find2022GroupForSubject(subject) {
         } catch(e) {
           console.warn('LocalStorage save failed:', e);
         }
-        alert('💾 구글 시트 2번 [2_교과세특_1·2학기통합] 탭 및 로컬 캐시에 안전하게 저장되었습니다!');
+        alert(' 구글 시트 2번 [2_교과세특_1·2학기통합] 탭 및 로컬 캐시에 안전하게 저장되었습니다!');
       });
     }
 
@@ -2703,7 +2532,7 @@ function find2022GroupForSubject(subject) {
         try {
           await navigator.clipboard.writeText(existEl.textContent.trim());
           const orig = btnCopyExist.textContent;
-          btnCopyExist.textContent = '✅ 복사됨';
+          btnCopyExist.textContent = ' 복사됨';
           setTimeout(() => { btnCopyExist.textContent = orig; }, 1500);
         } catch(e) {
           alert('복사 실패');
@@ -2720,12 +2549,12 @@ function find2022GroupForSubject(subject) {
         if (ext) {
           memoEl.value = cur ? `${ext}\n\n[추가 관찰 메모]\n${cur}` : ext;
           memoEl.dispatchEvent(new Event('input', { bubbles: true }));
-          alert('✅ 기존 세특 내용이 메모창에 덧붙여졌습니다.');
+          alert(' 기존 세특 내용이 메모창에 덧붙여졌습니다.');
         }
       });
     }
 
-    // 3. 구글 시트 전용 통합 Apps Script 5단계 캐러셀 모달
+    // 3. 구글 시트 전용 통합 Apps Script & AI 에이전트 6단계 팝업 캐러셀 가이드
     const gasModal = $('#gasCarouselModal');
     const gasCloseBtn = $('#gasCarouselCloseBtn');
     const btnOpenGas = $('#btnOpenGasGuideBtn');
@@ -2737,31 +2566,52 @@ function find2022GroupForSubject(subject) {
     const gasSlideCounter = $('#gasSlideCounter');
     const btnCopyGas = $('#btnCopyIntegratedGasScript');
 
+    const AGENT_PROMPTS = {
+      gemini: `[구글 시트 Apps Script 자동 설정 요청]\n\n1. 내 구글 시트 사본 링크: (여기에 방금 복사한 구글 시트 URL을 붙여넣으세요)\n2. 요청 작업:\n- 위 구글 시트의 [확장 프로그램 > Apps Script]에 아래 통합 Apps Script 코드를 전체 붙여넣고 저장해 주세요.\n- 저장 후 시트 상단 메뉴 [NEIS 생기부 마스터]의 formatMasterAllInOneSheet(시트 서식·테두리·접기버튼 일괄 적용) 함수를 실행하는 방법을 안내해 주세요.\n\n[붙여넣을 통합 Apps Script 코드]:\n(아래 '통합 Apps Script 코드 복사' 버튼을 눌러 복사한 코드를 여기에 붙여넣으세요)`,
+      agent: `[Antigravity / Codex 프로젝트 작업 지시문]\n\n현재 구글 계정에 로그인된 상태입니다.\n1. 대상 구글 시트 ID(또는 URL): (여기에 사본 시트 URL 입력)\n2. 작업 내용:\n- 프로젝트 내 google_apps_script_dual_relational.js 파일의 전체 코드를 위 구글 시트의 바인딩된 Apps Script 프로젝트(Code.gs)에 업로드·저장해 주세요.\n- 시트의 10개 탭(0_사용안내 ~ 8_출결_칭찬_기록, _스킬지침)에 [교사입력] 굵은 테두리·연노랑 음영, [AI자동] 연파랑 음영, [자동연동] 회색 음영과 긴 표 접기/펼치기 그룹이 정상 적용되도록 점검해 주세요.`,
+      assistant: `[AI 비서 앱(피클 등) 작업 요청문]\n\n연결된 내 Google 계정의 구글 스프레드시트 사본(URL: 여기에 입력)에서 Apps Script 에디터를 열고, 아래 제공된 나이스 올인원 통합 Apps Script 코드를 기존 코드 대신 붙여넣은 뒤 저장해 주세요. (학생 개인정보 입력 전 빈 양식 사본입니다.)`
+    };
+
+    window.copyAgentPrompt = async function(type) {
+      const txt = AGENT_PROMPTS[type] || AGENT_PROMPTS.gemini;
+      try {
+        await navigator.clipboard.writeText(txt);
+        alert('[복사 완료] AI 에이전트 요청용 프롬프트가 복사되었습니다. 이어서 하단의 [통합 Apps Script 코드 복사] 버튼으로 코드도 함께 복사해 전달하세요.');
+      } catch (e) {
+        alert('[오류] 프롬프트 복사에 실패했습니다.');
+      }
+    };
+
     const GAS_SLIDES = [
       {
-        img: 'assets/gas-step1.svg',
-        title: '1단계: 구글 시트 메뉴 [확장 프로그램] ➔ [Apps Script] 클릭',
-        desc: '구글 시트 상단 메뉴에서 <strong>[확장 프로그램]</strong>을 누른 뒤 <strong>[Apps Script]</strong>를 클릭하면 나만의 스크립트 에디터 창이 새 탭으로 열립니다.'
+        img: '/api/r2-image?type=carousel&name=gas-step1',
+        title: '1단계 [필수 권장]: 사본을 저장한 직후, 학생 정보를 입력하기 전에 먼저 연결하세요',
+        desc: '<strong>[가장 중요한 권장 원칙]</strong> 마스터 시트 사본을 내 드라이브에 저장하자마자 <strong>학생 개인정보(명렬표·성적·상담내용)를 입력하기 전에 먼저 Apps Script 연결부터 완료</strong>하세요.<br>• 빈 양식 상태에서 연결하면 AI 에이전트에게 설정을 맡길 때도 개인정보 유출 우려가 전혀 없습니다.<br>• 먼저 연결해 두면 학번 입력 즉시 대시보드 점검, AI 초안 수식, 모바일 교무수첩 동기화가 막힘없이 작동합니다.'
       },
       {
-        img: 'assets/gas-step2.svg',
-        title: '2단계: 기존 코드.gs 내용 전체 삭제 후 원클릭 복사한 코드 붙여넣기',
-        desc: '기존 템플릿 코드(myFunction 등)를 모두 지우고(Ctrl+A 후 Delete), 아래 [통합 코드 복사] 버튼으로 복사한 스크립트를 그대로 붙여넣습니다.'
+        img: '/api/r2-image?type=carousel&name=gas-step2',
+        title: '2단계 [기본 직접 연결]: 시트 상단 [확장 프로그램] -> [Apps Script]에 코드 붙여넣기',
+        desc: '가장 빠르고 확실한 기본 방법입니다 (1분 소요).<br>1) 사본 시트 상단 메뉴에서 <strong>[확장 프로그램] -> [Apps Script]</strong>를 클릭합니다.<br>2) 기존 코드를 모두 지우고 아래 <strong>[구글 시트용 통합 Apps Script 코드 1초 복사]</strong> 버튼으로 복사한 코드를 붙여넣은 뒤 <strong>저장(Ctrl+S)</strong>합니다.<br>3) 시트를 새로고침한 뒤 상단 <strong>[NEIS 생기부 마스터] -> [시트 서식·테두리·접기버튼 일괄 적용]</strong>을 클릭하면 입력칸 구분과 접기 버튼이 자동 완성됩니다.'
       },
       {
-        img: 'assets/gas-step3.svg',
-        title: '3단계: 상단 💾 디스크 아이콘 클릭하여 스크립트 프로젝트 저장',
-        desc: '에디터 상단의 💾 [저장] 아이콘(또는 Ctrl+S)을 눌러 프로젝트를 저장합니다. 별도의 복잡한 웹앱 배포 없이 즉시 시트 수식으로 작동합니다.'
+        img: '/api/r2-image?type=carousel&name=gas-step3',
+        title: '3단계 [어려우신 분 대안 1]: Gemini Pro 작업창에 시트 링크와 코드 주고 요청하기',
+        desc: 'Apps Script 메뉴를 직접 찾기 어려우신 경우, 본인의 Google 계정에 로그인된 <strong>Gemini Pro(제미나이 프로)</strong> 작업창에 사본 시트 링크와 통합 코드를 함께 전달하여 설정을 요청하거나 단계별 안내를 받을 수 있습니다.<br><div style="margin-top:8px;"><button type="button" class="btn small" onclick="window.copyAgentPrompt(\'gemini\')" style="background:#1d4ed8; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">[대안 1] Gemini Pro 요청 프롬프트 복사</button></div>'
       },
       {
-        img: 'assets/gas-step4.svg',
-        title: '4단계: 최초 1회 [권한 검토] ➔ [고급] ➔ [안전하지 않음 이동] ➔ [허용]',
-        desc: 'Google 계정 인증 창이 뜨면 <strong>[고급]</strong>을 누르고 <strong>[안전하지 않은 페이지로 이동]</strong> ➔ <strong>[허용]</strong>을 클릭하여 내 드라이브 연동 권한을 승인합니다.'
+        img: '/api/r2-image?type=carousel&name=gas-step4',
+        title: '4단계 [어려우신 분 대안 2]: Antigravity · Codex 등 실행형 에이전트에 요청하기',
+        desc: 'PC에 <strong>Google Antigravity</strong>나 <strong>Codex</strong> 같은 실행형 에이전트가 설치되어 있다면, 프로젝트 폴더에서 본인 구글 계정을 로그인한 뒤 사본 시트 링크와 스크립트 코드를 주고 자동 반영을 요청할 수 있습니다.<br><div style="margin-top:8px;"><button type="button" class="btn small" onclick="window.copyAgentPrompt(\'agent\')" style="background:#4f46e5; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">[대안 2] 실행형 에이전트 지시 프롬프트 복사</button></div>'
       },
       {
-        img: 'assets/gas-step5.svg',
-        title: '5단계: 구글 시트 셀에서 =AI_SETUK() 및 =NEIS_BYTE() 수식 실행',
-        desc: '구글 시트 셀에 <code>=AI_SETUK(D2, E2, F2)</code> 및 <code>=NEIS_BYTE(G2)</code>를 입력하면 Gemini AI가 1,500 Byte 나이스 규격 세특을 실시간 자동 작성합니다!'
+        img: '/api/r2-image?type=carousel&name=gas-step5',
+        title: '5단계 [어려우신 분 대안 3]: AI 비서 앱(피클 등)에 구글 계정 연결 후 요청하기',
+        desc: '평소 사용하시는 <strong>AI 비서 앱(피클 등)</strong>에 구글 계정을 로그인해 두셨다면, 비서 앱에 사본 시트 링크와 통합 스크립트 코드를 전달해 넣어달라고 요청할 수 있습니다. (단, 비서 앱이 Google Apps Script 편집 권한을 지원하는지 확인이 필요하며, 반드시 학생 정보 입력 전 빈 사본에서 진행하세요.)<br><div style="margin-top:8px;"><button type="button" class="btn small" onclick="window.copyAgentPrompt(\'assistant\')" style="background:#0f766e; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">[대안 3] AI 비서 앱 요청 문구 복사</button></div>'
+      },
+      {
+        img: '/api/r2-image?type=carousel&name=gas-step6',
+        title: '6단계 [필수 마무리]: 권한 승인 및 [웹 앱 URL]을 사이트·모바일 교무수첩에 등록',
+        desc: '보안 정책상 <strong>최초 1회 권한 승인([고급] -> [안전하지 않은 페이지로 이동] -> [허용])</strong>과 <strong>우측 상단 [배포 -> 새 배포 -> 웹 앱(모든 사용자)]</strong> 클릭은 선생님 계정에서 직접 승인해 주셔야 합니다.<br>발급된 <strong>웹 앱 URL</strong>을 복사해 본 사이트의 <strong>[시트 연동]</strong>과 모바일 교무수첩의 <strong>[구글 동기화]</strong>에 등록하면 수업관찰·세특·출결·칭찬·1인1역이 10개 탭 전체와 실시간 동기화됩니다!'
       }
     ];
 
@@ -2777,14 +2627,22 @@ function find2022GroupForSubject(subject) {
       if (gasSlideCounter) gasSlideCounter.textContent = `${idx + 1} / ${GAS_SLIDES.length}`;
       if (btnGasPrev) btnGasPrev.disabled = (idx === 0);
       if (btnGasNext) btnGasNext.disabled = (idx === GAS_SLIDES.length - 1);
+      $$('.modal-gas-step-pill').forEach((b, i) => {
+        const active = (i === idx);
+        b.style.background = active ? '#2563eb' : '#f1f5f9';
+        b.style.color = active ? '#ffffff' : '#334155';
+      });
     }
 
+    window.setModalGasSlide = renderGasSlide;
+    window.openGasGuideModal = function(startIdx = 0) {
+      if (!gasModal) return;
+      renderGasSlide(startIdx || 0);
+      gasModal.hidden = false;
+    };
+
     if (btnOpenGas && gasModal) {
-      btnOpenGas.addEventListener('click', () => {
-        currentGasIdx = 0;
-        renderGasSlide(0);
-        gasModal.hidden = false;
-      });
+      btnOpenGas.addEventListener('click', () => window.openGasGuideModal(0));
     }
 
     if (gasCloseBtn && gasModal) {
@@ -2805,115 +2663,10 @@ function find2022GroupForSubject(subject) {
       });
     }
 
-    // 원클릭 복사용 통합 Apps Script 코드
-    const FULL_APPS_SCRIPT_CODE = `/**
- * 학교생활기록부 올인원: 구글 시트 전용 통합 Apps Script
- * 저작권: Copyright ⓒ 2026 math-tong. All rights reserved.
- * 
- * [탑재 기능]
- * 1. =AI_SETUK(교과목, 탐구활동, [개별역량], [API키]) : 1,500 Byte 나이스 세특 자동 작성
- * 2. =NEIS_BYTE(텍스트) : 나이스 3-byte 기준 글자수 정밀 자동 계산
- * 3. =CHECK_BAN_WORDS(텍스트) : 2026 기재요령 금지어 즉시 검출
- */
-
-function NEIS_BYTE(text) {
-  if (!text) return 0;
-  var str = text.toString();
-  var bytes = 0;
-  for (var i = 0; i < str.length; i++) {
-    var code = str.charCodeAt(i);
-    if (code === 10) bytes += 2;
-    else if (code <= 127) bytes += 1;
-    else bytes += 3;
-  }
-  return bytes;
-}
-
-function CHECK_BAN_WORDS(text) {
-  if (!text) return "정상";
-  var str = text.toString();
-  var bans = ["토익", "TOEIC", "토플", "TOEFL", "텝스", "TEPS", "경시대회", "올림피아드", "논문", "학회지", "도서출판", "발명특허", "부모", "아버지", "어머니", "교수", "의사", "검사", "변호사", "대표"];
-  var found = [];
-  for (var i = 0; i < bans.length; i++) {
-    if (str.indexOf(bans[i]) !== -1) found.push(bans[i]);
-  }
-  return (found.length > 0) ? ("⚠️ 금지어 검출: " + found.join(", ")) : "✅ 기재요령 적합";
-}
-
-function AI_SETUK(subject, activity, competency, userApiKey) {
-  if (!subject || !activity) return "교과목과 탐구활동을 입력해주세요.";
-  var apiKey = userApiKey || PropertiesService.getUserProperties().getProperty("GEMINI_API_KEY");
-  if (!apiKey) return "API 키가 필요합니다. 상단 메뉴 [⚡ 생기부 올인원] ➔ [API 키 등록]을 먼저 실행해주세요.";
-  
-  var prompt = "당신은 고등학교 대한민국 2026학년도 학교생활기록부 교과 세부능력 및 특기사항 작성 전문가입니다.\\n" +
-    "교과목: " + subject + "\\n" +
-    "수행활동/탐구주제: " + activity + "\\n" +
-    (competency ? ("학생개별역량: " + competency + "\\n") : "") +
-    "\\n[작성 원칙]\\n" +
-    "1. 나이스 바이트 기준 공백 포함 1,200 ~ 1,450 Byte 내외로 충실하게 작성.\\n" +
-    "2. 모든 문장은 '~함.', '~임.', '~을 규명함.' 등 명사형 종결어미로 끝낼 것.\\n" +
-    "3. 교내 교육과정 내 탐구 활동 중심으로 학생의 지적 호기심과 문제해결 과정을 구체적으로 기술.\\n" +
-    "4. 공인어학성적, 교외경시대회, 부모 직업 등 2026 기재요령 금지 표현 일체 배제.\\n" +
-    "결과 세특 문단만 바로 출력하세요.";
-    
-  var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
-  var payload = {
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
-  };
-  
-  try {
-    var response = UrlFetchApp.fetch(url, {
-      method: "post",
-      contentType: "application/json",
-      payload: JSON.stringify(payload),
-      muteHttpExceptions: true
-    });
-    var json = JSON.parse(response.getContentText());
-    if (json.candidates && json.candidates[0] && json.candidates[0].content) {
-      return json.candidates[0].content.parts[0].text.trim();
-    }
-    return "생성 실패: " + (json.error ? json.error.message : "응답 없음");
-  } catch(e) {
-    return "API 호출 오류: " + e.toString();
-  }
-}
-
-function onOpen() {
-  SpreadsheetApp.getUi().createMenu("⚡ 생기부 올인원")
-    .addItem("🔑 Gemini API 키 등록", "promptApiKey")
-    .addSeparator()
-    .addItem("🔗 학교생활기록부 올인원 웹앱 열기", "openWebApp")
-    .addToUi();
-}
-
-function promptApiKey() {
-  var ui = SpreadsheetApp.getUi();
-  var res = ui.prompt("Gemini API 키 등록", "Google AI Studio에서 발급받은 무료 API 키를 입력하세요:", ui.ButtonSet.OK_CANCEL);
-  if (res.getSelectedButton() == ui.Button.OK) {
-    PropertiesService.getUserProperties().setProperty("GEMINI_API_KEY", res.getResponseText().trim());
-    ui.alert("API 키가 안전하게 저장되었습니다! 이제 =AI_SETUK() 수식을 바로 사용할 수 있습니다.");
-  }
-}
-
-function openWebApp() {
-  var html = HtmlService.createHtmlOutput("<script>window.open('https://neis-help-one.vercel.app', '_blank');google.script.host.close();</script>");
-  SpreadsheetApp.getUi().showModalDialog(html, "웹앱 여는 중...");
-}`;
-
     if (btnCopyGas) {
       btnCopyGas.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(FULL_APPS_SCRIPT_CODE);
-          const orig = btnCopyGas.textContent;
-          btnCopyGas.textContent = '✅ 통합 Apps Script 코드 100% 복사 완료!';
-          btnCopyGas.style.background = '#15803d';
-          setTimeout(() => {
-            btnCopyGas.textContent = orig;
-            btnCopyGas.style.background = '#059669';
-          }, 2500);
-        } catch(e) {
-          alert('클립보드 복사 실패: 브라우저 권한을 확인해주세요.');
+        if (window.GoogleSheet && typeof window.GoogleSheet.copyGasScript === 'function') {
+          await window.GoogleSheet.copyGasScript();
         }
       });
     }

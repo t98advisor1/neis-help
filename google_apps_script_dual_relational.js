@@ -1,19 +1,22 @@
 /**
  * =========================================================================================
- * [2027 학교생활기록부 & 대입진학상담] 듀얼 관계형 구글 시트 통합 Apps Script 엔진
+ * [2026-2027 학교생활기록부 · 진학상담 · 모바일 교무수첩] 교사용 올인원 마스터 통합 Apps Script 엔진
  * =========================================================================================
  * 
  * 1. 커스텀 함수 제공:
- *    - =AI(프롬프트, 활동내용, [추가맥락]): 셀 안에서 Gemini API 즉시 호출
- *    - =AI_SETUK(과목명, 탐구활동내용, 희망진로): 3단 구조(동기-활동-성장) 세특 초안 자동 생성
+ *    - =AI(프롬프트, 활동내용, [추가맥락], [지침셀]): 셀 안에서 Gemini API 즉시 호출
+ *    - =AI_SETUK(과목명, 탐구활동내용, 희망진로, [지침셀]): 과목별 세부능력 및 특기사항 초안 자동 생성
+ *    - =AI_HAENGTEUK(성명, 자율인성메모, 동아리진로메모, 강점키워드, [지침셀]): 행동특성 및 종합의견 초안 생성
  *    - =NEIS_BYTES(텍스트): 교육부 나이스 바이트 수(한글 3B, 영문/숫자 1B, 엔터 2B) 자동 계산
  * 
- * 2. 듀얼 관계형 동기화 API (Web App):
- *    - 학급 담임용 시트 ↔ 교과 담임용 시트 간 학번(ID) 기반 실시간 상호 참조
- *    - 다부서 동아리/진로활동 내용 자동 취합 및 합산
+ * 2. 올인원 마스터 통합 시트 동기화 API (Web App):
+ *    - 0_사용안내 ~ 8_출결_칭찬_기록, _스킬지침 (총 10개 탭) 학번(ID) 기준 유기적 자동 연동
+ *    - 모바일 교무수첩(T-ong) 수업관찰 -> 6_수업관찰_기록 & 7_AI세특_작성 자동 반영
+ *    - 모바일 교무수첩(T-ong) 출결·칭찬·1인1역·학생관찰 -> 8_출결_칭찬_기록 & 3_창체_행특 자동 반영
  * 
- * 3. Google Docs 상담 일지 자동 생성 및 링크 연동:
- *    - 학생별 개인 상담 포트폴리오 구글 독스 문서 자동 생성 및 시트 링크 바인딩
+ * 3. 시각 서식 구분 및 표 접기/펼치기 자동 구성:
+ *    - [교사입력] 굵은 테두리 + 연노랑 음영 / [AI자동] 연파랑 음영 / [자동연동] 회색 음영
+ *    - 긴 표(학생 명단 하위 행 및 수시 4~6지망 열) 접기/펼치기([+]/[-]) 그룹 자동 설정
  */
 
 // ==========================================
@@ -23,13 +26,11 @@ function getGeminiApiKey() {
   var props = PropertiesService.getScriptProperties();
   var key = props.getProperty("GEMINI_API_KEY");
   if (!key) {
-    // 기본값 또는 안내
     key = "AIzaSy_YOUR_API_KEY_HERE"; 
   }
   return key;
 }
 
-// 시트 상단 메뉴 생성
 // 시트 상단 메뉴 생성
 function onOpen() {
   try {
@@ -41,23 +42,198 @@ function onOpen() {
     }
   } catch(e) {}
   SpreadsheetApp.getUi()
-    .createMenu("[생기부 올인원 관리 (math-tong)]")
-    .addItem("[대시보드] 관리자 안내 및 승인 대시보드 자동 구성", "setupExecutiveDashboard")
-    .addSeparator()
-    .addItem("[일괄 승인] 대기 상태 신청자 전체 일괄 승인", "approveAllPendingUsers")
-    .addItem("[개별 승인] 선택 행 교사 즉시 승인", "approveSelectedUser")
-    .addItem("[반려 처리] 선택 행 교사 반려", "rejectSelectedUser")
+    .createMenu("[NEIS 생기부 마스터 (math-tong)]")
+    .addItem("[시트 서식·테두리·접기버튼 일괄 적용] 입력칸 구분 및 양방향 바로가기 구성", "formatMasterAllInOneSheet")
+    .addItem("[API 설정] Gemini API 키 등록", "promptSetApiKey")
+    .addItem("[서식 정리] 전체 탭 텍스트 자동 줄바꿈(Wrap) 적용", "formatWrapAllSheets")
     .addSeparator()
     .addItem("[동기화] 학번 기준 명렬표 자동 동기화", "syncAllTabsByNameList")
     .addItem("[활동 취합] 다부서 동아리/진로활동 자동 합산", "aggregateClubActivities")
     .addItem("[상담일지] 선택 학생 Google Docs 상담일지 생성", "createDocsForSelectedRow")
-    .addSeparator()
-    .addItem("[API 설정] Gemini API 키 설정", "promptSetApiKey")
     .addItem("[웹앱 바로가기] NEIS 올인원 웹앱 열기", "openWebApp")
-    .addItem("[서식 정리] 전체 탭 텍스트 자동 줄바꿈(Wrap) 적용", "formatWrapAllSheets")
+    .addSeparator()
+    .addItem("[관리자 전용] 교사 승인 대시보드 자동 구성", "setupExecutiveDashboard")
+    .addItem("[관리자 전용] 대기 상태 신청자 전체 일괄 승인", "approveAllPendingUsers")
+    .addItem("[관리자 전용] 선택 행 교사 즉시 승인", "approveSelectedUser")
+    .addItem("[관리자 전용] 선택 행 교사 반려", "rejectSelectedUser")
     .addSeparator()
     .addItem("[학년도 마감] 차년도 학생 초기화 및 기존 데이터 아카이빙", "archiveAndResetForNewSchoolYear")
     .addToUi();
+}
+
+/**
+ * [교사용 올인원 마스터 통합 시트] 10개 탭 서식·굵은테두리·음영·양방향 바로가기·표 접기/펼치기([+]/[-]) 일괄 적용
+ */
+function formatMasterAllInOneSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var masterOrder = [
+    "0_사용안내",
+    "1_대시보드",
+    "2_학생명렬표",
+    "3_창체_행특",
+    "4_대입상담",
+    "5_상담기록",
+    "6_수업관찰_기록",
+    "7_AI세특_작성",
+    "8_출결_칭찬_기록",
+    "_스킬지침"
+  ];
+
+  // 8_출결_칭찬_기록 탭이 없으면 자동 생성
+  var attSheet = ss.getSheetByName("8_출결_칭찬_기록");
+  if (!attSheet) {
+    attSheet = ss.insertSheet("8_출결_칭찬_기록");
+    attSheet.appendRow(["[출결·칭찬·역할] 8_출결_칭찬_기록 — 모바일 교무수첩(T-ong) 출결·칭찬포인트·1인1역·생활관찰 실시간 동기화 및 누가기록 탭"]);
+    attSheet.appendRow(["[중앙 대시보드 바로가기]", "[0_사용안내 바로가기]", "[2_학생명렬표]", "[3_창체_행특]", "[4_대입상담]", "[5_상담기록]", "[6_수업관찰_기록]", "[7_AI세특_작성]"]);
+    attSheet.appendRow(["※ [입력칸 구분] 굵은 테두리+연노랑 음영 = [교사입력/앱동기화] | 연파랑 음영 = [AI자동 생성] | 회색 음영 = [자동연동·수정금지]"]);
+    attSheet.appendRow(["기록일시 [교사/앱동기화]", "학번 [교사/앱동기화]", "성명 [자동연동]", "학급 [교사/앱동기화]", "구분(출결/칭찬/학급역할/학생관찰) [교사/앱동기화]", "상태·점수·역할명 [교사/앱동기화]", "사유 및 세부 관찰메모 [교사/앱동기화]", "대시보드 복귀 [자동연동]"]);
+  }
+
+  // 시트별 고유 gid 맵 생성 (클릭 시 100% 정확하게 탭 이동하는 HYPERLINK 생성)
+  var gidMap = {};
+  var allSheets = ss.getSheets();
+  for (var s = 0; s < allSheets.length; s++) {
+    gidMap[allSheets[s].getName()] = allSheets[s].getSheetId();
+  }
+
+  var navItems = [
+    { name: "1_대시보드", label: "[중앙 대시보드 바로가기]" },
+    { name: "0_사용안내", label: "[0_사용안내 바로가기]" },
+    { name: "2_학생명렬표", label: "[2_학생명렬표]" },
+    { name: "3_창체_행특", label: "[3_창체_행특]" },
+    { name: "4_대입상담", label: "[4_대입상담]" },
+    { name: "5_상담기록", label: "[5_상담기록]" },
+    { name: "6_수업관찰_기록", label: "[6_수업관찰_기록]" },
+    { name: "7_AI세특_작성", label: "[7_AI세특_작성]" },
+    { name: "8_출결_칭찬_기록", label: "[8_출결_칭찬_기록]" },
+    { name: "_스킬지침", label: "[_스킬지침]" }
+  ];
+
+  var tabColors = {
+    "0_사용안내": "#2563eb",
+    "1_대시보드": "#0f172a",
+    "2_학생명렬표": "#d97706",
+    "3_창체_행특": "#059669",
+    "4_대입상담": "#7c3aed",
+    "5_상담기록": "#0891b2",
+    "6_수업관찰_기록": "#ea580c",
+    "7_AI세특_작성": "#4f46e5",
+    "8_출결_칭찬_기록": "#db2777",
+    "_스킬지침": "#475569"
+  };
+
+  for (var idx = 0; idx < masterOrder.length; idx++) {
+    var shName = masterOrder[idx];
+    var sh = ss.getSheetByName(shName);
+    if (!sh) continue;
+
+    if (tabColors[shName]) {
+      try { sh.setTabColor(tabColors[shName]); } catch(e) {}
+    }
+
+    var lastRow = Math.max(5, sh.getLastRow());
+    var lastCol = Math.max(4, sh.getLastColumn());
+    sh.getRange(1, 1, lastRow, lastCol).setFontFamily("Pretendard").setWrap(true).setVerticalAlignment("middle");
+
+    // 1행: 상단 타이틀 배너
+    sh.getRange(1, 1, 1, lastCol)
+      .setBackground("#0f172a")
+      .setFontColor("#ffffff")
+      .setFontWeight("bold")
+      .setFontSize(12);
+    sh.setRowHeight(1, 34);
+
+    // 2행: 양방향 바로가기 네비게이션 바 (#gid 기반 1클릭 이동)
+    var navCount = Math.min(lastCol, navItems.length);
+    for (var nc = 0; nc < navCount; nc++) {
+      var target = navItems[nc];
+      var targetGid = gidMap[target.name];
+      var fStr = targetGid !== undefined
+        ? '=HYPERLINK("#gid=' + targetGid + '","' + target.label + '")'
+        : '=HYPERLINK(\"#\'' + target.name + '\'!A1\",\"' + target.label + '\")';
+      sh.getRange(2, nc + 1).setFormula(fStr);
+    }
+    sh.getRange(2, 1, 1, lastCol)
+      .setBackground("#1e3a8a")
+      .setFontColor("#ffffff")
+      .setFontWeight("bold")
+      .setFontSize(10)
+      .setHorizontalAlignment("center");
+    sh.setRowHeight(2, 28);
+
+    // 3행: 입력 구분 안내 배너
+    sh.getRange(3, 1, 1, lastCol)
+      .setBackground("#fef3c7")
+      .setFontColor("#92400e")
+      .setFontWeight("bold")
+      .setFontSize(10);
+    sh.setRowHeight(3, 26);
+
+    // 데이터 입력/연동 탭 (2_학생명렬표 ~ 8_출결_칭찬_기록) 컬럼별 시각 구분 적용
+    if (idx >= 2 && idx <= 8 && lastRow >= 4) {
+      sh.setFrozenRows(4);
+      sh.setRowHeight(4, 32);
+      var headers = sh.getRange(4, 1, 1, lastCol).getValues()[0];
+      var dataRows = Math.max(1, lastRow - 4);
+
+      for (var c = 0; c < lastCol; c++) {
+        var hText = String(headers[c] || "");
+        var colHeaderRange = sh.getRange(4, c + 1);
+        var colDataRange = sh.getRange(5, c + 1, dataRows, 1);
+
+        if (hText.indexOf("[교사") !== -1) {
+          // [교사 직접입력 / 앱동기화] -> 굵은 테두리(SOLID_MEDIUM) + 연노랑 음영
+          colHeaderRange.setBackground("#fde68a").setFontColor("#78350f").setFontWeight("bold").setHorizontalAlignment("center");
+          colDataRange.setBackground("#fefce8").setFontColor("#0f172a");
+          sh.getRange(4, c + 1, dataRows + 1, 1).setBorder(true, true, true, true, true, true, "#d97706", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+        } else if (hText.indexOf("[AI자동]") !== -1 || hText.indexOf("[AI]") !== -1) {
+          // [AI 자동생성] -> 연파랑 음영
+          colHeaderRange.setBackground("#bfdbfe").setFontColor("#1e3a8a").setFontWeight("bold").setHorizontalAlignment("center");
+          colDataRange.setBackground("#eff6ff").setFontColor("#1e3a8a");
+          sh.getRange(4, c + 1, dataRows + 1, 1).setBorder(true, true, true, true, true, true, "#60a5fa", SpreadsheetApp.BorderStyle.SOLID);
+        } else {
+          // [수식 자동연동 · 수정금지] -> 회색 음영
+          colHeaderRange.setBackground("#e2e8f0").setFontColor("#334155").setFontWeight("bold").setHorizontalAlignment("center");
+          colDataRange.setBackground("#f1f5f9").setFontColor("#475569");
+          sh.getRange(4, c + 1, dataRows + 1, 1).setBorder(true, true, true, true, true, true, "#cbd5e1", SpreadsheetApp.BorderStyle.SOLID);
+        }
+
+        if (hText.indexOf("대시보드") !== -1) {
+          colDataRange.setHorizontalAlignment("center").setFontWeight("bold");
+        }
+      }
+
+      // 긴 표 접기/펼치기([+]/[-]) 행 그룹 설정 (15행 이후 학생 행 그룹화)
+      if (lastRow >= 20) {
+        try { sh.getRange(1, 1, lastRow, 1).shiftRowGroupDepth(-8); } catch(e) {}
+        try { sh.getRange(15, 1, lastRow - 14, 1).shiftRowGroupDepth(1); } catch(e) {}
+      }
+
+      // 4_대입상담 탭은 수시 4~6지망(J~L열, 10~12열) 열 접기/펼치기 그룹 추가
+      if (shName === "4_대입상담" && lastCol >= 12) {
+        try { sh.getRange(1, 1, 1, lastCol).shiftColumnGroupDepth(-8); } catch(e) {}
+        try { sh.getRange(1, 10, 1, 3).shiftColumnGroupDepth(1); } catch(e) {}
+      }
+    } else if (shName === "1_대시보드") {
+      sh.setFrozenRows(3);
+      if (lastRow >= 25) {
+        try { sh.getRange(1, 1, lastRow, 1).shiftRowGroupDepth(-8); } catch(e) {}
+        try { sh.getRange(20, 1, lastRow - 19, 1).shiftRowGroupDepth(1); } catch(e) {}
+      }
+    } else if (shName === "_스킬지침") {
+      sh.setFrozenRows(3);
+      sh.setColumnWidth(2, 750);
+    }
+  }
+
+  SpreadsheetApp.getUi().alert(
+    "[시트 서식·테두리·접기버튼 적용 완료]\n\n" +
+    "1. [교사입력] 칸: 굵은 주황 테두리 + 연노랑 음영 표시\n" +
+    "2. [AI자동] 칸: 연파랑 음영 표시\n" +
+    "3. [자동연동] 칸: 회색 음영 표시\n" +
+    "4. 각 탭 2행 상단: 중앙 대시보드 및 전체 탭 1클릭 바로가기 바 고정\n" +
+    "5. 긴 표 접기/펼치기: 좌측 행 번호 및 상단 열 머리글의 [+]/[-] 버튼으로 표를 접거나 펼칠 수 있습니다."
+  );
 }
 
 /**
@@ -855,47 +1031,64 @@ function doPost(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // === [모바일 교무수첩(T-ong) ↔ 학생 세특 자료 입력 시트 실시간 동기화 API] ===
+    // === [모바일 교무수첩(T-ong) ↔ 교사용 올인원 마스터 통합 시트(수업관찰·세특·출결·칭찬·역할) 실시간 동기화 API] ===
     if (action === "save_notebook" || action === "sync_tong_notebook" || action === "save_attendance") {
       var now = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
       var items = (body.items && Array.isArray(body.items) && body.items.length > 0) ? body.items : [body];
 
-      // 1. 학생 세특 자료 시트 탭 확인
-      var obsSheet = ss.getSheetByName("3_수업관찰_기록");
-      var setukSheet = ss.getSheetByName("4_AI세특_작성");
-      var nbSheet = ss.getSheetByName("교무수첩_통합기록") || ss.getSheetByName("4_교무수첩_통합기록");
+      // 1. 마스터 통합 시트 탭 확인 (신규 10개 탭 및 하위 호환 탭 모두 지원)
+      var obsSheet = ss.getSheetByName("6_수업관찰_기록") || ss.getSheetByName("3_수업관찰_기록");
+      var setukSheet = ss.getSheetByName("7_AI세특_작성") || ss.getSheetByName("4_AI세특_작성");
+      var changcheSheet = ss.getSheetByName("3_창체_행특");
+      var attPraiseSheet = ss.getSheetByName("8_출결_칭찬_기록") || ss.getSheetByName("교무수첩_통합기록") || ss.getSheetByName("4_교무수첩_통합기록");
+
+      if (!attPraiseSheet) {
+        attPraiseSheet = ss.insertSheet("8_출결_칭찬_기록");
+        attPraiseSheet.appendRow(["[출결·칭찬·역할] 8_출결_칭찬_기록 — 모바일 교무수첩(T-ong) 출결·칭찬포인트·1인1역·생활관찰 실시간 동기화 및 누가기록 탭"]);
+        attPraiseSheet.appendRow(["=HYPERLINK(\"#\x271_대시보드\x27!A1\",\"[중앙 대시보드 바로가기]\")", "=HYPERLINK(\"#\x270_사용안내\x27!A1\",\"[0_사용안내 바로가기]\")", "=HYPERLINK(\"#\x272_학생명렬표\x27!A1\",\"[2_학생명렬표]\")", "=HYPERLINK(\"#\x273_창체_행특\x27!A1\",\"[3_창체_행특]\")", "=HYPERLINK(\"#\x274_대입상담\x27!A1\",\"[4_대입상담]\")", "=HYPERLINK(\"#\x275_상담기록\x27!A1\",\"[5_상담기록]\")", "=HYPERLINK(\"#\x276_수업관찰_기록\x27!A1\",\"[6_수업관찰_기록]\")", "=HYPERLINK(\"#\x277_AI세특_작성\x27!A1\",\"[7_AI세특_작성]\")"]);
+        attPraiseSheet.appendRow(["※ [입력칸 구분] 굵은 테두리+연노랑 음영 = [교사입력/앱동기화] | 연파랑 음영 = [AI자동 생성] | 회색 음영 = [자동연동·수정금지]"]);
+        attPraiseSheet.appendRow(["기록일시 [교사/앱동기화]", "학번 [교사/앱동기화]", "성명 [자동연동]", "학급 [교사/앱동기화]", "구분(출결/칭찬/학급역할/학생관찰) [교사/앱동기화]", "상태·점수·역할명 [교사/앱동기화]", "사유 및 세부 관찰메모 [교사/앱동기화]", "대시보드 복귀 [자동연동]"]);
+      }
 
       var setukData = setukSheet ? setukSheet.getDataRange().getValues() : null;
+      var changcheData = changcheSheet ? changcheSheet.getDataRange().getValues() : null;
 
-      // 2. 항목별 동기화 처리
       var obsRowsToAdd = [];
-      var nbRowsToAdd = [];
+      var attPraiseRowsToAdd = [];
+      var obsColCount = obsSheet ? Math.max(7, obsSheet.getLastColumn()) : 8;
+      var attColCount = attPraiseSheet ? Math.max(6, attPraiseSheet.getLastColumn()) : 8;
 
       for (var i = 0; i < items.length; i++) {
         var itm = items[i];
         var sId = String(itm.studentId || "").trim();
         var sName = String(itm.studentName || "").trim();
-        var cat = itm.category || itm.type || "수업참여";
-        var detail = itm.detail || itm.content || "";
-        var memo = itm.memo || "";
-        var dt = itm.timestamp || itm.date || now;
+        var clsName = String(itm.className || body.className || "").trim();
+        var cat = String(itm.category || itm.type || "수업관찰").trim();
+        var detail = String(itm.detail || itm.content || "").trim();
+        var memo = String(itm.memo || "").trim();
+        var dt = String(itm.timestamp || itm.date || now).trim();
         var dateOnly = dt.length >= 10 ? dt.slice(0, 10) : Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd");
 
-        // A. [3_수업관찰_기록] 탭이 있는 경우: 교과 세특 입력 시트 누적 관찰에 추가
-        if (obsSheet) {
-          obsRowsToAdd.push([
+        var isSubjectObs = (cat === "수업관찰" || cat === "교과세특" || cat === "수업참여");
+
+        // A. 수업관찰 항목인 경우: [6_수업관찰_기록] 및 [7_AI세특_작성] E열(누적 관찰메모)에 반영
+        if (isSubjectObs && obsSheet) {
+          var obsRow = [
             dateOnly,
             sId,
             sName,
-            cat,
+            clsName || cat,
             "모바일교무수첩",
             detail + (memo ? " (" + memo + ")" : ""),
             ""
-          ]);
+          ];
+          if (obsColCount >= 8) {
+            obsRow.push("=HYPERLINK(\"#\x271_대시보드\x27!A1\",\"[대시보드로 이동]\")");
+          }
+          obsRowsToAdd.push(obsRow);
         }
 
-        // B. [4_AI세특_작성] 탭이 있는 경우: 해당 학생의 E열(누적 관찰메모) 업데이트하여 AI 세특 초안 자동 반영
-        if (setukSheet && setukData && (sId || sName)) {
+        if (isSubjectObs && setukSheet && setukData && (sId || sName)) {
           for (var r = 2; r < setukData.length; r++) {
             var rowId = String(setukData[r][0] || "").trim();
             var rowName = String(setukData[r][1] || "").trim();
@@ -904,36 +1097,65 @@ function doPost(e) {
               if (detail && curMemo.indexOf(detail) === -1) {
                 var newMemo = curMemo ? (curMemo + " / " + detail) : detail;
                 setukSheet.getRange(r + 1, 5).setValue(newMemo);
-                setukData[r][4] = newMemo; // 메모리 갱신
+                setukData[r][4] = newMemo;
               }
               break;
             }
           }
         }
 
-        // C. 교무수첩 통합 탭에도 누적 보관
-        if (!obsSheet || nbSheet) {
-          nbRowsToAdd.push([dt, sId, sName, cat, detail, memo]);
+        // B. 출결 / 칭찬 / 학급역할(1인1역) / 학생관찰 항목인 경우: [8_출결_칭찬_기록]에 반영
+        if (!isSubjectObs && attPraiseSheet) {
+          if (attColCount >= 8) {
+            attPraiseRowsToAdd.push([
+              dt,
+              sId,
+              sName,
+              clsName,
+              cat,
+              detail,
+              memo,
+              "=HYPERLINK(\"#\x271_대시보드\x27!A1\",\"[대시보드로 이동]\")"
+            ]);
+          } else {
+            attPraiseRowsToAdd.push([dt, sId, sName, cat, detail, memo]);
+          }
+        }
+
+        // C. 칭찬·학급역할·학생관찰은 [3_창체_행특]의 F열(행동특성 상시관찰 메모) 또는 C열(자율활동)에도 자동 보조 반영
+        if ((cat === "칭찬" || cat === "학급역할" || cat === "학생관찰") && changcheSheet && changcheData && (sId || sName)) {
+          for (var cr = 4; cr < changcheData.length; cr++) {
+            var cRowId = String(changcheData[cr][0] || "").trim();
+            var cRowName = String(changcheData[cr][1] || "").trim();
+            if ((sId && cRowId === sId) || (sName && cRowName === sName)) {
+              var targetColIdx = (cat === "학급역할") ? 2 : 5; // 학급역할->C열(자율), 칭찬/학생관찰->F열(행특)
+              var existingVal = String(changcheData[cr][targetColIdx] || "").trim();
+              var appendTxt = "[" + cat + "] " + detail + (memo ? " (" + memo + ")" : "");
+              if (detail && existingVal.indexOf(detail) === -1) {
+                var updatedVal = existingVal ? (existingVal + " / " + appendTxt) : appendTxt;
+                changcheSheet.getRange(cr + 1, targetColIdx + 1).setValue(updatedVal);
+                changcheData[cr][targetColIdx] = updatedVal;
+              }
+              break;
+            }
+          }
         }
       }
 
       if (obsSheet && obsRowsToAdd.length > 0) {
-        obsSheet.getRange(obsSheet.getLastRow() + 1, 1, obsRowsToAdd.length, 7).setValues(obsRowsToAdd);
+        obsSheet.getRange(obsSheet.getLastRow() + 1, 1, obsRowsToAdd.length, obsRowsToAdd[0].length).setValues(obsRowsToAdd);
       }
 
-      if (nbRowsToAdd.length > 0) {
-        if (!nbSheet) {
-          nbSheet = ss.insertSheet("4_교무수첩_통합기록");
-          nbSheet.appendRow(["기록일시", "학번", "성명", "구분(출결/좌석/상담/관찰)", "세부내용", "메모"]);
-          nbSheet.getRange("A1:F1").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
-        }
-        nbSheet.getRange(nbSheet.getLastRow() + 1, 1, nbRowsToAdd.length, 6).setValues(nbRowsToAdd);
+      if (attPraiseSheet && attPraiseRowsToAdd.length > 0) {
+        attPraiseSheet.getRange(attPraiseSheet.getLastRow() + 1, 1, attPraiseRowsToAdd.length, attPraiseRowsToAdd[0].length).setValues(attPraiseRowsToAdd);
       }
 
       return ContentService.createTextOutput(JSON.stringify({
         success: true,
         count: items.length,
-        message: items.length + "건의 관찰 기록이 학생 세특 자료 시트에 성공적으로 동기화되었습니다.",
+        obsCount: obsRowsToAdd.length,
+        attPraiseCount: attPraiseRowsToAdd.length,
+        message: "총 " + items.length + "건(수업관찰 " + obsRowsToAdd.length + "건, 출결·칭찬·역할 " + attPraiseRowsToAdd.length + "건)이 마스터 통합 시트에 동기화되었습니다.",
         timestamp: now
       })).setMimeType(ContentService.MimeType.JSON);
     }

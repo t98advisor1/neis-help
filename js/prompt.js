@@ -488,7 +488,7 @@
    *  - name: 소문자·숫자·하이픈만(Gemini 규칙), 64자 이내(Claude). 과목·동아리가 있으면 이름이 겹치지 않게 짧은 꼬리표를 붙임
    *  - description: 200자 이내(Claude) — 언제 쓰는 스킬인지 적는다
    * 반환값: { name, description, markdown, body } — body 는 맨 위 YAML 을 뺀 지침 본문('지침만 복사': ChatGPT 프로젝트 지침·Gemini 빈 템플릿·Claude 채팅) */
-  const SKILL_SLUG = { jayul: 'jayul', dongari: 'dongari', jinro: 'jinro', setuk: 'setuk', haengteuk: 'haengteuk' };
+  const SKILL_SLUG = { jayul: 'autonomy', dongari: 'club', jinro: 'career', setuk: 'subject-detail', haengteuk: 'behavior' };
   function buildSkill(input, rules, ref, dict, comp, today) {
     const p = buildPrompt({ ...input, memo: '', obs: null, standards: [] }, rules, ref, dict, comp);
     const area = areaRules(rules, input.area);
@@ -659,9 +659,9 @@
     return { body: t.slice(0, m.index) + '\n\n' + rest, items: clean };
   }
   const extractAddedList = (text) => splitAdded(text).items;
-  // 설명 목록 덩어리: 모든 줄이 글머리표·번호로 시작하거나, 짧은 머리말(…:, **굵게**, ✅) 뒤에 목록만 오는 것 — '작성 포인트:'·'반영한 점' 같은 설명(QA 2026-10-24: 문단에 섞였음)
+  // 설명 목록 덩어리: 모든 줄이 글머리표·번호로 시작하거나, 짧은 머리말(…:, **굵게**, ) 뒤에 목록만 오는 것 — '작성 포인트:'·'반영한 점' 같은 설명(QA 2026-10-24: 문단에 섞였음)
   const LIST_LINE = /^\s*(?:[-*•·▪◦]|\d+[.)]|[①-⑳])\s+/;
-  const HEAD_LINE = /^\s*(?:\*\*[^*\n]{1,30}\*\*|[^\n]{1,30}[:：]|[✅✔☑📌💡🔎📝]\s*[^\n]{0,30})\s*$/;
+  const HEAD_LINE = /^\s*(?:\*\*[^*\n]{1,30}\*\*|[^\n]{1,30}[:：]|[]\s*[^\n]{0,30})\s*$/;
   // 머리말 없이 글머리표 한 줄뿐이면 문단에 표시만 붙인 것으로 본다(예: '- 문단 전체')
   const isListChunk = (c) => { const ls = c.split('\n').filter(l => l.trim()); const head = HEAD_LINE.test(ls[0] || ''); const body = head ? ls.slice(1) : ls; return body.length > 0 && (head || body.length >= 2) && body.every(l => LIST_LINE.test(l)); };
   const LEAD_LABEL = /^(?:완성(?:된)?\s*문단|최종\s*문단|생기부\s*문단|문단|초안|결과)\s*[:：]\s*/;

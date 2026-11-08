@@ -105,7 +105,7 @@ if (PANELS.includes(location.hash.slice(1))) {
   updateStepNavUI('make');
 }
 
-/* ── 상단 ⚙️ 설정 · 계정 드롭다운 제어 ── */
+/* ── 상단  설정 · 계정 드롭다운 제어 ── */
 const btnConfig = $('#btnHeaderConfigMenu');
 const configPop = $('#headerConfigPopover');
 if (btnConfig && configPop) {
@@ -126,33 +126,33 @@ if (btnConfig && configPop) {
 const INLINE_GAS_STEPS = [
   {
     img: '/api/r2-image?type=carousel&name=gas-step1',
-    title: '1단계: 학급담임용 / 교과담임용 관계형 표준시트 사본 만들기',
-    desc: '상단의 <strong>[📘 학급담임용 표준시트 사본 만들기]</strong> 또는 <strong>[📗 교과담임용 표준시트 사본 만들기]</strong> 버튼을 클릭해 선생님 개인 구글 드라이브로 복사합니다. (교과담임용은 불필요한 대입상담 탭을 제외하고 수업관찰·AI세특에 집중되어 있습니다.)'
+    title: '1단계 [필수 권장]: 마스터 통합 시트 사본 저장 직후, 학생 정보 입력 전에 먼저 연결하세요',
+    desc: '상단의 <strong>[내 드라이브로 사본 만들기]</strong>를 클릭해 사본을 저장한 직후, <strong>학생 개인정보를 입력하기 전에 먼저 Apps Script 연결을 진행</strong>하세요. 빈 양식에서 먼저 연결하면 AI 에이전트에게 도움을 요청할 때도 안전하며 모든 자동 수식이 처음부터 작동합니다.'
   },
   {
     img: '/api/r2-image?type=carousel&name=gas-step2',
-    title: '2단계: 구글 시트 상단 메뉴 [확장 프로그램] ➔ [Apps Script] 클릭',
-    desc: '복사한 구글 시트 상단 메뉴에서 <strong>[확장 프로그램] ➔ [Apps Script]</strong>를 누르면 스크립트 에디터 창이 열립니다.'
+    title: '2단계 [기본 직접 연결]: 시트 상단 메뉴 [확장 프로그램] -> [Apps Script]에 통합 코드 붙여넣기',
+    desc: '사본 시트 상단 메뉴 <strong>[확장 프로그램] -> [Apps Script]</strong>를 열고, 본 화면 상단의 <strong>[통합 Apps Script 코드 1초 복사]</strong> 버튼으로 복사한 코드를 붙여넣고 저장(Ctrl+S)합니다. 이후 시트 상단 <strong>[NEIS 생기부 마스터] -> [시트 서식·테두리·접기버튼 일괄 적용]</strong>을 실행하세요.'
   },
   {
     img: '/api/r2-image?type=carousel&name=gas-step3',
-    title: '3단계: 통합 Apps Script 코드 붙여넣기 & 💾 저장(Ctrl+S)',
-    desc: '아래 <strong>[📋 통합 Apps Script 코드 1초 복사]</strong> 버튼을 눌러 복사한 코드를 에디터에 붙여넣고 저장합니다. 시트의 <code>_스킬지침</code> 탭에 내장된 앱의 5대 기재요령 지침을 자동으로 참조합니다.'
+    title: '3단계 [어려우신 분 대안 1]: Gemini Pro 작업창에 사본 시트 링크와 코드 주고 요청하기',
+    desc: 'Apps Script 찾기가 어렵다면 본인 계정의 <strong>Gemini Pro</strong> 작업창에 사본 시트 링크와 통합 코드를 전달하여 반영을 요청할 수 있습니다. <button type="button" class="btn small" onclick="window.copyAgentPrompt && window.copyAgentPrompt(\'gemini\')" style="margin-left:6px; background:#2563eb; color:#fff; border:none; padding:3px 10px; border-radius:4px; font-weight:700; cursor:pointer;">요청 프롬프트 복사</button>'
   },
   {
     img: '/api/r2-image?type=carousel&name=gas-step4',
-    title: '4단계: 우측 상단 [배포] ➔ [새 배포] ➔ [웹 앱 (모든 사용자)] 선택',
-    desc: '우측 상단 <strong>[배포] ➔ [새 배포]</strong>에서 유형을 <strong>웹 앱(Web App)</strong>으로 선택하고, 액세스 권한을 <strong>모든 사용자(Anyone)</strong>로 지정한 뒤 배포를 클릭합니다.'
+    title: '4단계 [어려우신 분 대안 2]: Antigravity · Codex 등 실행형 에이전트 프로젝트에서 요청하기',
+    desc: 'PC에 설치된 <strong>Google Antigravity</strong> 또는 <strong>Codex</strong> 프로젝트에서 구글 계정을 로그인한 뒤 사본 시트 링크와 스크립트 코드를 주고 자동 설정을 요청할 수 있습니다. <button type="button" class="btn small" onclick="window.copyAgentPrompt && window.copyAgentPrompt(\'agent\')" style="margin-left:6px; background:#4f46e5; color:#fff; border:none; padding:3px 10px; border-radius:4px; font-weight:700; cursor:pointer;">에이전트 프롬프트 복사</button>'
   },
   {
     img: '/api/r2-image?type=carousel&name=gas-step5',
-    title: '5단계: 최초 1회 권한 승인 ([고급] ➔ [안전하지 않은 페이지로 이동] ➔ [허용])',
-    desc: '구글 보안 안내창이 뜨면 <strong>[고급(Advanced)]</strong>을 누른 뒤 하단의 <strong>[안전하지 않은 페이지로 이동] ➔ [허용]</strong>을 순서대로 클릭합니다.'
+    title: '5단계 [어려우신 분 대안 3]: AI 비서 앱(피클 등)에 구글 계정 연결 후 요청하기',
+    desc: '구글 계정이 연동된 <strong>AI 비서 앱(피클 등)</strong>에 빈 사본 시트 링크와 스크립트 코드를 전달해 넣어달라고 요청할 수 있습니다. <button type="button" class="btn small" onclick="window.copyAgentPrompt && window.copyAgentPrompt(\'assistant\')" style="margin-left:6px; background:#0f766e; color:#fff; border:none; padding:3px 10px; border-radius:4px; font-weight:700; cursor:pointer;">비서 앱 요청문 복사</button>'
   },
   {
     img: '/api/r2-image?type=carousel&name=gas-step6',
-    title: '6단계: 생성된 [웹 앱 URL]을 복사하여 본 앱 [시트 연동]에 등록!',
-    desc: '발급된 <code>https://script.google.com/macros/s/.../exec</code> 주소를 복사해 앱의 <strong>[시트 연동 설정]</strong>에 붙여넣으면 명렬표·세특·대입상담·모바일 교무수첩이 실시간 양방향 동기화됩니다!'
+    title: '6단계 [필수 마무리]: 권한 승인 및 [웹 앱 배포 URL]을 본 사이트와 모바일 교무수첩에 등록',
+    desc: '최초 1회 <strong>[권한 검토 -> 고급 -> 안전하지 않은 페이지로 이동 -> 허용]</strong> 승인 후, 우측 상단 <strong>[배포 -> 새 배포 -> 웹 앱(모든 사용자)]</strong>로 발급된 URL을 복사해 <strong>[시트 연동]</strong> 및 모바일 교무수첩 <strong>[구글 동기화]</strong>에 붙여넣으면 10개 탭 전체가 실시간 연동됩니다.'
   }
 ];
 let curInlineGasIdx = 0;
@@ -202,7 +202,7 @@ window.syncTongNotebookToApp = function() {
   if (frame && frame.contentWindow && frame.contentWindow.TongSyncBridge) {
     frame.contentWindow.TongSyncBridge.pushToGoogleSheet();
   } else {
-    alert('✅ 모바일 교무수첩(t-ong)의 자리배치·출결·상담·세특 관찰 데이터가 30명 관계형 데이터와 실시간 동기화되었습니다.');
+    alert(' 모바일 교무수첩(t-ong)의 자리배치·출결·상담·세특 관찰 데이터가 30명 관계형 데이터와 실시간 동기화되었습니다.');
   }
   if (window.GoogleSheet && typeof window.GoogleSheet.renderLiveRelationalPreview === 'function') {
     window.GoogleSheet.renderLiveRelationalPreview('liveSheetPreviewBox', 'homeroom', 'all');
@@ -217,7 +217,7 @@ window.addEventListener('message', (e) => {
   } else if (e.data.type === 'tong-notebook-synced') {
     const badge = $('#nbSyncBadge');
     if (badge) {
-      badge.textContent = `🟢 교무수첩 실시간 동기화됨 (${new Date().toLocaleTimeString('ko-KR')})`;
+      badge.textContent = ` 교무수첩 실시간 동기화됨 (${new Date().toLocaleTimeString('ko-KR')})`;
       badge.style.background = '#dcfce7';
       badge.style.color = '#166534';
     }
@@ -239,7 +239,7 @@ if ('IntersectionObserver' in window) {
 }
 
 
-/* 🌟 사이드바 네비게이션 & 접기형식 이용안내 제어 (이벤트 위임 방식) */
+/*  사이드바 네비게이션 & 접기형식 이용안내 제어 (이벤트 위임 방식) */
 function toggleAppSidebar() {
   const sidebar = document.getElementById('app-sidebar');
   const backdrop = document.getElementById('app-sidebar-backdrop');
@@ -295,7 +295,7 @@ document.addEventListener('click', (e) => {
 });
 
 
-/* 🌟 생기부 제약 점검 샘플 데이터 즉시 불러오기 핸들러 */
+/*  생기부 제약 점검 샘플 데이터 즉시 불러오기 핸들러 */
 const SAMPLE_NEIS_CHECK_TSV = `학번\t성명\t과목\t세부능력및특기사항
 10101\t김태형\t수학I\t교내외 수학 탐구 활동에 적극적으로 참여함. 특히 KMO 한국수학올림피아드 2차 시험에 응시하여 우수한 성적으로 장려상을 수상하였으며, 미적분과 실생활 모델링 관련 심화 보고서를 작성함.
 10102\t박서준\t영어\t원서 독해 능력이 뛰어나며 토익(TOEIC) 920점 수준의 어휘력을 구사함. TED 강연을 시청하고 영문 비평 에세이를 논리적으로 작성함.

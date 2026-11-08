@@ -876,7 +876,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-  /* 🌟 [핵심] 2027 진학상담 서브탭 선택 시 하얗게 가려지는 현상 영구 방지 */
+  /*  [핵심] 2027 진학상담 서브탭 선택 시 하얗게 가려지는 현상 영구 방지 */
 
   .counsel-sub-btn.is-active,
 
@@ -924,7 +924,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <button type="button" id="btnToggleSidebar" class="op-sidebar-btn" aria-label="메뉴 목록 사이드바 열기" title="전체 메뉴 목록 및 이용안내">
 
-      <span class="op-sidebar-icon">☰</span>
+      <span class="op-sidebar-icon"></span>
 
       <span class="op-sidebar-text">메뉴 목록</span>
 
@@ -968,7 +968,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <button id="btn-sheet-sync" type="button" class="op-nav-btn" title="구글 시트 표준안 및 동기화 설정">
 
-      <span class="btn-icon">📊</span>
+      <span class="btn-icon"></span>
 
       <span id="sheetSyncStatusLabel">시트 연동</span>
 
@@ -978,13 +978,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-    <!-- ⚙️ 설정 · 계정 통합 메뉴 (글꼴 선택, 로그인/승인 상태, 규칙 설정, 관리자 승인 시트 수납) -->
+    <!--  설정 · 계정 통합 메뉴 (글꼴 선택, 로그인/승인 상태, 규칙 설정, 관리자 승인 시트 수납) -->
 
     <div class="header-config-wrap">
 
       <button type="button" id="btnHeaderConfigMenu" class="op-nav-btn" aria-expanded="false" title="글꼴 · 계정 승인 · 점검 규칙 설정">
 
-        <span>⚙️ 설정 · 계정</span>
+        <span> 설정 · 계정</span>
 
       </button>
 
@@ -992,7 +992,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div class="header-config-row">
 
-          <span class="header-config-label">👤 교사 로그인 &amp; 1개월 승인 상태</span>
+          <span class="header-config-label"> 교사 로그인 &amp; 1개월 승인 상태</span>
 
           <div id="gatekeeperUserBadge" class="gk-user-badge" style="justify-content:flex-start;"></div>
 
@@ -1000,7 +1000,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div class="header-config-row">
 
-          <label class="header-config-label" for="fontSelect">🔤 화면 글꼴(폰트) 선택</label>
+          <label class="header-config-label" for="fontSelect"> 화면 글꼴(폰트) 선택</label>
 
           <select id="fontSelect" class="op-font-select" aria-label="글꼴 선택" style="background:#f8fafc; color:#0f172a; border:1px solid #cbd5e1; width:100%; padding:7px 10px; border-radius:8px;">
 
@@ -1018,13 +1018,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div class="header-config-row">
 
-          <span class="header-config-label">🛠️ 점검 규칙 &amp; AI 보고서 판독기</span>
+          <span class="header-config-label"> 점검 규칙 &amp; AI 보고서 판독기</span>
 
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
 
-            <button id="btn-settings" type="button" class="btn small" style="flex:1; background:#0f172a !important; color:#fff !important; border:none !important; padding:7px 10px !important; border-radius:8px !important; font-size:12px; font-weight:700; cursor:pointer;">⚙️ 금지어·규칙 설정</button>
+            <button id="btn-settings" type="button" class="btn small" style="flex:1; background:#0f172a !important; color:#fff !important; border:none !important; padding:7px 10px !important; border-radius:8px !important; font-size:12px; font-weight:700; cursor:pointer;"> 금지어·규칙 설정</button>
 
-            <button type="button" data-open="ocr" class="btn small" style="flex:1; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:7px 10px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">📸 보고서 AI 판독</button>
+            <button type="button" data-open="ocr" class="btn small" style="flex:1; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:7px 10px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;"> 보고서 AI 판독</button>
 
           </div>
 
@@ -1037,11 +1037,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           </a>
         </div>
 
-        <!-- 🌟 [이동] 방명록(방문자 수) 및 시스템 정보: 하단 공간 확보를 위해 설정 내부로 수납 -->
+        <!--  [이동] 방명록(방문자 수) 및 시스템 정보: 하단 공간 확보를 위해 설정 내부로 수납 -->
 
         <div class="header-config-row" style="border-top:1px solid #e2e8f0; padding-top:12px; margin-top:8px;">
 
-          <span class="header-config-label">📊 시스템 상태 &amp; 방명록 (방문자)</span>
+          <span class="header-config-label"> 시스템 상태 &amp; 방명록 (방문자)</span>
 
           <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:10px 12px; font-size:12px; color:#334155;">
 
@@ -1105,11 +1105,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
   <!-- ── [사용자 요청] 기존 화면 구성을 그대로 보여주면서 그 위에 크게 떠있는 교사 인증 오버레이 카드 ── -->
 
-  <!-- ── 교사 인증 오버레이 카드 (Google 계정 로그인 ➔ 교사 승인 확인 ➔ 3개월 로그인 유지) ── -->
+  <!-- ── 교사 인증 오버레이 카드 (Google 계정 로그인  교사 승인 확인  3개월 로그인 유지) ── -->
 
   <div id="appGatekeeperOverlay" class="gk-hero-card">
 
-    <!-- 미승인 상태에서는 창 닫기(✕) 우회 불가: 반드시 Google 로그인 후 관리자 시트 승인(3개월) 또는 마스터키 인증 필요 -->
+    <!-- 미승인 상태에서는 창 닫기() 우회 불가: 반드시 Google 로그인 후 관리자 시트 승인(3개월) 또는 마스터키 인증 필요 -->
 
     <!-- 대형 교사용 안내 배너 -->
 
@@ -1117,7 +1117,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div class="gk-banner-main-row">
 
-        <span class="gk-badge-pill">🔒 교사용 전용 연구 서비스</span>
+        <span class="gk-badge-pill"> 교사용 전용 연구 서비스</span>
 
         <h2 class="gk-banner-title">학교생활기록부 올인원: 교사 승인 및 로그인</h2>
 
@@ -1133,13 +1133,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-      <!-- 🔒 개인정보 최소 수집 및 도메인 자동 승인 고지 박스 -->
+      <!--  개인정보 최소 수집 및 도메인 자동 승인 고지 박스 -->
 
       <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:12px 16px; margin:12px 0 0; font-size:12px; color:#334155; line-height:1.6; text-align:left;">
 
         <div style="font-weight:800; color:#0f172a; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
 
-          <span>🔒 교원 승인 고지 및 개인정보 최소 수집 원칙</span>
+          <span> 교원 승인 고지 및 개인정보 최소 수집 원칙</span>
 
           <span style="background:#e0f2fe; color:#0369a1; padding:1px 6px; border-radius:4px; font-size:10.5px; font-weight:800;">1개월 단위 갱신</span>
 
@@ -1155,7 +1155,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-      <!-- 🎯 [체험 모드 둘러보기 배너 복원] -->
+      <!--  [체험 모드 둘러보기 배너 복원] -->
 
       <div style="margin-top:14px; background:#eff6ff; border:1.5px solid #93c5fd; border-radius:12px; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
 
@@ -1199,7 +1199,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="gk-duration-badge">[인증] 1개월 단위 갱신</span>
 
-        <!-- ❓ 관리자 마스터키 비밀번호 작은 물음표 버튼 (일반 교사에게 비노출) -->
+        <!--  관리자 마스터키 비밀번호 작은 물음표 버튼 (일반 교사에게 비노출) -->
 
         <button type="button" id="btnMasterPinQuestion" title="관리자 마스터 비밀번호 입력" style="width:24px; height:24px; border-radius:50%; border:1px solid #cbd5e1; background:#f8fafc; color:#64748b; font-size:12.5px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0; line-height:1; transition:all 0.2s ease;" aria-label="관리자 마스터 비밀번호">?</button>
 
@@ -1277,7 +1277,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                   <input type="text" id="gkGoogleSchool" class="gk-input-mini" placeholder="예: 신천고등학교 (입력 시 실시간 검색)" required value="신천고등학교" autocomplete="off">
 
-                  <button type="button" id="gkBtnSearchSchoolGoogle" class="gk-btn-search-school" title="나이스 학교 정보 실시간 검색">🔍</button>
+                  <button type="button" id="gkBtnSearchSchoolGoogle" class="gk-btn-search-school" title="나이스 학교 정보 실시간 검색"></button>
 
                 </div>
 
@@ -1311,25 +1311,25 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <button type="submit" id="gkBtnSubmitGoogleApp" class="gk-btn-final-verify" style="flex:1; background:#2563eb;">
 
-                📋 교사 사용 승인 신청하기
+                 교사 사용 승인 신청하기
 
               </button>
 
               <button type="button" id="gkBtnCheckGoogleStatus" class="gk-btn-final-verify" style="flex:1; background:#059669;">
 
-                ✅ 승인 상태 확인 &amp; 입장
+                 승인 상태 확인 &amp; 입장
 
               </button>
 
             </div>
 
-            <!-- 🌟 [사용자 선택] 구글 로그인 후 시트 기록이 남은 상태에서만 1회 둘러보기 허용 -->
+            <!--  [사용자 선택] 구글 로그인 후 시트 기록이 남은 상태에서만 1회 둘러보기 허용 -->
 
             <div style="margin-top:10px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
 
               <div style="font-size:12px; color:#334155;">
 
-                <strong style="color:#0f172a;">👀 샘플 둘러보기를 원하시나요?</strong><br>
+                <strong style="color:#0f172a;"> 샘플 둘러보기를 원하시나요?</strong><br>
 
                 관리자 정식 승인 전에도 가상 샘플 데이터로 1회 둘러보실 수 있습니다.
 
@@ -1337,7 +1337,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <button type="button" id="gkBtnGoogleDemoOnce" style="background:#475569; color:#fff; font-size:12px; font-weight:800; padding:7px 14px; border:none; border-radius:6px; cursor:pointer;">
 
-                👀 1회 둘러보기 (체험 모드)
+                 1회 둘러보기 (체험 모드)
 
               </button>
 
@@ -1379,7 +1379,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <input type="text" id="gkManualSchool" class="gk-input-mini" placeholder="예: 신천고등학교 (입력 시 실시간 검색)" required value="신천고등학교" autocomplete="off">
 
-              <button type="button" id="gkBtnSearchSchoolManual" class="gk-btn-search-school" title="나이스 학교 정보 실시간 검색">🔍</button>
+              <button type="button" id="gkBtnSearchSchoolManual" class="gk-btn-search-school" title="나이스 학교 정보 실시간 검색"></button>
 
             </div>
 
@@ -1417,13 +1417,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <button type="submit" id="gkBtnSubmitManualApp" class="gk-btn-final-verify" style="flex:1; background:#2563eb;">
 
-            📋 교사 사용 승인 신청하기
+             교사 사용 승인 신청하기
 
           </button>
 
           <button type="button" id="gkBtnCheckManualStatus" class="gk-btn-final-verify" style="flex:1; background:#059669;">
 
-            ✅ 승인 상태 확인 &amp; 입장
+             승인 상태 확인 &amp; 입장
 
           </button>
 
@@ -1444,7 +1444,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <h4 style="font-size:15px; font-weight:800; color:#0f172a; margin:0; display:flex; align-items:center; gap:6px;">
             <span>[관리자] 마스터 비밀번호 인증</span>
           </h4>
-          <button type="button" id="btnCloseMasterPinMini" style="background:none; border:none; font-size:18px; cursor:pointer; color:#94a3b8; padding:2px 6px;">✕</button>
+          <button type="button" id="btnCloseMasterPinMini" style="background:none; border:none; font-size:18px; cursor:pointer; color:#94a3b8; padding:2px 6px;"></button>
         </div>
         <p style="font-size:12.5px; color:#64748b; margin:0 0 14px; line-height:1.5;">
           관리자 마스터 비밀번호(기본 PIN: <strong>0909</strong>)를 입력하시면 관리자 권한으로 즉시 입장합니다.
@@ -1488,9 +1488,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <a class="op-cta op-cta-primary reveal" style="--d:.32s; margin-top:0;" href="#menu">시작하기 <span aria-hidden="true">↓</span></a>
 
-        <button type="button" class="op-cta op-cta-sheet reveal" id="heroBtnGoogleSync" style="--d:.36s; margin-top:0;">📊 구글 시트 연동</button>
+        <button type="button" class="op-cta op-cta-sheet reveal" id="heroBtnGoogleSync" style="--d:.36s; margin-top:0;"> 구글 시트 연동</button>
 
-        <a class="op-cta op-cta-counsel reveal" style="--d:.40s; margin-top:0;" href="#sec-counsel-scroll">🎯 대입 진학상담 바로가기 ↓</a>
+        <a class="op-cta op-cta-counsel reveal" style="--d:.40s; margin-top:0;" href="#sec-counsel-scroll"> 대입 진학상담 바로가기 ↓</a>
 
         <div id="heroAuthSuccessBadge" class="gk-hero-success-badge"></div>
 
@@ -1544,7 +1544,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="no">01 · DRAFTING</span>
 
-        <span class="ic">✏️</span>
+        <span class="ic"></span>
 
         <b>생기부 초안 작성</b>
 
@@ -1558,7 +1558,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="no">02 · INSPECT</span>
 
-        <span class="ic">📝</span>
+        <span class="ic"></span>
 
         <b>생기부 파일 점검</b>
 
@@ -1572,7 +1572,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="no">03 · ADMISSIONS</span>
 
-        <span class="ic">🎯</span>
+        <span class="ic"></span>
 
         <b>2027 대입 진학상담</b>
 
@@ -1586,7 +1586,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="no">04 · PROMPTS</span>
 
-        <span class="ic">✍️</span>
+        <span class="ic"></span>
 
         <b>AI 프롬프트 · 스킬</b>
 
@@ -1600,7 +1600,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="no">05 · MANUAL</span>
 
-        <span class="ic">📖</span>
+        <span class="ic"></span>
 
         <b>기재요령 원문 검색</b>
 
@@ -1614,7 +1614,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="no">06 · GUIDE</span>
 
-        <span class="ic">📘</span>
+        <span class="ic"></span>
 
         <b>사용법 · 보안 원칙</b>
 
@@ -1692,17 +1692,17 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div class="op-panel" id="panel-sheet" role="tabpanel">
 
-      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <!--  [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
 
       <div class="op-panel-compact-header">
 
-        <h2>📋 ① 학생 종합 기록 &amp; 구글 시트 1:1 동기화 Hub</h2>
+        <h2> ① 학생 종합 기록 &amp; 구글 시트 1:1 동기화 Hub</h2>
 
-        <span class="op-panel-compact-sub">30명 관계형 명부 및 단일 시트([📓_교무수첩]) 실시간 연동</span>
+        <span class="op-panel-compact-sub">30명 관계형 명부 및 단일 시트([_교무수첩]) 실시간 연동</span>
 
       </div>
 
-      <!-- 🌟 [사용자 중심 안내] 구글 시트 =AI() 함수 세특 작성 4단계 인포그래픽 & GIF 시연 매뉴얼 -->
+      <!--  [사용자 중심 안내] 구글 시트 =AI() 함수 세특 작성 4단계 인포그래픽 & GIF 시연 매뉴얼 -->
 
       <div style="background:#ffffff; border:1.5px solid #bfdbfe; border-radius:18px; padding:22px 26px; box-shadow:0 8px 30px rgba(37,99,235,0.08); margin-bottom:26px;">
 
@@ -1712,7 +1712,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
 
-              <span style="font-size:12px; font-weight:800; color:#2563eb; background:#eff6ff; padding:3px 10px; border-radius:999px; border:1px solid #bfdbfe;">💡 사용자 중심 안내 매뉴얼</span>
+              <span style="font-size:12px; font-weight:800; color:#2563eb; background:#eff6ff; padding:3px 10px; border-radius:999px; border:1px solid #bfdbfe;"> 사용자 중심 안내 매뉴얼</span>
 
               <span style="font-size:12px; font-weight:800; color:#059669; background:#ecfdf5; padding:3px 10px; border-radius:999px; border:1px solid #a7f3d0;">=AI 단일 함수로 통일</span>
 
@@ -1730,15 +1730,15 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
 
-            <button type="button" class="btn" onclick="navigator.clipboard.writeText('=AI(\'_스킬지침\'!$B$2, F2:I2)'); alert('📋 [세특 표준 수식]이 복사되었습니다!\n=AI(\'_스킬지침\'!$B$2, F2:I2)\n\n선생님의 구글 시트 세특 셀에 붙여넣어 보세요.');" style="background:#2563eb; color:#fff; font-weight:800; border:none; padding:9px 16px; border-radius:10px; font-size:13px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">
+            <button type="button" class="btn" onclick="navigator.clipboard.writeText('=AI(\'_스킬지침\'!$B$2, F2:I2)'); alert(' [세특 표준 수식]이 복사되었습니다!\n=AI(\'_스킬지침\'!$B$2, F2:I2)\n\n선생님의 구글 시트 세특 셀에 붙여넣어 보세요.');" style="background:#2563eb; color:#fff; font-weight:800; border:none; padding:9px 16px; border-radius:10px; font-size:13px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.25);">
 
-              📋 =AI 세특 수식 복사
+               =AI 세특 수식 복사
 
             </button>
 
-            <button type="button" class="btn" onclick="navigator.clipboard.writeText('=IMAGE(\"https://neis-help-one.vercel.app/assets/ai_sheet_guide_infographic.png\", 1)'); alert('🖼️ [구글 시트용 =IMAGE() 수식]이 복사되었습니다!\n=IMAGE(\"https://neis-help-one.vercel.app/assets/ai_sheet_guide_infographic.png\", 1)\n\n구글 시트 상단 셀에 입력하시면 이 인포그래픽 카드가 시트 안에 바로 삽입됩니다.');" style="background:#f8fafc; color:#0f172a; font-weight:800; border:1.5px solid #cbd5e1; padding:9px 16px; border-radius:10px; font-size:13px; cursor:pointer;">
+            <button type="button" class="btn" onclick="navigator.clipboard.writeText('=IMAGE(\"https://neis-help-one.vercel.app/assets/ai_sheet_guide_infographic.png\", 1)'); alert(' [구글 시트용 =IMAGE() 수식]이 복사되었습니다!\n=IMAGE(\"https://neis-help-one.vercel.app/assets/ai_sheet_guide_infographic.png\", 1)\n\n구글 시트 상단 셀에 입력하시면 이 인포그래픽 카드가 시트 안에 바로 삽입됩니다.');" style="background:#f8fafc; color:#0f172a; font-weight:800; border:1.5px solid #cbd5e1; padding:9px 16px; border-radius:10px; font-size:13px; cursor:pointer;">
 
-              🖼️ 시트 삽입용 =IMAGE() 복사
+               시트 삽입용 =IMAGE() 복사
 
             </button>
 
@@ -1748,7 +1748,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-        <!-- 🖼️ 4단계 마스터 인포그래픽 이미지 -->
+        <!--  4단계 마스터 인포그래픽 이미지 -->
 
         <div style="margin-bottom:16px; text-align:center;">
 
@@ -1758,13 +1758,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-        <!-- 🎬 GIF 시연 및 시트 내 직접 삽입 방법 안내 토글 바 -->
+        <!--  GIF 시연 및 시트 내 직접 삽입 방법 안내 토글 바 -->
 
         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
 
           <div style="font-size:12.5px; color:#334155;">
 
-            <strong style="color:#0f172a;">💡 구글 시트 안에 직접 GIF / 인포그래픽 넣는 방법:</strong><br>
+            <strong style="color:#0f172a;"> 구글 시트 안에 직접 GIF / 인포그래픽 넣는 방법:</strong><br>
 
             • <strong>방식 ① 수식 삽입</strong>: 시트 상단 병합 셀에 <code>=IMAGE("https://neis-help-one.vercel.app/assets/ai_sheet_guide_infographic.png", 1)</code> 입력<br>
 
@@ -1774,7 +1774,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <button type="button" onclick="const g=document.getElementById('aiFormulaGifBox'); if(g){ g.style.display=(g.style.display==='none'?'block':'none'); }" style="background:#ffffff; border:1.5px solid #cbd5e1; color:#0f172a; font-size:12px; font-weight:800; padding:6px 14px; border-radius:8px; cursor:pointer;">
 
-            🎬 실제 동작 GIF 영상 열기/닫기
+             실제 동작 GIF 영상 열기/닫기
 
           </button>
 
@@ -1798,184 +1798,136 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <span style="font-size:12px; font-weight:800; color:#1d4ed8; background:#dbeafe; padding:3px 10px; border-radius:999px;">① 관계형 데이터 표준 서식 &amp; 실시간 동기화 허브</span>
 
-          <h2 class="op-panel-title" style="margin:6px 0 4px;">관계형 구글 시트 2대 표준안 (학급담임용 · 교과담임용)</h2>
-
-          <p class="op-panel-sub" style="margin:0;">학생 명렬표(학번·성명) 1회 입력으로 창체·행특·교과세특·대입상담·상담기록·모바일교무수첩이 유기적으로 연결되며, 1번 탭 대시보드에서 누락 항목 점검 및 입력 탭 바로가기를 지원합니다.</p>
-
+          <h2 class="op-panel-title" style="margin:6px 0 4px;">[교사용 올인원] 마스터 통합 구글 시트 (10개 탭 유기적 연동)</h2>
+          <p class="op-panel-sub" style="margin:0;">학생 명렬표(학번·성명) 1회 입력으로 창체·행특·교과세특·대입상담·상담기록·모바일교무수첩(출결·칭찬·1인1역·수업관찰)이 하나의 시트 안에서 유기적으로 연결되며, 중앙 대시보드와 각 탭 간 양방향 바로가기 및 표 접기/펼치기를 지원합니다.</p>
         </div>
-
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-
-          <button type="button" id="btnSheetPanelCopyGas" class="btn primary" style="background:#7c3aed; color:#fff; border:none; padding:9px 16px; border-radius:8px; font-weight:800; cursor:pointer;">📋 통합 Apps Script 코드 1초 복사</button>
-
-          <button type="button" onclick="window.GoogleSheet && window.GoogleSheet.openModal()" class="btn secondary" style="padding:9px 14px; border-radius:8px; font-weight:700; cursor:pointer;">⚙️ 내 구글시트 Web App URL 연결</button>
-
+          <button type="button" id="btnSheetPanelCopyGas" class="btn primary" style="background:#7c3aed; color:#fff; border:none; padding:9px 16px; border-radius:8px; font-weight:800; cursor:pointer;">통합 Apps Script 코드 1초 복사</button>
+          <button type="button" onclick="window.openGasGuideModal && window.openGasGuideModal(0)" class="btn secondary" style="background:#eff6ff; color:#1d4ed8; border:1.5px solid #93c5fd; padding:9px 14px; border-radius:8px; font-weight:800; cursor:pointer;">시트 연결 · AI 에이전트 안내서 (팝업)</button>
+          <button type="button" onclick="window.GoogleSheet && window.GoogleSheet.openModal()" class="btn secondary" style="padding:9px 14px; border-radius:8px; font-weight:700; cursor:pointer;">내 구글시트 Web App URL 연결</button>
         </div>
-
       </div>
 
-
-
-      <!-- 💡 [시트 작성 표준 규칙 및 색상 구분 안내 배너] -->
-
-      <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:14px 18px; margin-bottom:18px; display:flex; flex-direction:column; gap:8px;">
-
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-
-          <span style="font-size:13px; font-weight:800; color:#0f172a;">💡 사본으로 저장한 구글 시트 입력 항목 및 색상 구분 규칙:</span>
-
-          <span style="font-size:11.5px; background:#e2e8f0; color:#334155; padding:2px 8px; border-radius:6px; font-weight:700;">첫 번째 탭 = 1_종합대시보드_및_사용설명서</span>
-
-        </div>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:10px; font-size:12.5px;">
-
-          <div style="background:#ffffff; border:1.5px solid #94a3b8; border-radius:8px; padding:8px 12px; display:flex; align-items:center; gap:8px;">
-
-            <span style="display:inline-block; width:16px; height:16px; background:#ffffff; border:2px solid #0284c7; border-radius:4px;"></span>
-
-            <span><strong>순백색(#FFFFFF) 셀</strong>: ✏️ <strong>선생님 직접 입력 칸</strong> (학번, 성명, 관찰메모, 설문결과 F2:I2 등)</span>
-
+      <!-- [필수 권장 안내 배너: 사본 저장 직후 연결] -->
+      <div style="background:#fffbeb; border:2px solid #f59e0b; border-radius:12px; padding:14px 18px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div style="flex:1; min-width:260px;">
+          <div style="font-size:13.5px; font-weight:800; color:#92400e; margin-bottom:4px;">[필수 권장] 사본을 저장하자마자 학생 정보를 입력하기 전에 먼저 Apps Script 연결부터 완료하세요!</div>
+          <div style="font-size:12.5px; color:#78350f; line-height:1.55;">
+            빈 양식 사본 상태에서 먼저 연결해 두면 <strong>AI 초안 수식(=AI_SETUK, =AI_HAENGTEUK)</strong>, <strong>입력칸 굵은 테두리·음영 구분</strong>, <strong>긴 표 접기/펼치기([+]/[-])</strong>, <strong>모바일 교무수첩 동기화</strong>가 처음부터 막힘없이 작동합니다. 직접 코드 넣기가 어려우신 선생님을 위한 <strong>AI 에이전트(Gemini Pro · Antigravity · 비서 앱) 활용법</strong>도 팝업 안내서에서 바로 확인하실 수 있습니다.
           </div>
-
-          <div style="background:#f1f5f9; border:1.5px solid #cbd5e1; border-radius:8px; padding:8px 12px; display:flex; align-items:center; gap:8px;">
-
-            <span style="display:inline-block; width:16px; height:16px; background:#e2e8f0; border:1px solid #94a3b8; border-radius:4px;"></span>
-
-            <span><strong>유색(회색·하늘색) 셀</strong>: 🔒 <strong>수식 및 AI 자동 계산 칸</strong> (지우지 마시고 그대로 유지)</span>
-
-          </div>
-
         </div>
-
+        <button type="button" onclick="window.openGasGuideModal && window.openGasGuideModal(0)" style="background:#d97706; color:#ffffff; border:none; padding:10px 16px; border-radius:8px; font-size:12.5px; font-weight:800; cursor:pointer; white-space:nowrap;">6단계 연결 캐러셀 팝업 열기 ↗</button>
       </div>
 
-
+      <!-- [시트 입력 구분 (굵은 테두리 · 음영 · 양방향 바로가기 · 접기 버튼) 규칙 배너] -->
+      <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:14px 18px; margin-bottom:18px; display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+          <span style="font-size:13px; font-weight:800; color:#0f172a;">구글 시트 내 교사 입력칸 vs AI 자동생성칸 시각 구분 및 네비게이션 규칙</span>
+          <span style="font-size:11.5px; background:#1e3a8a; color:#ffffff; padding:3px 10px; border-radius:6px; font-weight:700;">가장 먼저 보는 탭: 0_사용안내 &amp; 1_대시보드 (모든 탭 2행에 양방향 바로가기 고정)</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:10px; font-size:12.5px;">
+          <div style="background:#fefce8; border:2px solid #d97706; border-radius:8px; padding:9px 12px;">
+            <strong style="color:#78350f; display:block; margin-bottom:2px;">[교사입력 / 앱동기화] (굵은 테두리 + 연노랑)</strong>
+            <span style="color:#475569; font-size:12px;">선생님이 직접 입력하거나 모바일 교무수첩에서 자동 기록되는 칸 (명렬표, 관찰메모, 출결·칭찬 등)</span>
+          </div>
+          <div style="background:#eff6ff; border:1.5px solid #60a5fa; border-radius:8px; padding:9px 12px;">
+            <strong style="color:#1e3a8a; display:block; margin-bottom:2px;">[AI자동 생성] (연파랑 음영)</strong>
+            <span style="color:#475569; font-size:12px;"><code>=AI_SETUK()</code>, <code>=AI_HAENGTEUK()</code>, <code>=AI()</code> 수식으로 자동 생성되는 초안 칸</span>
+          </div>
+          <div style="background:#f1f5f9; border:1.5px solid #cbd5e1; border-radius:8px; padding:9px 12px;">
+            <strong style="color:#334155; display:block; margin-bottom:2px;">[자동연동 · 수정금지] (회색 음영)</strong>
+            <span style="color:#475569; font-size:12px;">학번·성명 참조, 나이스 바이트(1500B), 완비 상태가 자동 계산되는 수식 칸 (삭제 주의)</span>
+          </div>
+          <div style="background:#ffffff; border:1.5px solid #94a3b8; border-radius:8px; padding:9px 12px;">
+            <strong style="color:#0f172a; display:block; margin-bottom:2px;">[양방향 바로가기 &amp; 표 접기/펼치기]</strong>
+            <span style="color:#475569; font-size:12px;">각 탭 상단·우측의 <code>[대시보드로 이동]</code> 링크 및 행·열 머리글의 <code>[+]</code>/<code>[-]</code> 접기 버튼 지원</span>
+          </div>
+        </div>
+      </div>
 
       <!-- 교사용 단일 올인원 마스터 관계형 구글 시트 카드 -->
-      <div style="background:linear-gradient(135deg, #eff6ff 0%, #f5f3ff 100%); border:2px solid #6366f1; border-radius:14px; padding:20px; margin-bottom:24px; box-shadow:0 4px 14px rgba(99,102,241,0.08);">
+      <div style="background:linear-gradient(135deg, #eff6ff 0%, #f5f3ff 100%); border:2px solid #6366f1; border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 4px 14px rgba(99,102,241,0.08);">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
           <div style="display:flex; align-items:center; gap:8px;">
             <span style="font-size:12px; font-weight:800; background:#4f46e5; color:#fff; padding:4px 12px; border-radius:999px;">교사용 올인원 단일 마스터 시트</span>
-            <span style="font-size:12px; color:#4338ca; font-weight:700;">9개 탭 유기적 관계형 연동 (학번 기준)</span>
+            <span style="font-size:12px; color:#4338ca; font-weight:700;">10개 탭 유기적 관계형 연동 (학번 기준)</span>
           </div>
-          <span style="font-size:12px; color:#475569; font-weight:600;">NEIS Help 웹앱 + 모바일 교무수첩(T-ong) 동시 연동</span>
+          <span style="font-size:12px; color:#475569; font-weight:600;">나이스 올인원 웹앱 + 모바일 교무수첩(T-ong) 출결·칭찬·수업관찰 완전 동기화</span>
         </div>
-        <h3 style="margin:0 0 8px 0; font-size:18px; font-weight:800; color:#0f172a;">[교사용 올인원] 생기부·진학상담·교과세특·모바일교무수첩 통합 마스터 표준시트</h3>
+        <h3 style="margin:0 0 8px 0; font-size:18px; font-weight:800; color:#0f172a;">[교사용 올인원] 생기부·진학상담·교과세특·모바일교무수첩(출결·칭찬·역할) 통합 마스터 표준시트</h3>
         <p style="margin:0 0 14px 0; font-size:13px; color:#334155; line-height:1.6;">
-          여러 시트를 번거롭게 관리하실 필요 없이, <strong>단 하나의 시트 사본</strong>으로 담임 업무(명렬표, 창체·행특, 대입상담, 상담기록)와 교과 업무(수업관찰 누적, AI세특 작성, 모바일 교무수첩 실시간 동기화)를 한 번에 해결합니다.
+          시트가 여러 개로 나뉘어 혼란스러울 필요 없이, <strong>하나의 마스터 시트 안에서 10개 탭이 학번 하나로 유기적으로 연계</strong>됩니다. 가장 먼저 보는 <code>0_사용안내</code>와 <code>1_대시보드</code>에서 각 시트로 즉시 이동하고, 각 탭에서도 언제든 중앙 대시보드로 복귀할 수 있습니다.
         </p>
-        <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:12px 14px; margin-bottom:14px; font-size:12.5px; color:#1e293b; line-height:1.65;">
-          <strong>포함 탭 안내 (원클릭 탭 지도 내장):</strong><br>
-          • <code>0_사용안내</code> (원클릭 탭 이동 지도) · <code>1_대시보드</code> (영역별 누락 및 글자수 점검)<br>
-          • <code>2_학생명렬표</code> (학번·성명 기준표) · <code>3_창체_행특</code> (=AI_HAENGTEUK 행동특성 초안)<br>
-          • <code>4_대입상담</code> (수시 6지망 상담전략) · <code>5_상담기록</code> (날짜순 누적 상담일지)<br>
-          • <code>6_수업관찰_기록</code> (모바일 교무수첩 T-ong 실시간 연동) · <code>7_AI세특_작성</code> (=AI_SETUK 과목별 세특 초안)<br>
-          • <code>_스킬지침</code> (2026 기재요령 Gemini 프롬프트 원문)
+        <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:12px 14px; margin-bottom:14px; font-size:12.5px; color:#1e293b; line-height:1.7;">
+          <strong>10개 통합 탭 구성 (모든 탭 상단 2행에 중앙 대시보드 및 전체 탭 바로가기 바 내장):</strong><br>
+          • <code>0_사용안내</code> (가장 먼저 보는 사용법 · 색상 구분 · Apps Script 연결 안내) &nbsp;|&nbsp; <code>1_대시보드</code> (학생별 전 영역 완성도 점검 및 입력칸 바로가기)<br>
+          • <code>2_학생명렬표</code> <strong>[교사입력]</strong> (학번·성명·희망학과 1회 입력 기준표) &nbsp;|&nbsp; <code>3_창체_행특</code> <strong>[교사메모 + AI자동]</strong> (자율·동아리·진로·행특 초안)<br>
+          • <code>4_대입상담</code> <strong>[교사입력 + AI자동]</strong> (내신·수시 6지망 지원전략 · 4~6지망 열 접기 지원) &nbsp;|&nbsp; <code>5_상담기록</code> <strong>[교사입력]</strong> (일자별 상담 누적)<br>
+          • <code>6_수업관찰_기록</code> <strong>[교사/앱동기화]</strong> (단원별 수업관찰 누적) &nbsp;|&nbsp; <code>7_AI세특_작성</code> <strong>[AI자동 + 교사검수]</strong> (=AI_SETUK 과목별 세특 초안)<br>
+          • <code>8_출결_칭찬_기록</code> <strong>[교사/앱동기화]</strong> (모바일 교무수첩 출결·칭찬포인트·1인1역·생활관찰 동기화) &nbsp;|&nbsp; <code>_스킬지침</code> (2026 나이스 기재요령 프롬프트 원문)
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="https://docs.google.com/spreadsheets/d/12lGdMCyRGWpTlmG3vaXX18oeTcX2maJ_5Pfo9CJ4kfc/copy" target="_blank" rel="noreferrer" style="flex:1; min-width:200px; text-align:center; background:#4f46e5; color:#fff; padding:11px 16px; border-radius:8px; font-size:13px; font-weight:800; text-decoration:none; box-shadow:0 2px 8px rgba(79,70,229,0.3);">내 드라이브로 사본 만들기 ↗</a>
+          <a href="https://docs.google.com/spreadsheets/d/12lGdMCyRGWpTlmG3vaXX18oeTcX2maJ_5Pfo9CJ4kfc/copy" target="_blank" rel="noreferrer" style="flex:1; min-width:200px; text-align:center; background:#4f46e5; color:#fff; padding:11px 16px; border-radius:8px; font-size:13px; font-weight:800; text-decoration:none; box-shadow:0 2px 8px rgba(79,70,229,0.3);">1단계: 내 드라이브로 사본 만들기 ↗</a>
+          <button type="button" onclick="window.openGasGuideModal && window.openGasGuideModal(0)" style="background:#1e3a8a; color:#ffffff; border:none; padding:11px 16px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer;">2단계: 사본 저장 직후 연결 안내서 (팝업) ↗</button>
           <a href="https://docs.google.com/spreadsheets/d/12lGdMCyRGWpTlmG3vaXX18oeTcX2maJ_5Pfo9CJ4kfc/edit" target="_blank" rel="noreferrer" style="background:#ffffff; color:#4f46e5; border:1.5px solid #a5b4fc; padding:11px 16px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none;">표준시트 열람 ↗</a>
-          <button type="button" id="btnDownloadMainMasterExcel" onclick="window.GoogleSheet && window.GoogleSheet.downloadMasterExcel()" style="background:#ffffff; color:#0f172a; border:1.5px solid #cbd5e1; padding:11px 16px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">통합 마스터 엑셀(.xlsx) 다운로드</button>
+          <button type="button" id="btnDownloadMainMasterExcel" onclick="window.GoogleSheet && window.GoogleSheet.downloadMasterExcel()" style="background:#ffffff; color:#0f172a; border:1.5px solid #cbd5e1; padding:11px 16px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">통합 마스터 엑셀(.xlsx · 접기그룹 적용) 다운로드</button>
         </div>
       </div>
 
-      <!-- 실시간 동기화 관계형 구글시트 구성 & 30명 누락 진단 프리뷰 -->
-
-      <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:14px; padding:18px; margin-bottom:24px;">
-
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-
-          <div>
-
-            <h3 style="margin:0; font-size:16px; font-weight:800; color:#0f172a;">📊 실시간 데이터 동기화 구글시트 구조 &amp; 학생별 누락 항목 대시보드 점검</h3>
-
-            <p style="margin:2px 0 0; font-size:12.5px; color:#475569;">시트의 <code>1_대시보드</code>와 동일하게 어떤 학생의 어떤 영역(창체·행특, 수시 6지망, 상담기록, 수업관찰)이 부족한지 실시간 진단하고, 클릭 즉시 작성 화면으로 불러옵니다.</p>
-
-          </div>
-
+      <!-- [접기/펼치기 지원] 실시간 동기화 관계형 구글시트 구성 & 30명 누락 진단 프리뷰 -->
+      <details style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:14px; padding:14px 18px; margin-bottom:18px;" open>
+        <summary style="cursor:pointer; font-size:15px; font-weight:800; color:#0f172a; display:flex; justify-content:space-between; align-items:center; list-style:none;">
+          <span>[실시간 대시보드 미리보기] 1_대시보드 학생별 기록 완성도 점검표 (클릭하여 표 접기 / 펼치기)</span>
+          <span style="font-size:12px; font-weight:700; color:#2563eb; background:#eff6ff; padding:3px 10px; border-radius:999px;">표 접기/펼치기 [+/-]</span>
+        </summary>
+        <div style="margin-top:12px;">
+          <p style="margin:0 0 10px; font-size:12.5px; color:#475569;">시트의 <code>1_대시보드</code>와 동일하게 학생별 창체·행특, 대입상담, 수업관찰, 출결·칭찬 기록 현황을 진단하고 클릭 즉시 작성 화면으로 불러옵니다.</p>
+          <div id="liveSheetPreviewBox"></div>
         </div>
+      </details>
 
-        <div id="liveSheetPreviewBox"></div>
-
-      </div>
-
-
-
-      <!-- Apps Script 연동 6단계 캐러셀 설명서 (Cloudflare R2 이미지 프록시 연동) -->
-
-      <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:14px; padding:20px;">
-
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
-
-          <div>
-
-            <span style="font-size:11.5px; font-weight:800; color:#7c3aed; background:#f5f3ff; padding:3px 9px; border-radius:999px;">초보 선생님도 3분 완성 · Cloudflare R2 보호 그래픽</span>
-
-            <h3 style="margin:4px 0 0; font-size:16.5px; font-weight:800; color:#0f172a;">📸 구글 시트 &amp; Apps Script 연결 6단계 캐러셀 설명서</h3>
-
-          </div>
-
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-
-            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(0)" style="background:#2563eb; color:#fff; font-weight:700;">1. 시트 사본</button>
-
-            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(1)" style="background:#f1f5f9; color:#334155; font-weight:700;">2. Apps Script 열기</button>
-
-            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(2)" style="background:#f1f5f9; color:#334155; font-weight:700;">3. 코드 붙여넣기</button>
-
-            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(3)" style="background:#f1f5f9; color:#334155; font-weight:700;">4. 웹 앱 배포</button>
-
-            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(4)" style="background:#f1f5f9; color:#334155; font-weight:700;">5. 권한 허용(고급)</button>
-
-            <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(5)" style="background:#f1f5f9; color:#334155; font-weight:700;">6. URL 연동 완료</button>
-
-          </div>
-
-        </div>
-
-        <div style="background:#0f172a; border-radius:12px; overflow:hidden; margin-bottom:14px; text-align:center;">
-
-          <img id="inlineGasSlideImg" src="/api/r2-image?type=carousel&amp;name=gas-step1" alt="Apps Script 연동 캐러셀 가이드" style="width:100%; max-height:420px; height:auto; display:block; margin:0 auto;">
-
-        </div>
-
-        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-
-          <div style="flex:1; min-width:260px;">
-
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-
-              <strong id="inlineGasSlideTitle" style="font-size:15px; color:#0f172a;">1단계: 학급담임용 / 교과담임용 관계형 표준시트 사본 만들기</strong>
-
-              <span id="inlineGasSlideCounter" style="font-size:12px; font-weight:800; color:#2563eb; background:#eff6ff; padding:2px 8px; border-radius:999px;">1 / 6</span>
-
+      <!-- [접기/펼치기 지원] Apps Script 연동 6단계 인라인 설명서 (팝업 안내서와 동일 내용) -->
+      <details style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:14px; padding:14px 18px;">
+        <summary style="cursor:pointer; font-size:15px; font-weight:800; color:#0f172a; display:flex; justify-content:space-between; align-items:center; list-style:none;">
+          <span>[상세 연결 매뉴얼] 구글 시트 Apps Script 직접 연결 및 AI 에이전트(Gemini Pro · Antigravity · 비서 앱) 요청 6단계 가이드 (클릭하여 펼치기)</span>
+          <span style="font-size:12px; font-weight:700; color:#7c3aed; background:#f5f3ff; padding:3px 10px; border-radius:999px;">매뉴얼 펼치기/접기 [+/-]</span>
+        </summary>
+        <div style="margin-top:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+            <div>
+              <span style="font-size:11.5px; font-weight:800; color:#7c3aed; background:#f5f3ff; padding:3px 9px; border-radius:999px;">사본 저장 직후 연결 권장 · AI 에이전트 대안 포함</span>
+              <h3 style="margin:4px 0 0; font-size:16px; font-weight:800; color:#0f172a;">구글 시트 &amp; Apps Script 연결 6단계 캐러셀 설명서</h3>
             </div>
-
-            <p id="inlineGasSlideDesc" style="margin:0; font-size:13px; color:#334155; line-height:1.55;">
-
-              상단의 <strong>[📘 학급담임용 표준시트 사본 만들기]</strong> 또는 <strong>[📗 교과담임용 표준시트 사본 만들기]</strong> 버튼을 클릭해 선생님 개인 구글 드라이브로 복사합니다.
-
-            </p>
-
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(0)" style="background:#2563eb; color:#fff; font-weight:700;">1. 사본 직후 연결 원칙</button>
+              <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(1)" style="background:#f1f5f9; color:#334155; font-weight:700;">2. 기본 직접 붙여넣기</button>
+              <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(2)" style="background:#f1f5f9; color:#334155; font-weight:700;">3. 대안1: Gemini Pro</button>
+              <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(3)" style="background:#f1f5f9; color:#334155; font-weight:700;">4. 대안2: Antigravity</button>
+              <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(4)" style="background:#f1f5f9; color:#334155; font-weight:700;">5. 대안3: AI 비서 앱</button>
+              <button type="button" class="btn small inline-gas-step-btn" onclick="window.setInlineGasCarouselStep(5)" style="background:#f1f5f9; color:#334155; font-weight:700;">6. 권한 승인·URL 등록</button>
+            </div>
           </div>
-
-          <div style="display:flex; gap:8px;">
-
-            <button type="button" class="btn secondary" onclick="window.stepInlineGasCarousel(-1)" style="padding:8px 14px; font-weight:700;">◀ 이전</button>
-
-            <button type="button" class="btn primary" onclick="window.stepInlineGasCarousel(1)" style="padding:8px 16px; background:#2563eb; color:#fff; border:none; font-weight:800;">다음 단계 ▶</button>
-
+          <div style="background:#0f172a; border-radius:12px; overflow:hidden; margin-bottom:14px; text-align:center;">
+            <img id="inlineGasSlideImg" src="/api/r2-image?type=carousel&amp;name=gas-step1" alt="Apps Script 연동 캐러셀 가이드" style="width:100%; max-height:420px; height:auto; display:block; margin:0 auto;">
           </div>
-
+          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="flex:1; min-width:260px;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                <strong id="inlineGasSlideTitle" style="font-size:15px; color:#0f172a;">1단계 [필수 권장]: 마스터 통합 시트 사본 저장 직후, 학생 정보 입력 전에 먼저 연결하세요</strong>
+                <span id="inlineGasSlideCounter" style="font-size:12px; font-weight:800; color:#2563eb; background:#eff6ff; padding:2px 8px; border-radius:999px;">1 / 6</span>
+              </div>
+              <p id="inlineGasSlideDesc" style="margin:0; font-size:13px; color:#334155; line-height:1.55;">
+                상단의 <strong>[내 드라이브로 사본 만들기]</strong>를 클릭해 사본을 저장한 직후, <strong>학생 개인정보를 입력하기 전에 먼저 Apps Script 연결을 진행</strong>하세요. 빈 양식에서 먼저 연결하면 AI 에이전트에게 도움을 요청할 때도 안전하며 모든 자동 수식이 처음부터 작동합니다.
+              </p>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn secondary" onclick="window.stepInlineGasCarousel(-1)" style="padding:8px 14px; font-weight:700;">◀ 이전</button>
+              <button type="button" class="btn primary" onclick="window.stepInlineGasCarousel(1)" style="padding:8px 16px; background:#2563eb; color:#fff; border:none; font-weight:800;">다음 단계 ▶</button>
+            </div>
+          </div>
         </div>
-
-      </div>
-
+      </details>
     </div>
-
-
-
     <!-- ── 패널 1: 사용법 · 검사 규칙 (usage-section.css 디자인 통일) ── -->
 
     <div class="op-panel hidden" id="panel-usage" role="tabpanel">
@@ -2046,11 +1998,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div class="op-panel hidden" id="panel-make" role="tabpanel">
 
-      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <!--  [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
 
       <div class="op-panel-compact-header">
 
-        <h2>✍️ ④ 생기부 초안 작성 (AI 보조 도구)</h2>
+        <h2> ④ 생기부 초안 작성 (AI 보조 도구)</h2>
 
         <span class="op-panel-compact-sub">2026 기재요령 준수 1500B 맞춤 세특 초안 생성</span>
 
@@ -2074,7 +2026,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <button type="button" id="btnOpenDraftStepModal" class="btn primary" style="background:#2563eb; border:none; padding:8px 16px; font-size:13px; font-weight:800; border-radius:999px; box-shadow:0 4px 14px rgba(37,99,235,0.4); cursor:pointer;">
 
-              팝업 스크롤 단계별 작성 모드 ➔
+              팝업 스크롤 단계별 작성 모드 
 
             </button>
 
@@ -2158,7 +2110,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <button type="button" class="btn primary" onclick="document.querySelector('[data-tab-link=\'make\']').click()" style="background:#2563eb; color:#fff; font-weight:800; font-size:13px; padding:9px 18px; border-radius:8px; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.3);">
 
-              위 예시를 바탕으로 초안 작성하기 ➔
+              위 예시를 바탕으로 초안 작성하기 
 
             </button>
 
@@ -2284,7 +2236,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                 <button type="button" class="btn primary" onclick="document.querySelector('[data-tab-link=\'make\']').click()" style="background:#2563eb; color:#fff; font-weight:700; font-size:12.5px; padding:6px 14px; border-radius:6px; border:none; cursor:pointer;">
 
-                  초안 작성으로 이동 ➔
+                  초안 작성으로 이동 
 
                 </button>
 
@@ -2519,13 +2471,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                 
 
-                <!-- 🎯 4번 항목: 대입 진학상담 1~6지망 목표 요약 스트립 (선생님 요청 완벽 구현) -->
+                <!--  4번 항목: 대입 진학상담 1~6지망 목표 요약 스트립 (선생님 요청 완벽 구현) -->
 
                 <div id="targetUniSummaryBox" style="background:#f8fafc; border:1.5px solid #cbd5e1; border-left:4px solid #2563eb; border-radius:8px; padding:10px 14px; margin-bottom:12px; font-size:12.5px; color:#334155; line-height:1.5;">
 
                   <div id="targetUniSummaryText">
 
-                    <strong>🎯 2027 대입 진학 목표 (4번 항목 연동):</strong>
+                    <strong> 2027 대입 진학 목표 (4번 항목 연동):</strong>
 
                     <span style="color:#0f172a; font-weight:700;">1지망 고려대 생명공학부 (학업우수 1.78 [적정])</span> · 
 
@@ -2541,7 +2493,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-                <!-- 💡 현재까지 구글 시트에 입력된 세특 내용 (선생님 요청 완벽 구현) -->
+                <!--  현재까지 구글 시트에 입력된 세특 내용 (선생님 요청 완벽 구현) -->
 
                 <div id="existingSetukBox" style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:10px; padding:12px 14px; margin-bottom:14px;">
 
@@ -2549,7 +2501,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                     <span style="font-size:12.5px; font-weight:800; color:#15803d; display:flex; align-items:center; gap:6px;">
 
-                      📄 현재까지 구글 시트에 입력된 세특 내용
+                       현재까지 구글 시트에 입력된 세특 내용
 
                       <span id="existingSetukBytes" style="font-size:11px; background:#dcfce7; padding:2px 6px; border-radius:4px; font-weight:700;">420 Byte</span>
 
@@ -2557,7 +2509,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                     <div style="display:flex; gap:6px;">
 
-                      <button type="button" id="btnCopyExistingSetuk" class="btn ghost small" style="padding:2px 8px; font-size:11.5px; color:#15803d; border-color:#86efac;">📋 복사</button>
+                      <button type="button" id="btnCopyExistingSetuk" class="btn ghost small" style="padding:2px 8px; font-size:11.5px; color:#15803d; border-color:#86efac;"> 복사</button>
 
                       <button type="button" id="btnAppendExistingSetuk" class="btn ghost small" style="padding:2px 8px; font-size:11.5px; color:#1e40af; border-color:#bfdbfe;">+ 관찰 메모에 덧붙이기</button>
 
@@ -2583,7 +2535,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                 </div>
 
-                <label class="label" for="memo">✏️ 새로운 추가 수업 관찰 메모 입력 (구글 시트에 추가할 활동 사실을 적어 주세요)</label>
+                <label class="label" for="memo"> 새로운 추가 수업 관찰 메모 입력 (구글 시트에 추가할 활동 사실을 적어 주세요)</label>
 
                 <textarea id="memo" rows="5" placeholder="예: 추가 실험에서 세포막 물질 수송 단백질 모델을 직접 제작하고, 효소 반응 속도론과 연결하여 탐구 보고서를 완성함."></textarea>
 
@@ -2703,9 +2655,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                     <div class="gk-lock-notice" id="exampleLockNotice" style="display:none; background:#fffbeb; border:1.5px solid #fde68a; border-radius:8px; padding:10px 14px; margin-bottom:12px; font-size:12.5px; color:#92400e; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
 
-                      <span>🔒 <strong>작성 예시 열람 잠금:</strong> 학교용 계정(@korea.kr) 또는 경기도교육청 계정(@goe.go.kr) 승인 교사 전용</span>
+                      <span> <strong>작성 예시 열람 잠금:</strong> 학교용 계정(@korea.kr) 또는 경기도교육청 계정(@goe.go.kr) 승인 교사 전용</span>
 
-                      <button type="button" class="btn small" style="background:#f59e0b; color:#fff; border:none; padding:4px 10px; font-size:11.5px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="window.Gatekeeper && window.Gatekeeper.openModal('apply')">승인 신청하기 ➔</button>
+                      <button type="button" class="btn small" style="background:#f59e0b; color:#fff; border:none; padding:4px 10px; font-size:11.5px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="window.Gatekeeper && window.Gatekeeper.openModal('apply')">승인 신청하기 </button>
 
                     </div>
 
@@ -2771,7 +2723,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                 </div>
 
-                <p class="hint key-saved" id="keySavedLine" hidden>✓ API 키가 이 브라우저에 저장되어 있습니다. <a href="#guide" data-tab-link="guide">변경·삭제</a></p>
+                <p class="hint key-saved" id="keySavedLine" hidden> API 키가 이 브라우저에 저장되어 있습니다. <a href="#guide" data-tab-link="guide">변경·삭제</a></p>
 
                 <!-- AI 초안 생성 기능 잠금 안내 배너 -->
 
@@ -2779,13 +2731,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                   <span><strong>AI 초안 바로 생성 &amp; 프롬프트 복사는 승인된 교사 전용 기능입니다.</strong></span>
 
-                  <button type="button" class="btn small" style="background:#2563eb; color:#fff; border:none; padding:5px 12px; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="window.Gatekeeper && window.Gatekeeper.openModal('apply')">학교/교육청 계정 승인 신청 ➔</button>
+                  <button type="button" class="btn small" style="background:#2563eb; color:#fff; border:none; padding:5px 12px; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="window.Gatekeeper && window.Gatekeeper.openModal('apply')">학교/교육청 계정 승인 신청 </button>
 
                 </div>
 
                 <div class="btn-col">
 
-                  <p class="loose-now" id="looseNow" hidden>⚠ 현재 '과장 허용' 모드입니다 <button type="button" class="link-btn" data-goto-fact>(바꾸기)</button></p>
+                  <p class="loose-now" id="looseNow" hidden> 현재 '과장 허용' 모드입니다 <button type="button" class="link-btn" data-goto-fact>(바꾸기)</button></p>
 
                   <button type="button" class="btn primary" id="btnGenerate">초안 바로 생성하기 (Gemini API)</button>
 
@@ -2937,17 +2889,17 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div class="op-panel hidden" id="panel-check" role="tabpanel">
 
-      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <!--  [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
 
       <div class="op-panel-compact-header">
 
-        <h2>🔍 ② 나이스 규격·금지어·바이트 정밀 점검</h2>
+        <h2> ② 나이스 규격·금지어·바이트 정밀 점검</h2>
 
         <span class="op-panel-compact-sub">1,500B 바이트 한도, 공인어학·경시대회 금지어, 종결어미, 중복문장 일괄 점검</span>
 
       </div>
 
-      <!-- 🌟 [쇼케이스] 나이스 4대 제약 점검 실시간 시연 GIF 및 샘플 문서 다운로드 바 -->
+      <!--  [쇼케이스] 나이스 4대 제약 점검 실시간 시연 GIF 및 샘플 문서 다운로드 바 -->
 
       <div class="check-demo-showcase-box" style="background:linear-gradient(135deg, #1e293b, #0f172a); border:2px solid #3b82f6; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.35);">
 
@@ -2957,7 +2909,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <span style="display:inline-block; font-size:12px; font-weight:800; background:#2563eb; color:#ffffff; padding:3px 10px; border-radius:999px; margin-bottom:6px;">
 
-              ⚡ 2026 나이스 기재요령 4대 제약 정밀 점검 시연
+               2026 나이스 기재요령 4대 제약 정밀 점검 시연
 
             </span>
 
@@ -2979,13 +2931,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <a href="assets/2026_생기부_제약점검_샘플문서(위반표현_포함).xlsx" download="2026_생기부_제약점검_샘플문서(위반표현_포함).xlsx" class="btn" style="background:#16a34a; color:#ffffff; font-weight:800; font-size:13px; padding:9px 16px; border-radius:10px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(22,163,74,0.3);">
 
-              <span>📥 점검용 샘플 엑셀(.xlsx) 다운로드</span>
+              <span> 점검용 샘플 엑셀(.xlsx) 다운로드</span>
 
             </a>
 
             <button type="button" id="btnLoadCheckSampleDirect" class="btn" style="background:linear-gradient(135deg, #4f46e5, #0ea5e9); color:#ffffff; font-weight:800; font-size:13px; padding:9px 18px; border:none; border-radius:10px; cursor:pointer; box-shadow:0 4px 14px rgba(79,70,229,0.35);">
 
-              <span>✨ 샘플 데이터 1초 즉시 불러와서 검사하기</span>
+              <span> 샘플 데이터 1초 즉시 불러와서 검사하기</span>
 
             </button>
 
@@ -3069,7 +3021,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <textarea id="paste-input" rows="3" spellcheck="false"
 
-            placeholder="여기를 클릭한 뒤 Ctrl+V (Mac: ⌘V)로 붙여넣기. 글을 직접 입력해도 됩니다."></textarea>
+            placeholder="여기를 클릭한 뒤 Ctrl+V (Mac: V)로 붙여넣기. 글을 직접 입력해도 됩니다."></textarea>
 
           <div class="actions">
 
@@ -3105,9 +3057,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div class="gk-lock-notice" id="checkLockNotice" style="display:none; background:#fef2f2; border:1.5px solid #fecaca; border-radius:10px; padding:12px 16px; margin-bottom:14px; font-size:13px; color:#991b1b; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
 
-          <span>🔒 <strong>생기부 정밀 검사 기능은 승인 교사 전용입니다.</strong> (학교/교육청 계정 승인 후 무제한 이용)</span>
+          <span> <strong>생기부 정밀 검사 기능은 승인 교사 전용입니다.</strong> (학교/교육청 계정 승인 후 무제한 이용)</span>
 
-          <button type="button" class="btn small" style="background:#dc2626; color:#fff; border:none; padding:5px 12px; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="window.Gatekeeper && window.Gatekeeper.openModal('apply')">승인 신청하기 ➔</button>
+          <button type="button" class="btn small" style="background:#dc2626; color:#fff; border:none; padding:5px 12px; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="window.Gatekeeper && window.Gatekeeper.openModal('apply')">승인 신청하기 </button>
 
         </div>
 
@@ -3217,7 +3169,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div class="op-panel hidden" id="panel-prompts" role="tabpanel">
 
-      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <!--  [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
 
       <div class="op-panel-compact-header">
 
@@ -3233,7 +3185,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-            <!-- 💎 구글 제미나이 젬스(Gems) & 맞춤형 AI 활용 가이드 -->
+            <!--  구글 제미나이 젬스(Gems) & 맞춤형 AI 활용 가이드 -->
 
       <div class="card" style="margin-bottom:18px; background:linear-gradient(135deg, #fdfbf7 0%, #fff0f3 100%); border:1.5px solid #fecdd3;">
 
@@ -4168,7 +4120,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-        <!-- 📸 6번째 항목: 학생 보고서 · 설문지 AI 이미지 판독 (OCR 판독 지침) -->
+        <!--  6번째 항목: 학생 보고서 · 설문지 AI 이미지 판독 (OCR 판독 지침) -->
 
         <div class="card" style="flex:1 1 260px; margin-bottom:0; background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border:1.5px solid #86efac;">
 
@@ -4210,11 +4162,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div class="op-panel op-panel-wide hidden" id="panel-guide" role="tabpanel" style="background:#ffffff; color:#0f172a; border-radius:18px; padding:20px; box-shadow:0 20px 50px rgba(0,0,0,0.3);">
 
-      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <!--  [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
 
       <div class="op-panel-compact-header" style="color: #0f172a; border-color: rgba(0,0,0,0.1); background: #f8fafc; margin-bottom: 16px;">
 
-        <h2 style="color: #0f172a !important;">📖 ⑦ 2026 나이스 기재요령 원문 검색 &amp; 사용법</h2>
+        <h2 style="color: #0f172a !important;"> ⑦ 2026 나이스 기재요령 원문 검색 &amp; 사용법</h2>
 
         <span class="op-panel-compact-sub" style="color: #64748b;">교육부 기재요령 원문 검색 및 상세 매뉴얼</span>
 
@@ -4230,11 +4182,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div class="op-panel hidden" id="panel-counsel" role="tabpanel">
 
-      <!-- 🌟 [슬림 헤더] 대입 진학상담은 서브 네비게이션 바로 즉시 시작 (상단 공간 극대화) -->
+      <!--  [슬림 헤더] 대입 진학상담은 서브 네비게이션 바로 즉시 시작 (상단 공간 극대화) -->
 
       <div class="op-panel-compact-header" style="display:none !important;">
 
-        <h2>🎓 ③ 2027 대입 진학상담 &amp; 대학 전형 DB</h2>
+        <h2> ③ 2027 대입 진학상담 &amp; 대학 전형 DB</h2>
 
         <span class="op-panel-compact-sub">133개 대학 전형 DB, 2028 5등급제 환산 및 수시 6지망 시뮬레이션</span>
 
@@ -4246,17 +4198,17 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <nav class="counsel-sub-nav" role="tablist" aria-label="진학상담 메뉴">
 
-          <button type="button" class="counsel-sub-btn is-active" data-counsel-sub="unis">🏛️ 대학·전형 검색</button>
+          <button type="button" class="counsel-sub-btn is-active" data-counsel-sub="unis"> 대학·전형 검색</button>
 
-          <button type="button" class="counsel-sub-btn" data-counsel-sub="finder">📊 성적으로 대학 찾기</button>
+          <button type="button" class="counsel-sub-btn" data-counsel-sub="finder"> 성적으로 대학 찾기</button>
 
-          <button type="button" class="counsel-sub-btn" data-counsel-sub="nonsul">📝 논술전형·자료실</button>
+          <button type="button" class="counsel-sub-btn" data-counsel-sub="nonsul"> 논술전형·자료실</button>
 
-          <button type="button" class="counsel-sub-btn" data-counsel-sub="records">✍️ 나이스 세특·마스터 시트 연동</button>
+          <button type="button" class="counsel-sub-btn" data-counsel-sub="records"> 나이스 세특·마스터 시트 연동</button>
 
-          <button type="button" class="counsel-sub-btn" data-counsel-sub="gasguide" style="color:#7c3aed; font-weight:800;">📸 시트&amp;스크립트 매뉴얼</button>
+          <button type="button" class="counsel-sub-btn" data-counsel-sub="gasguide" style="color:#7c3aed; font-weight:800;"> 시트&amp;스크립트 매뉴얼</button>
 
-          <button type="button" class="counsel-sub-btn" data-counsel-sub="settings">⚙️ 보안·관리자 설정</button>
+          <button type="button" class="counsel-sub-btn" data-counsel-sub="settings"> 보안·관리자 설정</button>
 
         </nav>
 
@@ -4266,11 +4218,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <div class="auth-badge locked" id="counselAuthBadge" title="클릭하여 교사 인증/잠금 상태 변경">
 
-            <span id="counselAuthIcon">🔒</span> <span id="counselAuthLabel">보안 잠금</span>
+            <span id="counselAuthIcon"></span> <span id="counselAuthLabel">보안 잠금</span>
 
           </div>
 
-          <button type="button" class="btn-super-admin" id="btnOpenSuperAdmin" title="전체 관리자 설정 (비밀번호/기한 관리)">👑 전체 관리자</button>
+          <button type="button" class="btn-super-admin" id="btnOpenSuperAdmin" title="전체 관리자 설정 (비밀번호/기한 관리)"> 전체 관리자</button>
 
         </div>
 
@@ -4284,7 +4236,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div>
 
-          <strong>📌 2027 대입 진학상담 & 5등급제 추정 안내:</strong>
+          <strong> 2027 대입 진학상담 & 5등급제 추정 안내:</strong>
 
           <span>본 입결 데이터 및 2028 개편 5등급제 환산 수치는 담임선생님의 상담 편의를 위한 참고자료입니다. 최종 지원 시에는 각 대학 최신 수시 모집요강 및 대교협 어디가(adiga) 공시 기준을 함께 확인하세요.</span>
 
@@ -4302,11 +4254,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <div class="search-input-wrapper">
 
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"></span>
 
             <input class="main-search-input" id="counselUniSearchInput" type="search" placeholder="대학명(초성 검색 가능: ㄱㄷ, ㅅㄷ), 학과, 지역 검색..." autocomplete="off">
 
-            <span class="search-clear-btn" id="counselUniSearchClear">✕</span>
+            <span class="search-clear-btn" id="counselUniSearchClear"></span>
 
           </div>
 
@@ -4340,13 +4292,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <button class="chip m15" id="chipM15">주요 15개대</button>
 
-            <button class="chip" id="chipNonsulOnly">📝 논술실시교</button>
+            <button class="chip" id="chipNonsulOnly"> 논술실시교</button>
 
-            <button class="chip" id="chipSuneungMin" onclick="this.classList.toggle('active'); alert('🎯 수능최저학력기준 적용 전형 필터가 적용되었습니다.');">🎯 수능최저 반영교</button>
+            <button class="chip" id="chipSuneungMin" onclick="this.classList.toggle('active'); alert(' 수능최저학력기준 적용 전형 필터가 적용되었습니다.');"> 수능최저 반영교</button>
 
-            <button class="chip" id="chipInterviewOnly" onclick="this.classList.toggle('active'); alert('🗣️ 면접 실시전형 필터가 적용되었습니다.');">🗣️ 면접 실시</button>
+            <button class="chip" id="chipInterviewOnly" onclick="this.classList.toggle('active'); alert(' 면접 실시전형 필터가 적용되었습니다.');"> 면접 실시</button>
 
-            <button class="chip" id="chipFavs">★ 즐겨찾기</button>
+            <button class="chip" id="chipFavs"> 즐겨찾기</button>
 
           </div>
 
@@ -4386,7 +4338,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                   <span style="font-size:11.5px; font-weight:800; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:999px; border:1px solid #86efac;">2028 개편 상담 최적화</span>
 
-                  <h3 class="finder-title" style="margin:0;">🎯 내신 등급별 지원 가능 대학·전형 탐색 (5등급제 기준)</h3>
+                  <h3 class="finder-title" style="margin:0;"> 내신 등급별 지원 가능 대학·전형 탐색 (5등급제 기준)</h3>
 
                 </div>
 
@@ -4516,7 +4468,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                   <th>전형명</th>
 
-                  <th style="color:#0f766e; font-weight:800; background:#f0fdf4;">🌟 2028 5등급제 (합격선 기준)</th>
+                  <th style="color:#0f766e; font-weight:800; background:#f0fdf4;"> 2028 5등급제 (합격선 기준)</th>
 
                   <th style="color:#64748b;">9등급제 (전년도 참고)</th>
 
@@ -4548,7 +4500,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <div class="wb-card-title">
 
-            <span>🌐 공식 입시결과 & 논술 기출 공식 자료실</span>
+            <span> 공식 입시결과 & 논술 기출 공식 자료실</span>
 
           </div>
 
@@ -4566,7 +4518,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <div style="display:flex; justify-content:space-between; align-items:center;">
 
-                <strong style="color:var(--ink); font-size:14px;">🏫 대교협 대학어디가 (공식)</strong>
+                <strong style="color:var(--ink); font-size:14px;"> 대교협 대학어디가 (공식)</strong>
 
                 <span style="font-size:11px; color:var(--rausch); font-weight:700;">바로가기 ↗</span>
 
@@ -4582,7 +4534,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <div style="display:flex; justify-content:space-between; align-items:center;">
 
-                <strong style="color:var(--ink); font-size:14px;">📝 EBSi 논술 자료실</strong>
+                <strong style="color:var(--ink); font-size:14px;"> EBSi 논술 자료실</strong>
 
                 <span style="font-size:11px; color:#0284c7; font-weight:700;">바로가기 ↗</span>
 
@@ -4596,7 +4548,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <div class="wb-card" style="padding:14px 16px; border-left:4px solid #059669; display:flex; flex-direction:column; gap:4px;">
 
-              <strong style="color:var(--ink); font-size:14px;">📌 선행학습 영향평가 보고서 안내</strong>
+              <strong style="color:var(--ink); font-size:14px;"> 선행학습 영향평가 보고서 안내</strong>
 
               <span style="font-size:12px; color:var(--muted);">각 대학 입학처 홈페이지 자료실에서 대학별 논술 기출 원문·출제의도·모범답안을 PDF로 공식 배포합니다.</span>
 
@@ -4618,7 +4570,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <div>
 
-                <h3 class="finder-title">📝 2027 전국 49개 대학 논술전형 총정리 (pp.175~176 원본 데이터)</h3>
+                <h3 class="finder-title"> 2027 전국 49개 대학 논술전형 총정리 (pp.175~176 원본 데이터)</h3>
 
                 <p class="finder-desc">모집인원, 전형방법(논술 비중), 수능최저학력기준 적용 여부를 한눈에 비교합니다.</p>
 
@@ -4696,13 +4648,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div class="counsel-sub-panel" id="counsel-sub-records" hidden>
 
-        <!-- 🎯 핵심 기능 퀵 바: 세특 동기화 · 엑셀 다운로드 · 스크린샷 매뉴얼 (선생님 요청 완벽 구현) -->
+        <!--  핵심 기능 퀵 바: 세특 동기화 · 엑셀 다운로드 · 스크린샷 매뉴얼 (선생님 요청 완벽 구현) -->
 
         <div class="counsel-quick-action-bar" style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:12px; padding:14px 18px; margin-bottom:18px; box-shadow:0 4px 14px rgba(0,0,0,0.04); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
 
-            <span style="font-size:14px; font-weight:800; color:#0f172a;">📊 학급 세특 동기화 &amp; 점검 센터</span>
+            <span style="font-size:14px; font-weight:800; color:#0f172a;"> 학급 세특 동기화 &amp; 점검 센터</span>
 
             <span class="privacy-badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac; font-size:11.5px; font-weight:700;">1학생 1행 마스터 연동</span>
 
@@ -4712,19 +4664,19 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <button type="button" id="btnMasterDownloadExcel" class="btn primary" style="background:#2563eb; color:#ffffff; font-weight:800; font-size:13px; padding:8px 16px; border:none; border-radius:8px; cursor:pointer; box-shadow:0 3px 10px rgba(37,99,235,0.35);">
 
-              📥 2026 관계형 엑셀 서식 다운로드 (.xlsx)
+               2026 관계형 엑셀 서식 다운로드 (.xlsx)
 
             </button>
 
             <a href="https://docs.google.com/spreadsheets/create" target="_blank" rel="noreferrer" class="btn" style="background:#0f9d58; color:#ffffff; font-weight:700; font-size:12.5px; padding:8px 14px; border-radius:8px; text-decoration:none; box-shadow:0 2px 8px rgba(15,157,88,0.3);">
 
-              ✨ 새 구글 시트 만들기 ↗
+               새 구글 시트 만들기 ↗
 
             </a>
 
             <button type="button" id="btnOpenGasManualTab" class="btn secondary" style="background:#ffffff; color:#7c3aed; border:1.5px solid #c4b5fd; font-weight:800; font-size:12.5px; padding:8px 14px; border-radius:8px; cursor:pointer;">
 
-              📸 Apps Script 스크린샷 매뉴얼 (별도 안내) ➔
+               Apps Script 스크린샷 매뉴얼 (별도 안내) 
 
             </button>
 
@@ -4744,11 +4696,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
 
-                <span>✍️ 학생 상담 & 나이스 세특 (단일 마스터 행 입력)</span>
+                <span> 학생 상담 & 나이스 세특 (단일 마스터 행 입력)</span>
 
                 <span id="masterGSheetBadge" class="privacy-badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac; font-size:11.5px; font-weight:700;">
 
-                  📊 구글 시트 1:1 실시간 연동 항목
+                   구글 시트 1:1 실시간 연동 항목
 
                 </span>
 
@@ -4758,7 +4710,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                 <button type="button" id="btnCounselOpenSheetModal" class="btn secondary" style="padding:3px 8px; font-size:11.5px; font-weight:700; background:#ffffff; color:#2563eb; border:1px solid #93c5fd; cursor:pointer;">
 
-                  ⚙️ 구글 시트 연동 설정
+                   구글 시트 연동 설정
 
                 </button>
 
@@ -4770,7 +4722,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-            <!-- 📊 구글 시트 1:1 실시간 동기화 상태 바 -->
+            <!--  구글 시트 1:1 실시간 동기화 상태 바 -->
 
             <div id="masterGSheetSyncBanner" style="background:linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%); border:1.5px solid #86efac; border-radius:10px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-size:12.5px;">
 
@@ -4786,25 +4738,25 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                 <button type="button" id="btnLoadMock30Master" class="btn secondary" style="font-size:11.5px; padding:4px 9px; font-weight:800; background:#f0fdf4; color:#166534; border:1px solid #86efac; cursor:pointer;" onclick="window.load30StudentsRelationalData && window.load30StudentsRelationalData();">
 
-                  📥 30명 모의 학급 불러오기
+                   30명 모의 학급 불러오기
 
                 </button>
 
                 <button type="button" id="btnOpenMockSheetPreview" class="btn secondary" style="font-size:11.5px; padding:4px 9px; font-weight:700; background:#fff; color:#2563eb; border:1px solid #93c5fd; cursor:pointer;" onclick="document.getElementById('dialogRelationalSheetPreview') && document.getElementById('dialogRelationalSheetPreview').showModal(); window.renderMock30Table && window.renderMock30Table();">
 
-                  📋 30명 관계형 시트 미리보기
+                   30명 관계형 시트 미리보기
 
                 </button>
 
                 <button type="button" id="btnPullFromGSheet" class="btn secondary" style="font-size:11.5px; padding:4px 9px; font-weight:700; background:#fff;">
 
-                  📥 시트에서 불러오기
+                   시트에서 불러오기
 
                 </button>
 
                 <button type="button" id="btnPushAllToGSheet" class="btn secondary" style="font-size:11.5px; padding:4px 9px; font-weight:700; background:#fff; color:#15803d; border-color:#86efac;">
 
-                  📤 전체 학생 시트 일괄 전송
+                   전체 학생 시트 일괄 전송
 
                 </button>
 
@@ -4900,7 +4852,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
 
-                <span style="font-size:13.5px; font-weight:800; color:#0f172a;">🎯 2027 수시 6장 지원 전략 라인업</span>
+                <span style="font-size:13.5px; font-weight:800; color:#0f172a;"> 2027 수시 6장 지원 전략 라인업</span>
 
                 <span style="font-size:11px; font-weight:700; color:#1d4ed8; background:#dbeafe; padding:2px 8px; border-radius:999px;">구글 시트 1:1 동기화</span>
 
@@ -5048,17 +5000,17 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <div style="display:flex; gap:8px;">
 
-                <button type="button" class="btn secondary" id="btnCounselCopyText" style="font-size:12.5px;">📋 본문 복사</button>
+                <button type="button" class="btn secondary" id="btnCounselCopyText" style="font-size:12.5px;"> 본문 복사</button>
 
                 <button type="button" class="btn secondary" id="btnSendToMake" style="font-size:12.5px; color:var(--rausch); border-color:var(--rausch);" title="1지망 대학 및 세특 메모를 '초안 만들기' 탭으로 전송하여 바이트 검사 및 AI 윤문 진행">
 
-                  🚀 초안 작성기로 전송
+                   초안 작성기로 전송
 
                 </button>
 
                 <button type="button" class="btn primary" id="btnSaveMaster" style="font-size:13px; font-weight:800; background:#059669; border:none; color:#fff; border-radius:8px; padding:8px 18px; cursor:pointer; box-shadow:0 3px 10px rgba(5,150,105,0.35);">
 
-                  💾 마스터 저장 &amp; 구글 시트 1:1 동기화
+                   마스터 저장 &amp; 구글 시트 1:1 동기화
 
                 </button>
 
@@ -5076,9 +5028,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <div class="wb-card-title">
 
-              <span>📁 단일 마스터 시트 (학급 학생 목록)</span>
+              <span> 단일 마스터 시트 (학급 학생 목록)</span>
 
-              <button type="button" class="btn secondary" id="btnExportMasterCsv" style="padding:4px 10px; font-size:12px;">📊 엑셀/CSV 내보내기</button>
+              <button type="button" class="btn secondary" id="btnExportMasterCsv" style="padding:4px 10px; font-size:12px;"> 엑셀/CSV 내보내기</button>
 
             </div>
 
@@ -5106,7 +5058,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <div class="wb-card-title">
 
-            <span>📋 학급 진학·세특 단일 마스터 테이블 (1학생 1행 구조)</span>
+            <span> 학급 진학·세특 단일 마스터 테이블 (1학생 1행 구조)</span>
 
             <span style="font-size:12px; color:var(--muted)">가로 1행으로 진학 목표와 세특이 한눈에 연결됩니다.</span>
 
@@ -5166,7 +5118,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       
 
-      <!-- 서브패널 5: 📸 구글 시트 복사 & Apps Script 연동 스크린샷 완벽 매뉴얼 (별도 전용 안내 페이지) -->
+      <!-- 서브패널 5:  구글 시트 복사 & Apps Script 연동 스크린샷 완벽 매뉴얼 (별도 전용 안내 페이지) -->
 
       <div class="counsel-sub-panel" id="counsel-sub-gasguide" hidden>
 
@@ -5180,13 +5132,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
                 <span style="font-size:12px; font-weight:800; background:#f5f3ff; color:#7c3aed; padding:3px 10px; border-radius:999px; border:1px solid #ddd6fe;">별도 안내 전용 페이지</span>
 
-                <h3 style="font-size:19px; font-weight:800; color:#0f172a; margin:0;">📸 구글 시트 복사 &amp; Apps Script 연동 스크린샷 완벽 매뉴얼</h3>
+                <h3 style="font-size:19px; font-weight:800; color:#0f172a; margin:0;"> 구글 시트 복사 &amp; Apps Script 연동 스크린샷 완벽 매뉴얼</h3>
 
               </div>
 
               <p style="font-size:13.5px; color:#475569; margin:0;">
 
-                시트 복사부터 에디터 열기, 코드 붙여넣기, 최초 1회 Google 계정 승인(고급➔허용), URL 복사까지 실제 화면으로 안내합니다.
+                시트 복사부터 에디터 열기, 코드 붙여넣기, 최초 1회 Google 계정 승인(고급허용), URL 복사까지 실제 화면으로 안내합니다.
 
               </p>
 
@@ -5196,13 +5148,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <a href="https://docs.google.com/spreadsheets/create" target="_blank" rel="noreferrer" class="btn" style="background:#0f9d58; color:#ffffff; font-weight:700; font-size:13px; padding:8px 14px; border-radius:8px; text-decoration:none;">
 
-                ✨ 새 구글 시트 만들기 ↗
+                 새 구글 시트 만들기 ↗
 
               </a>
 
               <button type="button" id="btnPageCopyGasCode" class="btn primary" style="background:#7c3aed; color:#fff; border:none; padding:8px 16px; font-size:13px; font-weight:800; border-radius:8px; cursor:pointer;">
 
-                📋 통합 스크립트 코드 복사
+                 통합 스크립트 코드 복사
 
               </button>
 
@@ -5224,7 +5176,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <button type="button" class="btn small gas-page-tab" data-gas-step="3" style="padding:7px 14px; font-size:12.5px; font-weight:700; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer;">4. 새 배포 (웹 앱)</button>
 
-            <button type="button" class="btn small gas-page-tab" data-gas-step="4" style="padding:7px 14px; font-size:12.5px; font-weight:700; background:#f1f5f9; color:#dc2626; border:1.5px solid #fca5a5; border-radius:8px; cursor:pointer;">5. 계정 승인 (고급➔허용)</button>
+            <button type="button" class="btn small gas-page-tab" data-gas-step="4" style="padding:7px 14px; font-size:12.5px; font-weight:700; background:#f1f5f9; color:#dc2626; border:1.5px solid #fca5a5; border-radius:8px; cursor:pointer;">5. 계정 승인 (고급허용)</button>
 
             <button type="button" class="btn small gas-page-tab" data-gas-step="5" style="padding:7px 14px; font-size:12.5px; font-weight:700; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer;">6. URL 복사 및 연동</button>
 
@@ -5298,7 +5250,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div class="finder-card" style="max-width:760px; margin:0 auto;">
 
-          <h3 style="font-size:18px; font-weight:800; color:var(--ink); margin-bottom:6px;">⚙️ 진학자료 보안 및 시스템 설정</h3>
+          <h3 style="font-size:18px; font-weight:800; color:var(--ink); margin-bottom:6px;"> 진학자료 보안 및 시스템 설정</h3>
 
           <p style="font-size:13px; color:var(--muted); margin-bottom:20px;">
 
@@ -5326,7 +5278,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <div style="font-size:14px; font-weight:700; color:#0f766e; background:#f0fdfa; padding:8px 12px; border-radius:6px; border:1px solid #ccfbf1;">
 
-              📅 <span id="settingExpiryView">2027-02-28</span> (전체 관리자가 변경 가능)
+               <span id="settingExpiryView">2027-02-28</span> (전체 관리자가 변경 가능)
 
             </div>
 
@@ -5364,7 +5316,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
 
-              <label class="form-label" style="font-size:14px; font-weight:800; color:#0f172a; margin:0;" for="settingAdminGasApprovalUrl">🔒 비공개 운영 &amp; 사용자 승인 관리 구글 시트 웹앱 URL</label>
+              <label class="form-label" style="font-size:14px; font-weight:800; color:#0f172a; margin:0;" for="settingAdminGasApprovalUrl"> 비공개 운영 &amp; 사용자 승인 관리 구글 시트 웹앱 URL</label>
 
               <span style="font-size:11px; font-weight:800; color:#15803d; background:#dcfce7; padding:2px 8px; border-radius:999px;">관리자 전용</span>
 
@@ -5382,9 +5334,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <a href="/admin.html" target="_blank" class="btn" style="background:#2563eb; color:#ffffff; font-weight:800; font-size:12.5px; padding:7px 16px; text-decoration:none; border-radius:6px; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(37,99,235,0.25);">실시간 교사 승인 관제탑 열기 ↗</a>
 
-              <button type="button" id="btnCopyApprovalGasScript" class="btn secondary" style="font-size:12px; font-weight:700; padding:6px 14px;">📋 사용자 승인 통합 Apps Script 복사</button>
+              <button type="button" id="btnCopyApprovalGasScript" class="btn secondary" style="font-size:12px; font-weight:700; padding:6px 14px;"> 사용자 승인 통합 Apps Script 복사</button>
 
-              <button type="button" id="btnTestGatekeeperLock" class="btn secondary" style="font-size:12px; font-weight:700; color:#dc2626; border-color:#fca5a5; padding:6px 14px;">🔒 게이트키퍼 잠금 테스트 (로그아웃)</button>
+              <button type="button" id="btnTestGatekeeperLock" class="btn secondary" style="font-size:12px; font-weight:700; color:#dc2626; border-color:#fca5a5; padding:6px 14px;"> 게이트키퍼 잠금 테스트 (로그아웃)</button>
 
             </div>
 
@@ -5396,7 +5348,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <div style="display:flex; gap:8px;">
 
-              <button type="button" class="btn secondary" id="btnLockNow">🔒 즉시 보안 잠금</button>
+              <button type="button" class="btn secondary" id="btnLockNow"> 즉시 보안 잠금</button>
 
               <button type="button" class="btn secondary" id="btnClearMasterData" style="color:var(--danger);">전체 데이터 초기화</button>
 
@@ -5418,17 +5370,17 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <!-- ── 4화면: 2027학년도 대입 진학상담 & 대학 진학성적 분석 스크롤 전용 섹션 ── -->
 
-        <!-- ── 패널 ④: 📱 통합 모바일 교무수첩 (t-ong 전체 기능 탑재 + 교과 세특 실시간 관계형 동기화) ── -->
+        <!-- ── 패널 ④:  통합 모바일 교무수첩 (t-ong 전체 기능 탑재 + 교과 세특 실시간 관계형 동기화) ── -->
 
     <div class="op-panel hidden" id="panel-notebook" role="tabpanel">
 
-      <!-- 🌟 [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
+      <!--  [슬림 헤더] 제목만 명시하여 상단 공간 극대화 -->
 
       <div class="op-panel-compact-header">
 
-        <h2>📱 ⑤ 모바일 교무수첩 (독립 새 창 실행) ↗</h2>
+        <h2> ⑤ 모바일 교무수첩 (독립 새 창 실행) ↗</h2>
 
-        <span class="op-panel-compact-sub">자리배치·출결·즉석 메모 독립 뷰 및 동일 시트([📓_교무수첩]) 연동</span>
+        <span class="op-panel-compact-sub">자리배치·출결·즉석 메모 독립 뷰 및 동일 시트([_교무수첩]) 연동</span>
 
       </div>
 
@@ -5442,13 +5394,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <button type="button" id="btnNbModeTong" onclick="window.switchNotebookView('tong')" style="padding:9px 18px; border-radius:999px; border:none; background:#4f46e5; color:#ffffff; font-size:13.5px; font-weight:800; cursor:pointer; box-shadow:0 4px 12px rgba(79,70,229,0.3);">
 
-              🏫 통합 모바일 교무수첩 (자리배치 · 출결 · 교실도크 · 일정 · 학생종합 · 상담 · 세특)
+               통합 모바일 교무수첩 (자리배치 · 출결 · 교실도크 · 일정 · 학생종합 · 상담 · 세특)
 
             </button>
 
             <button type="button" id="btnNbModeFast" onclick="window.switchNotebookView('fast')" style="padding:9px 18px; border-radius:999px; border:1px solid #cbd5e1; background:#f1f5f9; color:#334155; font-size:13.5px; font-weight:700; cursor:pointer;">
 
-              ⚡ 과목별 수업관찰 빠른 카드 &amp; 나이스 바이트 점검
+               과목별 수업관찰 빠른 카드 &amp; 나이스 바이트 점검
 
             </button>
 
@@ -5456,11 +5408,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
 
-            <span id="nbSyncBadge" class="privacy-badge" style="background:#dcfce7; color:#166534; border:1px solid #86efac; font-size:12px; font-weight:700;">🟢 30명 관계형 실시간 연동됨</span>
+            <span id="nbSyncBadge" class="privacy-badge" style="background:#dcfce7; color:#166534; border:1px solid #86efac; font-size:12px; font-weight:700;"> 30명 관계형 실시간 연동됨</span>
 
-            <button type="button" onclick="window.syncTongNotebookToApp()" class="btn primary" style="background:#2563eb; color:#fff; border:none; padding:7px 14px; border-radius:8px; font-size:12.5px; font-weight:800; cursor:pointer;">📤 교무수첩 기록 구글시트 즉시 동기화</button>
+            <button type="button" onclick="window.syncTongNotebookToApp()" class="btn primary" style="background:#2563eb; color:#fff; border:none; padding:7px 14px; border-radius:8px; font-size:12.5px; font-weight:800; cursor:pointer;"> 교무수첩 기록 구글시트 즉시 동기화</button>
 
-            <a href="https://t-ong.vercel.app/" target="_blank" rel="noreferrer" class="btn secondary" style="padding:7px 12px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none; color:#0f172a;">🖥️ 새 창으로 크게 열기 ↗</a>
+            <a href="https://t-ong.vercel.app/" target="_blank" rel="noreferrer" class="btn secondary" style="padding:7px 12px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none; color:#0f172a;"> 새 창으로 크게 열기 ↗</a>
 
           </div>
 
@@ -5478,7 +5430,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <span style="font-size:12px; font-weight:800; background:#2563eb; color:#ffffff; padding:3px 10px; border-radius:999px;">스마트폰 · 태블릿 최적화</span>
 
-              <h3 style="font-size:22px; font-weight:800; color:#0f172a; margin:8px 0 6px;">📱 T-ong 모바일 교무수첩 전용 뷰</h3>
+              <h3 style="font-size:22px; font-weight:800; color:#0f172a; margin:8px 0 6px;"> T-ong 모바일 교무수첩 전용 뷰</h3>
 
               <p style="font-size:14px; color:#475569; line-height:1.6; margin:0 0 12px;">
 
@@ -5488,13 +5440,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
 
-                <span style="background:#ffffff; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; color:#334155;">🪑 스마트 자리배치</span>
+                <span style="background:#ffffff; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; color:#334155;"> 스마트 자리배치</span>
 
-                <span style="background:#ffffff; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; color:#334155;">✅ 원클릭 출결관리</span>
+                <span style="background:#ffffff; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; color:#334155;"> 원클릭 출결관리</span>
 
-                <span style="background:#ffffff; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; color:#334155;">⏱️ 교실도크 &amp; 룰렛</span>
+                <span style="background:#ffffff; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; color:#334155;"> 교실도크 &amp; 룰렛</span>
 
-                <span style="background:#ffffff; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; color:#334155;">📝 실시간 관찰·상담</span>
+                <span style="background:#ffffff; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; color:#334155;"> 실시간 관찰·상담</span>
 
               </div>
 
@@ -5504,13 +5456,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <a href="https://t-ong.vercel.app/" target="_blank" rel="noreferrer" style="background:linear-gradient(135deg, #4f46e5, #06b6d4); color:#ffffff; font-size:15px; font-weight:800; padding:14px 28px; border-radius:12px; text-decoration:none; display:inline-flex; align-items:center; gap:8px; box-shadow:0 6px 20px rgba(79,70,229,0.35);">
 
-                <span>🚀 새 창으로 모바일 교무수첩 열기 (t-ong.vercel.app) ↗</span>
+                <span> 새 창으로 모바일 교무수첩 열기 (t-ong.vercel.app) ↗</span>
 
               </a>
 
-              <button type="button" class="btn secondary" style="width:100%; font-size:12px; font-weight:700;" onclick="const sec = document.getElementById('nbTongIntegratedSection'); sec.hidden = !sec.hidden; this.textContent = sec.hidden ? '🔍 PC 화면 내부 미리보기 열기' : '✕ 내부 미리보기 닫기';">
+              <button type="button" class="btn secondary" style="width:100%; font-size:12px; font-weight:700;" onclick="const sec = document.getElementById('nbTongIntegratedSection'); sec.hidden = !sec.hidden; this.textContent = sec.hidden ? ' PC 화면 내부 미리보기 열기' : ' 내부 미리보기 닫기';">
 
-                🔍 PC 화면 내부 미리보기 열기
+                 PC 화면 내부 미리보기 열기
 
               </button>
 
@@ -5522,13 +5474,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-        <!-- 💡 단일 구글 시트 통합 동기화 아키텍처 안내 -->
+        <!--  단일 구글 시트 통합 동기화 아키텍처 안내 -->
 
         <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:14px; padding:18px 20px; margin-bottom:20px;">
 
           <h4 style="font-size:15px; font-weight:800; color:#1e3a8a; margin:0 0 8px; display:flex; align-items:center; gap:6px;">
 
-            <span>📊 하나의 구글 시트로 완성되는 통합 동기화 방안</span>
+            <span> 하나의 구글 시트로 완성되는 통합 동기화 방안</span>
 
           </h4>
 
@@ -5542,7 +5494,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
 
-              <strong style="font-size:12.5px; color:#0f172a;">1️⃣ 학생명렬표 (공통 키)</strong>
+              <strong style="font-size:12.5px; color:#0f172a;">1⃣ 학생명렬표 (공통 키)</strong>
 
               <p style="font-size:11.5px; color:#64748b; margin:2px 0 0;">학번 1회 입력 시 교무수첩과 생기부 시트 양방향 바인딩</p>
 
@@ -5550,15 +5502,15 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
 
-              <strong style="font-size:12.5px; color:#0f172a;">2️⃣ 교무수첩 기록 탭</strong>
+              <strong style="font-size:12.5px; color:#0f172a;">2⃣ 교무수첩 기록 탭</strong>
 
-              <p style="font-size:11.5px; color:#64748b; margin:2px 0 0;">출결, 좌석배치, 상담메모가 <code>[📓_교무수첩]</code> 탭에 실시간 누적</p>
+              <p style="font-size:11.5px; color:#64748b; margin:2px 0 0;">출결, 좌석배치, 상담메모가 <code>[_교무수첩]</code> 탭에 실시간 누적</p>
 
             </div>
 
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
 
-              <strong style="font-size:12.5px; color:#0f172a;">3️⃣ 세특 &amp; 대입상담 연계</strong>
+              <strong style="font-size:12.5px; color:#0f172a;">3⃣ 세특 &amp; 대입상담 연계</strong>
 
               <p style="font-size:11.5px; color:#64748b; margin:2px 0 0;">교실에서 메모한 내용이 교무실 PC에서 세특 초안으로 바로 연동</p>
 
@@ -5594,7 +5546,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <span style="font-size:12px; font-weight:800; background:#f5f3ff; color:#7c3aed; padding:3px 10px; border-radius:999px; border:1px solid #ddd6fe;">교과담임 전용 · 모바일 최적화</span>
 
-              <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0;">📱 모바일 교무수첩 &amp; 교과 세특 관찰노트</h2>
+              <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0;"> 모바일 교무수첩 &amp; 교과 세특 관찰노트</h2>
 
             </div>
 
@@ -5608,13 +5560,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
 
-            <span id="nbSyncBadge" class="privacy-badge" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a; font-size:12px; font-weight:700;">🟡 연동 대기</span>
+            <span id="nbSyncBadge" class="privacy-badge" style="background:#fef3c7; color:#b45309; border:1px solid #fde68a; font-size:12px; font-weight:700;"> 연동 대기</span>
 
-            <button type="button" id="nbBtnPullSheet" class="btn secondary" style="font-size:12.5px; font-weight:700; padding:7px 12px;">📥 시트에서 불러오기</button>
+            <button type="button" id="nbBtnPullSheet" class="btn secondary" style="font-size:12.5px; font-weight:700; padding:7px 12px;"> 시트에서 불러오기</button>
 
-            <button type="button" id="nbBtnExportExcel" class="btn primary" style="background:#0f9d58; color:#fff; font-size:12.5px; font-weight:800; border:none; padding:7px 14px; border-radius:8px;">📥 엑셀(.xlsx) 내보내기</button>
+            <button type="button" id="nbBtnExportExcel" class="btn primary" style="background:#0f9d58; color:#fff; font-size:12.5px; font-weight:800; border:none; padding:7px 14px; border-radius:8px;"> 엑셀(.xlsx) 내보내기</button>
 
-            <button type="button" id="nbBtnConfigGas" class="btn secondary" style="font-size:12.5px; font-weight:700; color:#7c3aed; border-color:#c4b5fd; padding:7px 12px;">⚙️ 교과시트 연동</button>
+            <button type="button" id="nbBtnConfigGas" class="btn secondary" style="font-size:12.5px; font-weight:700; color:#7c3aed; border-color:#c4b5fd; padding:7px 12px;"> 교과시트 연동</button>
 
           </div>
 
@@ -5628,7 +5580,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <div style="display:flex; align-items:center; gap:10px;">
 
-            <label for="nbSubjectSelect" style="font-size:13.5px; font-weight:800; color:#0f172a;">📚 담당 교과목:</label>
+            <label for="nbSubjectSelect" style="font-size:13.5px; font-weight:800; color:#0f172a;"> 담당 교과목:</label>
 
             <select id="nbSubjectSelect" class="form-input" style="padding:6px 12px; font-size:13.5px; font-weight:700; border-radius:8px; border:1.5px solid #cbd5e1; background:#ffffff;">
 
@@ -5760,7 +5712,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <div style="display:flex; align-items:center; gap:8px;">
 
-            <span style="font-size:13.5px; font-weight:800; color:#0f172a;">🏫 학급 선택:</span>
+            <span style="font-size:13.5px; font-weight:800; color:#0f172a;"> 학급 선택:</span>
 
             <div id="nbClassChips" style="display:inline-flex; gap:6px;"></div>
 
@@ -5774,19 +5726,19 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:10px 14px; margin-bottom:16px; display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
 
-          <span style="font-size:12px; font-weight:800; color:#1e40af;">⚡ 원터치 빠른 역량 칩 (터치 시 활성 학생 메모에 자동 추가):</span>
+          <span style="font-size:12px; font-weight:800; color:#1e40af;"> 원터치 빠른 역량 칩 (터치 시 활성 학생 메모에 자동 추가):</span>
 
-          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('탐구질문')">💡 탐구질문</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('탐구질문')"> 탐구질문</button>
 
-          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('가설검증실험')">🔬 가설검증실험</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('가설검증실험')"> 가설검증실험</button>
 
-          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('정량데이터분석')">📊 정량데이터분석</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('정량데이터분석')"> 정량데이터분석</button>
 
-          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('모둠토의리더십')">🗣️ 모둠토의리더십</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('모둠토의리더십')"> 모둠토의리더십</button>
 
-          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('교과연계독서')">📚 교과연계독서</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('교과연계독서')"> 교과연계독서</button>
 
-          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('문제해결우수')">🌟 문제해결우수</button>
+          <button type="button" class="btn small" style="background:#fff; border:1px solid #93c5fd; font-size:11.5px; font-weight:700; color:#1e40af; border-radius:999px; padding:3px 10px;" onclick="window.Notebook.insertQuickTag('문제해결우수')"> 문제해결우수</button>
 
         </div>
 
@@ -5840,11 +5792,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#34d399; animation:op-pulse 1.5s infinite;"></span>
 
-          ⚡ 실시간 경쟁률 &amp; 대학알리미
+           실시간 경쟁률 &amp; 대학알리미
 
         </button>
 
-        <button type="button" class="btn primary" id="btnOpenFullCounsel"  style="padding:12px 26px; font-size:15px; font-weight:800; background:#ff385c; color:#fff; border-radius:9999px; border:none; cursor:pointer; box-shadow:0 6px 20px rgba(255,56,92,0.4); transition:all 0.2s;">대입 진학상담 전체 화면으로 열기 ➔</button>
+        <button type="button" class="btn primary" id="btnOpenFullCounsel"  style="padding:12px 26px; font-size:15px; font-weight:800; background:#ff385c; color:#fff; border-radius:9999px; border:none; cursor:pointer; box-shadow:0 6px 20px rgba(255,56,92,0.4); transition:all 0.2s;">대입 진학상담 전체 화면으로 열기 </button>
 
     </div>
 
@@ -5864,7 +5816,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="swot-label">01 · ADMISSIONS DB</span>
 
-        <span class="swot-icon">🏛️</span>
+        <span class="swot-icon"></span>
 
       </div>
 
@@ -5902,7 +5854,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="swot-label">02 · 2028 REFORM</span>
 
-        <span class="swot-icon">📊</span>
+        <span class="swot-icon"></span>
 
       </div>
 
@@ -5940,7 +5892,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="swot-label">03 · ESSAY &amp; MOCK</span>
 
-        <span class="swot-icon">📑</span>
+        <span class="swot-icon"></span>
 
       </div>
 
@@ -5978,7 +5930,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <span class="swot-label">04 · GOOGLE SYNC</span>
 
-        <span class="swot-icon">☁️</span>
+        <span class="swot-icon"></span>
 
       </div>
 
@@ -6020,7 +5972,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <span id="visit-counter" class="visit-counter"></span>
 
-    <span class="build" id="build" title="화면 코드가 마지막으로 바뀐 때입니다. 고친 내용이 안 보이면 새로고침(⌘⇧R) 해 주세요."></span>
+    <span class="build" id="build" title="화면 코드가 마지막으로 바뀐 때입니다. 고친 내용이 안 보이면 새로고침(⇧R) 해 주세요."></span>
 
     <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
 
@@ -6030,7 +5982,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <a href="https://blog.naver.com/math-tong" target="_blank" rel="noreferrer" style="color:#2563eb; font-weight:700; text-decoration:none;">
 
-            ✍️ math-tong 공식 블로그 (교사 연구실) ↗
+             math-tong 공식 블로그 (교사 연구실) ↗
 
           </a>
 
@@ -6062,7 +6014,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       </div>
 
-      <button class="v-close-btn" id="udCloseBtn" style="padding:6px 12px; font-size:13px; background:none; border:1px solid var(--hairline); border-radius:6px; cursor:pointer;">✕ 닫기</button>
+      <button class="v-close-btn" id="udCloseBtn" style="padding:6px 12px; font-size:13px; background:none; border:1px solid var(--hairline); border-radius:6px; cursor:pointer;"> 닫기</button>
 
     </div>
 
@@ -6102,7 +6054,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <input type="radio" name="udAction" value="priorLearning">
 
-          <span>📑 선행학습 영향평가 보고서</span>
+          <span> 선행학습 영향평가 보고서</span>
 
         </label>
 
@@ -6218,7 +6170,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div id="udNonsulSection" style="margin-top:20px; display:none;">
 
-        <h4 style="font-size:14.5px; font-weight:800; color:var(--ink); margin-bottom:8px;">📝 해당 대학 실시 논술전형</h4>
+        <h4 style="font-size:14.5px; font-weight:800; color:var(--ink); margin-bottom:8px;"> 해당 대학 실시 논술전형</h4>
 
         <div class="finder-table-wrapper">
 
@@ -6256,9 +6208,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div class="uni-detail-footer">
 
-      <button class="btn secondary" id="udBtnScan">🔒 참고자료 원본페이지 보기</button>
+      <button class="btn secondary" id="udBtnScan"> 참고자료 원본페이지 보기</button>
 
-      <button class="btn primary" id="udBtnCounsel">✍️ 이 대학으로 세특·상담 작성</button>
+      <button class="btn primary" id="udBtnCounsel"> 이 대학으로 세특·상담 작성</button>
 
     </div>
 
@@ -6274,7 +6226,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
   <div class="auth-modal-dialog">
 
-    <div class="auth-modal-icon">🔐</div>
+    <div class="auth-modal-icon"></div>
 
     <h3 class="auth-modal-title">저장된 대입자료 이미지 보안 인증</h3>
 
@@ -6318,9 +6270,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--hairline); padding-bottom:10px;">
 
-      <h3 style="font-size:18px; font-weight:800; color:var(--ink); margin:0;">👑 전체 관리자 전용 설정</h3>
+      <h3 style="font-size:18px; font-weight:800; color:var(--ink); margin:0;"> 전체 관리자 전용 설정</h3>
 
-      <button type="button" id="saCloseBtn" style="background:none; border:none; font-size:18px; cursor:pointer;">✕</button>
+      <button type="button" id="saCloseBtn" style="background:none; border:none; font-size:18px; cursor:pointer;"></button>
 
     </div>
 
@@ -6406,7 +6358,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div style="display:flex; align-items:center; gap:8px;">
 
-        <span style="font-size:18px;">📖</span>
+        <span style="font-size:18px;"></span>
 
         <strong id="viewerTitle" style="font-size:15px; color:var(--ink);">원본 참고자료 열람</strong>
 
@@ -6438,7 +6390,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div class="chip-divider"></div>
 
-        <button type="button" class="btn secondary" id="viewerCloseBtn" style="padding:4px 12px; font-size:12.5px; color:var(--danger); border-color:#fecaca;">✕ 닫기</button>
+        <button type="button" class="btn secondary" id="viewerCloseBtn" style="padding:4px 12px; font-size:12.5px; color:var(--danger); border-color:#fecaca;"> 닫기</button>
 
       </div>
 
@@ -6474,7 +6426,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div class="viewer-attribution-box" style="width:100%;">
 
-        <strong>📌 저작권 및 출처 안내:</strong> 본 시스템의 전체적인 내용은 수학 교과서, 학교생활기록부 기재요령 매뉴얼 및 동료 교사들의 생기부 초안 문구를 참고하여 작성되었습니다. 디자인과 전체적인 시스템 구성은 개발자(<a href="https://blog.naver.com/math-tong" target="_blank" rel="noreferrer" style="color:#ff385c; font-weight:800; text-decoration:underline;">math-tong</a>)에게 있으며, 과 함께, 1·2학년 담임선생님의 생기부 및 진학 상담 부담을 덜어드리기 위해 정성껏 제작된 관계형 데이터 솔루션입니다.
+        <strong> 저작권 및 출처 안내:</strong> 본 시스템의 전체적인 내용은 수학 교과서, 학교생활기록부 기재요령 매뉴얼 및 동료 교사들의 생기부 초안 문구를 참고하여 작성되었습니다. 디자인과 전체적인 시스템 구성은 개발자(<a href="https://blog.naver.com/math-tong" target="_blank" rel="noreferrer" style="color:#ff385c; font-weight:800; text-decoration:underline;">math-tong</a>)에게 있으며, 과 함께, 1·2학년 담임선생님의 생기부 및 진학 상담 부담을 덜어드리기 위해 정성껏 제작된 관계형 데이터 솔루션입니다.
 
       </div>
 
@@ -6506,7 +6458,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <p class="note">
 
-        ⚠️ 이 설정 화면은 <strong>처음에는 건드리지 않아도 됩니다.</strong> 기본값 그대로 사용하세요.
+         이 설정 화면은 <strong>처음에는 건드리지 않아도 됩니다.</strong> 기본값 그대로 사용하세요.
 
         기본값은 <strong>「2026학년도 학교생활기록부 기재요령(고등학교)」</strong> 에서 옮긴 것입니다.
 
@@ -6726,7 +6678,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <input type="radio" name="guideMode" value="gems" checked style="accent-color:#38bdf8; width:16px; height:16px;">
 
-      <span>✨ [실무 강력 추천] Gemini 젬스 &amp; 프로로 수십 명 보고서 시트 일괄 생성 (API 불필요)</span>
+      <span> [실무 강력 추천] Gemini 젬스 &amp; 프로로 수십 명 보고서 시트 일괄 생성 (API 불필요)</span>
 
     </label>
 
@@ -6734,7 +6686,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <input type="radio" name="guideMode" value="apikey" style="accent-color:#ff385c; width:16px; height:16px;">
 
-      <span>🔑 Gemini API 키 무료 발급 (웹앱 브라우저 연동용)</span>
+      <span> Gemini API 키 무료 발급 (웹앱 브라우저 연동용)</span>
 
     </label>
 
@@ -6778,7 +6730,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div style="overflow:hidden;">
 
-          <b style="font-size:13px; color:#38bdf8;">📋 [복사하여 지침에 넣을 표준 프롬프트]:</b>
+          <b style="font-size:13px; color:#38bdf8;"> [복사하여 지침에 넣을 표준 프롬프트]:</b>
 
           <span style="font-size:12px; color:#cbd5e1; margin-left:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">"첨부된 보고서 사진들을 분석하여 학번, 성명, 탐구주제, 3단논법 세특 초안을 구글 시트 표로 만들어줘..."</span>
 
@@ -6802,7 +6754,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <button type="button" class="btn small" id="gemsGuidePrev" disabled style="padding:7px 16px; border-radius:8px; font-size:13px; cursor:pointer; background:rgba(255,255,255,0.06); color:#94a3b8; border:1px solid rgba(255,255,255,0.15);">이전</button>
 
-        <button type="button" class="btn small primary" id="gemsGuideNext" style="padding:7px 18px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; background:#2563eb; color:#fff; border:none;">다음 ➔</button>
+        <button type="button" class="btn small primary" id="gemsGuideNext" style="padding:7px 18px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; background:#2563eb; color:#fff; border:none;">다음 </button>
 
       </div>
 
@@ -6856,7 +6808,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <button type="button" class="btn small" id="guidePrevBtn" disabled style="padding:7px 16px; border-radius:8px; font-size:13px; cursor:pointer; background:rgba(255,255,255,0.06); color:#94a3b8; border:1px solid rgba(255,255,255,0.15);">이전</button>
 
-        <button type="button" class="btn small primary" id="guideNextBtn" style="padding:7px 18px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; background:#ff385c; color:#fff; border:none;">다음 ➔</button>
+        <button type="button" class="btn small primary" id="guideNextBtn" style="padding:7px 18px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; background:#ff385c; color:#fff; border:none;">다음 </button>
 
       </div>
 
@@ -6876,13 +6828,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div>
 
-      <b style="font-size:16px; font-weight:800; color:#0f172a;">듀얼 관계형 구글 시트 연동 (학급 담임용 &amp; 교과 담임용)</b>
+      <b style="font-size:16px; font-weight:800; color:#0f172a;">[교사용 올인원] 마스터 통합 구글 시트 실시간 연동 (10개 탭 통합)</b>
 
       <span style="font-size:12px; color:#64748b; margin-left:8px;">학번(ID) 기반 양방향 실시간 상호참조 &amp; Google Docs 일지 연동</span>
 
     </div>
 
-    <button type="button" class="btn small" onclick="document.getElementById('sheetSyncModal').close()">✕</button>
+    <button type="button" class="btn small" onclick="document.getElementById('sheetSyncModal').close()"></button>
 
   </div>
 
@@ -6896,11 +6848,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       </div>
       <div style="background:#eff6ff; border:1.5px solid #93c5fd; border-radius:10px; padding:14px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <div style="font-weight:800; color:#1e3a8a; font-size:14px;">[교사용 올인원] 마스터 관계형 표준시트 (9개 탭 통합)</div>
+          <div style="font-weight:800; color:#1e3a8a; font-size:14px;">[교사용 올인원] 마스터 통합 표준시트 (0_사용안내 ~ 8_출결_칭찬_기록 · 10개 탭 통합)</div>
           <span style="font-size:11.5px; background:#1d4ed8; color:#fff; padding:2px 8px; border-radius:999px; font-weight:700;">단일 시트</span>
         </div>
         <div style="font-size:12px; color:#475569; margin-bottom:10px; line-height:1.5;">
-          명렬표 · 창체·행특(=AI) · 대입상담(수시6장) · 상담기록 · 수업관찰 누적(모바일 교무수첩 연동) · AI세특 작성(=AI_SETUK) · _스킬지침
+          0_사용안내 · 1_대시보드 · 2_학생명렬표 · 3_창체_행특 · 4_대입상담 · 5_상담기록 · 6_수업관찰_기록 · 7_AI세특_작성 · 8_출결_칭찬_기록(모바일 교무수첩 출결·칭찬·1인1역 연동) · _스킬지침<br><strong style="color:#b45309;">[권장] 사본 저장 직후 학생 개인정보 입력 전에 먼저 Apps Script 연결을 완료하세요!</strong>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <a href="https://docs.google.com/spreadsheets/d/12lGdMCyRGWpTlmG3vaXX18oeTcX2maJ_5Pfo9CJ4kfc/copy" target="_blank" rel="noreferrer" class="btn small" style="background:#1d4ed8; color:#fff; text-decoration:none; font-weight:700; padding:7px 12px; border-radius:6px;">사본 만들기 ↗</a>
@@ -6972,13 +6924,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div>
 
-      <b style="font-size:17px; font-weight:800; color:#0f172a;">📸 학생 탐구보고서 AI 판독 &amp; 프롬프트 일괄 자동화 센터</b>
+      <b style="font-size:17px; font-weight:800; color:#0f172a;"> 학생 탐구보고서 AI 판독 &amp; 프롬프트 일괄 자동화 센터</b>
 
       <span style="font-size:12px; color:#64748b; margin-left:8px;">Gemini 젬스(Gems) · 대화형 프롬프트 · 비전 멀티모달 OCR</span>
 
     </div>
 
-    <button type="button" class="btn small" onclick="document.getElementById('ocrModal').close()">✕ 닫기</button>
+    <button type="button" class="btn small" onclick="document.getElementById('ocrModal').close()"> 닫기</button>
 
   </div>
 
@@ -6988,9 +6940,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
   <div class="ocr-tab-nav">
 
-    <button type="button" class="ocr-tab-btn is-active" data-ocr-tab="gems">🤖 1. Gemini 젬스 &amp; 프롬프트 일괄 자동화 가이드 (교사 실무 1순위 추천)</button>
+    <button type="button" class="ocr-tab-btn is-active" data-ocr-tab="gems"> 1. Gemini 젬스 &amp; 프롬프트 일괄 자동화 가이드 (교사 실무 1순위 추천)</button>
 
-    <button type="button" class="ocr-tab-btn" data-ocr-tab="vision">⚡ 2. 웹 브라우저 직접 Vision OCR 판독기</button>
+    <button type="button" class="ocr-tab-btn" data-ocr-tab="vision"> 2. 웹 브라우저 직접 Vision OCR 판독기</button>
 
   </div>
 
@@ -7004,7 +6956,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:12px; padding:16px 20px; margin-bottom:20px;">
 
-      <h3 style="font-size:15px; font-weight:800; color:#1e40af; margin:0 0 6px 0;">💡 왜 브라우저 낱장 판독보다 '프롬프트 &amp; 젬스'가 10배 더 강력한가요?</h3>
+      <h3 style="font-size:15px; font-weight:800; color:#1e40af; margin:0 0 6px 0;"> 왜 브라우저 낱장 판독보다 '프롬프트 &amp; 젬스'가 10배 더 강력한가요?</h3>
 
       <p style="font-size:13.5px; color:#1e293b; line-height:1.6; margin:0;">
 
@@ -7024,7 +6976,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div>
 
-          <b style="font-size:15px; font-weight:800; color:#0f172a;">📋 학생 보고서 ➔ 구글 시트 일괄 추출 표준 마스터 프롬프트</b>
+          <b style="font-size:15px; font-weight:800; color:#0f172a;"> 학생 보고서  구글 시트 일괄 추출 표준 마스터 프롬프트</b>
 
           <span style="font-size:12px; color:#64748b; margin-left:6px;">(Gems 지침 또는 대화창에 복사해서 사용)</span>
 
@@ -7032,13 +6984,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <button type="button" id="btnSaveOcrSkill" class="btn secondary" style="background:#eff6ff; color:#1d4ed8; font-weight:800; font-size:12.5px; padding:8px 14px; border-radius:8px; border:1.5px solid #93c5fd; cursor:pointer;">
 
-          💾 젬스 스킬 파일(.md) 저장
+           젬스 스킬 파일(.md) 저장
 
         </button>
 
         <button type="button" id="btnCopyOcrMasterPrompt" class="btn primary" style="background:#059669; color:#fff; font-weight:800; font-size:13px; padding:8px 18px; border-radius:8px; border:none; cursor:pointer; box-shadow:0 3px 10px rgba(5,150,105,0.35);">
 
-          📋 표준 프롬프트 1초 복사
+           표준 프롬프트 1초 복사
 
         </button>
 
@@ -7050,7 +7002,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-[🔒 개인정보 보호 및 보안 필수 권장사항]
+[ 개인정보 보호 및 보안 필수 권장사항]
 
 학생들의 설문지 및 탐구보고서 이미지에는 학생의 학습 기록과 소중한 개인정보가 포함되어 있습니다.
 
@@ -7106,11 +7058,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
 
-        <h4 style="font-size:15px; font-weight:800; color:#0f172a; margin:0;">⚡ Gemini 젬스(Gems) 3분 제작 및 보고서 일괄 자동화 5단계</h4>
+        <h4 style="font-size:15px; font-weight:800; color:#0f172a; margin:0;"> Gemini 젬스(Gems) 3분 제작 및 보고서 일괄 자동화 5단계</h4>
 
         <a href="https://gemini.google.com/gems" target="_blank" rel="noopener noreferrer" class="btn secondary" style="font-size:12.5px; font-weight:700; color:#2563eb; text-decoration:none; padding:6px 12px; border-radius:6px; border:1px solid #93c5fd;">
 
-          🚀 Google Gemini Gems 바로가기 ↗
+           Google Gemini Gems 바로가기 ↗
 
         </a>
 
@@ -7178,7 +7130,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div style="font-size:13.5px; font-weight:800; color:#0f172a; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
 
-        <span>🔍</span> <span>학생 보고서 직접 비전OCR 3단계 사용 방법</span>
+        <span></span> <span>학생 보고서 직접 비전OCR 3단계 사용 방법</span>
 
       </div>
 
@@ -7582,7 +7534,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       if (typeof d.today !== 'number' || typeof d.total !== 'number') return;
 
-      el.textContent = `👁 오늘 ${d.today.toLocaleString('ko-KR')} · 누적 ${d.total.toLocaleString('ko-KR')}`;
+      el.textContent = ` 오늘 ${d.today.toLocaleString('ko-KR')} · 누적 ${d.total.toLocaleString('ko-KR')}`;
 
       el.title = '오늘 / 지금까지 방문자 수 (브라우저당 하루 한 번)';
 
@@ -7688,13 +7640,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
 
-        <h2 style="font-size:18px; font-weight:800; color:#0f172a; margin:0;">📝 단계별 생기부 초안 작성 &amp; 구글 시트 연동</h2>
+        <h2 style="font-size:18px; font-weight:800; color:#0f172a; margin:0;"> 단계별 생기부 초안 작성 &amp; 구글 시트 연동</h2>
 
         <span style="font-size:11.5px; font-weight:700; color:#1d4ed8; background:#dbeafe; padding:3px 8px; border-radius:999px;">팝업 스크롤 집중 모드</span>
 
       </div>
 
-      <button class="v-close-btn" id="draftStepCloseBtn" style="padding:6px 14px; font-size:13px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer; font-weight:700;">✕ 닫기</button>
+      <button class="v-close-btn" id="draftStepCloseBtn" style="padding:6px 14px; font-size:13px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer; font-weight:700;"> 닫기</button>
 
     </div>
 
@@ -7706,7 +7658,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div id="mTargetStrip" style="background:#f8fafc; border:1.5px solid #cbd5e1; border-left:4px solid #2563eb; border-radius:8px; padding:12px 16px; margin-bottom:16px;">
 
-        <div style="font-size:13px; font-weight:800; color:#1e293b; margin-bottom:4px;">🎯 4번 대입 진학상담 연동 현황:</div>
+        <div style="font-size:13px; font-weight:800; color:#1e293b; margin-bottom:4px;"> 4번 대입 진학상담 연동 현황:</div>
 
         <div id="mTargetContent" style="font-size:13px; color:#334155;">
 
@@ -7724,7 +7676,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
 
-          <strong style="color:#15803d; font-size:13.5px;">📄 현재까지 구글 시트에 입력된 세특 내용</strong>
+          <strong style="color:#15803d; font-size:13.5px;"> 현재까지 구글 시트에 입력된 세특 내용</strong>
 
           <span id="mExistBytes" style="font-size:11.5px; font-weight:700; color:#15803d; background:#dcfce7; padding:2px 8px; border-radius:999px;">420 Byte</span>
 
@@ -7746,7 +7698,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <label class="form-label" style="font-size:13.5px; font-weight:800; color:#0f172a; margin-bottom:6px; display:block;">
 
-          ✏️ 추가 수업 관찰 메모 입력 (새로운 관찰 사실)
+           추가 수업 관찰 메모 입력 (새로운 관찰 사실)
 
         </label>
 
@@ -7778,7 +7730,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <button type="button" id="mBtnModalGenerate" class="btn primary" style="background:#ff385c; color:#fff; border:none; padding:10px 20px; font-size:14px; font-weight:800; border-radius:8px; cursor:pointer; box-shadow:0 4px 14px rgba(255,56,92,0.4);">
 
-          🚀 나이스 1,500 Byte 초안 생성하기
+           나이스 1,500 Byte 초안 생성하기
 
         </button>
 
@@ -7792,7 +7744,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
 
-          <strong style="font-size:13.5px; color:#0f172a;">✨ 최종 완성 세특 초안 (기존 내용 + 추가 메모 결합)</strong>
+          <strong style="font-size:13.5px; color:#0f172a;"> 최종 완성 세특 초안 (기존 내용 + 추가 메모 결합)</strong>
 
           <span id="mModalByteCount" style="font-size:12px; font-weight:800; color:#2563eb;">0 / 1,500 Byte</span>
 
@@ -7806,13 +7758,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
 
-        <button type="button" id="mBtnCopyModalResult" class="btn secondary" style="padding:8px 16px; font-size:13px; font-weight:700;">📋 문단 복사</button>
+        <button type="button" id="mBtnCopyModalResult" class="btn secondary" style="padding:8px 16px; font-size:13px; font-weight:700;"> 문단 복사</button>
 
         <div style="display:flex; gap:8px;">
 
           <button type="button" id="mBtnApplyToMainForm" class="btn secondary" style="padding:8px 16px; font-size:13px; font-weight:700; color:#2563eb; border-color:#93c5fd;">메인 폼에 반영</button>
 
-          <button type="button" id="mBtnSaveToSheet" class="btn primary" style="padding:8px 20px; font-size:13px; font-weight:800; background:#059669; border:none; color:#fff; border-radius:8px; cursor:pointer;">💾 구글 시트 저장 및 동기화</button>
+          <button type="button" id="mBtnSaveToSheet" class="btn primary" style="padding:8px 20px; font-size:13px; font-weight:800; background:#059669; border:none; color:#fff; border-radius:8px; cursor:pointer;"> 구글 시트 저장 및 동기화</button>
 
         </div>
 
@@ -7836,13 +7788,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div style="display:flex; align-items:center; gap:10px;">
 
-        <h2 style="font-size:18px; font-weight:800; color:#0f172a; margin:0;">📊 구글 시트 실시간 학생 명렬표 &amp; 세특 불러오기</h2>
+        <h2 style="font-size:18px; font-weight:800; color:#0f172a; margin:0;"> 구글 시트 실시간 학생 명렬표 &amp; 세특 불러오기</h2>
 
         <span style="font-size:11px; font-weight:700; color:#15803d; background:#dcfce7; padding:2px 8px; border-radius:999px;">샘플 5명 탑재</span>
 
       </div>
 
-      <button class="v-close-btn" id="studentLoaderCloseBtn" style="padding:6px 12px; font-size:13px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer;">✕ 닫기</button>
+      <button class="v-close-btn" id="studentLoaderCloseBtn" style="padding:6px 12px; font-size:13px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer;"> 닫기</button>
 
     </div>
 
@@ -7892,91 +7844,62 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-<!-- ── 구글 시트 전용 통합 Apps Script 5단계 캐러셀 모달 (GasCarouselModal) ── -->
-
+<!-- ── 구글 시트 전용 통합 Apps Script & AI 에이전트 6단계 팝업 캐러셀 가이드 (GasCarouselModal) ── -->
 <div class="viewer-modal-backdrop" id="gasCarouselModal" hidden>
-
-  <div class="uni-detail-dialog" style="max-width:880px; max-height:90vh; overflow-y:auto;">
-
+  <div class="uni-detail-dialog" style="max-width:900px; max-height:92vh; overflow-y:auto;">
     <div class="uni-detail-head">
-
-      <div style="display:flex; align-items:center; gap:10px;">
-
-        <h2 style="font-size:18px; font-weight:800; color:#0f172a; margin:0;">⚡ 구글 시트 전용 통합 Apps Script 5단계 실무 캐러셀 가이드</h2>
-
-        <span style="font-size:11.5px; font-weight:700; color:#2563eb; background:#eff6ff; padding:2px 8px; border-radius:999px;">실제 화면 안내</span>
-
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <h2 style="font-size:17.5px; font-weight:800; color:#0f172a; margin:0;">구글 시트 연결 &amp; AI 에이전트 활용 6단계 실무 캐러셀 안내서</h2>
+        <span style="font-size:11.5px; font-weight:700; color:#92400e; background:#fef3c7; padding:3px 9px; border-radius:999px;">사본 저장 직후 연결 권장</span>
       </div>
-
-      <button class="v-close-btn" id="gasCarouselCloseBtn" style="padding:6px 12px; font-size:13px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer;">✕ 닫기</button>
-
+      <button class="v-close-btn" id="gasCarouselCloseBtn" style="padding:6px 12px; font-size:13px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer;">닫기</button>
     </div>
 
-    
-
-    <div style="padding:20px 24px;">
+    <div style="padding:18px 24px;">
+      <!-- 상단 단계 바로가기 버튼 바 -->
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px;">
+        <button type="button" class="btn small modal-gas-step-pill" onclick="window.setModalGasSlide && window.setModalGasSlide(0)" style="background:#2563eb; color:#fff; font-weight:700; padding:5px 10px; font-size:12px;">1. 사본 직후 연결 원칙</button>
+        <button type="button" class="btn small modal-gas-step-pill" onclick="window.setModalGasSlide && window.setModalGasSlide(1)" style="background:#f1f5f9; color:#334155; font-weight:700; padding:5px 10px; font-size:12px;">2. 기본 직접 붙여넣기</button>
+        <button type="button" class="btn small modal-gas-step-pill" onclick="window.setModalGasSlide && window.setModalGasSlide(2)" style="background:#f1f5f9; color:#334155; font-weight:700; padding:5px 10px; font-size:12px;">3. 대안1: Gemini Pro 요청</button>
+        <button type="button" class="btn small modal-gas-step-pill" onclick="window.setModalGasSlide && window.setModalGasSlide(3)" style="background:#f1f5f9; color:#334155; font-weight:700; padding:5px 10px; font-size:12px;">4. 대안2: Antigravity·Codex</button>
+        <button type="button" class="btn small modal-gas-step-pill" onclick="window.setModalGasSlide && window.setModalGasSlide(4)" style="background:#f1f5f9; color:#334155; font-weight:700; padding:5px 10px; font-size:12px;">5. 대안3: AI 비서 앱(피클)</button>
+        <button type="button" class="btn small modal-gas-step-pill" onclick="window.setModalGasSlide && window.setModalGasSlide(5)" style="background:#f1f5f9; color:#334155; font-weight:700; padding:5px 10px; font-size:12px;">6. 권한 승인 · URL 등록</button>
+      </div>
 
       <!-- 캐러셀 슬라이드 뷰어 -->
-
-      <div id="gasSlideViewer" style="background:#0f172a; border-radius:12px; overflow:hidden; margin-bottom:16px; box-shadow:0 10px 25px rgba(0,0,0,0.3); min-height:360px; display:flex; align-items:center; justify-content:center;">
-
-        <img id="gasSlideImg" src="/api/r2-image?type=carousel&amp;name=gas-step1" alt="Apps Script Step Guide" style="width:100%; height:auto; display:block;">
-
+      <div id="gasSlideViewer" style="background:#0f172a; border-radius:12px; overflow:hidden; margin-bottom:14px; box-shadow:0 10px 25px rgba(0,0,0,0.25); min-height:300px; max-height:380px; display:flex; align-items:center; justify-content:center;">
+        <img id="gasSlideImg" src="/api/r2-image?type=carousel&amp;name=gas-step1" alt="Apps Script Step Guide" style="width:100%; max-height:380px; object-fit:contain; display:block;">
       </div>
-
-
 
       <!-- 슬라이드 단계 설명 카드 -->
-
       <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; padding:14px 18px; margin-bottom:16px;">
-
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-
-          <h3 id="gasSlideTitle" style="font-size:16px; font-weight:800; color:#0f172a; margin:0;">1단계: 구글 시트 메뉴 [확장 프로그램] ➔ [Apps Script] 클릭</h3>
-
-          <span id="gasSlideCounter" style="font-size:13px; font-weight:800; color:#2563eb; background:#eff6ff; padding:2px 10px; border-radius:999px;">1 / 5</span>
-
+          <h3 id="gasSlideTitle" style="font-size:15.5px; font-weight:800; color:#0f172a; margin:0;">1단계 [필수 권장]: 사본을 저장한 직후, 학생 정보를 입력하기 전에 먼저 연결하세요</h3>
+          <span id="gasSlideCounter" style="font-size:12.5px; font-weight:800; color:#2563eb; background:#eff6ff; padding:2px 10px; border-radius:999px;">1 / 6</span>
         </div>
-
-        <p id="gasSlideDesc" style="font-size:13.5px; color:#334155; line-height:1.6; margin:0;">
-
-          구글 시트 상단 메뉴에서 <strong>[확장 프로그램]</strong>을 누른 뒤 <strong>[Apps Script]</strong>를 클릭하면 나만의 스크립트 에디터 창이 새 탭으로 열립니다.
-
-        </p>
-
+        <div id="gasSlideDesc" style="font-size:13px; color:#334155; line-height:1.65; margin:0;">
+          <strong>[가장 중요한 권장 원칙]</strong> 마스터 시트 사본을 내 드라이브에 저장하자마자 <strong>학생 개인정보(명렬표·성적·상담내용)를 입력하기 전에 먼저 Apps Script 연결부터 완료</strong>하세요.
+        </div>
       </div>
-
-
 
       <!-- 네비게이션 컨트롤 & 코드 복사 버튼 -->
-
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-
         <div style="display:flex; gap:8px;">
-
           <button type="button" id="btnGasPrev" class="btn secondary" style="padding:8px 16px; font-size:13px; font-weight:700;">◀ 이전 단계</button>
-
           <button type="button" id="btnGasNext" class="btn primary" style="padding:8px 16px; font-size:13px; font-weight:700; background:#2563eb; color:#fff; border:none;">다음 단계 ▶</button>
-
         </div>
-
-        <button type="button" id="btnCopyIntegratedGasScript" class="btn primary" style="padding:10px 22px; font-size:13.5px; font-weight:800; background:#059669; color:#fff; border:none; border-radius:8px; cursor:pointer; box-shadow:0 4px 14px rgba(5,150,105,0.4);">
-
-          📋 구글 시트용 통합 Apps Script 코드 1초 복사
-
-        </button>
-
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" id="btnCopyIntegratedGasScript" class="btn primary" style="padding:10px 20px; font-size:13px; font-weight:800; background:#059669; color:#fff; border:none; border-radius:8px; cursor:pointer;">
+            구글 시트용 통합 Apps Script 코드 1초 복사
+          </button>
+          <button type="button" onclick="document.getElementById('gasCarouselModal').hidden=true; window.GoogleSheet && window.GoogleSheet.openModal();" class="btn secondary" style="padding:10px 16px; font-size:13px; font-weight:700; border-radius:8px; cursor:pointer;">
+            Web App URL 등록창 열기
+          </button>
+        </div>
       </div>
-
     </div>
-
   </div>
-
 </div>
-
-
-
-
 
 <!-- 30명 모의 학급 관계형 구글 시트 미리보기 모달 -->
 
@@ -7986,13 +7909,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <div style="display:flex; align-items:center; gap:8px;">
 
-      <span style="font-size:18px;">📊</span>
+      <span style="font-size:18px;"></span>
 
       <strong style="font-size:15px;">2026/2028 1학년 1반 30명 모의 학급 관계형 시트 명세 미리보기</strong>
 
     </div>
 
-    <button type="button" class="btn small" style="background:#334155; color:#fff; border:none; padding:4px 10px; border-radius:6px; cursor:pointer;" onclick="document.getElementById('dialogRelationalSheetPreview').close()">✕ 닫기</button>
+    <button type="button" class="btn small" style="background:#334155; color:#fff; border:none; padding:4px 10px; border-radius:6px; cursor:pointer;" onclick="document.getElementById('dialogRelationalSheetPreview').close()"> 닫기</button>
 
   </div>
 
@@ -8010,13 +7933,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <button type="button" id="btnPreviewDownloadExcel" class="btn small" style="background:#16a34a; color:#fff; border:none; font-weight:700; padding:6px 12px; border-radius:6px; cursor:pointer;">
 
-          ⬇️ 30명 엑셀 (.xlsx) 다운로드
+          ⬇ 30명 엑셀 (.xlsx) 다운로드
 
         </button>
 
         <button type="button" class="btn small" style="background:#2563eb; color:#fff; border:none; font-weight:700; padding:6px 12px; border-radius:6px; cursor:pointer;" onclick="window.load30StudentsRelationalData && window.load30StudentsRelationalData(); document.getElementById('dialogRelationalSheetPreview').close();">
 
-          📥 워크벤치에 30명 즉시 반영
+           워크벤치에 30명 즉시 반영
 
         </button>
 
@@ -8070,7 +7993,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-<!-- 🌟 사이드바 네비게이션 & 접기형식 이용 안내 (사용자 요청: 상부 공간 극대화 & 목록 구조화) -->
+<!--  사이드바 네비게이션 & 접기형식 이용 안내 (사용자 요청: 상부 공간 극대화 & 목록 구조화) -->
 
 <div id="app-sidebar-backdrop" class="app-sidebar-backdrop"></div>
 
@@ -8084,7 +8007,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       <div class="sidebar-brand">
 
-        <span class="sidebar-logo">📋</span>
+        <span class="sidebar-logo"></span>
 
         <div>
 
@@ -8096,7 +8019,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
       </div>
 
-      <button type="button" id="btnCloseSidebar" class="sidebar-close-btn" title="사이드바 닫기" aria-label="사이드바 닫기">✕</button>
+      <button type="button" id="btnCloseSidebar" class="sidebar-close-btn" title="사이드바 닫기" aria-label="사이드바 닫기"></button>
 
     </div>
 
@@ -8112,7 +8035,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <div style="display:flex; align-items:center; gap:6px;">
 
-            <span class="guide-icon">💡</span>
+            <span class="guide-icon"></span>
 
             <strong style="font-size:12.5px; color:#f8fafc;">워크벤치 이용 안내 (접기/펼치기)</strong>
 
@@ -8132,11 +8055,11 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
           <ul class="guide-bullet-list">
 
-            <li>🔒 <strong>개인정보 최소 수집 원칙</strong>: 오직 교원 식별을 위해 [구글 계정 주소]와 [성함]만 시트에 기록하며, 학생 정보는 서버에 저장되지 않습니다.</li>
+            <li> <strong>개인정보 최소 수집 원칙</strong>: 오직 교원 식별을 위해 [구글 계정 주소]와 [성함]만 시트에 기록하며, 학생 정보는 서버에 저장되지 않습니다.</li>
 
-            <li>⏱ <strong>1개월 세션 유지</strong>: 공식 계정(@sch.kr, @goedu.kr)은 1초 자동 승인되며, 1개월간 로그인 없이 자유롭게 이용하실 수 있습니다.</li>
+            <li> <strong>1개월 세션 유지</strong>: 공식 계정(@sch.kr, @goedu.kr)은 1초 자동 승인되며, 1개월간 로그인 없이 자유롭게 이용하실 수 있습니다.</li>
 
-            <li>⚡ <strong>단일 시트 자동 연동</strong>: 학번(ID)을 키로 하여 메인 앱과 교무수첩이 하나의 구글 시트([📓_교무수첩])에 모두 통합 동기화됩니다.</li>
+            <li> <strong>단일 시트 자동 연동</strong>: 학번(ID)을 키로 하여 메인 앱과 교무수첩이 하나의 구글 시트([_교무수첩])에 모두 통합 동기화됩니다.</li>
 
           </ul>
 
@@ -8152,7 +8075,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     <nav class="sidebar-nav">
 
-      <div class="sidebar-group-label">📊 학생 기록 &amp; 점검 워크벤치</div>
+      <div class="sidebar-group-label"> 학생 기록 &amp; 점검 워크벤치</div>
 
       <ul class="sidebar-nav-list">
 
@@ -8252,7 +8175,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
 
 
-      <div class="sidebar-group-label" style="margin-top:18px;">📚 참고 자료 및 도구</div>
+      <div class="sidebar-group-label" style="margin-top:18px;"> 참고 자료 및 도구</div>
 
       <ul class="sidebar-nav-list">
 
@@ -8314,7 +8237,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <button type="button" id="sidebarBtnSheetSync" class="btn primary small" style="width:100%; font-size:12px; font-weight:700; padding:6px 10px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
 
-          📤 시트 동기화 설정 열기
+           시트 동기화 설정 열기
 
         </button>
 
