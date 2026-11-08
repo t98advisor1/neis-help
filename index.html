@@ -1488,7 +1488,8 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
         <a class="op-cta op-cta-primary reveal" style="--d:.32s; margin-top:0;" href="#menu">시작하기 <span aria-hidden="true">↓</span></a>
 
-        <button type="button" class="op-cta op-cta-sheet reveal" id="heroBtnGoogleSync" style="--d:.36s; margin-top:0;"> 구글 시트 연동</button>
+        <button type="button" class="op-cta op-cta-sheet reveal" id="heroBtnGoogleSync" style="--d:.36s; margin-top:0;">구글 시트 연동</button>
+        <a class="op-cta reveal" style="--d:.38s; margin-top:0; text-decoration:none; background:#0f172a; color:#ffffff; font-weight:700; border-radius:12px; padding:12px 18px; font-size:14px; display:inline-flex; align-items:center; gap:6px;" href="/manual.html" target="_blank">동기화 시각 매뉴얼 (HTML 다운로드) ↗</a>
 
         <a class="op-cta op-cta-counsel reveal" style="--d:.40s; margin-top:0;" href="#sec-counsel-scroll"> 대입 진학상담 바로가기 ↓</a>
 
@@ -6902,12 +6903,14 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
       <input type="hidden" id="inputGasSubjectUrl">
     </div>
 
-    <div style="display:flex; justify-content:flex-end; gap:8px;">
-
-      <button type="button" class="btn" onclick="document.getElementById('sheetSyncModal').close()" style="padding:7px 14px; font-size:13px;">닫기</button>
-
-      <button type="button" class="btn primary" id="btnSaveSheetUrl" style="padding:7px 20px; font-size:13px; background:#2563eb; color:#fff; font-weight:700;">설정 저장하기</button>
-
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:14px;">
+      <a href="/manual.html" target="_blank" class="btn secondary" style="text-decoration:none; padding:7px 14px; font-size:12.5px; font-weight:700; color:#1e40af; border-color:#93c5fd; background:#eff6ff;">
+        동기화 시각 매뉴얼 전체보기 / HTML 다운로드 ↗
+      </a>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn" onclick="document.getElementById('sheetSyncModal').close()" style="padding:7px 14px; font-size:13px;">닫기</button>
+        <button type="button" class="btn primary" id="btnSaveSheetUrl" style="padding:7px 20px; font-size:13px; background:#2563eb; color:#fff; font-weight:700;">설정 저장하기</button>
+      </div>
     </div>
 
   </div>
@@ -7892,6 +7895,9 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
           <button type="button" id="btnCopyIntegratedGasScript" class="btn primary" style="padding:10px 20px; font-size:13px; font-weight:800; background:#059669; color:#fff; border:none; border-radius:8px; cursor:pointer;">
             구글 시트용 통합 Apps Script 코드 1초 복사
           </button>
+          <a href="/manual.html" target="_blank" class="btn secondary" style="padding:10px 16px; font-size:13px; font-weight:700; border-radius:8px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:#f8fafc; color:#0f172a; border:1px solid #cbd5e1;">
+            오프라인 매뉴얼 (HTML 다운로드) ↗
+          </a>
           <button type="button" onclick="document.getElementById('gasCarouselModal').hidden=true; window.GoogleSheet && window.GoogleSheet.openModal();" class="btn secondary" style="padding:10px 16px; font-size:13px; font-weight:700; border-radius:8px; cursor:pointer;">
             Web App URL 등록창 열기
           </button>
