@@ -47,9 +47,9 @@ export default async function handler(req, res) {
   );
 
   if (isValid) {
-    const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
+    const SEMESTER_MS = 180 * 24 * 60 * 60 * 1000; // 한 학기(6개월, 180일)
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + ONE_MONTH_MS).toISOString();
+    const expiresAt = new Date(now.getTime() + SEMESTER_MS).toISOString();
 
     return res.status(200).json({
       ok: true,
@@ -59,8 +59,8 @@ export default async function handler(req, res) {
       name: '관리자 선생님',
       authDate: now.toISOString(),
       expiresAt: expiresAt,
-      validDays: 30,
-      message: '[인증 성공] 마스터 PIN 인증이 완료되었습니다. (1개월 관리자 권한 활성화)'
+      validDays: 180,
+      message: '[인증 성공] 마스터 PIN 인증이 완료되었습니다. (한 학기 6개월 관리자 권한 활성화)'
     });
   }
 

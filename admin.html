@@ -432,7 +432,7 @@
 
       <span class="badge">[비공개] 사이트 운영자(관리자) 전용 운영 매뉴얼</span>
 
-      <h1 class="title">교사 승인 및 1개월 이용권 관리 시트 가이드</h1>
+      <h1 class="title">교사 승인 및 한 학기(6개월) 이용권 관리 시트 가이드</h1>
 
       <p class="subtitle">
 
@@ -460,7 +460,7 @@
 
             <p style="font-size:13px; color:#475569; margin:0;">
 
-              구글 시트를 열지 않고도, 사이트에서 직접 로그인한 교사 명단을 실시간으로 확인하고 <strong>[원클릭 1개월 승인]</strong>을 진행할 수 있습니다.
+              구글 시트를 열지 않고도, 사이트에서 직접 로그인한 교사 명단을 실시간으로 확인하고 <strong>[원클릭 한 학기(6개월) 승인]</strong>을 진행할 수 있습니다.
 
             </p>
 
@@ -470,7 +470,7 @@
 
             <button type="button" id="btnRefreshApplicants" class="btn secondary" style="padding:8px 14px; font-size:12.5px;">새로고침</button>
 
-            <button type="button" id="btnApproveAll" class="btn" style="background:#2563eb; padding:8px 16px; font-size:12.5px;">전체 일괄 1개월 승인</button>
+            <button type="button" id="btnApproveAll" class="btn" style="background:#2563eb; padding:8px 16px; font-size:12.5px;">전체 일괄 한 학기(6개월) 승인</button>
 
             <button type="button" id="btnExportCsv" class="btn secondary" style="padding:8px 14px; font-size:12.5px;">명단 엑셀(CSV) 다운로드</button>
 
@@ -493,7 +493,7 @@
             <input type="email" id="manualEmail" placeholder="선생님 이메일" style="padding:7px 10px; border-radius:8px; border:1px solid #cbd5e1; font-size:12px; width:190px;">
             <input type="text" id="manualName" placeholder="성함(선택)" style="padding:7px 10px; border-radius:8px; border:1px solid #cbd5e1; font-size:12px; width:90px;">
             <select id="manualStatus" style="padding:7px 8px; border-radius:8px; border:1px solid #cbd5e1; font-size:12px; background:#fff;">
-              <option value="승인">1개월 승인</option>
+              <option value="승인">한 학기(6개월) 승인</option>
               <option value="대기">사전 차단(대기)</option>
             </select>
             <button type="button" id="btnManualAdd" style="background:#0f172a; color:#fff; border:none; padding:7px 14px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">계정 등록/차단</button>
@@ -514,7 +514,7 @@
 
           <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:14px; text-align:center;">
 
-            <div style="font-size:12px; font-weight:700; color:#166534;">승인 완료 (1개월 이용)</div>
+            <div style="font-size:12px; font-weight:700; color:#166534;">승인 완료 (한 학기(6개월) 이용)</div>
 
             <div id="kpiApproved" style="font-size:24px; font-weight:800; color:#15803d; margin-top:4px;">-</div>
 
@@ -584,7 +584,7 @@
 
         <div style="font-size:12px; color:#64748b; display:flex; justify-content:space-between; align-items:center;">
 
-          <span>※ 승인 즉시 교사 화면에 1개월 정식 권한이 활성화됩니다. (@sch.kr 및 @goedu.kr 계정은 1초 자동 승인)</span>
+          <span>※ 승인 즉시 교사 화면에 한 학기(6개월) 정식 권한이 활성화됩니다. (@sch.kr 및 @goedu.kr 계정은 1초 자동 승인)</span>
 
           <span id="lastUpdated" style="font-weight:600;"></span>
 
@@ -736,7 +736,7 @@
 
             <p class="card-desc">
 
-              관리자 선생님은 시트 <strong>A열의 체크박스 [V]</strong>를 클릭하기만 하면 됩니다. 클릭 즉시 해당 선생님 계정에 <strong>1개월(30일) 정식 이용권</strong>이 부여됩니다.
+              관리자 선생님은 시트 <strong>A열의 체크박스 [V]</strong>를 클릭하기만 하면 됩니다. 클릭 즉시 해당 선생님 계정에 <strong>한 학기(6개월) 정식 이용권</strong>이 부여됩니다.
 
             </p>
 
@@ -748,7 +748,7 @@
 
             <p class="card-desc">
 
-              승인된 교사는 비밀번호 없이 사이트에 1초 만에 입장하며, 시트에서는 30일 후 만료일을 자동 계산하고 <code>[1_승인대시보드]</code>에 활성 교사 수가 자동 집계됩니다.
+              승인된 교사는 비밀번호 없이 사이트에 1초 만에 입장하며, 시트에서는 한 학기(180일) 후 만료일을 자동 계산하고 <code>[1_승인대시보드]</code>에 활성 교사 수가 자동 집계됩니다.
 
             </p>
 
@@ -765,6 +765,11 @@
       <div class="section">
 
         <h2 class="section-title">[열 구성] 2_교사승인명단 탭 주요 열(Column) 구성 및 역할</h2>
+
+        
+        <div style="background:#eff6ff; border:1px solid #93c5fd; border-radius:10px; padding:10px 14px; margin-bottom:14px; font-size:12.5px; color:#1e40af; line-height:1.5;">
+          <b>[만료일 및 기간 연장 안내]</b> 기본 승인 기간은 <b>한 학기(6개월, 180일)</b>입니다. 구글 시트 <code>[2_교사승인명단]</code> 탭의 <b>G열(만료예정일)</b> 날짜를 수정하시거나 위 표의 날짜를 변경하시면 <b>해당 지정 일자까지 교사의 이용 기한이 실시간 자동 연장</b>됩니다.
+        </div>
 
         <div class="table-container">
 
@@ -868,7 +873,7 @@
 
                 <td>날짜</td>
 
-                <td>승인일로부터 30일 후 자동 표기. 만료 7일 전 대시보드에 알림 표시.</td>
+                <td>승인일로부터 180일(한 학기) 후 자동 표기. 만료 7일 전 대시보드에 알림 표시.</td>
 
               </tr>
 
@@ -880,7 +885,7 @@
 
                 <td>숫자</td>
 
-                <td>추가 30일 연장이 필요할 때 숫자(1, 2, ...)를 올리면 연장 횟수만큼 만료일이 자동 갱신.</td>
+                <td>추가 한 학기(180일) 연장이 필요할 때 숫자(1, 2, ...)를 올리면 연장 횟수만큼 만료일이 자동 갱신.</td>
 
               </tr>
 
@@ -1120,11 +1125,13 @@
           ? '<span style="background:#dcfce7; color:#15803d; font-weight:800; font-size:11.5px; padding:3px 10px; border-radius:999px; border:1px solid #86efac;">[승인 완료] 이용 허용</span>'
           : '<span style="background:#fee2e2; color:#b91c1c; font-weight:800; font-size:11.5px; padding:3px 10px; border-radius:999px; border:1px solid #fca5a5;">[승인 대기] 접근 차단</span>';
         
-        const expDate = item.expiresAt || (isApproved ? '30일 후' : '-');
+        const expDate = isApproved
+          ? '<div style="display:flex; align-items:center; gap:4px; justify-content:center;"><input type="date" value="' + (item.expiresAt || '') + '" onchange="updateExpiryDate(\'' + item.email + '\', this.value)" title="구글 시트 또는 대시보드에서 날짜를 변경하면 그 일자까지 승인이 자동 연장됩니다." style="padding:4px 6px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; font-family:inherit; width:118px; text-align:center; font-weight:700; color:#1e293b;"></div>'
+          : '<span style="color:#94a3b8;">-</span>';
         
         const actionBtn = isApproved
           ? '<button type="button" onclick="toggleApproval(\'' + item.email + '\', false)" style="background:#fee2e2; color:#b91c1c; border:1px solid #f87171; border-radius:6px; padding:5px 12px; font-size:12px; font-weight:800; cursor:pointer;">승인 취소 (대기/차단)</button>'
-          : '<button type="button" onclick="toggleApproval(\'' + item.email + '\', true)" style="background:#15803d; color:#ffffff; border:none; border-radius:6px; padding:5px 14px; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 2px 6px rgba(21,128,61,0.3);">1개월 정식 승인</button>';
+          : '<button type="button" onclick="toggleApproval(\'' + item.email + '\', true)" style="background:#15803d; color:#ffffff; border:none; border-radius:6px; padding:5px 14px; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 2px 6px rgba(21,128,61,0.3);">한 학기(6개월) 승인</button>';
 
         return '<tr style="border-bottom:1px solid #e2e8f0; background:' + (isApproved ? '#ffffff' : '#fff5f5') + ';">' +
           '<td style="padding:10px 12px; text-align:center;">' + statusBadge + '</td>' +
@@ -1172,7 +1179,7 @@
     }
 
     async function approveAll() {
-      if (!confirm('현재 대기 중인 모든 신청 교사에게 1개월 정식 이용권을 부여하시겠습니까?')) return;
+      if (!confirm('현재 대기 중인 모든 신청 교사에게 한 학기(6개월) 정식 이용권을 부여하시겠습니까?')) return;
       try {
         const res = await fetch('/api/sheet-sync', {
           method: 'POST',
@@ -1251,6 +1258,29 @@
     document.getElementById('btnManualAdd')?.addEventListener('click', handleManualAdd);
 
     window.toggleApproval = toggleApproval;
+
+    // 구글 시트 및 대시보드 실시간 날짜 연장 함수
+    async function updateExpiryDate(email, newDate) {
+      if (!newDate) return;
+      try {
+        const res = await fetch('/api/sheet-sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'update_expiry', email: email, expiresAt: newDate })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message || '만료일이 성공적으로 연장되었습니다.');
+          fetchApplicants();
+        } else {
+          alert('날짜 변경 실패: ' + (data.error || '오류'));
+        }
+      } catch (err) {
+        alert('서버 오류: ' + err.message);
+      }
+    }
+    window.updateExpiryDate = updateExpiryDate;
+
 
     // 초기 마스터 PIN 검증 실행
     checkAdminPin();

@@ -274,7 +274,7 @@ function setupExecutiveDashboard() {
     .setVerticalAlignment("middle");
 
   dash.getRange("A3:I3").merge()
-    .setValue("실시간 교사 승인(1개월 이용권) 관제 · 학급 및 교과 데이터 연동 · 나이스 1500B 바이트 점검 | math-tong")
+    .setValue("실시간 교사 승인(한 학기(6개월) 이용권) 관제 · 학급 및 교과 데이터 연동 · 나이스 1500B 바이트 점검 | math-tong")
     .setBackground("#1e293b")
     .setFontColor("#94a3b8")
     .setFontSize(11)
@@ -288,9 +288,9 @@ function setupExecutiveDashboard() {
 
   var guideTexts = [
     "• [교사 접속 자동 기록]: 교사가 사이트에서 Google 로그인 시 '2_교사승인명단'에 접속 시각, 성명, 학교, 이메일이 실시간 자동 1행 추가됩니다.",
-    "• [체크박스 원클릭 승인]: 관리자 선생님은 '2_교사승인명단' A열 체크박스([V])를 클릭하기만 하면 즉시 1개월(30일) 정식 이용권이 부여됩니다.",
+    "• [체크박스 원클릭 승인]: 관리자 선생님은 '2_교사승인명단' A열 체크박스([V])를 클릭하기만 하면 즉시 한 학기(6개월) 정식 이용권이 부여됩니다.",
     "• [공식 도메인 즉시 통과]: @sch.kr 및 @goedu.kr 계정은 관리자 개입 없이 로그인 즉시 실시간 1초 자동 승인 처리됩니다.",
-    "• [만료일 및 연장 관리]: 승인일로부터 30일 후 만료예정일이 자동 계산되며, 추가 연장 시 H열 연장 횟수를 1씩 올립니다.",
+    "• [만료일 및 연장 관리]: 승인일로부터 180일(한 학기) 후 만료예정일이 자동 계산되며, 추가 연장 시 H열 연장 횟수를 1씩 올립니다.",
     "• [Web App 연동 필수]: [확장 프로그램 > Apps Script > 배포 > 새 배포 > 웹 앱 (모든 사용자)] URL을 사이트에 등록해야 실시간 연동됩니다."
   ];
 
@@ -316,7 +316,7 @@ function setupExecutiveDashboard() {
   dash.getRange("B13:C15").setBorder(true, true, true, true, false, false, "#cbd5e1", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
 
   // Card 2: 승인 완료 교사 (1개월 권한)
-  dash.getRange("D13:E13").merge().setValue("승인 완료 (1개월 이용)").setFontSize(12).setFontWeight("bold").setFontColor("#15803d").setHorizontalAlignment("center").setBackground("#f0fdf4");
+  dash.getRange("D13:E13").merge().setValue("승인 완료 (한 학기 6개월 이용)").setFontSize(12).setFontWeight("bold").setFontColor("#15803d").setHorizontalAlignment("center").setBackground("#f0fdf4");
   dash.getRange("D14:E15").merge().setFormula('=IFERROR(COUNTIF(\'2_교사승인명단\'!A2:A, true), 0) & "명"').setFontSize(18).setFontWeight("bold").setFontColor("#15803d").setHorizontalAlignment("center").setVerticalAlignment("middle").setBackground("#f0fdf4");
   dash.getRange("D13:E15").setBorder(true, true, true, true, false, false, "#86efac", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
 
@@ -455,7 +455,7 @@ function approveAllPendingUsers() {
   var data = sheet.getDataRange().getValues();
   var count = 0;
   var expDate = new Date();
-  expDate.setDate(expDate.getDate() + 30);
+  expDate.setDate(expDate.getDate() + 180); // 한 학기(6개월)
   var expStr = Utilities.formatDate(expDate, "Asia/Seoul", "yyyy-MM-dd");
 
   for (var r = 1; r < data.length; r++) {
@@ -474,7 +474,7 @@ function approveAllPendingUsers() {
       }
     }
   }
-  SpreadsheetApp.getUi().alert("[승인 완료] 총 " + count + "명의 대기 신청자가 '승인' 처리되었습니다. (1개월간 이용 가능)");
+  SpreadsheetApp.getUi().alert("[승인 완료] 총 " + count + "명의 대기 신청자가 '승인' 처리되었습니다. (한 학기(6개월)간 이용 가능)");
 }
 
 /**
@@ -493,7 +493,7 @@ function approveSelectedUser() {
     return;
   }
   var expDate = new Date();
-  expDate.setDate(expDate.getDate() + 30);
+  expDate.setDate(expDate.getDate() + 180); // 한 학기(6개월)
   var expStr = Utilities.formatDate(expDate, "Asia/Seoul", "yyyy-MM-dd");
 
   if (sName === "2_교사승인명단") {
@@ -503,7 +503,7 @@ function approveSelectedUser() {
     sheet.getRange(row, 7).setValue("승인");
     sheet.getRange(row, 8).setValue("관리자 개별 승인");
   }
-  SpreadsheetApp.getUi().alert("[승인 완료] " + row + "행의 교사가 '승인' 처리되었습니다. (1개월간 이용 가능)");
+  SpreadsheetApp.getUi().alert("[승인 완료] " + row + "행의 교사가 '승인' 처리되었습니다. (한 학기(6개월)간 이용 가능)");
 }
 
 /**
@@ -945,10 +945,25 @@ function doGet(e) {
         if (isChkTab) {
           // A열: 승인여부 (체크박스 TRUE/FALSE 또는 '승인')
           var isApproved = (r[0] === true || String(r[0]).toUpperCase() === "TRUE" || String(r[0]).trim() === "승인");
+          // G열: 만료예정일 — 관리자가 구글 시트에서 날짜를 변경하면 그 일자까지 승인 자동 연장
+          var expVal = r[6];
+          var expStr = "";
+          if (expVal instanceof Date) {
+            expStr = Utilities.formatDate(expVal, "Asia/Seoul", "yyyy-MM-dd");
+          } else if (expVal) {
+            expStr = String(expVal).trim().slice(0, 10);
+          }
+          var todayStr = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd");
+          if (isApproved && expStr && /^\d{4}-\d{2}-\d{2}$/.test(expStr)) {
+            if (todayStr > expStr) {
+              isApproved = false; // 시트에 입력된 만료일이 지난 경우 만료 처리
+            }
+          }
           return ContentService.createTextOutput(JSON.stringify({
             found: true,
             approved: isApproved,
-            status: isApproved ? "승인" : "대기",
+            status: isApproved ? "승인" : (expStr && todayStr > expStr ? "만료" : "대기"),
+            expiresAt: expStr || "",
             name: r[2] || "선생님",
             school: r[3] || "학교",
             email: email
@@ -1218,7 +1233,7 @@ function doPost(e) {
       var isAuto = (domain === "sch.kr" || domain.endsWith(".sch.kr") || domain === "goedu.kr" || domain.endsWith(".goedu.kr") || targetEmail.endsWith("@sch.hs.kr"));
 
       var expDate = new Date();
-      expDate.setDate(expDate.getDate() + 30);
+      expDate.setDate(expDate.getDate() + 180); // 한 학기(6개월)
       var expStr = Utilities.formatDate(expDate, "Asia/Seoul", "yyyy-MM-dd");
 
       var data = appSheet.getDataRange().getValues();
@@ -1366,4 +1381,52 @@ function formatWrapAllSheets() {
     sh.getRange(1, 1, lastRow, lastCol).setWrap(true);
   }
   SpreadsheetApp.getUi().alert("[확인] 전체 탭의 모든 셀에 자동 줄바꿈 서식이 적용되어 긴 텍스트도 숨김없이 모두 확인하실 수 있습니다.");
+}
+
+/**
+ * [자동 연동] 구글 시트에서 교사 승인 및 만료일 직접 수정 시 자동 처리
+ * - A열 체크박스 클릭 시: 만료일이 비어있으면 오늘부터 180일(한 학기) 자동 입력
+ * - G열(만료예정일) 수정 시: 유효한 날짜가 입력되면 A열 체크박스를 자동으로 TRUE로 설정
+ * - H열(연장횟수) 수정 시: 입력된 연장 횟수만큼 180일씩 만료일을 자동 연장
+ */
+function onEdit(e) {
+  if (!e || !e.range) return;
+  var sheet = e.range.getSheet();
+  if (sheet.getName() !== "2_교사승인명단") return;
+
+  var row = e.range.getRow();
+  var col = e.range.getColumn();
+  if (row <= 1) return; // 제목 행 제외
+
+  // 1. A열(체크박스) 체크 시
+  if (col === 1) {
+    var val = e.range.getValue();
+    if (val === true || String(val).toUpperCase() === "TRUE") {
+      var expCell = sheet.getRange(row, 7);
+      if (!expCell.getValue()) {
+        var d = new Date();
+        d.setDate(d.getDate() + 180);
+        expCell.setValue(Utilities.formatDate(d, "Asia/Seoul", "yyyy-MM-dd"));
+      }
+    }
+  }
+
+  // 2. G열(만료예정일) 직접 날짜 변경 시 -> 해당 교사 즉시 승인(TRUE) 유지
+  if (col === 7) {
+    var dateVal = e.range.getValue();
+    if (dateVal) {
+      sheet.getRange(row, 1).setValue(true); // 즉시 이용 승인 처리
+    }
+  }
+
+  // 3. H열(연장횟수) 변경 시 -> 연장 횟수 * 180일 추가 연장
+  if (col === 8) {
+    var count = Number(e.range.getValue() || 0);
+    if (count > 0) {
+      var d = new Date();
+      d.setDate(d.getDate() + (count * 180));
+      sheet.getRange(row, 7).setValue(Utilities.formatDate(d, "Asia/Seoul", "yyyy-MM-dd"));
+      sheet.getRange(row, 1).setValue(true);
+    }
+  }
 }

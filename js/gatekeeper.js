@@ -8,7 +8,7 @@
   const ADMIN_GAS_KEY = 'swk_admin_gas_approval_url';
   const MASTER_PIN_KEY = 'swk_admin_master_pin';
   const APPROVED_USERS_KEY = 'swk_approved_users';
-  const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000; // 1개월(30일) 단위 재로그인
+  const SEMESTER_MS = 180 * 24 * 60 * 60 * 1000; // 한 학기(6개월, 180일) 단위 라이선스
 
   // 기본 시흥시/신천고 및 수도권 고교 DB
   const BUILTIN_SCHOOLS = [
@@ -113,13 +113,13 @@
 
     authorize(userObj = {}) {
       const now = new Date();
-      const expiresAt = new Date(now.getTime() + ONE_MONTH_MS).toISOString();
+      const expiresAt = new Date(now.getTime() + SEMESTER_MS).toISOString();
       const authData = Object.assign({
         approved: true,
         role: 'teacher',
         authDate: now.toISOString(),
         expiresAt: expiresAt,
-        validDays: 30
+        validDays: 180
       }, userObj);
       localStorage.setItem(AUTH_KEY, JSON.stringify(authData));
 
@@ -284,7 +284,7 @@
             school: '신천고 · 시스템 총괄 관리자',
             role: 'admin',
             isMaster: true,
-            validDays: 30
+            validDays: 180
           });
           this.closeModal(true);
           this.updateUI();
@@ -335,7 +335,7 @@
             statusMsg.textContent = checkRes.message;
           }
           setTimeout(() => {
-            alert('[승인 확인 완료] 환영합니다, ' + name + ' 선생님! (1개월 정식 이용 활성화)');
+            alert('[승인 확인 완료] 환영합니다, ' + name + ' 선생님! (한 학기(6개월) 정식 이용 활성화)');
           }, 300);
           return;
         }
@@ -362,11 +362,11 @@
             name: name,
             school: schoolName,
             role: 'teacher',
-            validDays: 30
+            validDays: 180
           });
 
           setTimeout(() => {
-            alert('[학교 공식 계정 확인 완료]\n관리자 관제탑에 접속 기록이 안전하게 등록되었으며, 1개월간 자유롭게 이용하실 수 있습니다.');
+            alert('[학교 공식 계정 확인 완료]\n관리자 관제탑에 접속 기록이 안전하게 등록되었으며, 한 학기(6개월)간 자유롭게 이용하실 수 있습니다.');
           }, 350);
           return;
         }
@@ -384,7 +384,7 @@
           statusMsg.className = 'gk-msg-box is-warn';
           statusMsg.innerHTML = '<strong>구글 계정(@' + escapeHtml(email.split('@')[1] || '') + ') 접속 확인 완료:</strong><br>' +
             '선생님의 구글 계정(<strong>' + escapeHtml(email) + '</strong>)이 관리자 관제탑에 안전하게 등록되었습니다.<br>' +
-            '학교 공식 도메인 외 계정은 교원 확인 후 관리자가 승인(1개월)하며, 승인 완료 후 즉시 이용하실 수 있습니다.';
+            '학교 공식 도메인 외 계정은 교원 확인 후 관리자가 승인(한 학기 6개월)하며, 승인 완료 후 즉시 이용하실 수 있습니다.';
         }
       } catch (e) {
         console.error('Google credential parse error:', e);
@@ -429,13 +429,13 @@
             return {
               success: true,
               approved: true,
-              message: '학교 공식 계정 확인 완료. 1개월 이용 권한이 자동으로 승인되었습니다.'
+              message: '학교 공식 계정 확인 완료. 한 학기(6개월) 이용 권한이 자동으로 승인되었습니다.'
             };
           }
           return {
             success: true,
             approved: false,
-            message: data.message || '승인 신청이 완료되었습니다. 관리자 승인 후 1개월간 이용하실 수 있습니다.'
+            message: data.message || '승인 신청이 완료되었습니다. 관리자 승인 후 한 학기(6개월)간 이용하실 수 있습니다.'
           };
         } else {
           return {
@@ -533,7 +533,7 @@
                 found: true,
                 name: teacherName,
                 school: school,
-                message: '[승인 확인 완료] 환영합니다, ' + teacherName + '! (1개월 이용 활성화)'
+                message: '[승인 확인 완료] 환영합니다, ' + teacherName + '! (한 학기(6개월) 이용 활성화)'
               };
             } else if (data.found) {
               // 관리자가 승인 취소/대기 전환한 계정: 로컬 캐시 즉시 파기
@@ -766,7 +766,7 @@
 
           if (res.approved) {
             setTimeout(() => {
-              alert('1개월 사용 권한이 승인되었습니다! 워크벤치를 시작합니다.');
+              alert('한 학기(6개월) 사용 권한이 승인되었습니다! 워크벤치를 시작합니다.');
             }, 500);
           }
         });
@@ -835,7 +835,7 @@
 
           if (res.approved) {
             setTimeout(() => {
-              alert('1개월 사용 권한이 승인되었습니다! 워크벤치를 시작합니다.');
+              alert('한 학기(6개월) 사용 권한이 승인되었습니다! 워크벤치를 시작합니다.');
             }, 400);
           }
         });
@@ -910,7 +910,7 @@
               role: 'admin',
               name: res.data && res.data.name ? res.data.name : '관리자 선생님',
               school: res.data && res.data.school ? res.data.school : '관리자',
-              validDays: 30
+              validDays: 180
             });
             setTimeout(() => {
               if (miniModal) miniModal.style.display = 'none';
