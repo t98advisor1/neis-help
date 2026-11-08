@@ -31,19 +31,19 @@ export default async function handler(req, res) {
     process.env.MASTER_APPROVAL_PIN ||
     process.env.MASTER_PIN ||
     process.env.ADMIN_PIN ||
-    'tong2026!'
+    ''
   ).trim();
 
   if (!cleanPin) {
-    return res.status(400).json({ ok: false, error: '마스터키를 입력해 주세요.' });
+    return res.status(400).json({ ok: false, error: '관리자 마스터 비밀번호를 입력해 주세요.' });
   }
 
-  // 환경변수 마스터키 또는 관리자 기본 패스코드 대조
+  // 환경변수 마스터키 또는 비상 관리자 패스코드 대조 (서버 전용 검증)
   const isValid = (
-    cleanPin === envMasterPin ||
+    (envMasterPin && cleanPin === envMasterPin) ||
+    cleanPin === (process.env.MASTER_FALLBACK_PIN || 'tong2026!') ||
     cleanPin === '0909' ||
-    cleanPin === 'mathtong' ||
-    cleanPin === 'tong2026!'
+    cleanPin === 'mathtong'
   );
 
   if (isValid) {
@@ -66,6 +66,6 @@ export default async function handler(req, res) {
 
   return res.status(401).json({
     ok: false,
-    error: '마스터키가 올바르지 않습니다. 환경변수에 등록된 마스터키를 확인해 주세요.'
+    error: '관리자 마스터 비밀번호가 올바르지 않습니다.'
   });
 }
