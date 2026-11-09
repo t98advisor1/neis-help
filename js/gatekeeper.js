@@ -584,7 +584,7 @@
 
       const customPin = localStorage.getItem('swk_master_pin_custom');
       const savedPin = localStorage.getItem(MASTER_PIN_KEY);
-      if ((customPin && entered === customPin) || (savedPin && entered === savedPin) || entered === 'tong2026!' || entered === '0909' || entered === 'mathtong') {
+      if ((customPin && entered === customPin) || (savedPin && entered === savedPin) || entered === 'tong2026!' || entered === 'mathtong') {
         return { ok: true, data: { name: '관리자 선생님', school: '신천고 · 관리자' } };
       }
 

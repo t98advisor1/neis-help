@@ -2645,10 +2645,59 @@ function find2022GroupForSubject(subject) {
       btnOpenGas.addEventListener('click', () => window.openGasGuideModal(0));
     }
 
+    let gasAutoTimer = null;
+    let isGasAuto = false;
+    const btnGasAutoPlay = $('#btnGasAutoPlay');
+
+    function updateGasAutoUI() {
+      if (!btnGasAutoPlay) return;
+      if (isGasAuto) {
+        btnGasAutoPlay.textContent = '[⏸ 일시 정지]';
+        btnGasAutoPlay.style.background = '#dcfce7';
+        btnGasAutoPlay.style.color = '#15803d';
+      } else {
+        btnGasAutoPlay.textContent = '[▶ 자동 재생]';
+        btnGasAutoPlay.style.background = '#f0fdf4';
+        btnGasAutoPlay.style.color = '#15803d';
+      }
+    }
+
+    function startGasAuto() {
+      if (gasAutoTimer) clearInterval(gasAutoTimer);
+      isGasAuto = true;
+      gasAutoTimer = setInterval(() => {
+        const next = (currentGasIdx + 1) % GAS_SLIDES.length;
+        renderGasSlide(next);
+      }, 4000);
+      updateGasAutoUI();
+    }
+
+    function stopGasAuto() {
+      if (gasAutoTimer) {
+        clearInterval(gasAutoTimer);
+        gasAutoTimer = null;
+      }
+      isGasAuto = false;
+      updateGasAutoUI();
+    }
+
+    if (btnGasAutoPlay) {
+      btnGasAutoPlay.addEventListener('click', () => {
+        if (isGasAuto) stopGasAuto();
+        else startGasAuto();
+      });
+    }
+
     if (gasCloseBtn && gasModal) {
-      gasCloseBtn.addEventListener('click', () => { gasModal.hidden = true; });
+      gasCloseBtn.addEventListener('click', () => {
+        stopGasAuto();
+        gasModal.hidden = true;
+      });
       gasModal.addEventListener('click', (e) => {
-        if (e.target === gasModal) gasModal.hidden = true;
+        if (e.target === gasModal) {
+          stopGasAuto();
+          gasModal.hidden = true;
+        }
       });
     }
 

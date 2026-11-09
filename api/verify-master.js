@@ -38,11 +38,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: '관리자 마스터 비밀번호를 입력해 주세요.' });
   }
 
-  // 환경변수 마스터키 또는 비상 관리자 패스코드 대조 (서버 전용 검증)
+  // 환경변수 마스터키(ADMIN_PIN / MASTER_APPROVAL_PIN) 또는 비상 관리자 패스코드 대조
   const isValid = (
     (envMasterPin && cleanPin === envMasterPin) ||
-    cleanPin === (process.env.MASTER_FALLBACK_PIN || 'tong2026!') ||
-    cleanPin === '0909' ||
+    cleanPin === (process.env.MASTER_FALLBACK_PIN || process.env.ADMIN_FALLBACK_PIN || 'tong2026!') ||
     cleanPin === 'mathtong'
   );
 

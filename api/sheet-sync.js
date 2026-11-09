@@ -4,21 +4,55 @@ const ADMIN_EMAILS = [
   ...(process.env.ADMIN_EMAIL || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean)
 ];
 
+const KV_GAS_URL_KEY = 'neis-help:admin_gas_url';
+
 const getAdminGasUrl = () => {
-
   return (
-
     process.env.ADMIN_GAS_URL ||
-
     process.env.GAS_ADMIN_URL ||
-
     process.env.ADMIN_GAS_APPROVAL_URL ||
-
     ''
-
   ).trim();
-
 };
+
+async function getAdminGasUrlAsync() {
+  if (KV_URL && KV_TOKEN) {
+    try {
+      const fetchUrl = KV_URL + '/get/' + encodeURIComponent(KV_GAS_URL_KEY);
+      const res = await fetch(fetchUrl, {
+        headers: { 'Authorization': 'Bearer ' + KV_TOKEN }
+      });
+      if (res.ok) {
+        const d = await res.json();
+        if (d && d.result) {
+          const val = typeof d.result === 'string' ? d.result : String(d.result);
+          if (val && val.startsWith('https://script.google.com/')) {
+            return val.trim();
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[sheet-sync] KV get adminGasUrl error:', e.message);
+    }
+  }
+  return getAdminGasUrl();
+}
+
+async function saveAdminGasUrlToKV(url) {
+  if (!KV_URL || !KV_TOKEN) return false;
+  try {
+    const fetchUrl = KV_URL + '/set/' + encodeURIComponent(KV_GAS_URL_KEY);
+    const res = await fetch(fetchUrl, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + KV_TOKEN },
+      body: JSON.stringify(url.trim())
+    });
+    return res.ok;
+  } catch (e) {
+    console.warn('[sheet-sync] KV save adminGasUrl error:', e.message);
+    return false;
+  }
+}
 
 
 
@@ -381,6 +415,12 @@ export default async function handler(req, res) {
 
 
 
+    // 0-1. Google Apps Script 연동 주소 조회 (GET)
+    if (action === 'get_gas_config') {
+      const currentUrl = await getAdminGasUrlAsync();
+      return res.status(200).json({ success: true, gasUrl: currentUrl });
+    }
+
     return res.status(200).json({ success: true, message: "Sheet Sync Engine Ready" });
 
   }
@@ -527,6 +567,28 @@ export default async function handler(req, res) {
         target.approvedAt = now;
         target.expiresAt = exp;
         await saveApplicantsToKV(currentApplicants);
+
+        const adminGasUrl = await getAdminGasUrlAsync();
+        if (adminGasUrl) {
+          try {
+            await fetch(adminGasUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({
+                action: 'apply_access',
+                name: target.name,
+                school: target.school,
+                email: email,
+                approved: true,
+                status: '승인',
+                expiresAt: exp
+              })
+            });
+          } catch (fwdErr) {
+            console.warn('[sheet-sync] Remote GAS forward approve_teacher error:', fwdErr.message);
+          }
+        }
+
         return res.status(200).json({ success: true, message: target.name + ' 교사 한 학기(6개월) 승인 완료', teacher: target });
       } else {
         const newTeacher = {
@@ -560,6 +622,27 @@ export default async function handler(req, res) {
         target.revokedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
         target.note = '관리자에 의해 승인 취소/차단됨';
         await saveApplicantsToKV(currentApplicants);
+
+        const adminGasUrl = await getAdminGasUrlAsync();
+        if (adminGasUrl) {
+          try {
+            await fetch(adminGasUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({
+                action: 'apply_access',
+                name: target.name,
+                school: target.school,
+                email: email,
+                approved: false,
+                status: '대기'
+              })
+            });
+          } catch (fwdErr) {
+            console.warn('[sheet-sync] Remote GAS forward reject_teacher error:', fwdErr.message);
+          }
+        }
+
         return res.status(200).json({ success: true, message: target.name + ' 교사 승인 취소(대기 전환) 완료', teacher: target });
       } else {
         // 명단에 없는 계정 사전 차단 등록
@@ -609,15 +692,116 @@ export default async function handler(req, res) {
 
       await saveApplicantsToKV(currentApplicants);
 
+      const adminGasUrl = await getAdminGasUrlAsync();
+      if (adminGasUrl) {
+        try {
+          await fetch(adminGasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'batch_apply_access',
+              list: currentApplicants
+            })
+          });
+        } catch (fwdErr) {
+          console.warn('[sheet-sync] Remote GAS forward approve_all error:', fwdErr.message);
+        }
+      }
+
       return res.status(200).json({ success: true, message: `총 ${count}명의 교사가 한 학기(6개월) 승인되었습니다.`, updatedCount: count, applicants: currentApplicants });
 
     }
 
 
 
+    // 0-1. Google Apps Script 연동 주소 조회
+    if (action === 'get_gas_config') {
+      const currentUrl = await getAdminGasUrlAsync();
+      return res.status(200).json({ success: true, gasUrl: currentUrl });
+    }
+
+    // 0-2. Google Apps Script 연동 주소 저장 (KV에 실시간 저장)
+    if (action === 'set_gas_config') {
+      const newUrl = String(body.url || req.query.url || '').trim();
+      if (!newUrl || !newUrl.startsWith('https://script.google.com/')) {
+        return res.status(400).json({ success: false, error: '올바른 Google Apps Script 웹앱 URL (https://script.google.com/macros/s/.../exec)을 입력해 주세요.' });
+      }
+      await saveAdminGasUrlToKV(newUrl);
+      return res.status(200).json({ success: true, message: '구글 시트 연동 웹앱 주소가 성공적으로 저장되었습니다.', gasUrl: newUrl });
+    }
+
+    // 0-3. 구글 시트로 실시간 테스트 데이터 전송 (연동 즉시 검증)
+    if (action === 'test_gas_send') {
+      const testUrl = String(body.url || req.query.url || '').trim() || await getAdminGasUrlAsync();
+      if (!testUrl || !testUrl.startsWith('https://script.google.com/')) {
+        return res.status(400).json({ success: false, error: '유효한 Google Apps Script 웹앱 URL을 입력해 주세요.' });
+      }
+      const testPayload = {
+        action: 'apply_access',
+        name: body.name || '홍길동 선생님 (연동테스트)',
+        school: body.school || '신천고등학교 (연동검증)',
+        email: body.email || 'test_teacher@sch.hs.kr',
+        subject: '구글 시트 실시간 연동 테스트 전송',
+        reason: '관리자 페이지에서 구글 시트 연동을 검증하기 위해 보낸 테스트 패킷'
+      };
+      try {
+        const gasRes = await fetch(testUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(testPayload)
+        });
+        const gasText = await gasRes.text();
+        return res.status(200).json({
+          success: true,
+          message: '구글 시트로 테스트 데이터가 성공적으로 전송되었습니다! 구글 시트의 [2_교사승인명단] 시트에서 행이 추가되었는지 확인해 보세요.',
+          gasResponse: gasText.slice(0, 200)
+        });
+      } catch (testErr) {
+        return res.status(500).json({
+          success: false,
+          error: '구글 Apps Script 웹앱 전송 실패: ' + testErr.message + ' (Apps Script 배포 시 "액세스 권한: 모든 사용자"로 설정되었는지 확인해 주세요)'
+        });
+      }
+    }
+
+    // 0-4. 기존 대시보드에 대기 중/승인된 교사 명단 전체를 구글 시트로 일괄 동기화
+    if (action === 'sync_all_to_gas') {
+      const adminGasUrl = await getAdminGasUrlAsync();
+      if (!adminGasUrl || !adminGasUrl.startsWith('https://script.google.com/')) {
+        return res.status(400).json({ success: false, error: '구글 시트 연동 웹앱 주소(ADMIN_GAS_URL)가 아직 등록되지 않았습니다. 먼저 웹앱 URL을 저장해 주세요.' });
+      }
+      const currentApplicants = await loadApplicantsFromKV();
+      if (!currentApplicants || currentApplicants.length === 0) {
+        return res.status(200).json({ success: true, message: '동기화할 기존 교사 명단이 없습니다.', count: 0 });
+      }
+
+      try {
+        const gasRes = await fetch(adminGasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'batch_apply_access',
+            list: currentApplicants
+          })
+        });
+        const gasData = await gasRes.json().catch(() => ({}));
+        return res.status(200).json({
+          success: true,
+          message: `기존 대시보드에 등록되어 있던 총 ${currentApplicants.length}명의 교사 명단이 구글 시트로 성공적으로 일괄 전송되었습니다! 구글 시트의 [2_교사승인명단] 시트에서 확인하세요.`,
+          count: currentApplicants.length,
+          gasResponse: gasData
+        });
+      } catch (fwdErr) {
+        return res.status(500).json({
+          success: false,
+          error: '구글 시트 일괄 전송 오류: ' + fwdErr.message
+        });
+      }
+    }
+
     if (action === 'apply_access') {
       const email = String(body.email || '').trim().toLowerCase();
-      const adminGasUrl = getAdminGasUrl();
+      const adminGasUrl = await getAdminGasUrlAsync();
       if (adminGasUrl) {
         try {
           await fetch(adminGasUrl, {
@@ -688,6 +872,19 @@ export default async function handler(req, res) {
       const email = String(body.email || req.query.email || '').trim().toLowerCase();
       const newExpiry = String(body.expiresAt || req.query.expiresAt || '').trim();
       if (!email || !newExpiry) return res.status(400).json({ success: false, error: '이메일과 만료일을 입력해 주세요.' });
+      
+      const adminGasUrl = await getAdminGasUrlAsync();
+      if (adminGasUrl) {
+        try {
+          await fetch(adminGasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'update_expiry', email: email, expiresAt: newExpiry })
+          });
+        } catch(fwdErr) {
+          console.warn('[sheet-sync] Remote GAS update_expiry forward error:', fwdErr.message);
+        }
+      }
       const currentApplicants = await loadApplicantsFromKV();
       const target = currentApplicants.find(a => a.email.toLowerCase() === email);
       if (target) {

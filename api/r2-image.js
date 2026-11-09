@@ -25,7 +25,7 @@ module.exports = async function handler(req, res) {
   // 1. 캐러셀 매뉴얼 이미지 프록시 (Cloudflare R2 연동으로 내부 구조 은닉)
   if (type === 'carousel') {
     const safeName = String(name || 'gas-step1').replace(/[^a-zA-Z0-9_-]/g, '');
-    const r2CarouselBase = process.env.R2_CAROUSEL_BASE_URL || process.env.R2_PUBLIC_BASE_URL || '';
+    const r2CarouselBase = process.env.CLOUDFLARE_R2_URL || process.env.R2_CAROUSEL_BASE_URL || process.env.R2_PUBLIC_BASE_URL || '';
 
     if (r2CarouselBase && !r2CarouselBase.includes('pub-xxx')) {
       try {

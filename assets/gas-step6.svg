@@ -57,7 +57,7 @@
       <rect x="36" y="190" width="468" height="80" rx="8" fill="#f0fdf4" stroke="#86efac"/>
       <text x="52" y="216" font-size="13" font-weight="800" fill="#166534">🎉 이제 본 웹 프로그램의 [구글 시트 연동]에 붙여넣으세요!</text>
       <text x="52" y="238" font-size="12" fill="#15803d">• 저장 시 선생님의 개인 구글 시트로 1초 만에 자동 전송됩니다.</text>
-      <text x="52" y="256" font-size="12" fill="#15803d">• 시트 셀 안에서 =AI_SETUK() 수식도 평생 무료로 작동합니다.</text>
+      <text x="52" y="256" font-size="12" fill="#15803d">• 바이트(LENB) 및 출결(COUNTIF) 표준 수식이 자동 작동합니다.</text>
 
       <!-- Done Button -->
       <g transform="translate(400, 286)">

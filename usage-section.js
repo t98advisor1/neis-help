@@ -49,10 +49,10 @@ const USE = [
     notes: [['생기부 + 대입 통합', '기존 생기부 작성·파일 점검 기능은 그대로 유지하면서 대입 진학상담 자료가 함께 연결됩니다.'],
             ['검증된 어디가 링크', '133개 대학 모두 대교협 대학어디가(adiga.kr) 고유코드(unvCd) 및 입학처 공식 페이지로 연결됩니다.'],
             ['실시간 경쟁률 API', '진학사어플라이·유웨이어플라이 실시간 경쟁률 데이터를 API로 불러와 전형별·학과별 현황을 확인합니다.']] },
-  { short: '구글 시트 =AI() 연동', title: '7. 구글 시트 =AI() 관계형 대시보드 (추가 기능)', sub: '학생 명렬표 대시보드와 영역별 생기부·상담기록을 구글 시트로 유기적으로 연결합니다.',
-    mock: `<div class="mock">${MOCK_TOP}<div class="mock-content"><div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#065f46">📊 학생 명렬표 대시보드 ↔ 창체·세특·상담기록 1:1 연동</div><div class="mock-row" style="border-color:#6ee7b7;background:#ecfdf5"><span>1_학급_종합대시보드 (학번 ID 기준 자동 집계)</span></div><div class="mock-row"><span>=AI_SETUK(과목, 관찰메모, 희망진로) 무료 Gemini 호출</span></div><div class="mock-row"><span>=NEIS_BYTES(텍스트) 나이스 바이트 실시간 계산</span></div></div></div>`,
+  { short: '구글 시트 자동 바이트·연동 수식 연동', title: '7. 구글 시트 자동 바이트·연동 수식 관계형 대시보드 (추가 기능)', sub: '학생 명렬표 대시보드와 영역별 생기부·상담기록을 구글 시트로 유기적으로 연결합니다.',
+    mock: `<div class="mock">${MOCK_TOP}<div class="mock-content"><div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#065f46">📊 학생 명렬표 대시보드 ↔ 창체·세특·상담기록 1:1 연동</div><div class="mock-row" style="border-color:#6ee7b7;background:#ecfdf5"><span>1_학급_종합대시보드 (학번 ID 기준 자동 집계)</span></div><div class="mock-row"><span>세특검수(과목, 관찰메모, 희망진로) 무료 Gemini 호출</span></div><div class="mock-row"><span>=NEIS_BYTES(텍스트) 나이스 바이트 실시간 계산</span></div></div></div>`,
     notes: [['로컬 기본 + 시트 연동', '기본 작업은 브라우저 로컬에서 즉시 작동하며, 구글 시트 연동 시 명렬표 대시보드와 관계형으로 동기화됩니다.'],
-            ['무료 =AI() 커스텀 함수', '사이드바 없이 구글 시트 셀 안에서 =AI(), =AI_SETUK() 수식으로 무료 Gemini API를 호출해 문구를 생성합니다.'],
+            ['무료 자동 바이트·연동 수식 커스텀 함수', '사이드바 없이 구글 시트 셀 안에서 자동 바이트·연동 수식, 과목 세특 초안 검수 수식으로 무료 Gemini API를 호출해 문구를 생성합니다.'],
             ['유기적 대시보드', '학생 명렬표(학번 ID)를 중심으로 자율·동아리·진로·교과세특·대입상담 기록이 한눈에 연결됩니다.']] },
 ];
 

@@ -483,7 +483,7 @@
 
   /* ---------- 데이터 저장소 & 2단계 보안 관리 (전체 관리자 / 중간 관리자) ---------- */
   const DEFAULT_STORAGE = "https://pub-xxx.r2.dev/pages/";
-  const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000; // 30일 (1개월)
+  const SEMESTER_AUTH_MS = 180 * 24 * 60 * 60 * 1000; // 180일 (한 학기 6개월)
 
   
   // 5명 풍부한 샘플 학생 데이터 기본 탑재 (선생님 요청: 사전 입력된 데이터로 즉시 불러오기 지원)
@@ -612,7 +612,7 @@
       const authTime = Number(localStorage.getItem("swk_auth_time") || "0");
       if (!authTime) return false;
       const elapsed = Date.now() - authTime;
-      return elapsed < ONE_MONTH_MS;
+      return elapsed < SEMESTER_AUTH_MS;
     },
 
     setUnlocked(v) {
@@ -626,7 +626,7 @@
     getRemainingDays() {
       const authTime = Number(localStorage.getItem("swk_auth_time") || "0");
       if (!authTime) return 0;
-      const leftMs = ONE_MONTH_MS - (Date.now() - authTime);
+      const leftMs = SEMESTER_AUTH_MS - (Date.now() - authTime);
       return Math.max(0, Math.ceil(leftMs / (24 * 60 * 60 * 1000)));
     },
 
@@ -1955,7 +1955,7 @@
  * 저작권: Copyright ⓒ 2026 math-tong. All rights reserved.
  * 
  * [탑재 기능]
- * 1. =AI_SETUK(교과목, 탐구활동, [개별역량], [API키]) : 1,500 Byte 나이스 세특 자동 작성
+ * 1. 세특검수(교과목, 탐구활동, [개별역량], [API키]) : 1,500 Byte 나이스 세특 자동 작성
  * 2. =NEIS_BYTE(텍스트) : 나이스 3-byte 기준 글자수 정밀 자동 계산
  * 3. =CHECK_BAN_WORDS(텍스트) : 2026 기재요령 금지어 즉시 검출
  */
@@ -2036,7 +2036,7 @@ function promptApiKey() {
   var res = ui.prompt("Gemini API 키 등록", "Google AI Studio에서 발급받은 무료 API 키를 입력하세요:", ui.ButtonSet.OK_CANCEL);
   if (res.getSelectedButton() == ui.Button.OK) {
     PropertiesService.getUserProperties().setProperty("GEMINI_API_KEY", res.getResponseText().trim());
-    ui.alert("API 키가 안전하게 저장되었습니다! 이제 =AI_SETUK() 수식을 바로 사용할 수 있습니다.");
+    ui.alert("API 키가 안전하게 저장되었습니다! 이제 과목 세특 초안 검수 수식을 바로 사용할 수 있습니다.");
   }
 }
 
@@ -2412,7 +2412,7 @@ function NEIS_BYTE(text) {
         errMsg.textContent = "";
 
         const expiry = store.getGlobalExpiry();
-        alert(`✓ 대입자료 이미지 보안 인증 완료!\n\n• 로컬 브라우저에서 1개월(30일)간 열람 권한이 유지됩니다.\n• 전체 서비스 이용 기한: ${expiry}까지 사용 가능합니다.`);
+        alert(`✓ 대입자료 이미지 보안 인증 완료!\n\n• 로컬 브라우저에서 한 학기(6개월/180일)간 열람 권한이 유지됩니다.\n• 전체 서비스 이용 기한: ${expiry}까지 사용 가능합니다.`);
 
         if (appState.pendingOpenViewer) {
           const { title, start, end, chips, uni } = appState.pendingOpenViewer;

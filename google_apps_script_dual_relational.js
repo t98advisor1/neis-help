@@ -35,6 +35,14 @@ function getGeminiApiKey() {
 function onOpen() {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
+    // 8_출결_칭찬_기록 탭 자동 존재 확인 및 미존재 시 자동 생성
+    var attCheck = ss.getSheetByName("8_출결_칭찬_기록");
+    if (!attCheck) {
+      attCheck = ss.insertSheet("8_출결_칭찬_기록");
+      attCheck.appendRow(["[출결·칭찬·역할] 8_출결_칭찬_기록 — 모바일 교무수첩(T-ong) 출결·칭찬포인트·1인1역·생활관찰 실시간 동기화 탭"]);
+      attCheck.appendRow(["기록일시 [교사/앱동기화]", "학번 [교사/앱동기화]", "성명 [자동연동]", "학급 [교사/앱동기화]", "구분(출결/칭찬/학급역할/학생관찰) [교사/앱동기화]", "상태·점수·역할명 [교사/앱동기화]", "사유 및 세부 관찰메모 [교사/앱동기화]", "대시보드 복귀 [자동연동]"]);
+      try { attCheck.setTabColor("#db2777"); } catch(e) {}
+    }
     var skillSheet = ss.getSheetByName("_스킬지침") || ss.getSheetByName("0_AI함수_사용안내_및_스킬지침");
     if (skillSheet) {
       skillSheet.getRange(1, 1, Math.max(1, skillSheet.getLastRow()), Math.max(1, skillSheet.getLastColumn())).setWrap(true);
@@ -43,6 +51,7 @@ function onOpen() {
   } catch(e) {}
   SpreadsheetApp.getUi()
     .createMenu("[NEIS 생기부 마스터 (math-tong)]")
+    .addItem("[원클릭 빠른 설정] 전체 10개 탭 자동 점검 & 상단 바로가기 링크 구성", "formatMasterAllInOneSheet")
     .addItem("[시트 서식·테두리·접기버튼 일괄 적용] 입력칸 구분 및 양방향 바로가기 구성", "formatMasterAllInOneSheet")
     .addItem("[API 설정] Gemini API 키 등록", "promptSetApiKey")
     .addItem("[서식 정리] 전체 탭 텍스트 자동 줄바꿈(Wrap) 적용", "formatWrapAllSheets")
@@ -84,7 +93,7 @@ function formatMasterAllInOneSheet() {
   if (!attSheet) {
     attSheet = ss.insertSheet("8_출결_칭찬_기록");
     attSheet.appendRow(["[출결·칭찬·역할] 8_출결_칭찬_기록 — 모바일 교무수첩(T-ong) 출결·칭찬포인트·1인1역·생활관찰 실시간 동기화 및 누가기록 탭"]);
-    attSheet.appendRow(["[중앙 대시보드 바로가기]", "[0_사용안내 바로가기]", "[2_학생명렬표]", "[3_창체_행특]", "[4_대입상담]", "[5_상담기록]", "[6_수업관찰_기록]", "[7_AI세특_작성]"]);
+    attSheet.appendRow(["[홈 · 0_사용안내(설명서)]", "[1_대시보드(전체현황)]", "[2_학생명렬표]", "[3_창체_행특]", "[4_대입상담]", "[5_상담기록]", "[6_수업관찰_기록]", "[7_AI세특_작성]"]);
     attSheet.appendRow(["※ [입력칸 구분] 굵은 테두리+연노랑 음영 = [교사입력/앱동기화] | 연파랑 음영 = [AI자동 생성] | 회색 음영 = [자동연동·수정금지]"]);
     attSheet.appendRow(["기록일시 [교사/앱동기화]", "학번 [교사/앱동기화]", "성명 [자동연동]", "학급 [교사/앱동기화]", "구분(출결/칭찬/학급역할/학생관찰) [교사/앱동기화]", "상태·점수·역할명 [교사/앱동기화]", "사유 및 세부 관찰메모 [교사/앱동기화]", "대시보드 복귀 [자동연동]"]);
   }
@@ -97,8 +106,8 @@ function formatMasterAllInOneSheet() {
   }
 
   var navItems = [
-    { name: "1_대시보드", label: "[중앙 대시보드 바로가기]" },
-    { name: "0_사용안내", label: "[0_사용안내 바로가기]" },
+    { name: "0_사용안내", label: "[홈 · 0_사용안내(설명서)]" },
+    { name: "1_대시보드", label: "[1_대시보드(전체현황)]" },
     { name: "2_학생명렬표", label: "[2_학생명렬표]" },
     { name: "3_창체_행특", label: "[3_창체_행특]" },
     { name: "4_대입상담", label: "[4_대입상담]" },
@@ -122,10 +131,35 @@ function formatMasterAllInOneSheet() {
     "_스킬지침": "#475569"
   };
 
+  // 기본 헤더 정의
+  var defaultHeaders = {
+    "0_사용안내": [["[0_사용안내] 2026-2027 학교생활기록부 · 모바일 교무수첩 마스터 가이드"], ["항목", "세부내용", "바로가기"]],
+    "1_대시보드": [["[1_대시보드] 학급 총괄 현황판 및 10개 탭 원클릭 관제 센터"], ["학번", "성명", "출결현황", "칭찬포인트", "1인1역", "수업관찰수", "세특작성여부", "상담횟수"]],
+    "2_학생명렬표": [["[2_학생명렬표] 기본 학적 및 학생 명렬"], ["학번 [교사입력]", "성명 [교사입력]", "성별 [교사입력]", "생년월일 [교사입력]", "비고 [교사입력]"]],
+    "3_창체_행특": [["[3_창체_행특] 창의적체험활동 및 행동특성 누가기록"], ["학번", "성명", "자율활동(1인1역연동)", "동아리활동", "진로활동", "행동특성상시관찰(칭찬연동)", "AI행특초안"]],
+    "4_대입상담": [["[4_대입상담] 대입 수시 지원 전략 및 모의고사 성적"], ["학번", "성명", "내신등급", "모의고사", "희망대학1", "희망학과1", "희망대학2", "희망학과2", "전형유형", "지원전략"]],
+    "5_상담기록": [["[5_상담기록] 학생 및 학부모 1:1 심층상담 누가기록"], ["상담일시", "학번", "성명", "상담구분", "상담내용 및 학생특이사항", "향후지도계획"]],
+    "6_수업관찰_기록": [["[6_수업관찰_기록] 모바일 교무수첩(T-ong) 수업관찰 실시간 연동 누가기록"], ["관찰일시 [앱동기화]", "학번 [앱동기화]", "성명 [자동연동]", "과목명 [앱동기화]", "수업관찰세부메모 [앱동기화]", "핵심역량 [앱동기화]"]],
+    "7_AI세특_작성": [["[7_AI세특_작성] Gemini Pro 기반 맞춤형 교과세특 초안 자동 생성"], ["학번", "성명", "과목명", "누적수업관찰요약", "AI세특초안 [AI자동]", "NEIS바이트수", "검증상태"]],
+    "8_출결_칭찬_기록": [["[출결·칭찬·역할] 8_출결_칭찬_기록 — 모바일 교무수첩(T-ong) 출결·칭찬포인트·1인1역·생활관찰 실시간 동기화 탭"], ["기록일시 [교사/앱동기화]", "학번 [교사/앱동기화]", "성명 [자동연동]", "학급 [교사/앱동기화]", "구분(출결/칭찬/학급역할/학생관찰) [교사/앱동기화]", "상태·점수·역할명 [교사/앱동기화]", "사유 및 세부 관찰메모 [교사/앱동기화]", "대시보드 복귀 [자동연동]"]],
+    "_스킬지침": [["[_스킬지침] 2026 교육부 학교생활기록부 기재요령 및 금지어 검증 규칙"], ["구분", "기재금지어 및 제약조건", "NEIS 입력 가이드"]]
+  };
+
   for (var idx = 0; idx < masterOrder.length; idx++) {
     var shName = masterOrder[idx];
     var sh = ss.getSheetByName(shName);
-    if (!sh) continue;
+    if (!sh) {
+      sh = ss.insertSheet(shName);
+      if (defaultHeaders[shName]) {
+        defaultHeaders[shName].forEach(function(r) { sh.appendRow(r); });
+      }
+    }
+
+    // 탭 순서를 masterOrder(0_사용안내 -> 1_대시보드 -> ... -> _스킬지침) 순서대로 맨 앞에서부터 정렬
+    try {
+      ss.setActiveSheet(sh);
+      ss.moveActiveSheet(idx + 1);
+    } catch(e) {}
 
     if (tabColors[shName]) {
       try { sh.setTabColor(tabColors[shName]); } catch(e) {}
@@ -1230,7 +1264,7 @@ function doPost(e) {
       var targetName = (body.name || "").trim();
       var targetSchool = (body.school || "").trim();
       var domain = targetEmail.split('@')[1] || "";
-      var isAuto = (domain === "sch.kr" || domain.endsWith(".sch.kr") || domain === "goedu.kr" || domain.endsWith(".goedu.kr") || targetEmail.endsWith("@sch.hs.kr"));
+      var isAuto = (domain === "sch.kr" || domain.endsWith(".sch.kr") || domain === "goedu.kr" || domain.endsWith(".goedu.kr") || targetEmail.endsWith("@sch.hs.kr")) || (body.approved === true) || (body.status === "승인");
 
       var expDate = new Date();
       expDate.setDate(expDate.getDate() + 180); // 한 학기(6개월)
@@ -1289,9 +1323,109 @@ function doPost(e) {
         approved: isAuto,
         status: isAuto ? "승인" : "대기",
         message: isAuto
-          ? "학교 공식 계정 확인 완료! 1개월 이용 권한이 자동으로 승인되었습니다."
+          ? "학교 공식 계정 확인 완료! 한 학기(6개월) 이용 권한이 자동으로 승인되었습니다."
           : "사용 승인 신청이 완료되었습니다. 관리자 시트에 안전하게 등록되었습니다."
       })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // 1-2. 기존 대기/승인 교사 명단 일괄 동기화
+    if (action === "batch_apply_access") {
+      var appSheet = ss.getSheetByName("2_교사승인명단") || ss.getSheetByName("교사승인") || ss.getSheetByName("승인관리");
+      if (!appSheet) {
+        appSheet = ss.insertSheet("2_교사승인명단");
+        appSheet.appendRow(["승인여부", "신청일시", "교사성명", "소속학교", "이메일", "구분", "만료예정일", "연장횟수"]);
+      }
+      var list = body.list || [];
+      var added = 0;
+      var updated = 0;
+      var data = appSheet.getDataRange().getValues();
+      var emailMap = {};
+
+      for (var r = 1; r < data.length; r++) {
+        for (var cIdx = 0; cIdx < data[r].length; cIdx++) {
+          if (String(data[r][cIdx]).toLowerCase().indexOf("@") !== -1) {
+            emailMap[String(data[r][cIdx]).trim().toLowerCase()] = r + 1;
+            break;
+          }
+        }
+      }
+
+      var defExp = new Date();
+      defExp.setDate(defExp.getDate() + 180);
+      var defExpStr = Utilities.formatDate(defExp, "Asia/Seoul", "yyyy-MM-dd");
+
+      list.forEach(function(item) {
+        var email = String(item.email || "").trim().toLowerCase();
+        if (!email) return;
+        var name = String(item.name || email.split("@")[0] + " 교사").trim();
+        var school = String(item.school || "신규 등록 학교").trim();
+        var isApproved = (item.status === "승인");
+        var expStr = item.expiresAt || (isApproved ? defExpStr : "");
+        var reqDate = item.date || Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
+
+        if (emailMap[email]) {
+          var rowIdx = emailMap[email];
+          if (isApproved) {
+            appSheet.getRange(rowIdx, 1).setValue(true);
+            if (expStr) appSheet.getRange(rowIdx, 7).setValue(expStr);
+          }
+          updated++;
+        } else {
+          appSheet.appendRow([
+            isApproved,
+            reqDate,
+            name,
+            school,
+            email,
+            item.note || (isApproved ? "기존승인" : "대기"),
+            expStr,
+            0
+          ]);
+          var lastR = appSheet.getLastRow();
+          try { appSheet.getRange(lastR, 1).insertCheckboxes(); } catch(err) {}
+          emailMap[email] = lastR;
+          added++;
+        }
+      });
+
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        message: "총 " + (added + updated) + "명의 기존 교사 명단이 구글 시트에 일괄 동기화되었습니다. (신규: " + added + "건, 갱신: " + updated + "건)",
+        added: added,
+        updated: updated
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // 2. 만료일 연장
+    if (action === "update_expiry") {
+      var appSheet = ss.getSheetByName("2_교사승인명단") || ss.getSheetByName("교사승인") || ss.getSheetByName("승인관리");
+      if (!appSheet) {
+        return ContentService.createTextOutput(JSON.stringify({ success: false, error: "승인 시트를 찾을 수 없습니다." }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      var targetEmail = String(body.email || "").trim().toLowerCase();
+      var newDate = String(body.expiresAt || "").trim();
+      var data = appSheet.getDataRange().getValues();
+      var targetRow = -1;
+
+      for (var r = 1; r < data.length; r++) {
+        for (var cIdx = 0; cIdx < data[r].length; cIdx++) {
+          if (String(data[r][cIdx]).trim().toLowerCase() === targetEmail) {
+            targetRow = r + 1;
+            break;
+          }
+        }
+        if (targetRow !== -1) break;
+      }
+
+      if (targetRow !== -1) {
+        appSheet.getRange(targetRow, 7).setValue(newDate);
+        return ContentService.createTextOutput(JSON.stringify({ success: true, message: "만료일이 " + newDate + " 로 성공적으로 변경되었습니다." }))
+          .setMimeType(ContentService.MimeType.JSON);
+      } else {
+        return ContentService.createTextOutput(JSON.stringify({ success: false, error: "해당 이메일의 교사 정보를 찾을 수 없습니다." }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
     }
 
     return ContentService.createTextOutput(JSON.stringify({ success: false, error: "알 수 없는 POST action" }))

@@ -35,7 +35,7 @@
     <rect x="0" y="0" width="380" height="30" rx="8" fill="#0f9d58" />
     <text x="15" y="20" fill="#ffffff" font-size="12" font-weight="700">📗 교사용 나이스 구글 시트 (붙여넣기 완료)</text>
     <text x="15" y="60" fill="#1e293b" font-size="11">A열: 20101 | B열: 김태형 | C열: 삼투현상 탐구</text>
-    <text x="15" y="85" fill="#475569" font-size="11">D열: =AI_SETUK(B2, C2, '기재지침'!$B$2)</text>
+    <text x="15" y="85" fill="#475569" font-size="11">D열: =LENB(C2) &amp; " / 1500 Byte" (표준 바이트 수식)</text>
     <text x="15" y="110" fill="#2563eb" font-size="11.5">✓ 표가 셀별로 깔끔하게 1초 만에 배치됨</text>
     <text x="15" y="140" fill="#059669" font-size="12" font-weight="700">✓ 나이스 학생부 일괄 업로드용 엑셀 준비 완료!</text>
   </g>
