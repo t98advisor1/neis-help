@@ -38,17 +38,28 @@
     activeStudentId: null,
 
     getGasUrl() {
-      // 1순위: 교과담임 전용 GAS URL
-      const subUrl = localStorage.getItem(GAS_URL_KEY);
-      if (subUrl && subUrl.trim()) return subUrl.trim();
-      // 2순위: 공통 단일 마스터 시트 URL
-      const homeroomUrl = localStorage.getItem('swk_gsheet_homeroom_url') || localStorage.getItem('swk_gsheet_web_app_url');
-      return (homeroomUrl && homeroomUrl.trim()) || '';
+      if (window.GoogleSheet && typeof window.GoogleSheet.getMasterUrl === 'function') {
+        const mUrl = window.GoogleSheet.getMasterUrl();
+        if (mUrl && mUrl.trim()) return mUrl.trim();
+      }
+      const subUrl = localStorage.getItem(GAS_URL_KEY)
+        || localStorage.getItem('SR_GAS_MASTER_URL')
+        || localStorage.getItem('swk_gsheet_url')
+        || localStorage.getItem('swk_gsheet_homeroom_url')
+        || localStorage.getItem('swk_gsheet_web_app_url')
+        || localStorage.getItem('tong_gsheet_url');
+      return (subUrl && subUrl.trim()) || '';
     },
 
     setGasUrl(url) {
-      if (url && url.trim()) {
-        localStorage.setItem(GAS_URL_KEY, url.trim());
+      const u = (url || '').trim();
+      if (window.GoogleSheet && typeof window.GoogleSheet.setMasterUrl === 'function') {
+        window.GoogleSheet.setMasterUrl(u);
+      } else if (u) {
+        localStorage.setItem(GAS_URL_KEY, u);
+        localStorage.setItem('SR_GAS_MASTER_URL', u);
+        localStorage.setItem('swk_gsheet_url', u);
+        localStorage.setItem('tong_gsheet_url', u);
       } else {
         localStorage.removeItem(GAS_URL_KEY);
       }
@@ -226,7 +237,7 @@
 
           this.saveLocalData();
           this.renderStudentList();
-          alert(`✓ 구글 시트 [교과담임_세특] 탭에서 총 ${updatedCount}건의 관찰기록을 성공적으로 동기화했습니다!`);
+          alert(`✓ 구글 시트 [6_수업관찰_기록 · 7_AI세특_작성] 탭에서 총 ${updatedCount}건의 관찰기록을 성공적으로 동기화했습니다!`);
         } else {
           alert('구글 시트에 저장된 교과 관찰기록이 없습니다. 먼저 스마트폰에서 작성 후 [저장]해 보세요!');
         }

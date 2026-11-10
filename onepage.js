@@ -125,32 +125,32 @@ if (btnConfig && configPop) {
 /* ── ① 관계형 시트·표준안 탭 내부 6단계 Apps Script 캐러셀 제어 (Cloudflare R2 프록시 연동) ── */
 const INLINE_GAS_STEPS = [
   {
-    img: '/api/r2-image?type=carousel&name=gas-step1',
+    img: 'assets/gas-step1.svg',
     title: '1단계 [필수 권장]: 마스터 통합 시트 사본 저장 직후, 학생 정보 입력 전에 먼저 연결하세요',
     desc: '상단의 <strong>[내 드라이브로 사본 만들기]</strong>를 클릭해 사본을 저장한 직후, <strong>학생 개인정보를 입력하기 전에 먼저 Apps Script 연결을 진행</strong>하세요. 빈 양식에서 먼저 연결하면 AI 에이전트에게 도움을 요청할 때도 안전하며 모든 자동 수식이 처음부터 작동합니다.'
   },
   {
-    img: '/api/r2-image?type=carousel&name=gas-step2',
+    img: 'assets/gas-step2.svg',
     title: '2단계 [기본 직접 연결]: 시트 상단 메뉴 [확장 프로그램] -> [Apps Script]에 통합 코드 붙여넣기',
     desc: '사본 시트 상단 메뉴 <strong>[확장 프로그램] -> [Apps Script]</strong>를 열고, 본 화면 상단의 <strong>[통합 Apps Script 코드 1초 복사]</strong> 버튼으로 복사한 코드를 붙여넣고 저장(Ctrl+S)합니다. 이후 시트 상단 <strong>[NEIS 생기부 마스터] -> [시트 서식·테두리·접기버튼 일괄 적용]</strong>을 실행하세요.'
   },
   {
-    img: '/api/r2-image?type=carousel&name=gas-step3',
+    img: 'assets/gas-step3.svg',
     title: '3단계 [어려우신 분 대안 1]: Gemini Pro 작업창에 사본 시트 링크와 코드 주고 요청하기',
     desc: 'Apps Script 찾기가 어렵다면 본인 계정의 <strong>Gemini Pro</strong> 작업창에 사본 시트 링크와 통합 코드를 전달하여 반영을 요청할 수 있습니다. <button type="button" class="btn small" onclick="window.copyAgentPrompt && window.copyAgentPrompt(\'gemini\')" style="margin-left:6px; background:#2563eb; color:#fff; border:none; padding:3px 10px; border-radius:4px; font-weight:700; cursor:pointer;">요청 프롬프트 복사</button>'
   },
   {
-    img: '/api/r2-image?type=carousel&name=gas-step4',
+    img: 'assets/gas-step4.svg',
     title: '4단계 [어려우신 분 대안 2]: Antigravity · Codex 등 실행형 에이전트 프로젝트에서 요청하기',
     desc: 'PC에 설치된 <strong>Google Antigravity</strong> 또는 <strong>Codex</strong> 프로젝트에서 구글 계정을 로그인한 뒤 사본 시트 링크와 스크립트 코드를 주고 자동 설정을 요청할 수 있습니다. <button type="button" class="btn small" onclick="window.copyAgentPrompt && window.copyAgentPrompt(\'agent\')" style="margin-left:6px; background:#4f46e5; color:#fff; border:none; padding:3px 10px; border-radius:4px; font-weight:700; cursor:pointer;">에이전트 프롬프트 복사</button>'
   },
   {
-    img: '/api/r2-image?type=carousel&name=gas-step5',
+    img: 'assets/gas-step5.svg',
     title: '5단계 [어려우신 분 대안 3]: AI 비서 앱(피클 등)에 구글 계정 연결 후 요청하기',
     desc: '구글 계정이 연동된 <strong>AI 비서 앱(피클 등)</strong>에 빈 사본 시트 링크와 스크립트 코드를 전달해 넣어달라고 요청할 수 있습니다. <button type="button" class="btn small" onclick="window.copyAgentPrompt && window.copyAgentPrompt(\'assistant\')" style="margin-left:6px; background:#0f766e; color:#fff; border:none; padding:3px 10px; border-radius:4px; font-weight:700; cursor:pointer;">비서 앱 요청문 복사</button>'
   },
   {
-    img: '/api/r2-image?type=carousel&name=gas-step6',
+    img: 'assets/gas-step6.svg',
     title: '6단계 [필수 마무리]: 권한 승인 및 [웹 앱 배포 URL]을 본 사이트와 모바일 교무수첩에 등록',
     desc: '최초 1회 <strong>[권한 검토 -> 고급 -> 안전하지 않은 페이지로 이동 -> 허용]</strong> 승인 후, 우측 상단 <strong>[배포 -> 새 배포 -> 웹 앱(모든 사용자)]</strong>로 발급된 URL을 복사해 <strong>[시트 연동]</strong> 및 모바일 교무수첩 <strong>[구글 동기화]</strong>에 붙여넣으면 10개 탭 전체가 실시간 연동됩니다.'
   }

@@ -1858,32 +1858,32 @@
     // 📸 전용 서브패널 5: Apps Script 6단계 스크린샷 매뉴얼 컨트롤러
     const GAS_PAGE_STEPS = [
       {
-        img: "/api/r2-image?type=carousel&name=gas-step1",
+        img: "assets/gas-step1.svg",
         title: "1단계: 관계형 구글 시트 마스터 템플릿 사본 만들기",
         desc: "상단의 <strong>[시트 사본 만들기]</strong> 버튼을 누르면 선생님 본인의 개인 Google 드라이브로 복사됩니다. 학생 정보는 외부 서버가 아닌 선생님 개인 드라이브에만 안전하게 보관됩니다."
       },
       {
-        img: "/api/r2-image?type=carousel&name=gas-step2",
+        img: "assets/gas-step2.svg",
         title: "2단계: 시트 상단 메뉴 [확장 프로그램] ➔ [Apps Script] 클릭",
         desc: "구글 시트 상단 메뉴의 <strong>[확장 프로그램]</strong>을 누른 뒤 <strong>[Apps Script]</strong>를 클릭하면 나만의 스크립트 에디터 창이 새 탭으로 열립니다."
       },
       {
-        img: "/api/r2-image?type=carousel&name=gas-step3",
+        img: "assets/gas-step3.svg",
         title: "3단계: 기존 코드 전체 삭제(Ctrl+A ➔ Del) 후 코드 붙여넣기 & 💾 저장",
         desc: "에디터 창의 기존 글씨를 모두 지우고, <strong>[통합 스크립트 코드 복사]</strong>로 복사한 코드를 붙여넣은 뒤 <strong>💾 저장 아이콘(Ctrl+S)</strong>을 누릅니다."
       },
       {
-        img: "/api/r2-image?type=carousel&name=gas-step4",
+        img: "assets/gas-step4.svg",
         title: "4단계: 우측 상단 [배포] ➔ [새 배포] ➔ [웹 앱 (액세스: 모든 사용자)]",
         desc: "우측 상단 파란색 <strong>[배포] ➔ [새 배포]</strong>를 누르고, 톱니바퀴에서 '웹 앱'을 선택합니다. <strong>액세스 권한을 '모든 사용자(Anyone)'로 설정</strong>한 뒤 [배포]를 누릅니다."
       },
       {
-        img: "/api/r2-image?type=carousel&name=gas-step5",
+        img: "assets/gas-step5.svg",
         title: "5단계: 최초 1회 Google 계정 승인 (고급 ➔ 안전하지 않음 이동 ➔ 허용)",
         desc: "<strong>(가장 중요!)</strong> 선생님 개인 스크립트이므로 구글이 보안 경고를 띄웁니다. 당황하지 마시고 <strong>[고급(Advanced)]</strong>을 누른 뒤 <strong>[안전하지 않은 페이지로 이동] ➔ [허용(Allow)]</strong>을 누르시면 1초 만에 권한이 승인됩니다."
       },
       {
-        img: "/api/r2-image?type=carousel&name=gas-step6",
+        img: "assets/gas-step6.svg",
         title: "6단계: 배포 완료창의 [웹 앱 URL] 복사 ➔ 본 프로그램에 붙여넣기!",
         desc: "배포 완료 창에 표시된 <strong>웹 앱 URL (https://script.google.com/macros/s/.../exec)</strong>을 복사하여 본 프로그램의 <strong>[구글 시트 연동]</strong> 창에 붙여넣으시면 실시간 동기화가 영구 연동됩니다!"
       }

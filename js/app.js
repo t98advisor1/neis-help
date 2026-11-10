@@ -2584,32 +2584,32 @@ function find2022GroupForSubject(subject) {
 
     const GAS_SLIDES = [
       {
-        img: '/api/r2-image?type=carousel&name=gas-step1',
+        img: 'assets/gas-step1.svg',
         title: '1단계 [필수 권장]: 사본을 저장한 직후, 학생 정보를 입력하기 전에 먼저 연결하세요',
         desc: '<strong>[가장 중요한 권장 원칙]</strong> 마스터 시트 사본을 내 드라이브에 저장하자마자 <strong>학생 개인정보(명렬표·성적·상담내용)를 입력하기 전에 먼저 Apps Script 연결부터 완료</strong>하세요.<br>• 빈 양식 상태에서 연결하면 AI 에이전트에게 설정을 맡길 때도 개인정보 유출 우려가 전혀 없습니다.<br>• 먼저 연결해 두면 학번 입력 즉시 대시보드 점검, AI 초안 수식, 모바일 교무수첩 동기화가 막힘없이 작동합니다.'
       },
       {
-        img: '/api/r2-image?type=carousel&name=gas-step2',
+        img: 'assets/gas-step2.svg',
         title: '2단계 [기본 직접 연결]: 시트 상단 [확장 프로그램] -> [Apps Script]에 코드 붙여넣기',
         desc: '가장 빠르고 확실한 기본 방법입니다 (1분 소요).<br>1) 사본 시트 상단 메뉴에서 <strong>[확장 프로그램] -> [Apps Script]</strong>를 클릭합니다.<br>2) 기존 코드를 모두 지우고 아래 <strong>[구글 시트용 통합 Apps Script 코드 1초 복사]</strong> 버튼으로 복사한 코드를 붙여넣은 뒤 <strong>저장(Ctrl+S)</strong>합니다.<br>3) 시트를 새로고침한 뒤 상단 <strong>[NEIS 생기부 마스터] -> [시트 서식·테두리·접기버튼 일괄 적용]</strong>을 클릭하면 입력칸 구분과 접기 버튼이 자동 완성됩니다.'
       },
       {
-        img: '/api/r2-image?type=carousel&name=gas-step3',
+        img: 'assets/gas-step3.svg',
         title: '3단계 [어려우신 분 대안 1]: Gemini Pro 작업창에 시트 링크와 코드 주고 요청하기',
         desc: 'Apps Script 메뉴를 직접 찾기 어려우신 경우, 본인의 Google 계정에 로그인된 <strong>Gemini Pro(제미나이 프로)</strong> 작업창에 사본 시트 링크와 통합 코드를 함께 전달하여 설정을 요청하거나 단계별 안내를 받을 수 있습니다.<br><div style="margin-top:8px;"><button type="button" class="btn small" onclick="window.copyAgentPrompt(\'gemini\')" style="background:#1d4ed8; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">[대안 1] Gemini Pro 요청 프롬프트 복사</button></div>'
       },
       {
-        img: '/api/r2-image?type=carousel&name=gas-step4',
+        img: 'assets/gas-step4.svg',
         title: '4단계 [어려우신 분 대안 2]: Antigravity · Codex 등 실행형 에이전트에 요청하기',
         desc: 'PC에 <strong>Google Antigravity</strong>나 <strong>Codex</strong> 같은 실행형 에이전트가 설치되어 있다면, 프로젝트 폴더에서 본인 구글 계정을 로그인한 뒤 사본 시트 링크와 스크립트 코드를 주고 자동 반영을 요청할 수 있습니다.<br><div style="margin-top:8px;"><button type="button" class="btn small" onclick="window.copyAgentPrompt(\'agent\')" style="background:#4f46e5; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">[대안 2] 실행형 에이전트 지시 프롬프트 복사</button></div>'
       },
       {
-        img: '/api/r2-image?type=carousel&name=gas-step5',
+        img: 'assets/gas-step5.svg',
         title: '5단계 [어려우신 분 대안 3]: AI 비서 앱(피클 등)에 구글 계정 연결 후 요청하기',
         desc: '평소 사용하시는 <strong>AI 비서 앱(피클 등)</strong>에 구글 계정을 로그인해 두셨다면, 비서 앱에 사본 시트 링크와 통합 스크립트 코드를 전달해 넣어달라고 요청할 수 있습니다. (단, 비서 앱이 Google Apps Script 편집 권한을 지원하는지 확인이 필요하며, 반드시 학생 정보 입력 전 빈 사본에서 진행하세요.)<br><div style="margin-top:8px;"><button type="button" class="btn small" onclick="window.copyAgentPrompt(\'assistant\')" style="background:#0f766e; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">[대안 3] AI 비서 앱 요청 문구 복사</button></div>'
       },
       {
-        img: '/api/r2-image?type=carousel&name=gas-step6',
+        img: 'assets/gas-step6.svg',
         title: '6단계 [필수 마무리]: 권한 승인 및 [웹 앱 URL]을 사이트·모바일 교무수첩에 등록',
         desc: '보안 정책상 <strong>최초 1회 권한 승인([고급] -> [안전하지 않은 페이지로 이동] -> [허용])</strong>과 <strong>우측 상단 [배포 -> 새 배포 -> 웹 앱(모든 사용자)]</strong> 클릭은 선생님 계정에서 직접 승인해 주셔야 합니다.<br>발급된 <strong>웹 앱 URL</strong>을 복사해 본 사이트의 <strong>[시트 연동]</strong>과 모바일 교무수첩의 <strong>[구글 동기화]</strong>에 등록하면 수업관찰·세특·출결·칭찬·1인1역이 10개 탭 전체와 실시간 동기화됩니다!'
       }
@@ -2621,12 +2621,18 @@ function find2022GroupForSubject(subject) {
       if (idx >= GAS_SLIDES.length) idx = GAS_SLIDES.length - 1;
       currentGasIdx = idx;
       const slide = GAS_SLIDES[idx];
-      if (gasSlideImg) gasSlideImg.src = slide.img;
-      if (gasSlideTitle) gasSlideTitle.textContent = slide.title;
-      if (gasSlideDesc) gasSlideDesc.innerHTML = slide.desc;
-      if (gasSlideCounter) gasSlideCounter.textContent = `${idx + 1} / ${GAS_SLIDES.length}`;
-      if (btnGasPrev) btnGasPrev.disabled = (idx === 0);
-      if (btnGasNext) btnGasNext.disabled = (idx === GAS_SLIDES.length - 1);
+      const imgEl = $('#gasSlideImg');
+      const titleEl = $('#gasSlideTitle');
+      const descEl = $('#gasSlideDesc');
+      const countEl = $('#gasSlideCounter');
+      const prevEl = $('#btnGasPrev');
+      const nextEl = $('#btnGasNext');
+      if (imgEl) imgEl.src = slide.img;
+      if (titleEl) titleEl.textContent = slide.title;
+      if (descEl) descEl.innerHTML = slide.desc;
+      if (countEl) countEl.textContent = `${idx + 1} / ${GAS_SLIDES.length}`;
+      if (prevEl) prevEl.disabled = (idx === 0);
+      if (nextEl) nextEl.disabled = (idx === GAS_SLIDES.length - 1);
       $$('.modal-gas-step-pill').forEach((b, i) => {
         const active = (i === idx);
         b.style.background = active ? '#2563eb' : '#f1f5f9';
@@ -2636,9 +2642,10 @@ function find2022GroupForSubject(subject) {
 
     window.setModalGasSlide = renderGasSlide;
     window.openGasGuideModal = function(startIdx = 0) {
-      if (!gasModal) return;
+      const m = $('#gasCarouselModal');
+      if (!m) return;
       renderGasSlide(startIdx || 0);
-      gasModal.hidden = false;
+      m.hidden = false;
     };
 
     if (btnOpenGas && gasModal) {
@@ -2721,8 +2728,21 @@ function find2022GroupForSubject(subject) {
     }
   }
 
+  let _modalsBound = false;
+  function safeBindModals() {
+    if (_modalsBound) return;
+    const m = document.getElementById('gasCarouselModal');
+    if (!m) return;
+    _modalsBound = true;
+    try { bindKeyGuide(); } catch (e) { console.warn(e); }
+    try { bindSheetSyncModal(); } catch (e) { console.warn(e); }
+    try { bindReportOcr(); } catch (e) { console.warn(e); }
+    try { bindDraftStepAndGasModals(); } catch (e) { console.warn(e); }
+  }
+
   async function init() {
     window.SM_EXPIRES = '2099-12-31';
+    safeBindModals();
     if (SMAI.isMock() && $('#mockBanner')) $('#mockBanner').hidden = false;
     try {
       const opt = (url, fallback) => fetch(url, { cache: 'no-cache' }).then(r => r.ok ? r.json() : fallback).catch(() => fallback);
@@ -2751,14 +2771,19 @@ function find2022GroupForSubject(subject) {
     if ($('#rulesBadge')) $('#rulesBadge').textContent = `${S.rules.meta.title.replace(' 학교생활기록부 기재요령', ' 기재요령')} 기준`;
     const saved = SMStore.get(K.draft, null);
     if (saved && AREA_ORDER.includes(saved.area)) S.draft = normalizeDraft({ ...S.draft, ...saved });
-    restoreInputs();
-    const last = SMStore.get(K.result, null);
-    if (last && typeof last.text === 'string' && last.text && AREA_ORDER.includes(last.area) && last.input && AREA_ORDER.includes(last.input.area)) S.result = last;
-    bind();
-    renderMake();
-    route('library');
-    if (S.result) renderResult();
-    bindKeyGuide(); bindSheetSyncModal(); bindReportOcr(); bindDraftStepAndGasModals();
+    safeBindModals();
+    try {
+      restoreInputs();
+      const last = SMStore.get(K.result, null);
+      if (last && typeof last.text === 'string' && last.text && AREA_ORDER.includes(last.area) && last.input && AREA_ORDER.includes(last.input.area)) S.result = last;
+      bind();
+      renderMake();
+      route('library');
+      if (S.result) renderResult();
+    } catch (e) {
+      console.warn('init bind error:', e);
+    }
+    safeBindModals();
     window.SMAction = {
       route,
       showPrompt,
@@ -2776,5 +2801,9 @@ function find2022GroupForSubject(subject) {
       }
     };
   }
-  init();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => init());
+  } else {
+    init();
+  }
 })();

@@ -37,19 +37,33 @@
     SUBJECT_TABS: SUBJECT_XLSX_TABS,
 
     getMasterUrl() {
-      return localStorage.getItem(STORAGE_MASTER_KEY) || localStorage.getItem(STORAGE_HOMEROOM_KEY) || localStorage.getItem(STORAGE_SUBJECT_KEY) || '';
+      return localStorage.getItem(STORAGE_MASTER_KEY)
+        || localStorage.getItem(STORAGE_HOMEROOM_KEY)
+        || localStorage.getItem(STORAGE_SUBJECT_KEY)
+        || localStorage.getItem('swk_gsheet_url')
+        || localStorage.getItem('swk_gsheet_homeroom_url')
+        || localStorage.getItem('swk_gsheet_subject_url')
+        || localStorage.getItem('swk_gsheet_web_app_url')
+        || localStorage.getItem('tong_gsheet_url')
+        || '';
     },
 
     setMasterUrl(url) {
       const u = (url || '').trim();
+      const allKeys = [
+        STORAGE_MASTER_KEY,
+        STORAGE_HOMEROOM_KEY,
+        STORAGE_SUBJECT_KEY,
+        'swk_gsheet_url',
+        'swk_gsheet_homeroom_url',
+        'swk_gsheet_subject_url',
+        'swk_gsheet_web_app_url',
+        'tong_gsheet_url'
+      ];
       if (u) {
-        localStorage.setItem(STORAGE_MASTER_KEY, u);
-        localStorage.setItem(STORAGE_HOMEROOM_KEY, u);
-        localStorage.setItem(STORAGE_SUBJECT_KEY, u);
+        allKeys.forEach(k => localStorage.setItem(k, u));
       } else {
-        localStorage.removeItem(STORAGE_MASTER_KEY);
-        localStorage.removeItem(STORAGE_HOMEROOM_KEY);
-        localStorage.removeItem(STORAGE_SUBJECT_KEY);
+        allKeys.forEach(k => localStorage.removeItem(k));
       }
       this.updateStatusBadge();
     },
@@ -131,6 +145,46 @@
         return { ok: true, result };
       } catch (err) {
         return { ok: false, msg: err.message };
+      }
+    },
+
+    async saveRecord(payload = {}) {
+      const targetUrl = this.getMasterUrl();
+      if (!targetUrl) {
+        return { success: false, msg: '연동할 구글 시트 Apps Script URL이 등록되지 않았습니다.' };
+      }
+      try {
+        const bodyObj = Object.assign({
+          action: 'saveRecord',
+          studentId: payload.studentId || payload.id || '',
+          studentName: payload.studentName || payload.student || payload.name || '',
+          subject: payload.subject || '탐구보고서',
+          content: payload.content || payload.draft || payload.memo || '',
+          careerHope: payload.careerHope || payload.stuMajor || ''
+        }, payload);
+        const res = await fetch(targetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(bodyObj)
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        return Object.assign({ success: true }, data);
+      } catch (err) {
+        console.warn('saveRecord error:', err);
+        return { success: false, error: err.message };
+      }
+    },
+
+    async pullFromMasterSheet() {
+      const targetUrl = this.getMasterUrl();
+      if (!targetUrl) return { success: false, msg: '구글 시트 URL이 설정되지 않았습니다.' };
+      try {
+        const res = await fetch(targetUrl + (targetUrl.includes('?') ? '&' : '?') + 'action=getAllRecords&tab=all&_t=' + Date.now());
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return await res.json();
+      } catch (err) {
+        return { success: false, error: err.message };
       }
     },
 
