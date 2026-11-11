@@ -2,7 +2,7 @@
 // Vercel Serverless Function (Node.js ESM)
 
 const BUILTIN_SCHOOLS = [
-  { name: "신천고등학교", region: "경기 시흥시", office: "경기도교육청", kind: "일반고(공립)", code: "7530562", address: "경기도 시흥시 신천로79번길 14 (신천동)", domain: "sch.hs.kr" },
+  { name: "신천고등학교", region: "경기 시흥시", office: "경기도교육청", kind: "일반고(공립)", code: "7530929", address: "경기도 시흥시 포도원로 50 (신천동)", domain: "sch.hs.kr" },
   { name: "서울신천고등학교", region: "서울 송파구", office: "서울특별시교육청", kind: "일반고(공립)", code: "7010198", address: "서울특별시 송파구 잠실로 88", domain: "sen.go.kr" },
   { name: "소래고등학교", region: "경기 시흥시", office: "경기도교육청", kind: "일반고(공립)", code: "7530175", address: "경기도 시흥시 소래산길 45 (대야동)", domain: "goedu.kr" },
   { name: "은행고등학교", region: "경기 시흥시", office: "경기도교육청", kind: "일반고(공립)", code: "7530482", address: "경기도 시흥시 은행로 93 (은행동)", domain: "goedu.kr" },
