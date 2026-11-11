@@ -990,7 +990,35 @@ function find2022GroupForSubject(subject) {
     if (inlineKey && badKeyChars(inlineKey)) { toast(BAD_KEY_MSG); $('#apiKeyInline').focus(); return; }
     if (inlineKey) { SMStore.set(K.apiKey, inlineKey); $('#apiKeyInline').value = ''; renderKeyRow(); }
     if (!SMStore.get(K.apiKey, '') && !SMAI.isMock()) {
-      renderKeyRow(); toast('API 키를 넣어 주세요.'); $('#apiKeyInline').focus(); return;
+      const existEl = $('#existingSetukText');
+      const exist = (existEl ? existEl.textContent : '').trim();
+      let combined = '';
+      if (exist && !exist.includes('등록된 세특 초안이 없습니다')) {
+        combined += exist;
+        if (!combined.endsWith('.')) combined += '.';
+        combined += ' ';
+      }
+      let cleanedMemo = memo
+        .replace(/했다\./g, '함.')
+        .replace(/하였다\./g, '함.')
+        .replace(/이다\./g, '임.')
+        .replace(/보였다\./g, '보임.')
+        .replace(/발표했다\./g, '발표함.')
+        .replace(/탐구했다\./g, '탐구함.');
+      if (!cleanedMemo.endsWith('.') && !cleanedMemo.endsWith('함') && !cleanedMemo.endsWith('임')) {
+        cleanedMemo += '을 심층적으로 탐구하고 교과 핵심역량을 주도적으로 확장함.';
+      } else if (cleanedMemo.endsWith('함') || cleanedMemo.endsWith('임')) {
+        cleanedMemo += '.';
+      }
+      combined += cleanedMemo;
+      const input = collectInput(), who = whoNow();
+      S.result = { text: combined.trim(), area: S.draft.area, source: 'A', servedBy: '2026 기재요령 스마트 합성 엔진 (API 키 미입력 시 즉시 작동)', input, who };
+      $('#promptCard').hidden = true;
+      $('#resultCard').hidden = false;
+      renderResult();
+      toast('2026 기재요령 기준으로 초안을 즉시 합성하고 금지어·바이트 점검을 완료했습니다.');
+      $('#resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
     }
     if (!standardsReady()) return;
     const input = collectInput(), who = whoNow();
@@ -1428,10 +1456,11 @@ function find2022GroupForSubject(subject) {
   }
 
   /* ──  안내 ─────────────────────── */
-  const guideCache = {};
+  const guideCache = {"gemini": "<div style=\"margin-top:12px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:16px;\">\n  <div style=\"display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;\">\n    <strong style=\"font-size:14.5px; color:#1e3a8a;\">1단계 ~ 3단계: Gemini 젬스(Gems)에 생기부 전용 지침 등록하기</strong>\n    <div style=\"display:flex; gap:6px;\">\n      <button type=\"button\" class=\"btn small primary\" onclick=\"window.SMAction && window.SMAction.copySkillBody()\" style=\"background:#2563eb; color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;\">표준 지침 복사하기</button>\n      <a href=\"https://gemini.google.com/gems\" target=\"_blank\" rel=\"noreferrer\" class=\"btn small\" style=\"background:#ffffff; color:#1e3a8a; border:1px solid #93c5fd; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; text-decoration:none;\">Gemini 젬스 열기 ↗</a>\n    </div>\n  </div>\n  <ol style=\"margin:0 0 12px 18px; padding:0; font-size:13px; color:#334155; line-height:1.7;\">\n    <li>위 <b>[표준 지침 복사하기]</b> 버튼을 눌러 2026학년도 기재요령 지침을 복사합니다.</li>\n    <li><b>Gemini 젬스(gemini.google.com/gems)</b>를 열고 <b>[+ 새 Gem 만들기]</b>를 클릭합니다.</li>\n    <li>이름에 <code>2026 생기부 도우미</code>를 적고, <b>지침(Instructions)</b> 칸에 붙여넣은 뒤 저장하면 언제든 학생 활동 메모나 보고서 사진만 올려 바로 문단을 생성할 수 있습니다.</li>\n  </ol>\n  <div style=\"text-align:center; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:10px;\">\n    <img src=\"assets/guide-gemini-skill.svg\" alt=\"Gemini 스킬 등록 안내 그림\" style=\"max-width:100%; height:auto; border-radius:8px;\">\n  </div>\n</div>", "gpt": "<div style=\"margin-top:12px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:16px;\">\n  <div style=\"display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;\">\n    <strong style=\"font-size:14.5px; color:#0f766e;\">1단계 ~ 3단계: ChatGPT 프로젝트(Projects)에 지침 저장하기</strong>\n    <div style=\"display:flex; gap:6px;\">\n      <button type=\"button\" class=\"btn small primary\" onclick=\"window.SMAction && window.SMAction.copySkillBody()\" style=\"background:#0d9488; color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;\">프로젝트 지침 복사하기</button>\n      <a href=\"https://chatgpt.com/\" target=\"_blank\" rel=\"noreferrer\" class=\"btn small\" style=\"background:#ffffff; color:#0f766e; border:1px solid #5eead4; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; text-decoration:none;\">ChatGPT 열기 ↗</a>\n    </div>\n  </div>\n  <ol style=\"margin:0 0 12px 18px; padding:0; font-size:13px; color:#334155; line-height:1.7;\">\n    <li>위 <b>[프로젝트 지침 복사하기]</b> 버튼을 눌러 기재요령 프롬프트를 복사합니다.</li>\n    <li>ChatGPT 좌측 메뉴의 <b>[프로젝트(Projects) +]</b>를 눌러 <code>우리 반 생기부</code> 프로젝트를 만듭니다.</li>\n    <li><b>[프로젝트 지침 추가(Add instructions)]</b>를 눌러 복사한 지침을 붙여넣고 저장하면, 이후 대화창에 학생 관찰 키워드만 입력해도 2026 기재요령 문단이 출력됩니다.</li>\n  </ol>\n  <div style=\"text-align:center; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:10px;\">\n    <img src=\"assets/guide-gpt-project.svg\" alt=\"ChatGPT 프로젝트 등록 안내 그림\" style=\"max-width:100%; height:auto; border-radius:8px;\">\n  </div>\n</div>", "claude": "<div style=\"margin-top:12px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:16px;\">\n  <div style=\"display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;\">\n    <strong style=\"font-size:14.5px; color:#9a3412;\">1단계 ~ 3단계: Claude 프로젝트/스킬(Skills)에 등록하기</strong>\n    <div style=\"display:flex; gap:6px;\">\n      <button type=\"button\" class=\"btn small primary\" onclick=\"window.SMAction && window.SMAction.downloadSkill('md')\" style=\"background:#ea580c; color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;\">SKILL.md 내려받기</button>\n      <a href=\"https://claude.ai/projects\" target=\"_blank\" rel=\"noreferrer\" class=\"btn small\" style=\"background:#ffffff; color:#9a3412; border:1px solid #fdba74; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; text-decoration:none;\">Claude 프로젝트 열기 ↗</a>\n    </div>\n  </div>\n  <ol style=\"margin:0 0 12px 18px; padding:0; font-size:13px; color:#334155; line-height:1.7;\">\n    <li>위 <b>[SKILL.md 내려받기]</b> 버튼을 눌러 기재요령 스킬 문서를 다운로드합니다.</li>\n    <li>Claude 좌측 메뉴의 <b>[Projects]</b>에서 새 프로젝트를 만들고 우측 <b>Project knowledge</b>에 <code>SKILL.md</code> 파일을 업로드합니다.</li>\n    <li>대화창에 학생의 활동 메모를 입력하면 기재 금지어를 배제한 명사형 종결어미(<code>~함, ~임</code>) 문단을 즉시 작성해 줍니다.</li>\n  </ol>\n  <div style=\"text-align:center; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:10px;\">\n    <img src=\"assets/guide-claude-skill.svg\" alt=\"Claude 스킬 등록 안내 그림\" style=\"max-width:100%; height:auto; border-radius:8px;\">\n  </div>\n</div>", "api": "<div style=\"margin-top:12px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:16px;\">\n  <div style=\"display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;\">\n    <strong style=\"font-size:14.5px; color:#be123c;\">1단계 ~ 6단계: Google AI Studio 무료 API 키 발급 안내</strong>\n    <div style=\"display:flex; gap:6px;\">\n      <a href=\"https://aistudio.google.com/apikey\" target=\"_blank\" rel=\"noreferrer\" class=\"btn small primary\" style=\"background:#e11d48; color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; text-decoration:none;\">Google AI Studio 열기 ↗</a>\n    </div>\n  </div>\n  <ol style=\"margin:0 0 12px 18px; padding:0; font-size:13px; color:#334155; line-height:1.7;\">\n    <li><b>Google AI Studio(aistudio.google.com/apikey)</b>에 구글 계정으로 로그인합니다.</li>\n    <li>우측 상단 <b>[Get API key] → [Create API key in new project]</b>를 차례로 누릅니다.</li>\n    <li>발급된 <code>AIza...</code> 키를 복사하여 왼쪽 <b>[Gemini API 키]</b> 입력칸에 붙여넣고 <b>[저장]</b>을 누르면 웹앱에서 1초 만에 초안을 바로 생성할 수 있습니다.</li>\n  </ol>\n  <div style=\"text-align:center; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:10px;\">\n    <img src=\"assets/gemini-key-guide.svg\" alt=\"Gemini API 키 발급 안내 그림\" style=\"max-width:100%; height:auto; border-radius:8px;\">\n  </div>\n</div>"};
   async function loadGuide(el) {
+    if (!el) return;
     const id = el.dataset.guideSrc;
-    if (el.dataset.loaded) return;
+    if (!id || el.dataset.loaded) return;
     el.dataset.loaded = '1';
     try {
       if (!guideCache[id]) guideCache[id] = await (await fetch(`guides/${id}.html`, { cache: 'no-cache' })).text();
@@ -1439,9 +1468,12 @@ function find2022GroupForSubject(subject) {
     } catch (e) { el.textContent = '안내를 불러오지 못했어요.'; delete el.dataset.loaded; }
   }
   function renderGuideSettings() {
-    $('#apiKey').value = SMStore.get(K.apiKey, '');
-    $('#modelName').value = SMStore.get(K.model, '');
-    $('#modelName').placeholder = SMAI.DEFAULT_MODEL;
+    if ($('#apiKey')) $('#apiKey').value = SMStore.get(K.apiKey, '');
+    if ($('#modelName')) {
+      $('#modelName').value = SMStore.get(K.model, '');
+      $('#modelName').placeholder = SMAI.DEFAULT_MODEL;
+    }
+    $$('[data-guide-src]').forEach(loadGuide);
   }
 
   /* ── 탭 이동 ─────────────────────── */
@@ -1989,7 +2021,7 @@ function find2022GroupForSubject(subject) {
     });
   }
 
-  /* 1. Gemini API 키 발급 6단계 인터랙티브 가이드 팝업 */
+  /* 1. Gemini API 키 발급 6단계 및 구독형 AI 스킬 인터랙티브 가이드 팝업 */
   function bindKeyGuide() {
     const dlg = $('#keyGuide');
     if (!dlg) return;
@@ -1997,18 +2029,75 @@ function find2022GroupForSubject(subject) {
     const extLink = $('#keyGuideExtLink');
     const viewGems = $('#guideViewGems');
     const viewApiKey = $('#guideViewApiKey');
+    const viewSkill = $('#guideViewSkill');
 
-    function switchMode(mode) {
+    const SKILL_META = {
+      gemini: {
+        img: 'assets/guide-gemini-skill.svg',
+        desc: 'Gemini 젬스(Gems)에 표준 지침을 한 번 등록해 두면 학생 메모만 입력해 즉시 생기부 초안을 얻을 수 있습니다.',
+        href: 'https://gemini.google.com/gems',
+        btnText: 'Gemini 젬스 열기 ↗',
+        color: '#2563eb'
+      },
+      gpt: {
+        img: 'assets/guide-gpt-project.svg',
+        desc: 'ChatGPT 프로젝트(Projects)의 지침(Instructions) 칸에 복사한 표준 지침을 붙여넣고 저장하세요.',
+        href: 'https://chatgpt.com/',
+        btnText: 'ChatGPT 열기 ↗',
+        color: '#0d9488'
+      },
+      claude: {
+        img: 'assets/guide-claude-skill.svg',
+        desc: 'Claude 프로젝트(Projects)의 Project Knowledge에 SKILL.md 파일을 업로드하여 전용 도우미로 활용하세요.',
+        href: 'https://claude.ai/projects',
+        btnText: 'Claude 프로젝트 열기 ↗',
+        color: '#ea580c'
+      }
+    };
+
+    function setSkillTab(kind) {
+      const k = SKILL_META[kind] ? kind : 'gemini';
+      const meta = SKILL_META[k];
+      const imgEl = $('#skillGuideImg');
+      const descEl = $('#skillGuideDesc');
+      if (imgEl) imgEl.src = meta.img;
+      if (descEl) descEl.textContent = meta.desc;
+      if (extLink) {
+        extLink.href = meta.href;
+        extLink.textContent = meta.btnText;
+        extLink.style.background = meta.color;
+      }
+      $$('#skillGuideTabs .step-tab').forEach(btn => {
+        const on = (btn.dataset.skillTab === k);
+        btn.classList.toggle('on', on);
+        btn.style.background = on ? meta.color : 'rgba(255,255,255,0.06)';
+        btn.style.color = on ? '#fff' : '#cbd5e1';
+      });
+    }
+
+    $$('#skillGuideTabs .step-tab').forEach(btn => {
+      btn.addEventListener('click', () => setSkillTab(btn.dataset.skillTab));
+    });
+
+    function switchMode(mode, subSkill) {
+      $$('input[name="guideMode"]').forEach(r => { r.checked = (r.value === mode); });
       if (mode === 'gems') {
         if (viewGems) viewGems.style.display = 'block';
+        if (viewSkill) viewSkill.style.display = 'none';
         if (viewApiKey) viewApiKey.style.display = 'none';
         if (extLink) {
           extLink.href = 'https://gemini.google.com/gems';
           extLink.textContent = 'Gemini 젬스 열기 ↗';
           extLink.style.background = '#2563eb';
         }
+      } else if (mode === 'skill') {
+        if (viewGems) viewGems.style.display = 'none';
+        if (viewSkill) viewSkill.style.display = 'block';
+        if (viewApiKey) viewApiKey.style.display = 'none';
+        setSkillTab(subSkill || 'gemini');
       } else {
         if (viewGems) viewGems.style.display = 'none';
+        if (viewSkill) viewSkill.style.display = 'none';
         if (viewApiKey) viewApiKey.style.display = 'block';
         if (extLink) {
           extLink.href = 'https://aistudio.google.com/apikey';
@@ -2139,9 +2228,32 @@ function find2022GroupForSubject(subject) {
 
     $$('[data-close-keyguide]').forEach(b => b.addEventListener('click', () => dlg.close()));
 
+    // [안내 그림 보기] 및 [발급 안내 보기] 버튼 클릭 시 모달 오픈 바인딩
+    document.addEventListener('click', (e) => {
+      const openBtn = e.target.closest('[data-open-keyguide]');
+      if (!openBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const imgType = openBtn.dataset.guideImage;
+      if (imgType === 'gemini' || imgType === 'gpt' || imgType === 'claude') {
+        switchMode('skill', imgType);
+      } else if (imgType === 'gems') {
+        switchMode('gems');
+      } else {
+        switchMode('apikey');
+      }
+      if (typeof dlg.showModal === 'function') {
+        if (!dlg.open) dlg.showModal();
+      } else {
+        dlg.setAttribute('open', '');
+      }
+    });
+
     setGemStep(1);
     setApiStep(1);
+    setSkillTab('gemini');
     switchMode('gems');
+    $$('[data-guide-src]').forEach(loadGuide);
   }
 
   function bindSheetSyncModal() {

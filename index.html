@@ -1713,6 +1713,7 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
             <p class="op-panel-sub" style="margin:0; font-size:15px; color:#475569; line-height:1.6;">복잡한 엑셀 수식을 전혀 몰라도 괜찮습니다. 아래 <strong>1단계 &rarr; 2단계 &rarr; 3단계</strong> 버튼만 차례대로 누르시면 준비가 끝납니다.</p>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <a href="youtube-guide.html" target="_blank" class="btn primary" style="background:#2563eb; color:#fff; border:none; padding:11px 18px; border-radius:10px; font-size:14px; font-weight:800; cursor:pointer; text-decoration:none;">유튜브 7편 연수 대본 · 스크린샷 ↗</a>
             <a href="manual.html" target="_blank" class="btn primary" style="background:#bf3b36; color:#fff; border:none; padding:11px 18px; border-radius:10px; font-size:14px; font-weight:800; cursor:pointer; text-decoration:none;">쉬운 사용설명서 열기 ↗</a>
             <a href="assets/교사용_올인원_시스템_사용설명서.pdf" download class="btn secondary" style="background:#1e293b; color:#fff; border:none; padding:11px 18px; border-radius:10px; font-size:14px; font-weight:800; cursor:pointer; text-decoration:none;">PDF 설명서 다운로드</a>
           </div>
@@ -2171,13 +2172,13 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
               <h2 class="card-title">구독형 AI 스킬 · 프로젝트 등록 방법</h2>
 
-              <details class="card guide"><summary>Gemini 스킬(Skills)로 저장해 쓰기</summary><button type="button" class="btn" data-open-keyguide data-guide-image="gemini">안내 그림 보기</button><div data-guide-src="gemini"></div></details>
+              <details class="card guide" open><summary style="display:flex; justify-content:space-between; align-items:center;"><span>Gemini 스킬(Skills · Gems)로 저장해 쓰기</span><button type="button" class="btn small primary" data-open-keyguide data-guide-image="gemini" style="background:#2563eb; color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">큰 안내 그림 팝업 보기 ↗</button></summary><div data-guide-src="gemini"></div></details>
 
-              <details class="card guide"><summary>ChatGPT 프로젝트(Projects)에 저장해 쓰기</summary><button type="button" class="btn" data-open-keyguide data-guide-image="gpt">안내 그림 보기</button><div data-guide-src="gpt"></div></details>
+              <details class="card guide"><summary style="display:flex; justify-content:space-between; align-items:center;"><span>ChatGPT 프로젝트(Projects)에 저장해 쓰기</span><button type="button" class="btn small primary" data-open-keyguide data-guide-image="gpt" style="background:#0d9488; color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">큰 안내 그림 팝업 보기 ↗</button></summary><div data-guide-src="gpt"></div></details>
 
-              <details class="card guide"><summary>Claude 스킬(Skills)로 저장해 쓰기</summary><button type="button" class="btn" data-open-keyguide data-guide-image="claude">안내 그림 보기</button><div data-guide-src="claude"></div></details>
+              <details class="card guide"><summary style="display:flex; justify-content:space-between; align-items:center;"><span>Claude 스킬(Projects · Skills)로 저장해 쓰기</span><button type="button" class="btn small primary" data-open-keyguide data-guide-image="claude" style="background:#ea580c; color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">큰 안내 그림 팝업 보기 ↗</button></summary><div data-guide-src="claude"></div></details>
 
-              <details class="card guide"><summary>Gemini API 키 발급 안내</summary><button type="button" class="btn" data-open-keyguide>안내 그림 보기</button><div data-guide-src="api"></div></details>
+              <details class="card guide"><summary style="display:flex; justify-content:space-between; align-items:center;"><span>Gemini API 키 1분 무료 발급 안내</span><button type="button" class="btn small primary" data-open-keyguide data-guide-image="api" style="background:#e11d48; color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">6단계 발급 그림 팝업 보기 ↗</button></summary><div data-guide-src="api"></div></details>
 
             </div>
 
@@ -6567,21 +6568,29 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
   <!-- 방식 선택 라디오 버튼 (선생님 요청) -->
 
-  <div style="display:flex; justify-content:center; gap:24px; padding:12px 20px; background:#14151c; border-bottom:1px solid rgba(255,255,255,0.08); flex-wrap:wrap;">
+  <div style="display:flex; justify-content:center; gap:18px; padding:12px 20px; background:#14151c; border-bottom:1px solid rgba(255,255,255,0.08); flex-wrap:wrap;">
 
-    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:800; font-size:14px; color:#38bdf8;">
+    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:800; font-size:13.5px; color:#38bdf8;">
 
       <input type="radio" name="guideMode" value="gems" checked style="accent-color:#38bdf8; width:16px; height:16px;">
 
-      <span> [실무 강력 추천] Gemini 젬스 &amp; 프로로 수십 명 보고서 시트 일괄 생성 (API 불필요)</span>
+      <span>1. Gemini 젬스(Gems) 보고서 일괄 판독 (5단계)</span>
 
     </label>
 
-    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:700; font-size:14px; color:#cbd5e1;">
+    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:800; font-size:13.5px; color:#a7f3d0;">
+
+      <input type="radio" name="guideMode" value="skill" style="accent-color:#10b981; width:16px; height:16px;">
+
+      <span>2. 구독형 AI 스킬·프로젝트 등록 그림 안내 (Gemini · ChatGPT · Claude)</span>
+
+    </label>
+
+    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:700; font-size:13.5px; color:#fda4af;">
 
       <input type="radio" name="guideMode" value="apikey" style="accent-color:#ff385c; width:16px; height:16px;">
 
-      <span> Gemini API 키 무료 발급 (웹앱 브라우저 연동용)</span>
+      <span>3. Gemini API 키 무료 발급 (6단계)</span>
 
     </label>
 
@@ -6709,6 +6718,25 @@ body.font-gmarket { font-family: 'GmarketSans', Inter, -apple-system, BlinkMacSy
 
     </div>
 
+  </div>
+
+  <!-- [VIEW 3: 구독형 AI 스킬·프로젝트 등록 그림 안내 (Gemini / ChatGPT / Claude)] -->
+  <div id="guideViewSkill" style="display:none;">
+    <div class="step-guide-tabs" id="skillGuideTabs" style="display:flex; gap:8px; padding:10px 20px; background:#181922; border-bottom:1px solid rgba(255,255,255,0.08); overflow-x:auto;">
+      <button type="button" class="btn small step-tab on" data-skill-tab="gemini" style="font-weight:800; background:#2563eb; color:#fff; border:none; padding:7px 16px; border-radius:8px; cursor:pointer;">Gemini 스킬(Gems) 등록 그림</button>
+      <button type="button" class="btn small step-tab" data-skill-tab="gpt" style="font-weight:700; padding:7px 16px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1); cursor:pointer;">ChatGPT 프로젝트(Projects) 등록 그림</button>
+      <button type="button" class="btn small step-tab" data-skill-tab="claude" style="font-weight:700; padding:7px 16px; border-radius:8px; background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1); cursor:pointer;">Claude 스킬(Projects) 등록 그림</button>
+    </div>
+    <div style="padding:18px 24px; text-align:center; background:#111217; min-height:430px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <img id="skillGuideImg" src="assets/guide-gemini-skill.svg" alt="구독형 AI 스킬 등록 안내 그림" style="max-width:100%; max-height:420px; width:auto; border-radius:10px; background:#ffffff; padding:8px; box-shadow:0 10px 30px rgba(0,0,0,0.6);" />
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 24px; border-top:1px solid rgba(255,255,255,0.1); background:#181920; flex-wrap:wrap; gap:10px;">
+      <span id="skillGuideDesc" style="font-size:13.5px; font-weight:700; color:#a7f3d0;">Gemini 젬스(Gems)에 표준 지침을 한 번 등록해 두면 학생 메모만 입력해 즉시 생기부 초안을 얻을 수 있습니다.</span>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn small primary" onclick="window.SMAction && window.SMAction.copySkillBody()" style="padding:7px 16px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; background:#10b981; color:#fff; border:none;">표준 지침 복사하기</button>
+        <button type="button" class="btn small" onclick="window.SMAction && window.SMAction.downloadSkill('md')" style="padding:7px 16px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2);">SKILL.md 다운로드</button>
+      </div>
+    </div>
   </div>
 
 </dialog>
