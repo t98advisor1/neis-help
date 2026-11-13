@@ -2,14 +2,14 @@
  * 앱을 수정한 뒤에는 아래 CACHE_VERSION 을 올려주세요.
  * (올리지 않으면 이미 설치한 사용자에게 옛 파일이 계속 보일 수 있습니다)
  */
-var CACHE_VERSION = '05c2aa5448';
+var CACHE_VERSION = '8d722cf42f';
 var CACHE_NAME = 'seat-app-' + CACHE_VERSION;
 
 var PRECACHE = [
   '/',
   '/index.html',
-  '/style.css?v=05c2aa5448',
-  '/app.js?v=05c2aa5448',
+  '/style.css?v=8d722cf42f',
+  '/app.js?v=8d722cf42f',
   '/icon.svg',
   '/manifest.webmanifest'
 ];
@@ -62,7 +62,7 @@ self.addEventListener('fetch', function (event) {
 
   // 앱 핵심 자산(style.css, app.js)은 네트워크 우선으로 받아 화면 깨짐/구버전 캐시 고착을 방지합니다.
   var urlPath = new URL(req.url).pathname;
-  if (urlPath === '/style.css?v=05c2aa5448' || urlPath === '/app.js?v=05c2aa5448' || urlPath === '/index.html') {
+  if (urlPath === '/style.css?v=8d722cf42f' || urlPath === '/app.js?v=8d722cf42f' || urlPath === '/index.html') {
     event.respondWith(
       fetch(req)
         .then(function (res) {
