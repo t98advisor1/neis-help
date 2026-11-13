@@ -125,7 +125,11 @@ function doGet(e) {
       var profileSheet = ss.getSheetByName("9_교무수첩_시간표_동기화");
       var teacherProfile = null;
       if (profileSheet && profileSheet.getLastRow() >= 2) {
-        var jsonRaw = String(profileSheet.getRange("J2").getValue() || "").trim();
+        var jsonRaw = String(profileSheet.getRange("J9").getValue() || "").trim();
+        if (!jsonRaw) {
+          var legacyRaw = String(profileSheet.getRange("J2").getValue() || "").trim();
+          if (legacyRaw && legacyRaw.charAt(0) === "{") jsonRaw = legacyRaw;
+        }
         if (jsonRaw) {
           try { teacherProfile = JSON.parse(jsonRaw); } catch (errParse) {}
         }
@@ -249,10 +253,10 @@ function doPost(e) {
           }
           pSheet.getRange(p + 1, 1, 1, 10).setValues([rowVals]);
         }
-        // 전체 복원용 JSON 스냅샷을 J2 셀(또는 J10 셀)에 안전하게 저장
+        // 전체 복원용 JSON 스냅샷을 J9 셀에 안전하게 저장 (J2 금요일 1교시 셀 보존)
         pSheet.getRange("I9").setValue("SYNC_SNAPSHOT_JSON");
-        pSheet.getRange("J2").setNote("T-ong 기기간 시간표 복원용 스냅샷");
-        pSheet.getRange("J2").setValue(JSON.stringify(tp));
+        pSheet.getRange("J9").setNote("T-ong 기기간 시간표 복원용 스냅샷");
+        pSheet.getRange("J9").setValue(JSON.stringify(tp));
       }
 
       // 2) 출결·칭찬·수업관찰·학급역할 누적 기록 저장 (8_출결_칭찬_기록 / 6_수업관찰_기록)
