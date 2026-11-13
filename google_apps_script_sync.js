@@ -119,6 +119,60 @@ function doGet(e) {
       return jsonResponse({ success: true, applicants: list });
     }
 
+    // === [T-ong 모바일 교무수첩 전체 데이터 불러오기 API (시간표·학교·동아리·명렬·관찰)] ===
+    if (action === "pull_tong_notebook") {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var profileSheet = ss.getSheetByName("9_교무수첩_시간표_동기화");
+      var teacherProfile = null;
+      if (profileSheet && profileSheet.getLastRow() >= 2) {
+        var jsonRaw = String(profileSheet.getRange("J2").getValue() || "").trim();
+        if (jsonRaw) {
+          try { teacherProfile = JSON.parse(jsonRaw); } catch (errParse) {}
+        }
+      }
+
+      var stuList = [];
+      var stuSheet = ss.getSheetByName("2_학생명렬표") || ss.getSheetByName("교과담임_세특") || ss.getSheetByName("2027_진학상담_마스터");
+      if (stuSheet && stuSheet.getLastRow() >= 2) {
+        var sRows = stuSheet.getDataRange().getValues();
+        for (var sr = 1; sr < sRows.length; sr++) {
+          var r0 = String(sRows[sr][0] || "").trim();
+          var r1 = String(sRows[sr][1] || "").trim();
+          var r2 = String(sRows[sr][2] || "").trim();
+          var r3 = String(sRows[sr][3] || "").trim();
+          var sId = r0 || r2;
+          var sNm = r1 || r3;
+          if (!sId && !sNm) continue;
+          stuList.push({ id: sId || String(sr), name: sNm || sId, gender: "" });
+        }
+      }
+
+      var obsList = [];
+      var obsSheet = ss.getSheetByName("6_수업관찰_기록") || ss.getSheetByName("교과담임_세특");
+      if (obsSheet && obsSheet.getLastRow() >= 2) {
+        var oRows = obsSheet.getDataRange().getValues();
+        for (var or = 1; or < oRows.length; or++) {
+          var rowO = oRows[or];
+          if (!rowO[1] && !rowO[3]) continue;
+          obsList.push({
+            date: String(rowO[0] || "").slice(0, 10),
+            studentId: String(rowO[1] || ""),
+            studentName: String(rowO[2] || ""),
+            subject: String(rowO[3] || "수업관찰"),
+            category: String(rowO[4] || "수업 참여"),
+            content: String(rowO[5] || rowO[3] || "")
+          });
+        }
+      }
+
+      return jsonResponse({
+        success: true,
+        teacherProfile: teacherProfile,
+        students: stuList,
+        observations: obsList
+      });
+    }
+
     if (action === "getStudents") {
       var data = sheet.getDataRange().getValues();
       if (data.length <= 1) {
@@ -164,6 +218,70 @@ function doPost(e) {
     var body = JSON.parse(raw);
     var action = body.action || "saveCounsel";
     var sheet = getTargetSheet();
+
+    // === [T-ong 모바일 교무수첩 전체 양방향 동기화 저장 API (학교·비담임·시간표·동아리·명렬·기록)] ===
+    if (action === "sync_tong_notebook") {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var nowStr = Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss");
+
+      // 1) 교사 환경설정 & 주간 시간표 & 동아리 & 시트 메모장 저장 (9_교무수첩_시간표_동기화)
+      if (body.teacherProfile) {
+        var pSheet = ss.getSheetByName("9_교무수첩_시간표_동기화");
+        if (!pSheet) {
+          pSheet = ss.insertSheet("9_교무수첩_시간표_동기화");
+        }
+        pSheet.clear();
+        pSheet.getRange("A1:J1").setValues([[
+          "최종동기화일시", "교사계정", "소속학교", "담임구분", "교시", "월", "화", "수", "목", "금"
+        ]]).setBackground("#0f172a").setFontColor("#ffffff").setFontWeight("bold");
+
+        var tp = body.teacherProfile;
+        var schoolName = (tp.school && tp.school.schoolName) || "";
+        var homeroomLabel = tp.isNonHomeroom ? "비담임(교과전담)" : ((tp.homeroom && tp.homeroom.label) || "미설정");
+        var days = ["월", "화", "수", "목", "금"];
+        var tt = tp.timetable || {};
+        for (var p = 1; p <= 7; p++) {
+          var rowVals = [p === 1 ? nowStr : "", p === 1 ? (body.userEmail || "") : "", p === 1 ? schoolName : "", p === 1 ? homeroomLabel : "", p + "교시"];
+          for (var di = 0; di < days.length; di++) {
+            var cell = (tt[days[di]] && tt[days[di]][p]) || {};
+            var txt = cell.subject ? ((cell.className ? "[" + cell.className + "] " : "") + cell.subject) : "-";
+            rowVals.push(txt);
+          }
+          pSheet.getRange(p + 1, 1, 1, 10).setValues([rowVals]);
+        }
+        // 전체 복원용 JSON 스냅샷을 J2 셀(또는 J10 셀)에 안전하게 저장
+        pSheet.getRange("I9").setValue("SYNC_SNAPSHOT_JSON");
+        pSheet.getRange("J2").setNote("T-ong 기기간 시간표 복원용 스냅샷");
+        pSheet.getRange("J2").setValue(JSON.stringify(tp));
+      }
+
+      // 2) 출결·칭찬·수업관찰·학급역할 누적 기록 저장 (8_출결_칭찬_기록 / 6_수업관찰_기록)
+      var items = Array.isArray(body.items) ? body.items : [];
+      if (items.length > 0) {
+        var obsSheet = ss.getSheetByName("6_수업관찰_기록");
+        if (!obsSheet) {
+          obsSheet = ss.insertSheet("6_수업관찰_기록");
+          obsSheet.appendRow(["일시", "학번", "성명", "과목", "구분", "관찰내용", "비고"]);
+          obsSheet.getRange("A1:G1").setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
+        }
+        var attSheet = ss.getSheetByName("8_출결_칭찬_기록");
+        if (!attSheet) {
+          attSheet = ss.insertSheet("8_출결_칭찬_기록");
+          attSheet.appendRow(["일시", "학번", "성명", "학급", "구분", "상세내용", "메모"]);
+          attSheet.getRange("A1:G1").setBackground("#065f46").setFontColor("#ffffff").setFontWeight("bold");
+        }
+        for (var idx = 0; idx < items.length; idx++) {
+          var it = items[idx];
+          if (it.category === "수업관찰" || it.category === "탐구 활동" || it.category === "학생관찰") {
+            obsSheet.appendRow([it.timestamp || nowStr, it.studentId || "", it.studentName || "", it.subject || "", it.category || "수업관찰", it.detail || "", it.memo || ""]);
+          } else {
+            attSheet.appendRow([it.timestamp || nowStr, it.studentId || "", it.studentName || "", it.className || "", it.category || "기록", it.detail || "", it.memo || ""]);
+          }
+        }
+      }
+
+      return jsonResponse({ success: true, message: "교무수첩 전체(시간표·설정·기록) 동기화 완료", count: items.length });
+    }
 
     if (action === "saveCounsel") {
       var sName = String(body.studentName || "").trim();
