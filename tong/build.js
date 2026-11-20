@@ -1,0 +1,160 @@
+/* 배포용 빌드
+ *  - app.js 를 난독화해서 dist/app.js 로
+ *  - index.html / style.css 는 주석 제거 + 공백 압축
+ *  - 나머지 정적 파일은 그대로 복사
+ *  - sw.js 의 캐시 버전을 내용 해시로 자동 교체 (캐시가 옛 파일을 물고 있는 문제 방지)
+ *
+ * 실행: npm run build
+ */
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const JavaScriptObfuscator = require('javascript-obfuscator');
+
+const SRC = __dirname;
+const OUT = path.join(SRC, 'dist');
+
+const read = (p) => fs.readFileSync(path.join(SRC, p), 'utf8');
+const write = (p, s) => {
+  const full = path.join(OUT, p);
+  fs.mkdirSync(path.dirname(full), { recursive: true });
+  fs.writeFileSync(full, s, 'utf8');
+};
+
+function copyDir(rel) {
+  const from = path.join(SRC, rel);
+  if (!fs.existsSync(from)) return 0;
+  let n = 0;
+  for (const entry of fs.readdirSync(from, { withFileTypes: true })) {
+    const r = path.join(rel, entry.name);
+    if (entry.isDirectory()) { n += copyDir(r); continue; }
+    const dest = path.join(OUT, r);
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.copyFileSync(path.join(SRC, r), dest);
+    n++;
+  }
+  return n;
+}
+
+// HTML: 주석 제거 + 줄머리 들여쓰기 제거 (태그 내부 텍스트는 건드리지 않음)
+function minifyHtml(html) {
+  return html
+    .replace(/<!--(?!\[if)[\s\S]*?-->/g, '')
+    .split('\n')
+    .map((l) => l.replace(/^\s+/, ''))
+    .filter((l) => l.length)
+    .join('\n');
+}
+
+// CSS: 주석 제거 + 공백 압축
+function minifyCss(css) {
+  return css
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\s*([{}:;,>~+])\s*/g, '$1')
+    .replace(/;}/g, '}')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+console.log('▶ 빌드 시작');
+fs.rmSync(OUT, { recursive: true, force: true });
+fs.mkdirSync(OUT, { recursive: true });
+
+// 1) app.js 난독화
+const appSrc = read('app.js');
+const obfuscated = JavaScriptObfuscator.obfuscate(appSrc, {
+  compact: true,
+  controlFlowFlattening: true,
+  controlFlowFlatteningThreshold: 0.4,
+  deadCodeInjection: true,
+  deadCodeInjectionThreshold: 0.2,
+  identifierNamesGenerator: 'hexadecimal',
+  numbersToExpressions: true,
+  simplify: true,
+  splitStrings: true,
+  splitStringsChunkLength: 8,
+  stringArray: true,
+  stringArrayEncoding: ['base64'],
+  stringArrayRotate: true,
+  stringArrayShuffle: true,
+  stringArrayThreshold: 0.9,
+  transformObjectKeys: true,
+  unicodeEscapeSequence: false,
+  // 개발자 도구를 방해하는 옵션(debugProtection 등)은 쓰지 않습니다.
+  // 정상 사용자에게 피해가 가고, 보호 효과도 크지 않습니다.
+  debugProtection: false,
+  selfDefending: false,
+  disableConsoleOutput: false
+}).getObfuscatedCode();
+write('app.js', obfuscated);
+
+// 2) CSS / HTML
+const css = minifyCss(read('style.css'));
+write('style.css', css);
+
+const rawHtml = minifyHtml(read('index.html'));
+
+// 3) 캐시 버전을 내용 해시로 교체 (sw.js 및 index.html의 ?v= 쿼리 모두 갱신)
+const hash = crypto.createHash('sha1')
+  .update(obfuscated).update(css).update(rawHtml)
+  .digest('hex').slice(0, 10);
+const html = rawHtml
+  .replace(/\/app\.js(\?v=[^"']*)?/g, '/app.js?v=' + hash)
+  .replace(/\/style\.css(\?v=[^"']*)?/g, '/style.css?v=' + hash);
+write('index.html', html);
+
+const sw = read('sw.js')
+  .replace(/var CACHE_VERSION = '[^']*';/, "var CACHE_VERSION = '" + hash + "';")
+  .replace(/\/app\.js(\?v=[^"']*)?/g, '/app.js?v=' + hash)
+  .replace(/\/style\.css(\?v=[^"']*)?/g, '/style.css?v=' + hash);
+write('sw.js', sw);
+
+// 4) 정적 파일 (매뉴얼, 스마트 판서 보드, 가이드, QR/PDF 라이브러리, 매니페스트, 아이콘 등)
+const rootStaticFiles = [
+  'manifest.webmanifest',
+  'icon.svg',
+  'icon-maskable.svg',
+  'manual.html',
+  'sync-manual.html',
+  '교사용_올인원_클라우드동기화_매뉴얼.html',
+  'youtube-guide.html',
+  'qr-lib.js',
+  'board.html',
+  'memo-board-guide.html',
+  'score-planner-guide.html',
+  'doc-converter-guide.html',
+  'smart-board.html',
+  'smart-board.css',
+  'smart-board.js',
+  'smart-board-guide.html',
+  'smart-board.webmanifest'
+];
+rootStaticFiles.forEach((f) => {
+  if (fs.existsSync(path.join(SRC, f))) write(f, read(f));
+});
+const nLibs = copyDir('libs');
+const nGuide = copyDir('guide');
+const nAssets = copyDir('assets');
+const nVendor = copyDir('vendor');
+const nScreenshots = copyDir('screenshots');
+// TWA verification is copied only after real signing certificates have been supplied.
+const assetLinksPath = path.join(SRC, '.well-known', 'assetlinks.json');
+if (fs.existsSync(assetLinksPath)) {
+  const assetLinks = JSON.parse(fs.readFileSync(assetLinksPath, 'utf8'));
+  if (!Array.isArray(assetLinks) || !assetLinks.length || assetLinks.some(link =>
+    !Array.isArray(link.relation) || !link.relation.includes('delegate_permission/common.handle_all_urls') ||
+    !link.target || link.target.namespace !== 'android_app' ||
+    !/^[a-zA-Z][\w]*(?:\.[a-zA-Z][\w]*)+$/.test(link.target.package_name || '') ||
+    !Array.isArray(link.target.sha256_cert_fingerprints) || !link.target.sha256_cert_fingerprints.length ||
+    link.target.sha256_cert_fingerprints.some(value => !/^(?:[0-9A-F]{2}:){31}[0-9A-F]{2}$/.test(value) || new Set(value.split(':')).size === 1)
+  )) throw new Error('Invalid Android assetlinks.json; refusing to deploy placeholders');
+  write('.well-known/assetlinks.json', JSON.stringify(assetLinks, null, 2));
+}
+
+const kb = (s) => Math.round(Buffer.byteLength(s, 'utf8') / 1024);
+console.log('  app.js    ' + kb(appSrc) + 'KB → ' + kb(obfuscated) + 'KB (난독화)');
+console.log('  style.css ' + kb(read('style.css')) + 'KB → ' + kb(css) + 'KB');
+console.log('  index.html ' + kb(read('index.html')) + 'KB → ' + kb(html) + 'KB');
+console.log('  guide/ ' + nGuide + '개, assets/ ' + nAssets + '개, libs/ ' + nLibs + '개');
+console.log('  캐시 버전 ' + hash);
+console.log('✔ dist/ 생성 완료');
