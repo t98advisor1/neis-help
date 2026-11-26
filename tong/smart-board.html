@@ -13,7 +13,7 @@
   <script src="./libs/jszip.min.js"></script>
   <script src="./libs/pdf-lib.min.js"></script>
   <script src="./libs/pdf.min.js"></script>
-  <link rel="stylesheet" href="./smart-board.css?v=33c2cb39c2">
+  <link rel="stylesheet" href="./smart-board.css?v=26041f242b">
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -28,9 +28,9 @@
 
   <!-- 팔레트가 숨겨졌을 때 상단 중앙에 뜨는 미니 열기 바 (사용설명서·전체화면 즉시 접근 가능) -->
   <div class="sb-floating-opener" id="sbFloatingOpener" style="display:none;">
-    <button type="button" class="sb-opener-btn" id="sbOpenPaletteBtn" title="상단 도구 팔레트 펼치기 (Tab)">▼ 도구 팔레트 펼치기</button>
+    <button type="button" class="sb-opener-btn" id="sbOpenPaletteBtn" title="상단 도구 팔레트 펼치기 (Tab)">▼ 도구 팔레트 펼치기<kbd class="sb-key">Tab</kbd></button>
     <button type="button" class="sb-opener-quick" id="sbFloatingHelpBtn" title="사용설명서 열기">사용설명서</button>
-    <button type="button" class="sb-opener-quick" id="sbFloatingFsBtn" title="꽉 찬 전체화면 전환 (F)">전체화면</button>
+    <button type="button" class="sb-opener-quick" id="sbFloatingFsBtn" title="꽉 찬 전체화면 전환 (F)">전체화면<kbd class="sb-key">F</kbd></button>
     <span class="sb-opener-note" id="sbOpenerNoteTitle">새 판서 노트</span>
   </div>
 
@@ -42,9 +42,9 @@
       <div class="sb-top-row sb-top-row-primary">
         <!-- 최우선 메뉴: 사용설명서 & 전체화면 최상단 배치 -->
         <div class="sb-top-group sb-priority-group">
-          <a href="./index.html" class="sb-btn sb-btn-ghost sb-btn-xs" title="T-ong 교무수첩 홈으로 돌아가기">← 홈</a>
+          <a href="./index.html" class="sb-btn sb-btn-ghost sb-btn-xs" title="판서를 저장하고 T-ong 교무수첩 홈으로 돌아가기 (Backspace)">← 홈</a>
           <button type="button" class="sb-btn sb-btn-guide-top" id="sbHelpBtn" title="큰 글씨 핵심 사용법 및 스크린샷 매뉴얼 열기">사용설명서</button>
-          <button type="button" class="sb-btn sb-btn-fs-top" id="sbFullscreenBtn" title="화면 송출용 100% 꽉 찬 전체화면 전환 (F)">전체화면</button>
+          <button type="button" class="sb-btn sb-btn-fs-top" id="sbFullscreenBtn" title="화면 송출용 100% 꽉 찬 전체화면 전환 (F · Fullscreen)">전체화면<kbd class="sb-key">F</kbd></button>
           <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs" id="sbShortcutBtn" title="전체창 키보드 단축키 및 스크린샷 안내 (? 또는 F1)">단축키(?)</button>
           <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs" id="sbTopAdBlockGuideBtn" title="모바일(갤럭시탭) Firefox + uBlock Origin 유튜브 광고 제거 스크린샷 매뉴얼">광고제거(?)</button>
         </div>
@@ -65,19 +65,20 @@
 
         <!-- 4대 모드 전환 -->
         <div class="sb-top-group sb-mode-tabs-row" role="tablist">
-          <button type="button" class="sb-mode-btn" data-sb-mode="pin" title="화면 영역을 오려 항상 맨 위에 고정 (Alt + `)">게시 <kbd>Alt+`</kbd></button>
-          <button type="button" class="sb-mode-btn" data-sb-mode="zoom" title="확대(2.0x) ↔ 100% 축소 토글 · 두/세 손가락 이동 지원 (Alt + 1)">확대 <kbd>Alt+1</kbd></button>
-          <button type="button" class="sb-mode-btn active" data-sb-mode="draw" title="현재 배율 유지하며 판서 모드 전환 (Alt + 2)">판서 <kbd>Alt+2</kbd></button>
-          <button type="button" class="sb-mode-btn" data-sb-mode="edit" title="영역 선택·이동·편집 및 손글씨 변환 (Alt + 3)">편집 <kbd>Alt+3</kbd></button>
+          <button type="button" class="sb-mode-btn" data-sb-mode="pin" title="화면 영역을 오려 항상 맨 위에 고정 (Ctrl + `)">게시 <kbd>Ctrl+`</kbd></button>
+          <button type="button" class="sb-mode-btn" data-sb-mode="zoom" title="확대 켜기/끄기 (Ctrl + 1) — 커서로 볼 곳을 고르고 누르면 그 자리에서 판서(Ctrl + 2). 두 손가락: 확대·이동, 세 손가락: 이동">확대 <kbd>Ctrl+1</kbd></button>
+          <button type="button" class="sb-mode-btn active" data-sb-mode="draw" title="펜·도형·텍스트·스탬프 판서 (Ctrl + 2)">판서 <kbd>Ctrl+2</kbd></button>
+          <button type="button" class="sb-mode-btn" data-sb-mode="edit" title="영역 선택·이동·편집 및 손글씨 변환 (Ctrl + 3)">편집 <kbd>Ctrl+3</kbd></button>
         </div>
 
         <div class="sb-top-divider"></div>
 
         <!-- 내보내기(PNG·PDF) & 자동 숨김 / 접기 제어 -->
         <div class="sb-top-group sb-right-controls">
-          <button type="button" class="sb-btn sb-btn-primary sb-btn-xs sb-btn-export" id="sbSaveMenuBtn" title="현재 화면 PNG 이미지 또는 전체 페이지 합본 PDF 저장">PNG·PDF ▾</button>
+          <button type="button" class="sb-btn sb-btn-primary sb-btn-xs sb-btn-export" id="sbSaveMenuBtn" title="현재 화면 PNG 이미지(Ctrl+P) 또는 전체 페이지 합본 PDF 저장">PNG·PDF ▾</button>
+          <button type="button" class="sb-btn sb-btn-accent sb-btn-xs sb-btn-share" id="sbShareMenuBtn" title="판서를 PNG·PDF로 공유하거나 복사해 노션·카톡·구글 클래스룸 등에 붙여넣기">공유 ▾</button>
           <button type="button" class="sb-spen-pill" id="sbAutoHideBtn" title="판서를 시작하면 상단 팔레트가 자동으로 위로 숨겨져 화면을 100% 넓게 씁니다">자동숨김 OFF</button>
-          <button type="button" class="sb-pal-fold-btn" id="sbFoldPaletteBtn" title="상단 팔레트 위로 숨기기 (Tab)">▲ 숨김</button>
+          <button type="button" class="sb-pal-fold-btn" id="sbFoldPaletteBtn" title="상단 팔레트 위로 숨기기 (Tab)">▲ 숨김<kbd class="sb-key">Tab</kbd></button>
         </div>
       </div>
 
@@ -85,26 +86,26 @@
       <div class="sb-top-row sb-top-row-tools">
         <!-- 핵심 도구 + 통합 드롭다운 (펜 통합 / 도형 통합) -->
         <div class="sb-top-group sb-tools-strip">
-          <button type="button" class="sb-tool-btn sb-tool-icon-btn" data-sb-tool="select" title="선택·이동: 필기·도형·스탬프를 클릭/드래그해 이동 (단축키 V)">
+          <button type="button" class="sb-tool-btn sb-tool-icon-btn" data-sb-tool="select" title="선택·옮기기: 필기·도형·스탬프를 눌러 끌어서 옮기기 (V · Select)">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l7.2 16.2 2.4-6.2 6.2-2.4L4 4z"/></svg>
             <span>선택</span><kbd>V</kbd>
           </button>
           <button type="button" class="sb-tool-btn sb-tool-icon-btn" id="sbQuickPinBtn" title="선택 영역을 바로 조각으로 고정합니다. 선택이 없으면 드래그할 영역을 지정합니다.">조각 고정</button>
-          <button type="button" class="sb-tool-btn sb-tool-icon-btn sb-pen-trigger active" id="sbPenMenuBtn" title="펜 종류 선택 (만년필·볼펜·연필·붓펜·형광펜) — 단축키 P / H">
+          <button type="button" class="sb-tool-btn sb-tool-icon-btn sb-pen-trigger active" id="sbPenMenuBtn" title="펜 종류 선택 (만년필·볼펜·연필·붓펜·형광펜) — P · Pen / H · Highlighter">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            <span id="sbPenMenuLabel">만년필</span> ▾
+            <span id="sbPenMenuLabel">만년필</span><kbd id="sbPenMenuKey">P</kbd> ▾
           </button>
           <button type="button" class="sb-tool-btn sb-tool-icon-btn sb-tool-more-trigger" id="sbMoreToolsBtn" title="도형(직선·사각형·원·채움사각) · 가림막 · 텍스트 · 번호 스탬프 열기">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><circle cx="17" cy="7" r="4"/><path d="M4 20l6-6 4 4 6-6"/></svg>
-            <span id="sbMoreToolsLabel">도형</span> ▾
+            <span id="sbMoreToolsLabel">도형</span><kbd id="sbMoreToolsKey" hidden></kbd> ▾
           </button>
-          <button type="button" class="sb-tool-btn sb-tool-icon-btn sb-tool-laser-btn" data-sb-tool="laser" title="잔상이 사라지는 레이저 포인터 (단축키 Z)">
+          <button type="button" class="sb-tool-btn sb-tool-icon-btn sb-tool-laser-btn" data-sb-tool="laser" title="잔상이 사라지는 레이저 포인터 (Z · Zap)">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>
             <span>레이저</span><kbd>Z</kbd>
           </button>
-          <button type="button" class="sb-tool-btn sb-tool-icon-btn sb-tool-more-trigger" data-sb-tool="eraser" id="sbEraserToolBtn" title="지우개 · 전체 펜 지우기 · 전체 스탬프 지우기 메뉴 (단축키 E / S펜 옆 버튼 스위치)">
+          <button type="button" class="sb-tool-btn sb-tool-icon-btn" data-sb-tool="eraser" id="sbEraserToolBtn" title="지우개 (E · Eraser / S펜 옆 버튼 스위치) — ▾ 또는 한 번 더 누르면 전체 지우기 메뉴">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20H7L3 16a2 2 0 0 1 0-2.8l9.6-9.6a2 2 0 0 1 2.8 0l5.2 5.2a2 2 0 0 1 0 2.8L12 20"/></svg>
-            <span>지우개</span><kbd>E</kbd> ▾
+            <span>지우개</span><kbd>E</kbd><span class="sb-caret" title="전체 지우기 메뉴">▾</span>
           </button>
         </div>
 
@@ -131,7 +132,7 @@
 
         <!-- 실행취소 / 다시실행 -->
         <div class="sb-top-group">
-          <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs sb-icon-only-btn" id="sbUndoBtn" title="마지막 동작 취소/되돌리기 (Backspace 또는 Ctrl+Z)" aria-label="취소">
+          <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs sb-icon-only-btn" id="sbUndoBtn" title="마지막 동작 취소/되돌리기 (Esc 또는 Ctrl+Z)" aria-label="취소">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
           </button>
           <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs sb-icon-only-btn" id="sbRedoBtn" title="다시 실행 (Ctrl+Y)" aria-label="다시 실행">
@@ -199,9 +200,8 @@
 
       <div class="sb-zoom-badge" id="sbZoomBadge" style="display:none;">
         <span id="sbZoomText">확대 2.0x</span>
-        <button type="button" class="sb-mini-btn" id="sbZoomOutBtn" title="축소 (Alt + -)">−</button>
-        <button type="button" class="sb-mini-btn" id="sbZoomInBtn" title="확대 (Alt + +)">+</button>
-        <button type="button" class="sb-mini-btn" id="sbZoomResetBtn" title="100% 원래 크기로 복귀 (Alt + 1 또는 ESC)">100% 복귀</button>
+        <button type="button" class="sb-mini-btn" id="sbZoomHandBtn" title="손 도구: 끌어서 확대한 화면 옮기기 (M · Move)">✋ 이동 <kbd class="sb-key">M</kbd></button>
+        <button type="button" class="sb-mini-btn" id="sbZoomResetBtn">100% 복귀</button>
       </div>
 
       <div class="sb-canvas-viewport" id="sbViewport">
@@ -290,6 +290,26 @@
             <div class="sb-vault-notes-head">
               <strong id="sbVaultActiveFolderTitle">전체 노트</strong>
               <span id="sbVaultNoteCount">0개 노트</span>
+              <select id="sbVaultSortSelect" class="sb-input sb-vault-sort" title="노트 정렬 방법" style="margin-left:auto;width:auto;padding:4px 8px;font-size:0.8rem;">
+                <option value="recent">최근 연 순</option>
+                <option value="manual">직접 정한 순서</option>
+              </select>
+            </div>
+            <p class="sb-vault-autosave-note" style="margin:0 0 8px;font-size:0.76rem;color:#64748b;">판서는 1분마다 자동 저장되고, 스마트 판서를 다시 열면 마지막 판서로 돌아옵니다.</p>
+            <div class="sb-vault-copy-box" id="sbVaultCopyBox" hidden>
+              <b>📋 노트 복사 — <span id="sbVaultCopyName"></span></b>
+              <div class="sb-vault-copy-row">
+                <label>복사할 폴더(학급)<select id="sbVaultCopyFolder" class="sb-input"></select></label>
+                <label>새 노트 제목<input type="text" id="sbVaultCopyTitle" class="sb-input"></label>
+              </div>
+              <div class="sb-vault-copy-row">
+                <label class="sb-vault-copy-opt"><input type="radio" name="sbVaultCopyMode" value="material" checked> 자료만 복사 <small>PDF·PPTX·배경은 두고 판서는 비움 — 다른 학급 수업용</small></label>
+                <label class="sb-vault-copy-opt"><input type="radio" name="sbVaultCopyMode" value="all"> 판서까지 모두 복사</label>
+              </div>
+              <div class="sb-vault-copy-row sb-vault-copy-actions">
+                <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs" id="sbVaultCopyCancelBtn">취소</button>
+                <button type="button" class="sb-btn sb-btn-primary sb-btn-xs" id="sbVaultCopyOkBtn">복사하기</button>
+              </div>
             </div>
             <div class="sb-vault-notes-grid" id="sbVaultNotesGrid"></div>
           </div>
@@ -364,15 +384,18 @@
               <tr><th>분류</th><th>단축키</th><th>기능 및 동작 설명</th></tr>
             </thead>
             <tbody>
-              <tr><td><b>핵심 도구 1키 전환</b></td><td><kbd>V</kbd> / <kbd>P</kbd> / <kbd>H</kbd> / <kbd>Z</kbd> / <kbd>E</kbd></td><td><b>선택·이동(<kbd>V</kbd>)</b> / <b>펜(<kbd>P</kbd>)</b> / <b>형광펜(<kbd>H</kbd>)</b> / <b>레이저 포인터(<kbd>Z</kbd>)</b> / <b>지우개(<kbd>E</kbd>)</b> 토글</td></tr>
-              <tr><td><b>원형·사각 스탬프 &amp; 텍스트</b></td><td><kbd>S</kbd> / <kbd>Q</kbd> / <kbd>T</kbd></td><td><b>①②③ 완벽한 원형 번호 스탬프(<kbd>S</kbd>)</b> / <b>▣ 정사각형 번호 스탬프(<kbd>Q</kbd>)</b> / <b>한글 텍스트 입력(<kbd>T</kbd>)</b></td></tr>
-              <tr><td><b>도형 그리기 (사각형·원·선)</b></td><td><kbd>R</kbd> / <kbd>C</kbd> / <kbd>L</kbd></td><td><b>사각형 그리기(<kbd>R</kbd>)</b> / <b>원·타원 그리기(<kbd>C</kbd>, <kbd>Shift</kbd> 누른 채 드래그 시 정원)</b> / <b>반듯한 직선 그리기(<kbd>L</kbd>)</b></td></tr>
-              <tr><td><b>빠른 취소 (되돌리기)</b></td><td><kbd>Backspace (백스페이스)</kbd> 또는 <kbd>Ctrl + Z</kbd></td><td><b>마지막 판서·도형·스탬프 동작 즉시 취소(되돌리기)</b> / 편집 모드에서 영역 선택 시 선택 판서 삭제</td></tr>
+              <tr><td><b>핵심 도구 1키 전환</b></td><td><kbd>P</kbd> / <kbd>H</kbd> / <kbd>E</kbd> / <kbd>V</kbd> / <kbd>M</kbd> / <kbd>Z</kbd></td><td><b>펜(<kbd>P</kbd> · Pen)</b> / <b>형광펜(<kbd>H</kbd> · Highlighter)</b> / <b>지우개(<kbd>E</kbd> · Eraser)</b> / <b>선택·옮기기(<kbd>V</kbd> · Select)</b> / <b>화면 이동(<kbd>M</kbd> · Move)</b> / <b>레이저 포인터(<kbd>Z</kbd> · Zap)</b> — 한 번 더 누르면 쓰던 펜으로 돌아갑니다</td></tr>
+              <tr><td><b>원형·사각 스탬프 &amp; 텍스트</b></td><td><kbd>S</kbd> / <kbd>Q</kbd> / <kbd>T</kbd></td><td><b>①②③ 원형 번호 스탬프(<kbd>S</kbd> · Stamp)</b> / <b>▣ 사각 번호 스탬프(<kbd>Q</kbd> · sQuare)</b> / <b>한글 텍스트 입력(<kbd>T</kbd> · Text)</b> — 지운 번호는 다음 스탬프가 다시 채웁니다</td></tr>
+              <tr><td><b>도형 그리기 (사각형·원·선)</b></td><td><kbd>R</kbd> / <kbd>C</kbd> / <kbd>L</kbd></td><td><b>사각형(<kbd>R</kbd> · Rectangle)</b> / <b>원·타원(<kbd>C</kbd> · Circle, <kbd>Shift</kbd> 누른 채 끌면 정원)</b> / <b>직선(<kbd>L</kbd> · Line)</b></td></tr>
+              <tr><td><b>빠른 취소 (되돌리기)</b></td><td><kbd>Esc</kbd> 또는 <kbd>Ctrl + Z</kbd></td><td><b>마지막 판서·도형·스탬프 동작 즉시 취소(되돌리기)</b> — 창·메뉴가 열려 있으면 <kbd>Esc</kbd>는 먼저 창을 닫습니다</td></tr>
+              <tr><td><b>홈으로</b></td><td><kbd>Backspace (백스페이스)</kbd></td><td><b>판서를 저장하고 T-ong 홈으로 이동</b> — 다시 스마트 판서를 열면 마지막 판서로 돌아옵니다 / 편집 모드에서 영역을 골랐을 때는 선택 판서 삭제</td></tr>
               <tr><td><b>펜 색상 (숫자 1~6)</b></td><td><kbd>1</kbd> / <kbd>2</kbd> / <kbd>3</kbd> / <kbd>4</kbd> / <kbd>5</kbd> / <kbd>6</kbd></td><td>빨강(<kbd>1</kbd>) · 초록(<kbd>2</kbd>) · 파랑(<kbd>3</kbd>) · 노랑(<kbd>4</kbd>) · 아이보리/흰색(<kbd>5</kbd>) · 검정(<kbd>6</kbd>) 즉시 변경</td></tr>
               <tr><td><b>갤럭시 S펜 옆 버튼</b></td><td><b>S펜 옆 버튼 클릭 / 에어액션</b></td><td><b>[지우개] ↔ [펜] 양방향 스위치</b>: 버튼 1회 클릭 시 지우개 활성화, 다시 1회 클릭 시 펜 모드로 즉시 복귀</td></tr>
-              <tr><td><b>4대 모드 전환</b></td><td><kbd>Alt + `</kbd> / <kbd>Alt + 1</kbd> / <kbd>Alt + 2</kbd> / <kbd>Alt + 3</kbd></td><td><b>게시 모드(스닙페이스트)</b> / <b>확대 모드</b> / <b>판서 모드</b> / <b>편집·무료 OCR 모드</b></td></tr>
-              <tr><td><b>팔레트 · 전체화면 · 초기모드</b></td><td><kbd>Tab</kbd> / <kbd>F</kbd> / <kbd>?</kbd> (<kbd>F1</kbd>) / <kbd>Esc</kbd></td><td>상단 팔레트 숨기기·펼치기(<kbd>Tab</kbd>) / 꽉 찬 전체화면(<kbd>F</kbd>) / 단축키 창(<kbd>?</kbd>) / <b>초기 모드(판서·펜) 복귀(<kbd>Esc</kbd>)</b></td></tr>
-              <tr><td><b>배경 · 전체삭제 · 저장</b></td><td><kbd>K</kbd> / <kbd>W</kbd> · <kbd>Ctrl+E</kbd> · <kbd>Ctrl+S</kbd> / <kbd>Ctrl+Shift+S</kbd></td><td>칠판 배경(<kbd>K</kbd>) · 백지 배경(<kbd>W</kbd>) · 현재 쪽 판서 전체삭제(<kbd>Ctrl+E</kbd>) · PNG 저장 · 로컬 폴더 노트함 저장</td></tr>
+              <tr><td><b>4대 모드 전환</b></td><td><kbd>Ctrl + `</kbd> / <kbd>Ctrl + 1</kbd> / <kbd>Ctrl + 2</kbd> / <kbd>Ctrl + 3</kbd></td><td><b>게시 모드(스닙페이스트)</b> / <b>확대 켜기·끄기(줌잇)</b> / <b>그 자리에서 판서</b> / <b>편집·OCR</b> — 확대 중에는 <kbd>M</kbd>(Move)으로 끌어서 옮기고, 태블릿은 두 손가락(확대·이동)·세 손가락(이동)</td></tr>
+              <tr><td><b>팔레트 · 전체화면 · 단축키 창</b></td><td><kbd>Tab</kbd> / <kbd>F</kbd> / <kbd>?</kbd> (<kbd>F1</kbd>)</td><td>상단 팔레트 숨기기·펼치기(<kbd>Tab</kbd>) / 꽉 찬 전체화면(<kbd>F</kbd>) / 단축키 창(<kbd>?</kbd>) — 기본 펜으로 돌아가려면 <kbd>P</kbd>(Pen) 또는 <kbd>Ctrl+2</kbd></td></tr>
+              <tr><td><b>한꺼번에 지우기 (지우개 ▾)</b></td><td><kbd>Shift + E</kbd> / <kbd>Ctrl + S</kbd> / <kbd>Ctrl + E</kbd></td><td><b>펜 글씨 전체 지우기(<kbd>Shift+E</kbd> · Eraser)</b> / <b>스탬프 전체 지우기(<kbd>Shift+S</kbd> · Stamp)</b> / <b>전체 필기 지우기(<kbd>Ctrl+E</kbd>)</b> — 바로 되돌리기(<kbd>Ctrl+Z</kbd>)로 모두 복구</td></tr>
+              <tr><td><b>그리다가 꾸욱 → 도형</b></td><td><b>펜으로 그린 뒤 끝에서 0.5초 멈춤</b></td><td>손으로 그린 원·네모·세모·별(한 붓 별 ☆)·직선이 반듯한 도형으로 바뀝니다. 멈추지 않고 떼면 손글씨 그대로 남습니다.</td></tr>
+              <tr><td><b>배경 · 전체삭제 · 저장</b></td><td><kbd>K</kbd> / <kbd>W</kbd> · <kbd>Ctrl+E</kbd> · <kbd>Ctrl+P</kbd> / <kbd>Ctrl+Shift+S</kbd></td><td>칠판 배경(<kbd>K</kbd>) · 백지 배경(<kbd>W</kbd>) · 현재 쪽 필기 전체 지우기(<kbd>Ctrl+E</kbd>) · 현재 화면 PNG 저장(<kbd>Ctrl+P</kbd>) · 로컬 폴더 노트함 저장 — 노션 등에 올리려면 <b>공유 ▾</b></td></tr>
               <tr><td><b>PPTX 액션 · 페이지 이동</b></td><td><kbd>Space</kbd> / <kbd>←</kbd> <kbd>→</kbd> / <b>마우스 휠</b></td><td>PPTX 다음 클릭 애니메이션 액션 및 슬라이드 이동 / 마우스 휠로 펜·스탬프·지우개 크기 조절</td></tr>
             </tbody>
           </table>
@@ -400,7 +423,7 @@
             <li><b>1단계 (무료 키 1회 설정)</b>: 아래에서 <b>Google Gemini 무료 API</b>(추천: 한글 흘림체·수학 수식 인식률 최상) 또는 <b>OCR.space 무료 API</b>(키 없이 기본 <code>helloworld</code> 체험 가능)를 고르고 저장합니다.
               <br><small>※ Gemini 무료 키 발급: <code>aistudio.google.com</code> 접속 → 구글 로그인 → 좌측 <code>Get API key</code> → <code>Create API key</code> 복사 후 아래 칸에 붙여넣기</small>
             </li>
-            <li><b>2단계 (판서 영역 선택)</b>: 판서 후 상단 팔레트에서 <b><code>편집·OCR (Alt+3)</code></b>을 누르고 변환할 손글씨 판서 영역을 마우스나 S펜으로 드래그해 감쌉니다.</li>
+            <li><b>2단계 (판서 영역 선택)</b>: 판서 후 상단 팔레트에서 <b><code>편집·OCR (Ctrl+3)</code></b>을 누르고 변환할 손글씨 판서 영역을 마우스나 S펜으로 드래그해 감쌉니다.</li>
             <li><b>3단계 (변환 및 적용)</b>: 상단에 뜨는 바에서 <b><code>[글씨로 변환 (OCR)]</code></b>을 누르면 인식 결과가 표시되며, <b><code>[선택 판서를 글씨로 교체]</code></b> · <b><code>[수업 메모보드로 보내기]</code></b> · <b><code>[텍스트 복사]</code></b> 중 원하는 동작을 실행합니다.</li>
           </ol>
         </div>
@@ -451,84 +474,22 @@
   </div>
 
   <!-- ================================================================= -->
-  <!-- 사용설명서 모달 (#sbHelpModal)
-       - 1단계(기본 진입): 태블릿·모바일에서도 눈이 편한 큰 글씨 텍스트 중심 가독성 요약 뷰
-       - 2단계([전체화면으로 GIF & 상세 과정 보기] 클릭 시): 100% 전체화면 1단 대형 GIF + 단계별 스크린샷 과정 뷰 -->
+  <!-- 사용설명서 모달 (#sbHelpModal) — smart-board-guide.html(영상 매뉴얼)을 창 안에 띄웁니다 -->
   <!-- ================================================================= -->
   <div class="sb-modal" id="sbHelpModal">
     <div class="sb-modal-card sb-modal-guide is-fullscreen" id="sbHelpModalCard">
       <div class="sb-modal-head">
         <div>
-          <span class="sb-guide-kicker">화살표 · 네모 · 번호 스탬프로 한눈에 보는 직관형 사용설명서</span>
-          <h3>스마트 판서 보드 사용설명서 (스크린샷 · GIF)</h3>
+          <span class="sb-guide-kicker">기능마다 30초 안팎의 영상으로 따라 하는 사용 설명서</span>
+          <h3>스마트 판서 사용 설명서</h3>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <a href="./smart-board-guide.html" target="_blank" rel="noopener noreferrer" class="sb-btn sb-btn-primary">매뉴얼 새 창 / 인쇄</a>
+          <a href="./smart-board-guide.html" target="_blank" rel="noopener noreferrer" class="sb-btn sb-btn-primary">새 창 / 인쇄</a>
           <button type="button" class="sb-close-btn" data-close="sbHelpModal">&times;</button>
         </div>
       </div>
-
-      <div class="sb-modal-body sb-guide-modal-body">
-        <div id="sbGuideFullVisualPane" class="sb-guide-visual-pane" style="display:block;">
-          <div class="sb-slide-nav-bar sb-visual-slide-bar">
-            <button type="button" class="sb-btn sb-btn-primary" id="sbVisPrevSlideBtn">◀ 이전</button>
-            <div class="sb-slide-tabs" id="sbVisSlideTabs">
-              <button type="button" class="sb-slide-tab active" data-vis-slide="0">1. 상단 팔레트</button>
-              <button type="button" class="sb-slide-tab" data-vis-slide="1">2. 선택·이동·스탬프</button>
-              <button type="button" class="sb-slide-tab" data-vis-slide="2">3. 파일·링크 열기</button>
-              <button type="button" class="sb-slide-tab" data-vis-slide="3">4. 유튜브·웹 스탬프</button>
-              <button type="button" class="sb-slide-tab" data-vis-slide="4">5. 스닙페이스트(GIF)</button>
-              <button type="button" class="sb-slide-tab" data-vis-slide="5">6. 번호 스탬프(GIF)</button>
-              <button type="button" class="sb-slide-tab" data-vis-slide="6">7. PDF·칠판(GIF)</button>
-              <button type="button" class="sb-slide-tab" data-vis-slide="7">8. PPTX·OCR(GIF)</button>
-            </div>
-            <span class="sb-slide-counter" id="sbVisSlideCounter">1 / 8</span>
-            <button type="button" class="sb-btn sb-btn-primary" id="sbVisNextSlideBtn">다음 ▶</button>
-            <button type="button" class="sb-btn sb-btn-ghost" id="sbVisShowAllToggleBtn">전체 보기</button>
-          </div>
-
-          <div class="sb-visual-single-col sb-visual-slide-deck" id="sbVisSlideContainer">
-            <article class="sb-gcard sb-vis-slide-item active" data-vis-slide-pane="0">
-              <div class="sb-gcard-head"><span class="sb-gstep s1">1 / 8</span><b>상단 팔레트 · 파일·링크 통합 열기 · 자동숨김</b></div>
-              <div class="sb-gshot sb-gshot-full"><img src="./assets/smartboard_guide/manual_v2_01_top_filehub.png" alt="상단 팔레트 화살표·스탬프 안내 스크린샷"></div>
-            </article>
-
-            <article class="sb-gcard sb-vis-slide-item" data-vis-slide-pane="1" style="display:none;">
-              <div class="sb-gcard-head"><span class="sb-gstep s2">2 / 8</span><b>선택·이동(V) · 원형(S)/사각(Q) 번호 스탬프 · S펜 스위치</b></div>
-              <div class="sb-gshot sb-gshot-full"><img src="./assets/smartboard_guide/manual_v2_02_select_stamp_spen.png" alt="선택 이동 및 스탬프 S펜 스위치 안내 스크린샷"></div>
-            </article>
-
-            <article class="sb-gcard sb-vis-slide-item" data-vis-slide-pane="2" style="display:none;">
-              <div class="sb-gcard-head"><span class="sb-gstep s3">3 / 8</span><b>파일·링크 열기 팝업 (PDF · PPTX · 이미지 · 유튜브 통합)</b></div>
-              <div class="sb-gshot sb-gshot-full"><img src="./assets/smartboard_guide/manual_v2_03_filehub_modal.png" alt="통합 파일 링크 열기 팝업 안내 스크린샷"></div>
-            </article>
-
-            <article class="sb-gcard sb-vis-slide-item" data-vis-slide-pane="3" style="display:none;">
-              <div class="sb-gcard-head"><span class="sb-gstep s4">4 / 8</span><b>유튜브 · 내장 웹 브라우저 위 ①원형·▣사각 스탬프 판서</b></div>
-              <div class="sb-gshot sb-gshot-full"><img src="./assets/smartboard_guide/manual_v2_04_web_stamp.png" alt="내장 웹 브라우저 유튜브 및 스탬프 판서 안내 스크린샷"></div>
-            </article>
-
-            <article class="sb-gcard is-gif-card sb-vis-slide-item" data-vis-slide-pane="4" style="display:none;">
-              <div class="sb-gcard-head"><span class="sb-gstep s3">5 / 8 · GIF</span><b>스닙페이스트(게시 모드 · Alt+`) — 영역 오려 화면 최상단 고정</b></div>
-              <div class="sb-gshot sb-gshot-full"><img src="./assets/smartboard_guide/gif_snipaste_pin.gif" alt="스닙페이스트 게시 모드 GIF 시연"></div>
-            </article>
-
-            <article class="sb-gcard is-gif-card sb-vis-slide-item" data-vis-slide-pane="5" style="display:none;">
-              <div class="sb-gcard-head"><span class="sb-gstep s2">6 / 8 · GIF</span><b>원형 스탬프(S) · 사각 스탬프(Q) 자동 증가 &amp; 정답 가림막</b></div>
-              <div class="sb-gshot sb-gshot-full"><img src="./assets/smartboard_guide/gif_number_stamp.gif" alt="번호 스탬프 및 정답 가림막 GIF 시연"></div>
-            </article>
-
-            <article class="sb-gcard is-gif-card sb-vis-slide-item" data-vis-slide-pane="6" style="display:none;">
-              <div class="sb-gcard-head"><span class="sb-gstep s1">7 / 8 · GIF</span><b>PDF · 칠판 · 모눈 판서 및 도형 단축키(R/C/L)</b></div>
-              <div class="sb-gshot sb-gshot-full"><img src="./assets/smartboard_guide/gif_pdf_draw.gif" alt="PDF 및 칠판 도형 판서 GIF 시연"></div>
-            </article>
-
-            <article class="sb-gcard is-gif-card sb-vis-slide-item" data-vis-slide-pane="7" style="display:none;">
-              <div class="sb-gcard-head"><span class="sb-gstep s5">8 / 8 · GIF</span><b>PPTX 클릭 액션 &amp; 손글씨 무료 AI OCR 변환</b></div>
-              <div class="sb-gshot sb-gshot-full"><img src="./assets/smartboard_guide/gif_pptx_ocr.gif" alt="PPTX 액션 및 무료 OCR 변환 GIF 시연"></div>
-            </article>
-          </div>
-        </div>
+      <div class="sb-modal-body sb-guide-modal-body sb-guide-frame-body">
+        <iframe id="sbHelpFrame" class="sb-guide-frame" title="스마트 판서 사용 설명서" data-src="./smart-board-guide.html?embed=1" loading="lazy"></iframe>
       </div>
     </div>
   </div>
@@ -612,7 +573,7 @@
         <span class="sb-pen-opt-ico">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
         </span>
-        <span class="sb-pen-opt-txt"><b>만년필</b><small>필압·속도에 따라 획 끝이 자연스럽게 가늘어지는 필기감</small></span>
+        <span class="sb-pen-opt-txt"><b>만년필 (P)</b><small>필압·속도에 따라 획 끝이 자연스럽게 가늘어지는 필기감</small></span>
       </button>
       <button type="button" class="sb-pen-opt" data-pen-style="ballpoint">
         <span class="sb-pen-opt-ico">
@@ -653,38 +614,39 @@
   <!-- ================================================================= -->
   <!-- 도형 · 스탬프 · 텍스트 카테고리 드롭다운 메뉴 (#sbMoreToolsMenu) -->
   <!-- ================================================================= -->
+  <div class="sb-tool-popover sb-eraser-popover" id="sbEraserMenu" role="menu" aria-label="지우개 및 전체 지우기">
+    <div class="sb-pop-sec-title">지우개</div>
+    <div class="sb-pop-grid">
+      <button type="button" class="sb-tool-btn sb-pop-tool-btn sb-pop-full-btn" data-sb-tool="eraser" title="문지른 선을 지우는 지우개 (E · Eraser)"><span>지우개</span><kbd>E</kbd></button>
+    </div>
+    <div class="sb-pop-sec-title" style="margin-top:8px;">한꺼번에 지우기 · 현재 쪽</div>
+    <div class="sb-pop-list">
+      <button type="button" class="sb-pop-list-btn" id="sbEraseAllPenBtn" title="펜·형광펜 글씨만 모두 지우기 (Shift + E)"><span>펜 글씨 전체 지우기</span><kbd>Shift+E</kbd></button>
+      <button type="button" class="sb-pop-list-btn" id="sbEraseAllStampBtn" title="번호 스탬프만 모두 지우기 (Ctrl + S)"><span>스탬프 전체 지우기</span><kbd>Ctrl+S</kbd></button>
+      <button type="button" class="sb-pop-list-btn danger" id="sbEraseAllInkBtn" title="펜·도형·텍스트·스탬프·가림막 모두 지우기 (Ctrl + E)"><span>전체 필기 지우기</span><kbd>Ctrl+E</kbd></button>
+    </div>
+    <p class="sb-pop-note">실수로 지웠다면 바로 되돌리기(Ctrl+Z)로 한꺼번에 되살아납니다.</p>
+  </div>
+
   <div class="sb-tool-popover" id="sbMoreToolsMenu" role="menu" aria-label="도형 및 추가 판서 도구">
     <div class="sb-pop-sec-title">도형 그리기</div>
     <div class="sb-pop-grid">
-      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="line" title="반듯한 직선 (단축키 L)"><span>직선</span><kbd>L</kbd></button>
-      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="rect" title="사각형 테두리 (단축키 R)"><span>사각형</span><kbd>R</kbd></button>
-      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="circle" title="원/타원 그리기 (단축키 C)"><span>원</span><kbd>C</kbd></button>
+      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="line" title="반듯한 직선 (L · Line)"><span>직선</span><kbd>L</kbd></button>
+      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="rect" title="사각형 테두리 (R · Rectangle)"><span>사각형</span><kbd>R</kbd></button>
+      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="circle" title="원/타원 그리기 (C · Circle)"><span>원</span><kbd>C</kbd></button>
       <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="fillRect" title="채운 사각형"><span>채움사각</span></button>
     </div>
     <div class="sb-pop-sec-title" style="margin-top:8px;">수업 보조 · 텍스트</div>
     <div class="sb-pop-grid">
       <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="cover" title="탭하면 열리고 닫히는 정답 가림막"><span>정답 가림막</span></button>
-      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="text" title="한글 텍스트 입력 (단축키 T)"><span>텍스트</span><kbd>T</kbd></button>
+      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="text" title="한글 텍스트 입력 (T · Text)"><span>텍스트</span><kbd>T</kbd></button>
     </div>
     <div class="sb-pop-sec-title" style="margin-top:8px;">번호 스탬프</div>
     <div class="sb-pop-grid">
-      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="stamp" id="sbCircleStampBtn" title="완벽한 원 모양 번호 스탬프 ①②③ (단축키 S)"><span>① 원스탬프</span><kbd>S</kbd></button>
-      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="sqStamp" id="sbSquareStampBtn" title="정사각형 번호 스탬프 [1][2][3] (단축키 Q)"><span>▣ 사각스탬프</span><kbd>Q</kbd></button>
+      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="stamp" id="sbCircleStampBtn" title="원 모양 번호 스탬프 ①②③ (S · Stamp)"><span>① 원스탬프</span><kbd>S</kbd></button>
+      <button type="button" class="sb-tool-btn sb-pop-tool-btn" data-sb-tool="sqStamp" id="sbSquareStampBtn" title="정사각형 번호 스탬프 [1][2][3] (Q · sQuare)"><span>▣ 사각스탬프</span><kbd>Q</kbd></button>
       <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs sb-pop-full-btn" id="sbStampResetBtn" title="원형·사각 번호 스탬프를 1번부터 다시 시작">스탬프 번호 초기화 (현재 <span id="sbStampNum">1</span>번)</button>
-      <button type="button" class="sb-btn sb-btn-danger sb-btn-xs sb-pop-full-btn" id="sbClearStampsFromToolsBtn" title="현재 페이지의 번호 스탬프만 모두 지우기">전체 스탬프 지우기</button>
-    </div>
-  </div>
-
-  <!-- ================================================================= -->
-  <!-- 지우개 · 선택적 전체 삭제 드롭다운 메뉴 (#sbEraserMenu) -->
-  <!-- ================================================================= -->
-  <div class="sb-tool-popover sb-eraser-popover" id="sbEraserMenu" role="menu" aria-label="지우개 및 전체 지우기 옵션">
-    <div class="sb-pop-sec-title">지우개 · 정리 도구</div>
-    <div class="sb-pop-stack">
-      <button type="button" class="sb-btn sb-btn-primary sb-btn-xs sb-pop-row-btn" id="sbUseEraserBtn" title="드래그한 획이나 스탬프만 골라 지우기 (E)">부분 지우개 사용 (E)</button>
-      <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs sb-pop-row-btn" id="sbClearPenBtn" title="현재 페이지의 펜·형광펜 필기만 모두 삭제 (스탬프·도형 유지)">전체 펜 지우기 (스탬프·도형 유지)</button>
-      <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs sb-pop-row-btn" id="sbClearStampsBtn" title="현재 페이지의 원형/사각 번호 스탬프만 모두 삭제 (펜·도형 유지)">전체 스탬프 지우기 (펜·도형 유지)</button>
-      <button type="button" class="sb-btn sb-btn-danger sb-btn-xs sb-pop-row-btn" id="sbClearAllFromEraserBtn" title="현재 페이지의 모든 판서·스탬프·도형 삭제 (Ctrl+E)">현재 페이지 전체 지우기 (Ctrl+E)</button>
+      <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs sb-pop-full-btn" id="sbClearStampsBtn2" title="현재 페이지의 번호 스탬프만 모두 지우기 (되돌리기로 복구)">스탬프 전체 지우기</button>
     </div>
   </div>
 
@@ -702,15 +664,39 @@
     <div class="sb-pop-stack">
       <button type="button" class="sb-mini-btn active sb-pop-row-btn" id="sbFillScreenModeBtn" title="화면 송출 시 여백 없이 화면 전체를 100% 꽉 채워 표시합니다">꽉찬화면: ON</button>
       <button type="button" class="sb-spen-pill active sb-pop-row-btn" id="sbSpenEraserModeBtn" title="갤럭시 S펜 옆 버튼을 누르면 지우개↔펜으로 전환됩니다">S펜버튼: 지우개↔펜 스위치</button>
+      <button type="button" class="sb-spen-pill active sb-pop-row-btn" id="sbSpenAutoBtn" title="S펜이 화면에 닿으면 S펜 전용 모드를 자동으로 켭니다">S펜자동: 켜짐</button>
       <button type="button" class="sb-spen-pill sb-pop-row-btn" id="sbPalmRejectBtn" title="갤럭시탭 S펜 전용 필기 (손바닥 터치 무시)">S펜전용: 꺼짐</button>
       <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs sb-pop-row-btn" id="sbOcrCfgBtn" title="무료 AI 손글씨 OCR 설정 및 안내">AI 손글씨 OCR 설정</button>
     </div>
     <div class="sb-pop-sec-title" style="margin-top:8px;">화면 정리</div>
     <div class="sb-pop-grid">
-      <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs" id="sbBoardClearPenBtn" title="현재 페이지의 펜·형광펜만 삭제">전체 펜 지우기</button>
-      <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs" id="sbBoardClearStampsBtn" title="현재 페이지의 번호 스탬프만 삭제">전체 스탬프 지우기</button>
-      <button type="button" class="sb-btn sb-btn-danger sb-btn-xs" id="sbClearInkBtn" title="현재 페이지 판서 전체 삭제 (Ctrl+E)">판서 전체삭제</button>
+      <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs" id="sbClearPenBtn" title="현재 페이지의 펜·형광펜 글씨만 모두 지우기 (Shift+E · 되돌리기로 복구)">펜 글씨 전체 지우기</button>
+      <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs" id="sbClearStampsBtn" title="현재 페이지의 번호 스탬프만 모두 지우기 (Ctrl+S · 되돌리기로 복구)">스탬프 전체 지우기</button>
+      <button type="button" class="sb-btn sb-btn-danger sb-btn-xs" id="sbClearInkBtn" title="현재 쪽의 펜·도형·텍스트·스탬프·가림막 모두 지우기 (Ctrl+E · 되돌리기로 복구)">전체 필기 지우기</button>
       <button type="button" class="sb-btn sb-btn-ghost sb-btn-xs" id="sbClearPinsBtn" title="화면에 고정된 게시 조각 모두 닫기">고정조각 닫기</button>
+    </div>
+    <div class="sb-pop-sec-title" style="margin-top:8px;">버전 · 이용 현황</div>
+    <div class="sb-about-box">
+      <div class="sb-about-row"><b>스마트 판서 <span id="sbVersionLabel">v2.7.0</span></b><button type="button" class="sb-btn sb-btn-ghost sb-btn-xs" id="sbChangelogBtn">수정 이력 보기</button></div>
+      <div class="sb-about-stats">
+        <span>오늘 방문자 <b id="sbTodayVisitors">–</b>명</span>
+        <span>총 이용 <b id="sbTotalVisits">–</b>회</span>
+      </div>
+      <small id="sbUsageStatus">방문 수만 익명으로 집계 · 판서 내용은 이 브라우저에만 저장</small>
+    </div>
+  </div>
+
+  <!-- 수정 이력 모달 (#sbChangelogModal) -->
+  <div class="sb-modal" id="sbChangelogModal">
+    <div class="sb-modal-card" style="max-width:640px;">
+      <div class="sb-modal-head">
+        <div>
+          <span class="sb-guide-kicker">버전 · 수정 이력</span>
+          <h3>스마트 판서 <span id="sbChangelogVersion">v2.7.0</span></h3>
+        </div>
+        <button type="button" class="sb-btn sb-btn-ghost" data-close="sbChangelogModal">닫기</button>
+      </div>
+      <div class="sb-changelog" id="sbChangelogBody"></div>
     </div>
   </div>
 
@@ -721,8 +707,8 @@
     <button type="button" class="sb-save-pop-item" id="sbSavePngBtn" role="menuitem">
       <span class="sb-save-pop-badge is-png">PNG</span>
       <span class="sb-save-pop-text">
-        <b>현재 화면 PNG 저장</b>
-        <small>지금 보고 있는 판서 화면 1장을 고화질 이미지로 저장 (Ctrl+S)</small>
+        <b>현재 화면 PNG 저장 <kbd class="sb-key">Ctrl+P</kbd></b>
+        <small>지금 보고 있는 판서 화면 1장을 고화질 이미지로 저장</small>
       </span>
     </button>
     <button type="button" class="sb-save-pop-item" id="sbSavePdfBtn" role="menuitem">
@@ -732,6 +718,33 @@
         <small>열어 둔 모든 슬라이드와 판서를 1개의 PDF 문서로 묶어 저장</small>
       </span>
     </button>
+  </div>
+
+  <!-- 공유 팝오버 (#sbShareMenu) -->
+  <div class="sb-save-popover" id="sbShareMenu" role="menu" aria-label="PNG 또는 PDF로 공유">
+    <button type="button" class="sb-save-pop-item" id="sbSharePngBtn" role="menuitem">
+      <span class="sb-save-pop-badge is-png">PNG</span>
+      <span class="sb-save-pop-text"><b>현재 화면 PNG로 공유</b><small>공유 창에서 노션·카카오톡·드라이브·메일 등으로 바로 보내기</small></span>
+    </button>
+    <button type="button" class="sb-save-pop-item" id="sbCopyPngBtn" role="menuitem">
+      <span class="sb-save-pop-badge is-png">복사</span>
+      <span class="sb-save-pop-text"><b>현재 화면 이미지 복사</b><small>노션·구글 문서·패들렛에서 Ctrl+V로 바로 붙여넣기</small></span>
+    </button>
+    <button type="button" class="sb-save-pop-item" id="sbSharePdfBtn" role="menuitem">
+      <span class="sb-save-pop-badge is-pdf">PDF</span>
+      <span class="sb-save-pop-text"><b>전체 쪽 PDF로 공유</b><small>모든 쪽을 PDF 한 파일로 묶어 공유 (지원하지 않으면 내려받기)</small></span>
+    </button>
+  </div>
+
+  <!-- 공유 준비 완료 (#sbShareReadyModal) — 파일 만드는 데 오래 걸리면 한 번 더 눌러 공유합니다 -->
+  <div class="sb-modal" id="sbShareReadyModal">
+    <div class="sb-modal-card" style="max-width:380px;">
+      <div class="sb-modal-head"><div><span class="sb-guide-kicker">공유 준비 완료</span><h3 id="sbShareReadyTitle">파일이 준비되었습니다</h3></div></div>
+      <div style="display:flex;gap:8px;padding:14px 20px 20px;">
+        <button type="button" class="sb-btn sb-btn-primary" id="sbShareReadyGo" style="flex:1;">공유하기</button>
+        <button type="button" class="sb-btn sb-btn-ghost" id="sbShareReadyDl">내려받기</button>
+      </div>
+    </div>
   </div>
 
   <!-- ================================================================= -->
@@ -816,6 +829,6 @@
     </div>
   </div>
 
-  <script src="./smart-board.js?v=33c2cb39c2"></script>
+  <script src="./smart-board.js?v=26041f242b"></script>
 </body>
 </html>
