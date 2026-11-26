@@ -2,22 +2,22 @@
  * 앱을 수정한 뒤에는 아래 CACHE_VERSION 을 올려주세요.
  * (올리지 않으면 이미 설치한 사용자에게 옛 파일이 계속 보일 수 있습니다)
  */
-var CACHE_VERSION = '26a2ae056c';
+var CACHE_VERSION = '33c2cb39c2';
 var CACHE_NAME = 'seat-app-' + CACHE_VERSION;
 
 var PRECACHE = [
   '/',
   '/index.html',
-  '/style.css?v=26a2ae056c',
-  '/app.js?v=26a2ae056c',
+  '/style.css?v=33c2cb39c2',
+  '/app.js?v=33c2cb39c2',
   '/smart-board.html',
   '/smart-board-guide.html',
   '/smart-board.webmanifest',
   '/memo-board-guide.html',
   '/score-planner-guide.html',
   '/doc-converter-guide.html',
-  '/smart-board.css?v=26a2ae056c',
-  '/smart-board.js?v=26a2ae056c',
+  '/smart-board.css?v=33c2cb39c2',
+  '/smart-board.js?v=33c2cb39c2',
   '/qr-lib.js',
   '/geo-services.js?v=1.0.0',
   '/libs/jszip.min.js',
@@ -79,9 +79,9 @@ self.addEventListener('fetch', function (event) {
 
   // 앱 핵심 자산(style.css, app.js, smart-board.*)은 네트워크 우선(no-cache)으로 받아 화면 깨짐/구버전 캐시 고착을 방지합니다 (/ 및 /tong/ 경로 모두 대응).
   var urlPath = new URL(req.url).pathname;
-  if (urlPath.endsWith('/style.css?v=26a2ae056c') || urlPath.endsWith('/app.js?v=26a2ae056c') || urlPath.endsWith('/index.html') ||
+  if (urlPath.endsWith('/style.css?v=33c2cb39c2') || urlPath.endsWith('/app.js?v=33c2cb39c2') || urlPath.endsWith('/index.html') ||
       urlPath.endsWith('/geo-services.js') || urlPath.endsWith('/board.html') ||
-      urlPath.endsWith('/smart-board.html') || urlPath.endsWith('/smart-board.css?v=26a2ae056c') || urlPath.endsWith('/smart-board.js?v=26a2ae056c')) {
+      urlPath.endsWith('/smart-board.html') || urlPath.endsWith('/smart-board.css?v=33c2cb39c2') || urlPath.endsWith('/smart-board.js?v=33c2cb39c2')) {
     event.respondWith(
       fetch(req, { cache: 'no-cache' })
         .then(function (res) {

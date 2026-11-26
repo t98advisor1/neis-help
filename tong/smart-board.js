@@ -78,7 +78,20 @@
     currentStroke: null,
     draggingSelection: false,
     lastHoverSideBtn: false,
-    pinchMap: {}
+    pinchMap: {},
+    multiTouchActive: false,
+    lastCenterX: 0,
+    lastCenterY: 0,
+    pinchStartDist: 0,
+    pinchStartZoom: 1,
+    pinchStartMidX: 0,
+    pinchStartMidY: 0,
+    pinchStartPanX: 0,
+    pinchStartPanY: 0,
+    spaceHeld: false,
+    zoomTapStartX: 0,
+    zoomTapStartY: 0,
+    zoomTapMoved: false
   };
 
   function el(id) { return document.getElementById(id); }
@@ -104,16 +117,20 @@
   }
 
   function getTrueViewportSize() {
-    var vv = window.visualViewport;
-    var candsW = [window.innerWidth, document.documentElement.clientWidth];
-    var candsH = [window.innerHeight, document.documentElement.clientHeight];
-    if (vv && vv.width > 100) candsW.push(vv.width);
-    if (vv && vv.height > 100) candsH.push(vv.height);
+    // 1순위: position:fixed inset:0 인 stageWrap 의 실제 레이아웃 크기 사용
+    // (브라우저 핀치 확대 중 visualViewport.width 가 줄어들어 우측 화면이 검게 잘리는 버그 원천 차단)
     if (stageWrap) {
       var sr = stageWrap.getBoundingClientRect();
-      if (sr.width > 100) candsW.push(sr.width);
-      if (sr.height > 100) candsH.push(sr.height);
+      if (sr.width > 100 && sr.height > 100) {
+        return { w: Math.round(sr.width), h: Math.round(sr.height) };
+      }
     }
+    var vv = window.visualViewport;
+    var vvUnzoomed = vv && (!vv.scale || vv.scale <= 1.02);
+    var candsW = [window.innerWidth, document.documentElement.clientWidth];
+    var candsH = [window.innerHeight, document.documentElement.clientHeight];
+    if (vvUnzoomed && vv.width > 100) candsW.push(vv.width);
+    if (vvUnzoomed && vv.height > 100) candsH.push(vv.height);
     var validW = candsW.filter(function (v) { return typeof v === 'number' && v > 100; });
     var validH = candsH.filter(function (v) { return typeof v === 'number' && v > 100; });
     return {
@@ -218,8 +235,35 @@
     applyTransform();
   }
 
+  function getMaxPan() {
+    var sr = stageWrap ? stageWrap.getBoundingClientRect() : { width: window.innerWidth, height: window.innerHeight };
+    var pg = curPage();
+    var fitW = parseFloat(boardFrame.style.width) || (pg.width * state.baseScale) || sr.width;
+    var fitH = parseFloat(boardFrame.style.height) || (pg.height * state.baseScale) || sr.height;
+    var scaledW = fitW * state.zoomScale;
+    var scaledH = fitH * state.zoomScale;
+    // 보드의 좌·우·상·하 끝이 화면 안쪽으로 들어와 검은 여백이 생기지 않도록 정확한 최대 이동 범위 계산
+    return {
+      x: Math.max(0, (scaledW - sr.width) / 2),
+      y: Math.max(0, (scaledH - sr.height) / 2)
+    };
+  }
+
+  function clampPan() {
+    if (state.zoomScale <= 1.01) {
+      state.zoomScale = 1;
+      state.panX = 0;
+      state.panY = 0;
+      return;
+    }
+    var mp = getMaxPan();
+    state.panX = Math.max(-mp.x, Math.min(mp.x, Math.round(state.panX)));
+    state.panY = Math.max(-mp.y, Math.min(mp.y, Math.round(state.panY)));
+  }
+
   function applyTransform() {
-    boardFrame.style.transform = 'translate(' + state.panX + 'px, ' + state.panY + 'px) scale(' + state.zoomScale + ')';
+    clampPan();
+    boardFrame.style.transform = 'translate3d(' + state.panX + 'px, ' + state.panY + 'px, 0) scale(' + state.zoomScale + ')';
     var zb = el('sbZoomBadge');
     var zt = el('sbZoomText');
     if (zb && zt) {
@@ -230,6 +274,26 @@
         zb.style.display = 'none';
       }
     }
+  }
+
+  function stepZoom(delta, anchorClientX, anchorClientY) {
+    var prevZ = state.zoomScale;
+    var nextZ = Math.max(1, Math.min(4, Math.round((prevZ + delta) * 10) / 10));
+    if (nextZ <= 1.01) {
+      resetZoom();
+      if (state.mode === 'zoom') setMode('draw');
+      return;
+    }
+    if (typeof anchorClientX === 'number' && typeof anchorClientY === 'number' && stageWrap) {
+      var sr = stageWrap.getBoundingClientRect();
+      var cx = sr.left + sr.width / 2;
+      var cy = sr.top + sr.height / 2;
+      var ratio = nextZ / Math.max(0.01, prevZ);
+      state.panX = (anchorClientX - cx) - (anchorClientX - cx - state.panX) * ratio;
+      state.panY = (anchorClientY - cy) - (anchorClientY - cy - state.panY) * ratio;
+    }
+    state.zoomScale = nextZ;
+    applyTransform();
   }
 
   function resetZoom() {
@@ -941,6 +1005,7 @@
       liveCanvas.style.cursor = 'crosshair';
       showToast('편집 모드: 이동하거나 글씨로 변환(OCR)할 판서 영역을 드래그하세요.');
     } else {
+      applyTransform();
       liveCanvas.style.cursor = state.tool === 'text' ? 'text' : 'crosshair';
     }
   }
@@ -1178,17 +1243,62 @@
     return null;
   }
 
+  function getTouchIds() {
+    return Object.keys(pointer.pinchMap);
+  }
+  function getTouchCentroid(ids) {
+    var sx = 0, sy = 0;
+    for (var i = 0; i < ids.length; i++) {
+      sx += pointer.pinchMap[ids[i]].x;
+      sy += pointer.pinchMap[ids[i]].y;
+    }
+    return { x: sx / ids.length, y: sy / ids.length };
+  }
+  function anchorMultiTouch(ids) {
+    var c = getTouchCentroid(ids);
+    pointer.lastCenterX = c.x;
+    pointer.lastCenterY = c.y;
+    if (ids.length === 2) {
+      var p1 = pointer.pinchMap[ids[0]], p2 = pointer.pinchMap[ids[1]];
+      pointer.pinchStartDist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      pointer.pinchStartZoom = state.zoomScale;
+      pointer.pinchStartMidX = c.x;
+      pointer.pinchStartMidY = c.y;
+      pointer.pinchStartPanX = state.panX;
+      pointer.pinchStartPanY = state.panY;
+    } else {
+      // 세 손가락 이상: 배율 고정 순수 화면 이동(팬)
+      pointer.pinchStartDist = 0;
+    }
+  }
+
   liveCanvas.addEventListener('pointerdown', function (ev) {
     if (ev.pointerType === 'touch') {
       pointer.pinchMap[ev.pointerId] = { x: ev.clientX, y: ev.clientY, type: ev.pointerType };
-      var pIds = Object.keys(pointer.pinchMap);
-      if (pIds.length === 2) {
+      try { liveCanvas.setPointerCapture(ev.pointerId); } catch (e) {}
+      var pIds = getTouchIds();
+      if (pIds.length >= 2) {
+        // 두 손가락 / 세 손가락 터치 진입 시 첫 손가락이 남긴 임시 획 즉시 취소
+        pointer.multiTouchActive = true;
         pointer.down = false;
-        var p1 = pointer.pinchMap[pIds[0]], p2 = pointer.pinchMap[pIds[1]];
-        pointer.pinchStartDist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
-        pointer.pinchStartZoom = state.zoomScale;
+        pointer.currentStroke = null;
+        liveCtx.clearRect(0, 0, curPage().width, curPage().height);
+        anchorMultiTouch(pIds);
         return;
       }
+      if (pointer.multiTouchActive) return;
+    }
+
+    // PC: 확대 상태에서 휠 버튼(가운데 클릭) 또는 Space + 드래그로 화면 이동(팬)
+    if ((ev.button === 1 || (pointer.spaceHeld && state.zoomScale > 1.02)) && state.mode !== 'pin') {
+      ev.preventDefault();
+      pointer.down = true;
+      pointer.activeId = ev.pointerId;
+      pointer.effectiveTool = 'pan';
+      pointer.lastX = ev.clientX;
+      pointer.lastY = ev.clientY;
+      try { liveCanvas.setPointerCapture(ev.pointerId); } catch (e) {}
+      return;
     }
 
     if (state.palmReject && ev.pointerType === 'touch' && state.mode === 'draw') {
@@ -1202,8 +1312,16 @@
     }
 
     if (state.mode === 'zoom') {
-      setMode('draw');
-      showToast('확대 화면을 고정하고 판서 모드로 전환했습니다.');
+      // 확대 모드에서 터치/마우스 드래그는 화면 이동, 짧은 클릭/탭은 확대 고정 후 판서 전환
+      pointer.down = true;
+      pointer.activeId = ev.pointerId;
+      pointer.effectiveTool = 'zoom_pan';
+      pointer.lastX = ev.clientX;
+      pointer.lastY = ev.clientY;
+      pointer.zoomTapStartX = ev.clientX;
+      pointer.zoomTapStartY = ev.clientY;
+      pointer.zoomTapMoved = false;
+      try { liveCanvas.setPointerCapture(ev.pointerId); } catch (e) {}
       return;
     }
 
@@ -1318,31 +1436,52 @@
     }
   });
 
+  // 확대 모드에서 마우스 커서 이동 시 스테이지 전체에서 부드럽게 팬 (우측 검은 잘림 없이 정확한 최대 범위 적용)
+  if (stageWrap) {
+    stageWrap.addEventListener('pointermove', function (ev) {
+      if (state.mode === 'zoom' && !pointer.down && !pointer.multiTouchActive && ev.pointerType === 'mouse') {
+        var sr = stageWrap.getBoundingClientRect();
+        if (sr.width < 10 || sr.height < 10) return;
+        var nx = Math.max(-0.5, Math.min(0.5, ((ev.clientX - sr.left) / sr.width) - 0.5));
+        var ny = Math.max(-0.5, Math.min(0.5, ((ev.clientY - sr.top) / sr.height) - 0.5));
+        var mp = getMaxPan();
+        state.panX = Math.round(-nx * 2 * mp.x);
+        state.panY = Math.round(-ny * 2 * mp.y);
+        applyTransform();
+      }
+    });
+  }
+
   liveCanvas.addEventListener('pointermove', function (ev) {
     if (pointer.pinchMap[ev.pointerId]) {
       pointer.pinchMap[ev.pointerId].x = ev.clientX;
       pointer.pinchMap[ev.pointerId].y = ev.clientY;
     }
-    var pIds = Object.keys(pointer.pinchMap);
-    if (pIds.length === 2 && pointer.pinchStartDist > 10) {
-      var p1 = pointer.pinchMap[pIds[0]], p2 = pointer.pinchMap[pIds[1]];
-      var dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
-      state.zoomScale = Math.max(1, Math.min(4, pointer.pinchStartZoom * (dist / pointer.pinchStartDist)));
-      if (state.zoomScale <= 1.02) { state.panX = 0; state.panY = 0; }
-      applyTransform();
-      return;
-    }
-
-    if (state.mode === 'zoom' && !pointer.down) {
-      var sr = stageWrap.getBoundingClientRect();
-      var nx = ((ev.clientX - sr.left) / sr.width) - 0.5;
-      var ny = ((ev.clientY - sr.top) / sr.height) - 0.5;
-      var pg = curPage();
-      var maxPanX = (pg.width * state.baseScale * (state.zoomScale - 1)) / 2;
-      var maxPanY = (pg.height * state.baseScale * (state.zoomScale - 1)) / 2;
-      state.panX = Math.round(-nx * 2 * maxPanX);
-      state.panY = Math.round(-ny * 2 * maxPanY);
-      applyTransform();
+    var pIds = getTouchIds();
+    if (pointer.multiTouchActive) {
+      if (pIds.length >= 2) {
+        var c = getTouchCentroid(pIds);
+        if (pIds.length === 2 && pointer.pinchStartDist > 12) {
+          var p1 = pointer.pinchMap[pIds[0]], p2 = pointer.pinchMap[pIds[1]];
+          var dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+          var nextZoom = Math.max(1, Math.min(4, pointer.pinchStartZoom * (dist / pointer.pinchStartDist)));
+          var sr = stageWrap.getBoundingClientRect();
+          var stageCx = sr.left + sr.width / 2;
+          var stageCy = sr.top + sr.height / 2;
+          var ratio = nextZoom / Math.max(0.01, pointer.pinchStartZoom);
+          state.zoomScale = nextZoom;
+          // 두 손가락 동시 핀치 확대·축소 + 화면 이동(팬)
+          state.panX = (c.x - stageCx) - (pointer.pinchStartMidX - stageCx - pointer.pinchStartPanX) * ratio;
+          state.panY = (c.y - stageCy) - (pointer.pinchStartMidY - stageCy - pointer.pinchStartPanY) * ratio;
+        } else {
+          // 세 손가락 화면 이동(팬): 현재 확대 배율을 유지한 채 자유롭게 이동
+          state.panX += (c.x - pointer.lastCenterX);
+          state.panY += (c.y - pointer.lastCenterY);
+        }
+        pointer.lastCenterX = c.x;
+        pointer.lastCenterY = c.y;
+        applyTransform();
+      }
       return;
     }
 
@@ -1359,9 +1498,14 @@
 
     if (!pointer.down || ev.pointerId !== pointer.activeId) return;
 
-    if (pointer.effectiveTool === 'pan') {
-      state.panX += (ev.clientX - pointer.lastX);
-      state.panY += (ev.clientY - pointer.lastY);
+    if (pointer.effectiveTool === 'pan' || pointer.effectiveTool === 'zoom_pan') {
+      var moveDx = ev.clientX - pointer.lastX;
+      var moveDy = ev.clientY - pointer.lastY;
+      if (pointer.effectiveTool === 'zoom_pan' && Math.hypot(ev.clientX - pointer.zoomTapStartX, ev.clientY - pointer.zoomTapStartY) > 8) {
+        pointer.zoomTapMoved = true;
+      }
+      state.panX += moveDx;
+      state.panY += moveDy;
       pointer.lastX = ev.clientX;
       pointer.lastY = ev.clientY;
       applyTransform();
@@ -1453,10 +1597,27 @@
 
   function finishPointer(ev) {
     delete pointer.pinchMap[ev.pointerId];
+    var remIds = getTouchIds();
+    if (pointer.multiTouchActive) {
+      if (remIds.length >= 2) {
+        anchorMultiTouch(remIds);
+      } else if (remIds.length === 0) {
+        pointer.multiTouchActive = false;
+      }
+      pointer.down = false;
+      return;
+    }
     if (!pointer.down || ev.pointerId !== pointer.activeId) return;
     pointer.down = false;
 
     if (pointer.effectiveTool === 'pan') return;
+    if (pointer.effectiveTool === 'zoom_pan') {
+      if (!pointer.zoomTapMoved) {
+        setMode('draw');
+        showToast('확대 화면(' + state.zoomScale.toFixed(1) + 'x)을 고정하고 판서 모드로 전환했습니다. (두/세 손가락으로 이동 가능)');
+      }
+      return;
+    }
 
     var pt = clientToBoard(ev.clientX, ev.clientY);
     var curPg = curPage();
@@ -1526,10 +1687,7 @@
     if (state.webActive && state.webInteract) return;
     e.preventDefault();
     if (state.mode === 'zoom' || e.ctrlKey) {
-      var nextZ = state.zoomScale + (e.deltaY < 0 ? 0.2 : -0.2);
-      state.zoomScale = Math.max(1, Math.min(4, Math.round(nextZ * 10) / 10));
-      if (state.zoomScale <= 1.01) { state.panX = 0; state.panY = 0; }
-      applyTransform();
+      stepZoom(e.deltaY < 0 ? 0.25 : -0.25, e.clientX, e.clientY);
     } else if (state.mode === 'draw') {
       stepSize(e.deltaY < 0 ? 1 : -1);
     }
@@ -3133,9 +3291,38 @@
     });
     if (el('sbWebCloseBtn')) el('sbWebCloseBtn').addEventListener('click', closeWebBrowser);
 
+    // ZoomIt 스타일 Alt+1 (확대 ↔ 100% 복귀 토글) / Alt+2 (확대 유지 판서 전환 · 재입력 시 100% 축소)
+    function toggleZoomItZoom() {
+      if (state.zoomScale > 1.05 || state.mode === 'zoom') {
+        resetZoom();
+        setMode('draw');
+        showToast('화면을 100% 원래 크기로 축소했습니다. (Alt+1)');
+      } else {
+        state.zoomScale = 2.0;
+        setMode('zoom');
+      }
+    }
+    function handleAlt2Draw() {
+      if (state.mode === 'zoom') {
+        setMode('draw');
+        showToast('확대 화면(' + state.zoomScale.toFixed(1) + 'x)을 고정하고 판서 모드로 전환했습니다. (Alt+2 · 두/세 손가락 이동 가능)');
+      } else if (state.mode === 'draw' && state.zoomScale > 1.05) {
+        resetZoom();
+        showToast('화면을 100% 원래 크기로 축소했습니다. (Alt+2)');
+      } else {
+        setMode('draw');
+        showToast('판서 모드입니다. (Alt+1 확대/축소 · Alt+2 판서)');
+      }
+    }
+
     // 모드 전환
     document.querySelectorAll('.sb-mode-btn').forEach(function (b) {
-      b.addEventListener('click', function () { setMode(b.getAttribute('data-sb-mode')); });
+      b.addEventListener('click', function () {
+        var m = b.getAttribute('data-sb-mode');
+        if (m === 'zoom') toggleZoomItZoom();
+        else if (m === 'draw') handleAlt2Draw();
+        else setMode(m);
+      });
     });
 
     // 도구 선택
@@ -3327,12 +3514,75 @@
       }
     });
 
-    // 되돌리기 / 다시실행 / 전체삭제
-    if (el('sbUndoBtn')) el('sbUndoBtn').addEventListener('click', function () {
+    // 되돌리기 / 다시실행 / 선택적 전체 지우기 (전체 펜 지우기 · 전체 스탬프 지우기 · 전체 삭제)
+    function saveBulkUndo(pg) {
+      if (!pg) return;
+      if (!Array.isArray(pg.bulkUndoStack)) pg.bulkUndoStack = [];
+      pg.bulkUndoStack.push({
+        objects: JSON.parse(JSON.stringify(pg.objects || [])),
+        stampCounter: state.stampCounter
+      });
+      if (pg.bulkUndoStack.length > 10) pg.bulkUndoStack.shift();
+    }
+
+    function clearAllPenStrokes() {
+      var pg = curPage();
+      var penCount = (pg.objects || []).filter(function (o) { return o.type === 'stroke' || o.type === 'highlighter'; }).length;
+      if (!penCount) {
+        showToast('현재 페이지에 지울 펜·형광펜 필기가 없습니다.');
+        return;
+      }
+      saveBulkUndo(pg);
+      pg.objects = pg.objects.filter(function (o) { return o.type !== 'stroke' && o.type !== 'highlighter'; });
+      pg.redoStack = [];
+      clearSelection();
+      renderInk();
+      showToast('펜·형광펜 필기 ' + penCount + '개를 모두 지웠습니다. (스탬프·도형 유지 · Ctrl+Z 복구 가능)');
+    }
+
+    function clearAllStamps() {
+      var pg = curPage();
+      var stampCount = (pg.objects || []).filter(function (o) { return o.type === 'stamp'; }).length;
+      if (!stampCount) {
+        showToast('현재 페이지에 지울 번호 스탬프가 없습니다.');
+        return;
+      }
+      saveBulkUndo(pg);
+      pg.objects = pg.objects.filter(function (o) { return o.type !== 'stamp'; });
+      pg.redoStack = [];
+      state.stampCounter = 1;
+      if (el('sbStampNum')) el('sbStampNum').textContent = '1';
+      clearSelection();
+      renderInk();
+      showToast('번호 스탬프 ' + stampCount + '개를 모두 지우고 1번으로 초기화했습니다. (Ctrl+Z 복구 가능)');
+    }
+
+    function clearAllPageObjects() {
       var pg = curPage();
       if (!pg.objects.length) return;
-      pg.redoStack.push(pg.objects.pop());
+      saveBulkUndo(pg);
+      pg.objects = [];
+      pg.redoStack = [];
+      clearSelection();
       renderInk();
+      showToast('현재 페이지 판서를 모두 삭제했습니다. (Ctrl+Z 복구 가능)');
+    }
+
+    if (el('sbUndoBtn')) el('sbUndoBtn').addEventListener('click', function () {
+      var pg = curPage();
+      if (pg.objects.length) {
+        pg.redoStack.push(pg.objects.pop());
+        renderInk();
+      } else if (Array.isArray(pg.bulkUndoStack) && pg.bulkUndoStack.length) {
+        var snap = pg.bulkUndoStack.pop();
+        pg.objects = snap.objects || [];
+        if (typeof snap.stampCounter === 'number') {
+          state.stampCounter = snap.stampCounter;
+          if (el('sbStampNum')) el('sbStampNum').textContent = state.stampCounter;
+        }
+        renderInk();
+        showToast('전체 삭제 이전 상태로 복원했습니다.');
+      }
     });
     if (el('sbRedoBtn')) el('sbRedoBtn').addEventListener('click', function () {
       var pg = curPage();
@@ -3340,16 +3590,17 @@
       pg.objects.push(pg.redoStack.pop());
       renderInk();
     });
-    if (el('sbClearInkBtn')) el('sbClearInkBtn').addEventListener('click', function () {
-      var pg = curPage();
-      if (!pg.objects.length) return;
-      pg.objects = [];
-      pg.redoStack = [];
-      clearSelection();
-      renderInk();
-      showToast('현재 페이지 판서를 모두 삭제했습니다.');
-    });
+    if (el('sbClearInkBtn')) el('sbClearInkBtn').addEventListener('click', function () { closeAllPopovers(); clearAllPageObjects(); });
+    if (el('sbClearPenBtn')) el('sbClearPenBtn').addEventListener('click', function () { closeAllPopovers(); clearAllPenStrokes(); });
+    if (el('sbBoardClearPenBtn')) el('sbBoardClearPenBtn').addEventListener('click', function () { closeAllPopovers(); clearAllPenStrokes(); });
+    if (el('sbClearStampsBtn')) el('sbClearStampsBtn').addEventListener('click', function () { closeAllPopovers(); clearAllStamps(); });
+    if (el('sbBoardClearStampsBtn')) el('sbBoardClearStampsBtn').addEventListener('click', function () { closeAllPopovers(); clearAllStamps(); });
+    if (el('sbClearStampsFromToolsBtn')) el('sbClearStampsFromToolsBtn').addEventListener('click', function () { closeAllPopovers(); clearAllStamps(); });
+    if (el('sbClearAllFromEraserBtn')) el('sbClearAllFromEraserBtn').addEventListener('click', function () { closeAllPopovers(); clearAllPageObjects(); });
+    if (el('sbUseEraserBtn')) el('sbUseEraserBtn').addEventListener('click', function () { setTool('eraser'); closeAllPopovers(); });
 
+    if (el('sbZoomOutBtn')) el('sbZoomOutBtn').addEventListener('click', function () { stepZoom(-0.4); });
+    if (el('sbZoomInBtn')) el('sbZoomInBtn').addEventListener('click', function () { stepZoom(0.4); });
     if (el('sbZoomResetBtn')) el('sbZoomResetBtn').addEventListener('click', function () { resetZoom(); if (state.mode === 'zoom') setMode('draw'); });
     inlineTextEl.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commitInlineText(); }
@@ -3422,7 +3673,7 @@
     // 저장 / 단축키 전체창(좌우 슬라이드) / 사용설명서 2단계 뷰(큰 글씨 요약 <-> 전체화면 GIF 좌우 슬라이드 과정)
     // PNG · PDF 저장 / 펜 종류 / 도형·도구 / 보드 설정 팝오버 통합 제어
     function closeAllPopovers() {
-      ['sbSaveMenu', 'sbPenMenu', 'sbMoreToolsMenu', 'sbBoardMoreMenu'].forEach(function (id) {
+      ['sbSaveMenu', 'sbPenMenu', 'sbMoreToolsMenu', 'sbEraserMenu', 'sbBoardMoreMenu'].forEach(function (id) {
         if (el(id)) el(id).classList.remove('show');
       });
     }
@@ -3453,6 +3704,7 @@
     bindAnchoredPopover('sbSaveMenuBtn', 'sbSaveMenu', true);
     bindAnchoredPopover('sbPenMenuBtn', 'sbPenMenu', false);
     bindAnchoredPopover('sbMoreToolsBtn', 'sbMoreToolsMenu', false);
+    bindAnchoredPopover('sbEraserToolBtn', 'sbEraserMenu', false);
     bindAnchoredPopover('sbBoardMoreBtn', 'sbBoardMoreMenu', true);
     document.addEventListener('click', closeAllPopovers);
     liveCanvas.addEventListener('pointerdown', closeAllPopovers);
@@ -3676,10 +3928,17 @@
         }
         return;
       }
+      if (e.code === 'Space' && state.zoomScale > 1.02) {
+        pointer.spaceHeld = true;
+        liveCanvas.style.cursor = 'grab';
+      }
       if (e.altKey && (e.code === 'Backquote' || e.key === '`')) { e.preventDefault(); setMode(state.mode === 'pin' ? 'draw' : 'pin'); return; }
-      if (e.altKey && e.key === '1') { e.preventDefault(); setMode(state.mode === 'zoom' ? 'draw' : 'zoom'); return; }
-      if (e.altKey && e.key === '2') { e.preventDefault(); setMode('draw'); return; }
-      if (e.altKey && e.key === '3') { e.preventDefault(); setMode(state.mode === 'edit' ? 'draw' : 'edit'); return; }
+      if (e.altKey && (e.code === 'Digit1' || e.code === 'Numpad1' || e.key === '1')) { e.preventDefault(); toggleZoomItZoom(); return; }
+      if (e.altKey && (e.code === 'Digit2' || e.code === 'Numpad2' || e.key === '2')) { e.preventDefault(); handleAlt2Draw(); return; }
+      if (e.altKey && (e.code === 'Digit3' || e.code === 'Numpad3' || e.key === '3')) { e.preventDefault(); setMode(state.mode === 'edit' ? 'draw' : 'edit'); return; }
+      if (e.altKey && (e.code === 'Equal' || e.code === 'NumpadAdd' || e.key === '+' || e.key === '=')) { e.preventDefault(); stepZoom(0.4); return; }
+      if (e.altKey && (e.code === 'Minus' || e.code === 'NumpadSubtract' || e.key === '-')) { e.preventDefault(); stepZoom(-0.4); return; }
+      if (e.altKey && (e.code === 'Digit0' || e.code === 'Numpad0' || e.key === '0')) { e.preventDefault(); resetZoom(); if (state.mode === 'zoom') setMode('draw'); return; }
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 's') { e.preventDefault(); serializeCurrentNote(false); return; }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveCurrentPng(); return; }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); el('sbUndoBtn').click(); return; }
@@ -3763,6 +4022,12 @@
     if (!isLocal && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(function () {});
     }
+    document.addEventListener('keyup', function (e) {
+      if (e.code === 'Space' && pointer.spaceHeld) {
+        pointer.spaceHeld = false;
+        liveCanvas.style.cursor = state.tool === 'select' ? 'default' : (state.tool === 'text' ? 'text' : 'crosshair');
+      }
+    });
   }
 
   init();
