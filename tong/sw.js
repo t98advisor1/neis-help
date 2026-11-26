@@ -2,22 +2,22 @@
  * 앱을 수정한 뒤에는 아래 CACHE_VERSION 을 올려주세요.
  * (올리지 않으면 이미 설치한 사용자에게 옛 파일이 계속 보일 수 있습니다)
  */
-var CACHE_VERSION = '067701bba4';
+var CACHE_VERSION = '22f9ab15cb';
 var CACHE_NAME = 'seat-app-' + CACHE_VERSION;
 
 var PRECACHE = [
   '/',
   '/index.html',
-  '/style.css?v=067701bba4',
-  '/app.js?v=067701bba4',
+  '/style.css?v=22f9ab15cb',
+  '/app.js?v=22f9ab15cb',
   '/smart-board.html',
   '/smart-board-guide.html',
   '/smart-board.webmanifest',
   '/memo-board-guide.html',
   '/score-planner-guide.html',
   '/doc-converter-guide.html',
-  '/smart-board.css?v=067701bba4',
-  '/smart-board.js?v=067701bba4',
+  '/smart-board.css?v=22f9ab15cb',
+  '/smart-board.js?v=22f9ab15cb',
   '/qr-lib.js',
   '/geo-services.js?v=1.0.0',
   '/libs/jszip.min.js',
@@ -65,7 +65,7 @@ self.addEventListener('fetch', function (event) {
   // 페이지 이동: 네트워크 우선 (새 버전을 바로 받도록), 실패 시 요청 URL 또는 index.html 캐시
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
+      fetch(req, { cache: 'no-cache' })
         .then(function (res) {
           var copy = res.clone();
           caches.open(CACHE_NAME).then(function (c) { c.put(req, copy); });
@@ -82,9 +82,10 @@ self.addEventListener('fetch', function (event) {
 
   // 앱 핵심 자산(style.css, app.js, smart-board.*)은 네트워크 우선(no-cache)으로 받아 화면 깨짐/구버전 캐시 고착을 방지합니다 (/ 및 /tong/ 경로 모두 대응).
   var urlPath = new URL(req.url).pathname;
-  if (urlPath.endsWith('/style.css?v=067701bba4') || urlPath.endsWith('/app.js?v=067701bba4') || urlPath.endsWith('/index.html') ||
+  if (urlPath.endsWith('/style.css') || urlPath.endsWith('/app.js') || urlPath.endsWith('/index.html') ||
       urlPath.endsWith('/geo-services.js') || urlPath.endsWith('/board.html') ||
-      urlPath.endsWith('/smart-board.html') || urlPath.endsWith('/smart-board.css?v=067701bba4') || urlPath.endsWith('/smart-board.js?v=067701bba4')) {
+      urlPath.endsWith('/smart-board.html') || urlPath.endsWith('/smart-board-guide.html') ||
+      urlPath.endsWith('/smart-board.css') || urlPath.endsWith('/smart-board.js')) {
     event.respondWith(
       fetch(req, { cache: 'no-cache' })
         .then(function (res) {
