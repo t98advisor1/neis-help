@@ -2,22 +2,22 @@
  * 앱을 수정한 뒤에는 아래 CACHE_VERSION 을 올려주세요.
  * (올리지 않으면 이미 설치한 사용자에게 옛 파일이 계속 보일 수 있습니다)
  */
-var CACHE_VERSION = 'e5675887dd';
+var CACHE_VERSION = 'f675dd6e90';
 var CACHE_NAME = 'seat-app-' + CACHE_VERSION;
 
 var PRECACHE = [
   '/',
   '/index.html',
-  '/style.css?v=e5675887dd',
-  '/app.js?v=e5675887dd',
+  '/style.css?v=f675dd6e90',
+  '/app.js?v=f675dd6e90',
   '/smart-board.html',
   '/smart-board-guide.html',
   '/smart-board.webmanifest',
   '/memo-board-guide.html',
   '/score-planner-guide.html',
   '/doc-converter-guide.html',
-  '/smart-board.css?v=e5675887dd',
-  '/smart-board.js?v=e5675887dd',
+  '/smart-board.css?v=f675dd6e90',
+  '/smart-board.js?v=f675dd6e90',
   '/qr-lib.js',
   '/geo-services.js?v=1.0.0',
   '/libs/jszip.min.js',
@@ -51,13 +51,9 @@ self.addEventListener('activate', function (event) {
 
 self.addEventListener('fetch', function (event) {
   var req = event.request;
+  // 실시간 API 요청(/api/*)은 서비스 워커를 거치지 않고 브라우저가 직접 통신합니다.
+  if (new URL(req.url).pathname.indexOf('/api/') === 0) return;
   if (req.method !== 'GET') return;
-
-  // 실시간 통계 API는 캐시하지 않습니다.
-  if (new URL(req.url).pathname.indexOf('/api/') === 0) {
-    event.respondWith(fetch(req));
-    return;
-  }
 
   // 매뉴얼 영상은 구간(Range) 요청으로 받아야 해서 서비스 워커를 거치지 않고 네트워크로 바로 받습니다.
   if (/\.mp4$/i.test(new URL(req.url).pathname)) return;
